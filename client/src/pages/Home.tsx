@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { useQuery } from "@tanstack/react-query";
-import { fetchLatestPosts } from "@/lib/wp";
+import { fetchLatestPosts, decodeHtmlEntities, getPostImage } from "@/lib/wp";
 
 import heroBg from "@/assets/images/hero-bg.png";
 import gearBackpack from "@/assets/images/gear-backpack.png";
@@ -359,8 +359,8 @@ export default function Home() {
                 ))
               ) : fieldNotes.length > 0 ? (
                 fieldNotes.map((post: any, i: number) => {
-                  const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09";
-                  const category = post._embedded?.['wp:term']?.[0]?.[0]?.name || "Strategy";
+                  const category = decodeHtmlEntities(post._embedded?.['wp:term']?.[0]?.[0]?.name || "Strategy");
+                  const featuredImage = getPostImage(post, category);
                   
                   return (
                     <Link key={i} href={`/articles/${post.slug}`} className="block">
@@ -419,8 +419,8 @@ export default function Home() {
                   ))
                 ) : widgetArticles.length > 0 ? (
                   widgetArticles.map((post: any, i: number) => {
-                    const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09";
-                    const category = post._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized";
+                    const category = decodeHtmlEntities(post._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");
+                    const featuredImage = getPostImage(post, category);
                     const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'short',

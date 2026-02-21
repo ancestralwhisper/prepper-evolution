@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { fetchPosts } from "@/lib/wp";
+import { fetchPosts, decodeHtmlEntities, getPostImage } from "@/lib/wp";
 import { useSEO } from "@/hooks/useSEO";
 import { Button } from "@/components/ui/button";
 
@@ -53,8 +53,8 @@ export default function Articles() {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {data?.posts.map((post) => {
-                const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09";
-                const category = post._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized";
+                const category = decodeHtmlEntities(post._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");
+                const featuredImage = getPostImage(post, category);
 
                 return (
                   <Link key={post.id} href={`/articles/${post.slug}`} className="group block h-full">

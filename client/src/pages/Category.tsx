@@ -2,7 +2,7 @@ import { useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useSEO } from "@/hooks/useSEO";
 import { mockProducts } from "@/content/products";
-import { fetchCategories, fetchPosts } from "@/lib/wp";
+import { fetchCategories, fetchPosts, decodeHtmlEntities, getPostImage } from "@/lib/wp";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { Link } from "wouter";
 
@@ -73,7 +73,8 @@ export default function Category() {
             <h2 className="text-2xl font-display font-bold mb-8 uppercase tracking-wider border-b border-border pb-4">Articles & Intel</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {categoryArticles.map(article => {
-                const featuredImage = article._embedded?.['wp:featuredmedia']?.[0]?.source_url || "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09";
+                const categoryName = decodeHtmlEntities(article._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");
+                const featuredImage = getPostImage(article, categoryName);
                 return (
                   <Link key={article.id} href={`/articles/${article.slug}`} className="group block h-full">
                     <div className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-300 h-full flex flex-col">

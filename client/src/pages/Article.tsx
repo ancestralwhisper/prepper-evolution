@@ -1,7 +1,7 @@
 import { useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useSEO } from "@/hooks/useSEO";
-import { fetchPostBySlug, fetchPosts } from "@/lib/wp";
+import { fetchPostBySlug, fetchPosts, decodeHtmlEntities, getPostImage } from "@/lib/wp";
 import { ChevronLeft, Calendar, User, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import { useEffect, useState } from "react";
@@ -36,9 +36,9 @@ export default function Article() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const featuredImage = article?._embedded?.['wp:featuredmedia']?.[0]?.source_url || "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09";
+  const categoryName = decodeHtmlEntities(article?._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");
+  const featuredImage = article ? getPostImage(article, categoryName) : "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09";
   const authorName = article?._embedded?.['author']?.[0]?.name || "Prepper Evolution Team";
-  const categoryName = article?._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized";
   const dateFormatted = article ? new Date(article.date).toLocaleDateString() : "";
   
   // Strip HTML from excerpt for meta tags
@@ -132,7 +132,8 @@ export default function Article() {
           <h2 className="text-3xl font-display font-bold mb-8">Related Intel</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {related.map(post => {
-              const relImg = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09";
+              const catName = decodeHtmlEntities(post._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");
+              const relImg = getPostImage(post, catName);
               return (
                 <Link key={post.id} href={`/articles/${post.slug}`} className="group block">
                   <div className="bg-card rounded-xl overflow-hidden border border-border shadow-sm hover:border-primary/50 transition-colors h-full flex flex-col">
