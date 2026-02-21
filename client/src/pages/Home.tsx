@@ -260,31 +260,32 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {[
-              { img: gearBackpack, name: "Tactical Alpha 72h Pack", category: "Backpacks", rating: 4.9 },
-              { img: gearKnife, name: "Bushcraft Survival Blade", category: "Tools", rating: 4.8 },
-              { img: gearFilter, name: "Pro-Gravity Water Filter", category: "Hydration", rating: 5.0 }
+              { img: "https://images.unsplash.com/photo-1596706917688-662f6bfa9f45", name: "ESEE 4", category: "Survival Tools & Knives", rating: 4.9, slug: "esee-4" },
+              { img: "https://images.unsplash.com/photo-1620804797089-32da5707bcf8", name: "EcoFlow DELTA 2 Max", category: "Power & Energy", rating: 4.9, slug: "ecoflow-delta-2-max" },
+              { img: "https://images.unsplash.com/photo-1523362628745-0c100150b504", name: "LifeStraw Personal Water Filter", category: "Water Purification", rating: 4.8, slug: "lifestraw-personal-water-filter" }
             ].map((item, i) => (
-              <motion.div 
-                key={i} 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.3, delay: i * 0.1 }}
-                className="group cursor-pointer" 
-                data-testid={`card-gear-${i}`}
-              >
-                <div className="aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-muted relative">
-                  <img src={item.img} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold uppercase tracking-wider text-foreground">
-                    {item.category}
+              <Link key={i} href={`/products/${item.slug}`}>
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.3, delay: i * 0.1 }}
+                  className="group cursor-pointer h-full flex flex-col" 
+                  data-testid={`card-gear-${i}`}
+                >
+                  <div className="aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-muted relative">
+                    <img src={item.img} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold uppercase tracking-wider text-foreground">
+                      {item.category}
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-1 mb-2 text-primary">
-                  <Star className="w-4 h-4 fill-current" />
-                  <span className="font-medium text-sm text-foreground">{item.rating}</span>
-                </div>
-                <h3 className="text-lg font-bold font-display group-hover:text-primary transition-colors">{item.name}</h3>
-              </motion.div>
+                  <div className="flex items-center gap-1 mb-2 text-primary">
+                    <Star className="w-4 h-4 fill-current" />
+                    <span className="font-medium text-sm text-foreground">{item.rating}</span>
+                  </div>
+                  <h3 className="text-lg font-bold font-display group-hover:text-primary transition-colors mt-auto">{item.name}</h3>
+                </motion.div>
+              </Link>
             ))}
           </div>
           <Button variant="outline" className="w-full mt-8 md:hidden" data-testid="button-view-all-reviews-mobile">View All Reviews</Button>
