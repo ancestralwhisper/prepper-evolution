@@ -69,15 +69,15 @@ const SLUG_IMAGE_MAP: Record<string, string> = {
   "water-purification-methods": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600",
   "long-term-food-storage-guide": "https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=600",
   "emergency-communication-grid-down": "https://images.unsplash.com/photo-1563203369-26f2e4a5ccf7?w=600",
-  "first-aid-essentials-survival": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=600",
+  "first-aid-essentials-survival": "/images/articles/first-aid-essentials.png",
   "home-security-budget": "https://images.unsplash.com/photo-1558002038-1055907df827?w=600",
   "financial-preparedness": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600",
   "urban-vs-rural-prepping": "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600",
   "top-10-skills-every-prepper-should-learn": "https://images.unsplash.com/photo-1517824806704-9040b037703b?w=600",
-  "overlanding-for-preppers-bug-out-vehicle": "https://images.unsplash.com/photo-1533591380348-14193f1de18f?w=600",
+  "overlanding-for-preppers-bug-out-vehicle": "/images/articles/overlanding-bug-out-vehicle.png",
   "overland-expo-guide-2026": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600",
   "best-overlanding-gear-emergency-preparedness": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600",
-  "campsite-selection-wilderness-survival": "https://images.unsplash.com/photo-1478131143263-83f42b576904?w=600",
+  "campsite-selection-wilderness-survival": "/images/articles/campsite-selection.png",
   "ultralight-backpacking-gear-guide": "https://images.unsplash.com/photo-1551632811-561732d1e306?w=600"
 };
 
