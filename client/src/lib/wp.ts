@@ -1,5 +1,3 @@
-export const WP_API_URL = "https://prepperevolution.com/wp-json/wp/v2";
-
 export interface WPPost {
   id: number;
   date: string;
@@ -21,7 +19,7 @@ export interface WPCategory {
 }
 
 export async function fetchPosts(page = 1, categoryId?: number): Promise<{ posts: WPPost[], totalPages: number }> {
-  let url = `${WP_API_URL}/posts?_embed&per_page=10&page=${page}&status=publish&orderby=date&order=desc`;
+  let url = `/api/wp/posts?per_page=10&page=${page}`;
   if (categoryId) {
     url += `&categories=${categoryId}`;
   }
@@ -36,14 +34,14 @@ export async function fetchPosts(page = 1, categoryId?: number): Promise<{ posts
 }
 
 export async function fetchLatestPosts(limit = 3): Promise<WPPost[]> {
-  const url = `${WP_API_URL}/posts?_embed&per_page=${limit}&status=publish&orderby=date&order=desc`;
+  const url = `/api/wp/posts?per_page=${limit}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error("Failed to fetch latest posts");
   return await res.json();
 }
 
 export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
-  const res = await fetch(`${WP_API_URL}/posts?_embed&slug=${slug}`);
+  const res = await fetch(`/api/wp/posts?slug=${slug}`);
   if (!res.ok) throw new Error("Failed to fetch post");
   
   const posts = await res.json();
@@ -51,7 +49,7 @@ export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
 }
 
 export async function fetchCategories(): Promise<WPCategory[]> {
-  const res = await fetch(`${WP_API_URL}/categories?per_page=100`);
+  const res = await fetch(`/api/wp/categories`);
   if (!res.ok) throw new Error("Failed to fetch categories");
   
   return await res.json();
@@ -84,16 +82,16 @@ const SLUG_IMAGE_MAP: Record<string, string> = {
 };
 
 const GENERIC_FALLBACK_IMAGES = [
-  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600", // Mountain landscape
-  "https://images.unsplash.com/photo-1455448972184-de647495d428?w=600", // Forest fog
-  "https://images.unsplash.com/photo-1445307399708-84c4ee5908b8?w=600", // Forest cabin
-  "https://images.unsplash.com/photo-1465310477141-6fb93167a273?w=600", // River valley
-  "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=600", // Tent under stars
-  "https://images.unsplash.com/photo-1478131143263-83f42b576904?w=600", // Wilderness campsite
-  "https://images.unsplash.com/photo-1517824806704-9040b037703b?w=600", // Fire building
-  "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600", // Open road van
-  "https://images.unsplash.com/photo-1508873696983-2dfd5898f08b?w=600", // Misty trees
-  "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600"  // Deep woods
+  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600",
+  "https://images.unsplash.com/photo-1455448972184-de647495d428?w=600",
+  "https://images.unsplash.com/photo-1445307399708-84c4ee5908b8?w=600",
+  "https://images.unsplash.com/photo-1465310477141-6fb93167a273?w=600",
+  "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=600",
+  "https://images.unsplash.com/photo-1478131143263-83f42b576904?w=600",
+  "https://images.unsplash.com/photo-1517824806704-9040b037703b?w=600",
+  "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600",
+  "https://images.unsplash.com/photo-1508873696983-2dfd5898f08b?w=600",
+  "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600"
 ];
 
 function getHash(str: string): number {
@@ -101,18 +99,16 @@ function getHash(str: string): number {
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
+    hash = hash & hash;
   }
   return Math.abs(hash);
 }
 
 export function getFallbackImageForArticle(slug: string, title: string): string {
-  // First check if we have a specific mapping for this slug
   if (SLUG_IMAGE_MAP[slug]) {
     return SLUG_IMAGE_MAP[slug];
   }
   
-  // If no specific mapping, use a hash of the title to deterministically pick a generic fallback
   const index = getHash(title) % GENERIC_FALLBACK_IMAGES.length;
   return GENERIC_FALLBACK_IMAGES[index];
 }
@@ -120,11 +116,6 @@ export function getFallbackImageForArticle(slug: string, title: string): string 
 export function getPostImage(post: any): string {
   const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
   
-  // The user mentioned "all share the same default image". We need to check for missing image OR that specific default image
-  // Looking at the previous code, it had: || "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09"
-  // Let's assume that if it's missing, or if it matches that specific unsplash photo, it's a fallback.
-  // Actually, wait, maybe WordPress itself is returning a specific fallback? If it's returning a generic WP fallback we should catch it.
-  // But if it's missing, it's undefined. 
   if (!featuredImage || featuredImage.includes("photo-1542601906990-b4d3fb778b09")) {
     return getFallbackImageForArticle(post.slug, post.title?.rendered || '');
   }

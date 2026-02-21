@@ -1,13 +1,24 @@
 import { useParams } from "wouter";
 import { useSEO } from "@/hooks/useSEO";
-import { mockProducts } from "@/content/products";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ShoppingCart, Check } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import type { Product as ProductType } from "@shared/schema";
 
 export default function Product() {
   const { slug } = useParams();
-  const product = mockProducts.find(p => p.slug === slug);
+
+  const { data: product, isLoading } = useQuery<ProductType>({
+    queryKey: ["product", slug],
+    queryFn: async () => {
+      const res = await fetch(`/api/products/${slug}`);
+      if (!res.ok) throw new Error("Product not found");
+      return res.json();
+    },
+    enabled: !!slug,
+    staleTime: 5 * 60 * 1000,
+  });
 
   useSEO({
     title: product?.name || "Product Not Found",
@@ -16,11 +27,16 @@ export default function Product() {
     image: product?.imageUrl
   });
 
-  if (!product) {
-    return <div className="min-h-screen flex items-center justify-center">Product not found. Please add content to app/content/products.ts.</div>;
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading gear intel...</div>;
   }
 
-  // Generate Schema Markup
+  if (!product) {
+    return <div className="min-h-screen flex items-center justify-center">Product not found.</div>;
+  }
+
+  const price = typeof product.price === 'string' ? parseFloat(product.price) : product.price;
+
   const schemaMarkup = {
     "@context": "https://schema.org/",
     "@type": "Product",
@@ -30,7 +46,7 @@ export default function Product() {
     "offers": {
       "@type": "Offer",
       "priceCurrency": "USD",
-      "price": product.price,
+      "price": price,
       "availability": "https://schema.org/InStock"
     }
   };
@@ -40,9 +56,13 @@ export default function Product() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }} />
       
       <div className="max-w-[1200px] mx-auto px-4 md:px-6">
-        <Link href="/" className="inline-flex items-center text-primary hover:text-primary/80 mb-8 font-medium">
-          <ChevronLeft className="w-4 h-4 mr-1" /> Back to Gear
-        </Link>
+        <Button 
+          variant="ghost" 
+          className="text-primary hover:text-primary/80 hover:bg-transparent px-0 mb-8 font-medium"
+          onClick={() => window.history.length > 1 ? window.history.back() : window.location.href = '/'}
+        >
+          <ChevronLeft className="w-4 h-4 mr-1" /> Back
+        </Button>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
           <div className="bg-card rounded-2xl overflow-hidden border border-border p-8 flex items-center justify-center aspect-square">
@@ -53,7 +73,7 @@ export default function Product() {
             <div>
               <span className="text-primary font-bold tracking-wider uppercase text-sm mb-2 block">{product.category}</span>
               <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">{product.name}</h1>
-              <p className="text-2xl font-bold text-foreground/80">${product.price.toFixed(2)}</p>
+              <p className="text-2xl font-bold text-foreground/80">${price.toFixed(2)}</p>
             </div>
             
             <p className="text-lg text-muted-foreground leading-relaxed">

@@ -1,12 +1,24 @@
 import { useParams } from "wouter";
 import { useSEO } from "@/hooks/useSEO";
-import { mockComparisons } from "@/content/comparisons";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, Trophy } from "lucide-react";
 import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
+import type { Comparison as ComparisonType } from "@shared/schema";
 
 export default function Comparison() {
   const { slug } = useParams();
-  const comparison = mockComparisons.find(c => c.slug === slug);
+
+  const { data: comparison, isLoading } = useQuery<ComparisonType>({
+    queryKey: ["comparison", slug],
+    queryFn: async () => {
+      const res = await fetch(`/api/comparisons/${slug}`);
+      if (!res.ok) throw new Error("Comparison not found");
+      return res.json();
+    },
+    enabled: !!slug,
+    staleTime: 5 * 60 * 1000,
+  });
 
   useSEO({
     title: comparison?.title || "Comparison Guide Not Found",
@@ -14,16 +26,24 @@ export default function Comparison() {
     type: "article"
   });
 
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading comparison data...</div>;
+  }
+
   if (!comparison) {
-    return <div className="min-h-screen flex items-center justify-center">Comparison guide not found. Please add content to app/content/comparisons.ts.</div>;
+    return <div className="min-h-screen flex items-center justify-center">Comparison guide not found.</div>;
   }
 
   return (
     <article className="min-h-screen bg-background pt-24 pb-20">
       <div className="max-w-[800px] mx-auto px-4 md:px-6">
-        <Link href="/" className="inline-flex items-center text-primary hover:text-primary/80 mb-8 font-medium">
-          <ChevronLeft className="w-4 h-4 mr-1" /> Back to Guides
-        </Link>
+        <Button 
+          variant="ghost" 
+          className="text-primary hover:text-primary/80 hover:bg-transparent px-0 mb-8 font-medium"
+          onClick={() => window.history.length > 1 ? window.history.back() : window.location.href = '/'}
+        >
+          <ChevronLeft className="w-4 h-4 mr-1" /> Back
+        </Button>
         
         <span className="text-primary font-bold tracking-wider uppercase text-sm mb-4 block">Head-to-Head Comparison</span>
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight">{comparison.title}</h1>
@@ -44,15 +64,12 @@ export default function Comparison() {
         <div className="prose prose-invert prose-lg max-w-none">
           <h2>Products Compared</h2>
           <ul>
-            {comparison.products.map(p => (
+            {comparison.productSlugs.map(p => (
               <li key={p}>
                 <Link href={`/products/${p}`} className="text-primary hover:underline">{p.replace(/-/g, ' ')}</Link>
               </li>
             ))}
           </ul>
-          <p>
-            <em>Please feed the 8 comparison guides researched by ContentForger into `client/src/content/comparisons.ts` to see full content here.</em>
-          </p>
         </div>
       </div>
     </article>

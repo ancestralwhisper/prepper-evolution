@@ -19,6 +19,76 @@ const TikTokIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+function NewsletterForm() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setStatus("loading");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStatus("success");
+        setMessage(data.message);
+        setEmail("");
+      } else {
+        setStatus("error");
+        setMessage(data.message || "Something went wrong");
+      }
+    } catch {
+      setStatus("error");
+      setMessage("Failed to subscribe. Please try again.");
+    }
+  };
+
+  if (status === "success") {
+    return (
+      <div className="flex flex-col items-center gap-3 max-w-lg mx-auto">
+        <div className="flex items-center gap-2 text-white text-lg font-bold">
+          <CheckCircle2 className="w-6 h-6" /> You're in! Welcome to the briefing.
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-3 max-w-lg mx-auto">
+      <form className="flex flex-col sm:flex-row gap-3" onSubmit={handleSubmit}>
+        <Input 
+          type="email" 
+          placeholder="Enter your email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="h-14 bg-white border-white text-black placeholder:text-gray-500 focus-visible:ring-black shadow-inner flex-1 font-medium"
+          data-testid="input-newsletter-email"
+          required
+        />
+        <Button 
+          size="lg" 
+          className="h-14 bg-black hover:bg-black/80 text-white px-8 whitespace-nowrap shadow-xl uppercase font-bold tracking-wider" 
+          data-testid="button-newsletter-submit"
+          disabled={status === "loading"}
+        >
+          {status === "loading" ? "Subscribing..." : "Get Briefings"}
+        </Button>
+      </form>
+      {status === "error" && <p className="text-white/90 text-sm font-medium">{message}</p>}
+      <div className="flex flex-wrap justify-center sm:justify-start gap-4 text-sm text-white sm:pl-4 font-medium">
+        <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> No spam</span>
+        <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Unsubscribe anytime</span>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const { isDark, toggle } = useDarkMode();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -324,23 +394,7 @@ export default function Home() {
           <p className="text-white text-lg mb-10 max-w-2xl mx-auto drop-shadow-md font-medium">
             Get weekly gear reviews, field-tested strategies, and exclusive deals — straight to your inbox.
           </p>
-          <div className="flex flex-col gap-3 max-w-lg mx-auto">
-            <form className="flex flex-col sm:flex-row gap-3" onSubmit={(e) => e.preventDefault()}>
-              <Input 
-                type="email" 
-                placeholder="Enter your email address" 
-                className="h-14 bg-white border-white text-black placeholder:text-gray-500 focus-visible:ring-black shadow-inner flex-1 font-medium"
-                data-testid="input-newsletter-email"
-              />
-              <Button size="lg" className="h-14 bg-black hover:bg-black/80 text-white px-8 whitespace-nowrap shadow-xl uppercase font-bold tracking-wider" data-testid="button-newsletter-submit">
-                Get Briefings
-              </Button>
-            </form>
-            <div className="flex flex-wrap justify-center sm:justify-start gap-4 text-sm text-white sm:pl-4 font-medium">
-              <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> No spam</span>
-              <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Unsubscribe anytime</span>
-            </div>
-          </div>
+          <NewsletterForm />
         </div>
       </motion.section>
 
