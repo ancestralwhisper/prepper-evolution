@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook, Menu, X } from "lucide-react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
@@ -52,14 +53,14 @@ export default function Home() {
           {/* Nav Links */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             {['Preparedness', 'Overlanding', 'Camping', 'Gear Reviews', 'Skills & Strategy'].map((item) => (
-              <a 
+              <Link 
                 key={item} 
-                href={`#${item.toLowerCase().replace(/ /g, '-')}`}
+                href={`/category/${item.toLowerCase().replace(/ /g, '-')}`}
                 className="text-foreground/80 hover:text-primary transition-colors hover:underline decoration-primary underline-offset-4"
                 data-testid={`link-nav-${item.toLowerCase().replace(/ /g, '-')}`}
               >
                 {item}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -125,15 +126,15 @@ export default function Home() {
               
               <nav className="flex flex-col gap-6 flex-1">
                 {['Preparedness', 'Overlanding', 'Camping', 'Gear Reviews', 'Skills & Strategy'].map((item) => (
-                  <a 
+                  <Link 
                     key={item} 
-                    href={`#${item.toLowerCase().replace(/ /g, '-')}`}
+                    href={`/category/${item.toLowerCase().replace(/ /g, '-')}`}
                     className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors py-2"
                     onClick={() => setIsMenuOpen(false)}
                     data-testid={`link-mobile-nav-${item.toLowerCase().replace(/ /g, '-')}`}
                   >
                     {item}
-                  </a>
+                  </Link>
                 ))}
               </nav>
               
@@ -231,9 +232,9 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-display font-semibold mb-3 group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
                 <p className="text-muted-foreground mb-6 flex-grow">{feature.desc}</p>
-                <a href="#" className="inline-flex items-center text-primary font-medium group-hover:tracking-wide transition-all duration-300 mt-auto">
+                <Link href="/category/skills-&-strategy" className="inline-flex items-center text-primary font-medium group-hover:tracking-wide transition-all duration-300 mt-auto">
                   Learn more <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
-                </a>
+                </Link>
               </motion.div>
             ))}
           </div>
@@ -380,10 +381,10 @@ export default function Home() {
                   'Vehicle Armor & Security Modifications', 
                   'EMP Protection Myths & Realities'
                 ].map((guide, i) => (
-                  <a key={i} href="#" className="flex items-center justify-between p-4 rounded-xl bg-background hover:border-primary/50 border border-transparent transition-colors group" data-testid={`link-guide-${i}`}>
+                  <Link key={i} href="/category/skills-&-strategy" className="flex items-center justify-between p-4 rounded-xl bg-background hover:border-primary/50 border border-transparent transition-colors group" data-testid={`link-guide-${i}`}>
                     <span className="font-medium group-hover:text-primary transition-colors">{guide}</span>
                     <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
-                  </a>
+                  </Link>
                 ))}
               </div>
             </motion.div>

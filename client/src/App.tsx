@@ -6,6 +6,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AnimatePresence, motion } from "framer-motion";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
+import Article from "@/pages/Article";
+import Product from "@/pages/Product";
+import Comparison from "@/pages/Comparison";
+import Category from "@/pages/Category";
 
 function Router() {
   const [location] = useLocation();
@@ -22,6 +26,10 @@ function Router() {
       >
         <Switch location={location}>
           <Route path="/" component={Home} />
+          <Route path="/articles/:slug" component={Article} />
+          <Route path="/products/:slug" component={Product} />
+          <Route path="/comparisons/:slug" component={Comparison} />
+          <Route path="/category/:name" component={Category} />
           <Route component={NotFound} />
         </Switch>
       </motion.div>
