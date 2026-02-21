@@ -1,0 +1,147 @@
+Replace the placeholder data in client/src/content/products.ts with this real product data. Keep the same TypeScript structure you created but use this content:
+
+  PRODUCTS (Amazon affiliate tag: prepperevo-20):
+
+  1. LifeStraw Personal Water Filter
+     - Price: $17.97
+     - URL: https://www.amazon.com/dp/B006QF3TW4?tag=prepperevo-20
+     - Category: Water Purification
+     - Description: Filters up to 1,000 gallons, removes 99.99% of bacteria
+
+  2. Sawyer Squeeze Water Filter
+     - Price: $37.95
+     - URL: https://www.amazon.com/dp/B00B1OSU4W?tag=prepperevo-20
+     - Category: Water Purification
+     - Description: Filters up to 100,000 gallons, lightweight and versatile
+
+  3. Berkey Water Filter (Big Berkey)
+     - Price: $398.00
+     - URL: https://www.amazon.com/dp/B00BWIWZ7M?tag=prepperevo-20
+     - Category: Water Purification
+     - Description: Gravity-fed, purifies up to 6,000 gallons, home base essential
+
+  4. EcoFlow DELTA 2 Max
+     - Price: $1,599.00
+     - URL: https://www.amazon.com/dp/B0BX57LMY4?tag=prepperevo-20
+     - Category: Power & Energy
+     - Description: 2048Wh LiFePO4, powers everything from fridges to power tools
+
+  5. Jackery Explorer 1000 Plus
+     - Price: $1,099.00
+     - URL: https://www.amazon.com/dp/B0CG5BP68F?tag=prepperevo-20
+     - Category: Power & Energy
+     - Description: 1264Wh expandable to 5kWh, LiFePO4, solar ready
+
+  6. Bluetti AC200MAX
+     - Price: $1,599.00
+     - URL: https://www.amazon.com/dp/B09P2JD3SR?tag=prepperevo-20
+     - Category: Power & Energy
+     - Description: 2048Wh expandable, dual charging, LiFePO4
+
+  7. iKamper Skycamp 3.0
+     - Price: $4,899.00
+     - URL: https://www.amazon.com/dp/B0C1J4NYRL?tag=prepperevo-20
+     - Category: Shelter & Sleep Systems
+     - Description: Hard-shell rooftop tent, sleeps 2-3, sets up in 1 minute
+
+  8. Roofnest Falcon 2
+     - Price: $3,495.00
+     - URL: https://www.amazon.com/dp/B0CKV16CKZ?tag=prepperevo-20
+     - Category: Shelter & Sleep Systems
+     - Description: Clamshell hard-shell, sleeps 2, all-season capable
+
+  9. ARB Simpson III Rooftop Tent
+     - Price: $1,795.00
+     - URL: https://www.amazon.com/dp/B01FHBXM2E?tag=prepperevo-20
+     - Category: Shelter & Sleep Systems
+     - Description: Soft-shell classic, sleeps 2, budget overlanding pick
+
+  10. Garmin inReach Mini 2
+      - Price: $399.99
+      - URL: https://www.amazon.com/dp/B09X49GPS1?tag=prepperevo-20
+      - Category: Navigation & Communication
+      - Description: Satellite messenger, SOS, GPS tracking, two-way texting
+
+  11. Baofeng UV-5R
+      - Price: $25.99
+      - URL: https://www.amazon.com/dp/B0CPK8GYWG?tag=prepperevo-20
+      - Category: Navigation & Communication
+      - Description: Dual-band ham radio, budget emergency comms starter
+
+  12. Midland GXT1000VP4
+      - Price: $69.99
+      - URL: https://www.amazon.com/dp/B001WMFYH4?tag=prepperevo-20
+      - Category: Navigation & Communication
+      - Description: 36-mile GMRS radio pair, no license hassle, weather alerts
+
+  13. Solo Stove Ranger 2.0
+      - Price: $199.99
+      - URL: https://www.amazon.com/dp/B0CH7YYXZC?tag=prepperevo-20
+      - Category: Food & Cooking
+      - Description: Smokeless fire pit, double-wall airflow, portable
+
+  14. Camp Chef Explorer 2X
+      - Price: $199.99
+      - URL: https://www.amazon.com/dp/B003ZQ6NME?tag=prepperevo-20
+      - Category: Food & Cooking
+      - Description: Two-burner propane stove, 30,000 BTU per burner, base camp cooking
+
+  15. BioLite CampStove 2+
+      - Price: $149.95
+      - URL: https://www.amazon.com/dp/B09JQPBJNF?tag=prepperevo-20
+      - Category: Food & Cooking
+      - Description: Burns wood, charges devices via thermoelectric, 5V USB output
+
+  16. Dometic CFX3 55IM
+      - Price: $1,299.00
+      - URL: https://www.amazon.com/dp/B08RDG4HQZ?tag=prepperevo-20
+      - Category: Overlanding Vehicles
+      - Description: 53L powered cooler with ice maker, runs on 12V/120V
+
+  17. ARB Classic Series II Fridge 50qt
+      - Price: $1,099.00
+      - URL: https://www.amazon.com/dp/B07DVBJPGB?tag=prepperevo-20
+      - Category: Overlanding Vehicles
+      - Description: 50-quart, built like a tank, vibration-resistant for off-road
+
+  18. MOLLE II Rucksack
+      - Price: $89.99
+      - URL: https://www.amazon.com/dp/B008SM0XSI?tag=prepperevo-20
+      - Category: Bug Out & Emergency
+      - Description: Military surplus 72hr pack, modular, battle-proven
+
+  19. 5.11 Tactical RUSH72
+      - Price: $199.99
+      - URL: https://www.amazon.com/dp/B005AG3R0C?tag=prepperevo-20
+      - Category: Bug Out & Emergency
+      - Description: 55L bug-out bag, MOLLE webbing, hydration compatible
+
+  20. Mora Companion HD
+      - Price: $16.99
+      - URL: https://www.amazon.com/dp/B009O014RG?tag=prepperevo-20
+      - Category: Survival Tools & Knives
+      - Description: Carbon steel, Scandi grind, best budget survival knife period
+
+  21. ESEE 4
+      - Price: $134.95
+      - URL: https://www.amazon.com/dp/B001DZZJ6C?tag=prepperevo-20
+      - Category: Survival Tools & Knives
+      - Description: 1095 carbon steel, bombproof, lifetime no-questions warranty
+
+  22. Benchmade Bugout 535
+      - Price: $183.00
+      - URL: https://www.amazon.com/dp/B06XKNF38D?tag=prepperevo-20
+      - Category: Survival Tools & Knives
+      - Description: Ultralight EDC folder, 1.85oz, CPM-S30V blade
+
+  23. Renogy 200W Portable Solar Panel
+      - Price: $299.99
+      - URL: https://www.amazon.com/dp/B0B5PSSCFY?tag=prepperevo-20
+      - Category: Power & Energy
+      - Description: Foldable suitcase design, pairs with any power station
+
+  24. Goal Zero Yeti 1000 Core
+      - Price: $999.95
+      - URL: https://www.amazon.com/dp/B0BF3V6VDV?tag=prepperevo-20
+      - Category: Power & Energy
+      - Description: 983Wh, reliable brand, integrates with Goal Zero solar panels
