@@ -1,0 +1,40 @@
+Connect this site to my WordPress REST API as a headless CMS for all article/blog content. Here are the details:
+
+  API BASE URL: https://prepperevolution.com/wp-json/wp/v2
+
+  WHAT TO FETCH:
+  - Posts: /posts (articles, gear reviews, comparison guides)
+  - Categories: /categories
+  - Pages: /pages
+
+  ARTICLE PAGES:
+  - Create a dynamic route at /articles/[slug] that fetches individual posts by slug
+  - Create an article index page at /articles that lists all posts with thumbnails, titles, excerpts, and category badges
+  - Fetch posts with ?_embed to get featured images and category names in one request
+  - Support pagination (10 posts per page, load more or numbered pages)
+
+  ARTICLE DISPLAY:
+  - Render WordPress post content (it comes as HTML) safely
+  - Show: title, featured image, author, date, categories, full content
+  - Add table of contents for long articles (parse h2/h3 headings)
+  - Related articles section at the bottom (same category)
+
+  CATEGORY FILTERING:
+  - /articles?category=overlanding should filter by category
+  - Categories: Preparedness, Overlanding, Camping, Gear Reviews, Skills & Strategy, Water Purification, Power & Energy, Shelter & Sleep Systems, Navigation & Communication, Food
+  & Cooking, Overlanding Vehicles, Bug Out & Emergency, Survival Tools & Knives, Hygiene & First Aid, Comparison Guides
+
+  SEO FOR EACH ARTICLE:
+  - Use the post title as the page <title> and og:title
+  - Use the excerpt as meta description and og:description
+  - Use featured image as og:image
+  - Add article schema markup (JSON-LD)
+  - Generate /sitemap.xml that includes all WordPress posts
+
+  CACHING:
+  - Cache API responses for 5 minutes so the site stays fast
+  - When ContentForger publishes a new article to WordPress, it shows up on the site within 5 minutes automatically
+
+  STYLING:
+  - Match the existing site design (dark theme, same fonts and colors)
+  - Article content should have good typography: max-width 720px, comfortable line-height, styled blockquotes, code blocks, lists, and images

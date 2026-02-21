@@ -392,17 +392,6 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* 7. Trust Bar */}
-      <div className="border-y border-border bg-card py-10">
-        <div className="max-w-[1200px] mx-auto px-4 md:px-6">
-          <img 
-            src="/image_1771694563348.png" 
-            alt="Trusted by Outdoor Mag, Overland Bound, Prepper Daily, and Survivalist" 
-            className="w-full h-auto max-w-[800px] mx-auto opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500"
-          />
-        </div>
-      </div>
-
       {/* 8. Footer */}
       <footer className="bg-[#11111A] text-white/70 py-16">
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">
