@@ -107,14 +107,14 @@ export default function Home() {
               { title: "Overland Navigation", icon: Navigation, desc: "Find your way when the grid goes down." },
               { title: "Water Procurement", icon: Shield, desc: "Filtration, purification, and storage techniques." }
             ].map((feature, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-md transition-shadow" data-testid={`card-feature-${i}`}>
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <feature.icon className="w-6 h-6 text-primary" />
+              <div key={i} className="group p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-xl hover:border-primary/50 hover:-translate-y-2 transition-all duration-300 cursor-pointer flex flex-col h-full" data-testid={`card-feature-${i}`}>
+                <div className="w-12 h-12 rounded-lg bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-6 transition-colors duration-300">
+                  <feature.icon className="w-6 h-6 text-primary group-hover:scale-110 transition-transform duration-300" />
                 </div>
-                <h3 className="text-xl font-display font-semibold mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.desc}</p>
-                <a href="#" className="inline-flex items-center mt-4 text-primary font-medium hover:underline underline-offset-4">
-                  Learn more <ChevronRight className="w-4 h-4 ml-1" />
+                <h3 className="text-xl font-display font-semibold mb-3 group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
+                <p className="text-muted-foreground mb-6 flex-grow">{feature.desc}</p>
+                <a href="#" className="inline-flex items-center text-primary font-medium group-hover:tracking-wide transition-all duration-300 mt-auto">
+                  Learn more <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
                 </a>
               </div>
             ))}
