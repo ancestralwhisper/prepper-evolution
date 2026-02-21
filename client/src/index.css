@@ -24,32 +24,34 @@
 }
 
 :root {
-  --background: 60 10% 96%; 
-  --foreground: 0 0% 12%; 
-  --primary: 85 40% 30%; /* Olive Drab */
-  --primary-foreground: 0 0% 100%;
-  --border: 60 5% 85%;
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 12%;
-  --muted: 60 5% 90%;
-  --muted-foreground: 0 0% 45%;
-  --accent: 60 5% 90%;
-  --accent-foreground: 0 0% 12%;
+  /* Earthy Light Mode */
+  --background: 35 25% 96%; /* Sand / Warm Off-White */
+  --foreground: 30 15% 15%; /* Deep Espresso */
+  --primary: 15 45% 45%;    /* Terracotta / Rust */
+  --primary-foreground: 35 25% 96%;
+  --border: 35 20% 85%;     /* Warm Gray / Beige */
+  --card: 35 30% 98%;       /* Slightly lighter sand */
+  --card-foreground: 30 15% 15%;
+  --muted: 35 20% 90%;      /* Taupe */
+  --muted-foreground: 30 10% 45%;
+  --accent: 35 20% 90%;
+  --accent-foreground: 30 15% 15%;
   --radius: 0.5rem;
 }
 
 .dark {
-  --background: 0 0% 9%; /* Pure Charcoal */
-  --foreground: 0 0% 90%; 
-  --primary: 85 40% 40%; /* Lighter Olive Drab for dark mode */
-  --primary-foreground: 0 0% 100%;
-  --border: 0 0% 18%;
-  --card: 0 0% 12%; 
-  --card-foreground: 0 0% 90%;
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 60%;
-  --accent: 0 0% 18%;
-  --accent-foreground: 0 0% 90%;
+  /* Earthy Dark Mode */
+  --background: 30 12% 10%; /* Deep Warm Brown-Gray */
+  --foreground: 35 20% 88%; /* Soft Sand */
+  --primary: 15 45% 55%;    /* Brighter Terracotta for dark mode contrast */
+  --primary-foreground: 30 12% 10%;
+  --border: 30 10% 20%;     /* Dark Taupe */
+  --card: 30 12% 13%;       /* Slightly lighter deep brown */
+  --card-foreground: 35 20% 88%;
+  --muted: 30 10% 18%;      /* Medium Dark Taupe */
+  --muted-foreground: 35 15% 65%;
+  --accent: 30 10% 18%;
+  --accent-foreground: 35 20% 88%;
 }
 
 @layer base {
