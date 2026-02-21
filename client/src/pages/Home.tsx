@@ -106,8 +106,8 @@ export default function Home() {
       <section className="py-20 bg-background">
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Master The Essentials</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">Focus on the core pillars of survival and self-reliance.</p>
+            <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 uppercase tracking-tight">Master The Essentials</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto font-medium text-lg">Focus on the core pillars of survival and self-reliance.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -136,8 +136,8 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
             <div>
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Top Rated Gear</h2>
-              <p className="text-muted-foreground">Field-tested equipment we trust with our lives.</p>
+              <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 uppercase tracking-tight">Top Rated Gear</h2>
+              <p className="text-muted-foreground font-medium text-lg">Field-tested equipment we trust with our lives.</p>
             </div>
             <Button variant="outline" className="hidden md:flex" data-testid="button-view-all-reviews-desktop">View All Reviews</Button>
           </div>
@@ -168,13 +168,13 @@ export default function Home() {
       </section>
 
       {/* 5. Lead Capture */}
-      <section className="py-24 relative overflow-hidden bg-[#1A1A1A] dark:bg-[#0D0D0D]">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10"></div>
+      <section className="py-24 relative overflow-hidden bg-primary dark:bg-primary">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
         <div className="relative z-10 max-w-[800px] mx-auto px-4 md:px-6 text-center">
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6 drop-shadow-sm">
+          <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6 drop-shadow-md uppercase tracking-wider">
             Don't Wait Until It's Too Late
           </h2>
-          <p className="text-white/80 text-lg mb-10 max-w-2xl mx-auto drop-shadow-sm">
+          <p className="text-white text-lg mb-10 max-w-2xl mx-auto drop-shadow-md font-medium">
             Join 50,000+ preppers receiving our weekly intelligence briefings, gear discounts, and survival strategies.
           </p>
           <div className="flex flex-col gap-3 max-w-lg mx-auto">
@@ -182,14 +182,14 @@ export default function Home() {
               <Input 
                 type="email" 
                 placeholder="Enter your email address" 
-                className="h-14 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-primary shadow-inner flex-1"
+                className="h-14 bg-white border-white text-black placeholder:text-gray-500 focus-visible:ring-black shadow-inner flex-1 font-medium"
                 data-testid="input-newsletter-email"
               />
-              <Button size="lg" className="h-14 bg-primary hover:bg-primary/90 text-primary-foreground px-8 whitespace-nowrap shadow-md" data-testid="button-newsletter-submit">
+              <Button size="lg" className="h-14 bg-black hover:bg-black/80 text-white px-8 whitespace-nowrap shadow-xl uppercase font-bold tracking-wider" data-testid="button-newsletter-submit">
                 Get Briefings
               </Button>
             </form>
-            <div className="flex flex-wrap justify-center sm:justify-start gap-4 text-sm text-white/70 sm:pl-4">
+            <div className="flex flex-wrap justify-center sm:justify-start gap-4 text-sm text-white sm:pl-4 font-medium">
               <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> No spam</span>
               <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Unsubscribe anytime</span>
             </div>
@@ -200,7 +200,7 @@ export default function Home() {
       {/* 6. Latest Articles */}
       <section className="py-20 bg-background">
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-12">Field Notes & Intel</h2>
+          <h2 className="text-3xl md:text-5xl font-display font-bold mb-12 uppercase tracking-tight">Field Notes & Intel</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="space-y-8">
               {[
