@@ -1,18 +1,17 @@
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
-import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook, Menu, X } from "lucide-react";
+import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook, Menu, X, RefreshCw } from "lucide-react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDarkMode } from "@/hooks/useDarkMode";
+import { useQuery } from "@tanstack/react-query";
+import { fetchLatestPosts } from "@/lib/wp";
 
 import heroBg from "@/assets/images/hero-bg.png";
 import gearBackpack from "@/assets/images/gear-backpack.png";
 import gearKnife from "@/assets/images/gear-knife.png";
 import gearFilter from "@/assets/images/gear-filter.png";
-import articleWinter from "@/assets/images/article-winter.png";
-import articleComms from "@/assets/images/article-comms.png";
-import articleFood from "@/assets/images/article-food.png";
 
 const TikTokIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -28,26 +27,12 @@ export default function Home() {
   const { scrollY } = useScroll();
   const [isMobile, setIsMobile] = useState(false);
   
-  const [latestPosts, setLatestPosts] = useState<{title: string, link: string}[]>([]);
-  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch('https://prepperevolution.com/wp-json/wp/v2/posts?per_page=3');
-        const data = await res.json();
-        setLatestPosts(data.map((post: any) => ({
-          title: post.title.rendered,
-          link: post.link
-        })));
-      } catch (err) {
-        console.error('Failed to fetch posts:', err);
-      } finally {
-        setIsLoadingPosts(false);
-      }
-    };
-    fetchPosts();
-  }, []);
+  const { data: latestPosts, isLoading: isLoadingPosts, refetch, isFetching } = useQuery({
+    queryKey: ["wp-latest-posts"],
+    queryFn: () => fetchLatestPosts(3),
+    staleTime: 2 * 60 * 1000,
+    refetchOnWindowFocus: true,
+  });
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -361,65 +346,79 @@ export default function Home() {
         className="py-20 bg-background"
       >
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">
-          <h2 className="text-3xl md:text-5xl font-display font-bold mb-12 uppercase tracking-tight">Field Notes & Intel</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div className="space-y-8">
-              {[
-                { title: "Winter Overlanding: 10 Critical Upgrades", image: articleWinter }, 
-                { title: "Comms Down: Building a Local Radio Network", image: articleComms }, 
-                { title: "Food Storage Rotation Methods That Work", image: articleFood }
-              ].map((article, i) => (
-                <motion.div 
-                  key={i} 
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.3, delay: i * 0.1 }}
-                  className="flex gap-6 group cursor-pointer border-b border-border/50 pb-8 last:border-0 last:pb-0" 
-                  data-testid={`card-article-${i}`}
-                >
-                  <div className="w-24 h-24 md:w-32 md:h-24 rounded-lg bg-muted flex-shrink-0 overflow-hidden relative">
-                    <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  </div>
-                  <div>
-                    <div className="text-xs text-primary font-bold uppercase tracking-wider mb-2">Strategy</div>
-                    <h3 className="text-lg font-bold font-display group-hover:text-primary transition-colors leading-snug">
-                      {article.title}
-                    </h3>
-                  </div>
-                </motion.div>
-              ))}
+          <div className="flex items-center justify-between mb-12">
+            <div className="flex items-center gap-3">
+              <h2 className="text-3xl md:text-5xl font-display font-bold uppercase tracking-tight">Latest Articles</h2>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => refetch()} 
+                disabled={isFetching}
+                className="rounded-full"
+                title="Refresh articles"
+              >
+                <RefreshCw className={`w-5 h-5 ${isFetching ? 'animate-spin' : ''}`} />
+              </Button>
             </div>
-            
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4 }}
-              className="bg-card rounded-2xl p-8 border border-border shadow-sm flex flex-col h-full"
-            >
-              <h3 className="text-2xl font-display font-bold mb-4">Latest Articles</h3>
-              <p className="text-muted-foreground mb-6">Stay up to date with our newest field notes, reviews, and strategies from the community.</p>
-              <div className="space-y-3 flex-1 flex flex-col justify-center">
-                {isLoadingPosts ? (
-                  <div className="space-y-4">
-                    {[1, 2, 3].map(i => (
-                      <div key={i} className="h-16 bg-muted rounded-xl animate-pulse"></div>
-                    ))}
-                  </div>
-                ) : latestPosts.length > 0 ? (
-                  latestPosts.map((post, i) => (
-                    <a key={i} href={post.link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 rounded-xl bg-background hover:border-primary/50 border border-transparent transition-colors group" data-testid={`link-latest-article-${i}`}>
-                      <span className="font-medium group-hover:text-primary transition-colors line-clamp-2 pr-4" dangerouslySetInnerHTML={{ __html: post.title }} />
-                      <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary shrink-0" />
-                    </a>
-                  ))
-                ) : (
-                  <p className="text-sm text-muted-foreground italic">No articles found.</p>
-                )}
-              </div>
-            </motion.div>
+            <Link href="/articles" className="hidden md:flex items-center text-primary font-medium hover:underline underline-offset-4">
+              View All <ChevronRight className="w-4 h-4 ml-1" />
+            </Link>
           </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {isLoadingPosts ? (
+              [1, 2, 3].map(i => (
+                <div key={i} className="bg-card rounded-2xl h-[400px] animate-pulse border border-border"></div>
+              ))
+            ) : latestPosts && latestPosts.length > 0 ? (
+              latestPosts.map((post: any, i: number) => {
+                const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09";
+                const category = post._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized";
+                const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                });
+                
+                return (
+                  <Link key={i} href={`/articles/${post.slug}`} className="group block h-full">
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-50px" }}
+                      transition={{ duration: 0.3, delay: i * 0.1 }}
+                      className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-300 h-full flex flex-col"
+                      data-testid={`card-latest-article-${i}`}
+                    >
+                      <div className="aspect-video relative overflow-hidden bg-muted">
+                        <img src={featuredImage} alt={post.title.rendered} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold uppercase tracking-wider text-foreground">
+                          {category}
+                        </div>
+                      </div>
+                      <div className="p-6 flex-1 flex flex-col">
+                        <span className="text-xs text-muted-foreground font-medium mb-2">{formattedDate}</span>
+                        <h3 className="text-xl font-display font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+                        <div className="text-muted-foreground mb-6 flex-1 line-clamp-2 prose prose-invert prose-p:my-0 text-sm" dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} />
+                        <span className="inline-flex items-center text-primary font-medium group-hover:tracking-wide transition-all mt-auto">
+                          Read <ChevronRight className="w-4 h-4 ml-1" />
+                        </span>
+                      </div>
+                    </motion.div>
+                  </Link>
+                );
+              })
+            ) : (
+              <div className="col-span-3 text-center py-20 bg-card rounded-2xl border border-border border-dashed">
+                <h3 className="text-2xl font-display font-bold mb-2">No Articles Found</h3>
+                <p className="text-muted-foreground">Check back soon for new content.</p>
+              </div>
+            )}
+          </div>
+          
+          <Button variant="outline" className="w-full mt-8 md:hidden" asChild>
+            <Link href="/articles">View All Articles</Link>
+          </Button>
         </div>
       </motion.section>
 

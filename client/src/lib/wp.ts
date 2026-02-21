@@ -21,7 +21,7 @@ export interface WPCategory {
 }
 
 export async function fetchPosts(page = 1, categoryId?: number): Promise<{ posts: WPPost[], totalPages: number }> {
-  let url = `${WP_API_URL}/posts?_embed&per_page=10&page=${page}`;
+  let url = `${WP_API_URL}/posts?_embed&per_page=10&page=${page}&status=publish&orderby=date&order=desc`;
   if (categoryId) {
     url += `&categories=${categoryId}`;
   }
@@ -33,6 +33,13 @@ export async function fetchPosts(page = 1, categoryId?: number): Promise<{ posts
   const posts = await res.json();
   
   return { posts, totalPages };
+}
+
+export async function fetchLatestPosts(limit = 3): Promise<WPPost[]> {
+  const url = `${WP_API_URL}/posts?_embed&per_page=${limit}&status=publish&orderby=date&order=desc`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Failed to fetch latest posts");
+  return await res.json();
 }
 
 export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
