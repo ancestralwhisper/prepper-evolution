@@ -1,0 +1,38 @@
+Build a complete single-page landing website for "Prepper Evolution" – a modern preparedness site for preppers, overlanders, and outdoor enthusiasts. Use React with Tailwind CSS for styling, make it fully responsive (mobile-first, desktop 1200px max-width centered), fast-loading, and deployable.
+
+Key feature: Implement light/dark mode with a toggle in the header that respects the user's native system preference (prefers-color-scheme) by default, but allows manual override. Use Tailwind's dark mode with 'class' strategy (add 'dark' class to <html> or <body>), detect system preference with window.matchMedia('(prefers-color-scheme: dark)'), persist user choice in localStorage, and sync it on load. Default to system preference if no stored choice. Include a sun/moon icon toggle button in the top-right header that switches modes smoothly.
+
+Exact layout and content (match reference https://prep-evolve-wise.lovable.app/ as closely as possible):
+
+1. Sticky Header (adapts bg/text to light/dark):
+   - Left: Logo text "Prepper Evolution" (bold, gold/orange accent in light, lighter in dark).
+   - Center: Nav links: Preparedness, Overlanding, Camping, Gear Reviews, Skills & Strategy (hover orange underline).
+   - Right: Light/dark toggle icon (sun for light, moon for dark; clickable to switch), and small "Start Here" button.
+
+2. Hero Section (full-width, dark #1A1A2E bg in dark mode, light sand/off-white in light mode, min-height 80vh, centered):
+   - Headline: "Adapt. Prepare. Evolve." (large, bold, white in dark, dark text in light).
+   - Subheadline: "Expert gear reviews, field-tested guides, and strategies that actually work — for preppers, overlanders, and anyone who refuses to be caught off guard." (muted white in dark, dark gray in light).
+   - Two buttons (flex row, centered, gap-4, wrap mobile):
+     - Primary "Start Here": orange bg (#D46A2E), white text, hover darker orange/scale/shadow.
+     - Secondary "Browse Gear Reviews": transparent bg, white border in dark (gray border in light), hover subtle fill.
+   - Social proof: "Trusted by thousands of preppers and overlanders since 2025" (small muted text).
+
+3–8. Rest of sections (adapt colors to light/dark automatically via Tailwind dark: variants):
+   - Featured Content (light bg in light mode, darker in dark).
+   - Best Of Picks strip.
+   - Lead Capture (dark green bg in both, but text/shadows adapt).
+   - Latest Articles grid.
+   - Trust Bar.
+   - Footer (dark charcoal, light text).
+
+Tech stack & requirements:
+- React (Vite or Create React App setup).
+- Tailwind CSS (configure darkMode: 'class' in tailwind.config.js for manual toggle + system sync).
+- Use localStorage to persist user theme choice.
+- Smooth transitions: transition-all duration-300 on theme changes.
+- Semantic HTML, SEO-friendly (meta tags, alt text placeholders).
+- Deploy-ready with Replit hosting.
+
+Implement dark mode logic first (useEffect to check system preference and localStorage on mount, toggle function to flip class and save). Then build the layout with Tailwind dark: prefixes for dark mode styles (e.g., dark:bg-gray-900, dark:text-white).
+
+Start building step-by-step: set up project + Tailwind + dark mode hook → header with toggle → hero → remaining sections. Once done, provide preview link and code overview.
