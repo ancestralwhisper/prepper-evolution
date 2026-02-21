@@ -376,7 +376,10 @@ export default function Home() {
                           <img src={featuredImage} alt={post.title.rendered} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                         </div>
                         <div className="flex-1">
-                          <div className="text-xs text-primary font-bold uppercase tracking-wider mb-2">{category}</div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-xs text-primary font-bold uppercase tracking-wider">{category}</span>
+                            <span className="text-xs text-muted-foreground font-medium">• {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                          </div>
                           <h3 className="text-lg font-bold font-display group-hover:text-primary transition-colors leading-snug line-clamp-2" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                         </div>
                       </motion.div>
