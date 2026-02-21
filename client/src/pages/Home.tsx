@@ -185,12 +185,12 @@ export default function Home() {
             <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all text-lg h-14 px-8" data-testid="button-hero-start">
               Start Here <ChevronRight className="ml-2 w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent border-foreground/30 hover:bg-foreground/5 dark:border-white/30 dark:hover:bg-white/10 text-foreground text-lg h-14 px-8 backdrop-blur-sm" data-testid="button-hero-browse">
+            <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/10 border-white/30 hover:bg-white/20 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all text-lg h-14 px-8 backdrop-blur-sm" data-testid="button-hero-browse">
               Browse Gear Reviews
             </Button>
           </div>
           
-          <p className="mt-8 text-sm text-foreground/70 font-medium tracking-wide uppercase flex items-center justify-center gap-2">
+          <p className="mt-8 text-sm text-white/70 font-medium tracking-wide uppercase flex items-center justify-center gap-2">
             <Shield className="w-4 h-4 text-primary" />
             Trusted by thousands of preppers and overlanders since 2025
           </p>
