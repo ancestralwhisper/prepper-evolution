@@ -80,8 +80,8 @@ export default function Home() {
             data-testid="img-hero-bg"
           />
           {/* Gradient overlays to ensure text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-background/75 via-background/55 to-background/75 dark:from-[#1A1A2E]/75 dark:via-[#1A1A2E]/55 dark:to-[#1A1A2E]/80"></div>
-          <div className="absolute inset-0 bg-black/0 dark:bg-black/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 dark:from-background/80 dark:via-background/60 dark:to-background/80"></div>
+          <div className="absolute inset-0 bg-black/20 dark:bg-black/40"></div>
         </motion.div>
 
         <motion.div 
@@ -90,10 +90,10 @@ export default function Home() {
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           className="relative z-10 max-w-[1200px] mx-auto px-4 md:px-6 flex flex-col items-center text-center"
         >
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold uppercase tracking-tight text-foreground drop-shadow-sm mb-6" data-testid="text-hero-headline">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold uppercase tracking-tight text-white drop-shadow-sm mb-6" data-testid="text-hero-headline">
             Adapt. Prepare. <span className="text-primary">Evolve.</span>
           </h1>
-          <p className="max-w-2xl text-lg md:text-xl text-foreground/90 mb-10 drop-shadow-md" data-testid="text-hero-subheadline">
+          <p className="max-w-2xl text-lg md:text-xl text-white/90 mb-10 drop-shadow-md" data-testid="text-hero-subheadline">
             Expert gear reviews, field-tested guides, and strategies that actually work — for preppers, overlanders, and anyone who refuses to be caught off guard.
           </p>
           

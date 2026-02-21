@@ -41,8 +41,25 @@
   --radius: 0.15rem; /* Modern, sharper corners */
 }
 
+.light {
+  /* Light mode variant of the theme */
+  --background: 30 20% 98%; /* Very light off-white */
+  --foreground: 0 0% 10%; /* Near black text */
+  --primary: 22 65% 50%; /* #D46A2D Primary burnt orange */
+  --primary-foreground: 30 33% 94%; /* Light text for contrast */
+  --border: 30 10% 85%;
+  --card: 0 0% 100%; /* Pure white cards */
+  --card-foreground: 0 0% 10%;
+  --muted: 30 10% 92%;
+  --muted-foreground: 0 0% 40%;
+  --accent: 35 47% 56%; /* #C4975A Accent muted gold */
+  --accent-foreground: 0 0% 10%;
+  --secondary: 123 17% 21%; /* #2C3E2D Secondary deep forest green */
+  --secondary-foreground: 30 33% 94%;
+}
+
 .dark {
-  /* Overland Event Dark Mode (Same as root for forced dark vibe) */
+  /* Dark Mode Explicit Colors */
   --background: 0 0% 10%;
   --foreground: 30 33% 94%;
   --primary: 22 65% 50%;
