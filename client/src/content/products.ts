@@ -52,7 +52,7 @@ export const mockProducts: Product[] = [
     price: 1599.00,
     category: "Power & Energy",
     imageUrl: "/images/product-ecoflow.png",
-    amazonLink: "https://www.amazon.com/dp/B0BX57LMY4?tag=prepperevo-20",
+    amazonLink: "https://amzn.to/4kQqKB1",
     features: ["2048Wh capacity", "LiFePO4 battery", "Heavy duty output"]
   },
   {
