@@ -40,7 +40,7 @@ export const mockProducts: Product[] = [
     description: "Gravity-fed, purifies up to 6,000 gallons, home base essential",
     price: 398.00,
     category: "Water Purification",
-    imageUrl: "https://images.unsplash.com/photo-1579208031023-d922bc9cba7d",
+    imageUrl: "/images/product-berkey.png",
     amazonLink: "https://www.amazon.com/dp/B00BWIWZ7M?tag=prepperevo-20",
     features: ["Gravity-fed", "6,000 gallon capacity", "Home base essential"]
   },
@@ -62,7 +62,7 @@ export const mockProducts: Product[] = [
     description: "1264Wh expandable to 5kWh, LiFePO4, solar ready",
     price: 1099.00,
     category: "Power & Energy",
-    imageUrl: "https://images.unsplash.com/photo-1620804796791-5360a0a52bd9",
+    imageUrl: "/images/product-jackery.png",
     amazonLink: "https://www.amazon.com/dp/B0CG5BP68F?tag=prepperevo-20",
     features: ["Expandable to 5kWh", "LiFePO4 battery", "Solar ready"]
   },
@@ -73,7 +73,7 @@ export const mockProducts: Product[] = [
     description: "2048Wh expandable, dual charging, LiFePO4",
     price: 1599.00,
     category: "Power & Energy",
-    imageUrl: "https://images.unsplash.com/photo-1620804797171-8b2b781878d3",
+    imageUrl: "/images/product-bluetti.png",
     amazonLink: "https://www.amazon.com/dp/B09P2JD3SR?tag=prepperevo-20",
     features: ["Expandable capacity", "Dual charging input", "LiFePO4 battery"]
   },
@@ -128,7 +128,7 @@ export const mockProducts: Product[] = [
     description: "Dual-band ham radio, budget emergency comms starter",
     price: 25.99,
     category: "Navigation & Communication",
-    imageUrl: "https://images.unsplash.com/photo-1616428751433-8c3ba9540b82",
+    imageUrl: "/images/product-baofeng.png",
     amazonLink: "https://www.amazon.com/dp/B0CPK8GYWG?tag=prepperevo-20",
     features: ["Dual-band", "Programmable", "Budget friendly"]
   },
@@ -150,7 +150,7 @@ export const mockProducts: Product[] = [
     description: "Smokeless fire pit, double-wall airflow, portable",
     price: 199.99,
     category: "Food & Cooking",
-    imageUrl: "https://images.unsplash.com/photo-1582216508933-28eb5ba34f9a",
+    imageUrl: "/images/product-solostove.png",
     amazonLink: "https://www.amazon.com/dp/B0CH7YYXZC?tag=prepperevo-20",
     features: ["Smokeless burn", "Double-wall design", "Portable"]
   },
@@ -172,7 +172,7 @@ export const mockProducts: Product[] = [
     description: "Burns wood, charges devices via thermoelectric, 5V USB output",
     price: 149.95,
     category: "Food & Cooking",
-    imageUrl: "https://images.unsplash.com/photo-1525013063544-24e5257dcce5",
+    imageUrl: "/images/product-biolite.png",
     amazonLink: "https://www.amazon.com/dp/B09JQPBJNF?tag=prepperevo-20",
     features: ["Wood burning", "Thermoelectric charging", "USB power output"]
   },
@@ -194,7 +194,7 @@ export const mockProducts: Product[] = [
     description: "50-quart, built like a tank, vibration-resistant for off-road",
     price: 1099.00,
     category: "Overlanding Vehicles",
-    imageUrl: "https://images.unsplash.com/photo-1595166299042-3e2b9c7b50ef",
+    imageUrl: "/images/product-arb-fridge.png",
     amazonLink: "https://www.amazon.com/dp/B07DVBJPGB?tag=prepperevo-20",
     features: ["50-quart capacity", "Vibration resistant", "Steel construction"]
   },
@@ -216,7 +216,7 @@ export const mockProducts: Product[] = [
     description: "55L bug-out bag, MOLLE webbing, hydration compatible",
     price: 199.99,
     category: "Bug Out & Emergency",
-    imageUrl: "https://images.unsplash.com/photo-1622285150997-6a17b0d77103",
+    imageUrl: "/images/product-rush72.png",
     amazonLink: "https://www.amazon.com/dp/B005AG3R0C?tag=prepperevo-20",
     features: ["55L capacity", "Hydration compatible", "Heavy duty nylon"]
   },
@@ -227,7 +227,7 @@ export const mockProducts: Product[] = [
     description: "Carbon steel, Scandi grind, best budget survival knife period",
     price: 16.99,
     category: "Survival Tools & Knives",
-    imageUrl: "https://images.unsplash.com/photo-1586523910543-1bc2d8d80f08",
+    imageUrl: "/images/product-mora.png",
     amazonLink: "https://www.amazon.com/dp/B009O014RG?tag=prepperevo-20",
     features: ["Carbon steel blade", "Scandi grind", "Ergonomic grip"]
   },
@@ -249,7 +249,7 @@ export const mockProducts: Product[] = [
     description: "Ultralight EDC folder, 1.85oz, CPM-S30V blade",
     price: 183.00,
     category: "Survival Tools & Knives",
-    imageUrl: "https://images.unsplash.com/photo-1629853966567-33ee4ceec946",
+    imageUrl: "/images/product-benchmade.png",
     amazonLink: "https://www.amazon.com/dp/B06XKNF38D?tag=prepperevo-20",
     features: ["1.85oz ultralight", "CPM-S30V steel", "AXIS lock mechanism"]
   },
@@ -271,7 +271,7 @@ export const mockProducts: Product[] = [
     description: "983Wh, reliable brand, integrates with Goal Zero solar panels",
     price: 999.95,
     category: "Power & Energy",
-    imageUrl: "https://images.unsplash.com/photo-1620804797089-32da5707bcf8",
+    imageUrl: "/images/product-goalzero.png",
     amazonLink: "https://www.amazon.com/dp/B0BF3V6VDV?tag=prepperevo-20",
     features: ["983Wh capacity", "Multiple port options", "Fast charging"]
   }
