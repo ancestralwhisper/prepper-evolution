@@ -27,6 +27,27 @@ export default function Home() {
   // Parallax setup
   const { scrollY } = useScroll();
   const [isMobile, setIsMobile] = useState(false);
+  
+  const [latestPosts, setLatestPosts] = useState<{title: string, link: string}[]>([]);
+  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch('https://prepperevolution.com/wp-json/wp/v2/posts?per_page=3');
+        const data = await res.json();
+        setLatestPosts(data.map((post: any) => ({
+          title: post.title.rendered,
+          link: post.link
+        })));
+      } catch (err) {
+        console.error('Failed to fetch posts:', err);
+      } finally {
+        setIsLoadingPosts(false);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -375,21 +396,27 @@ export default function Home() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4 }}
-              className="bg-card rounded-2xl p-8 border border-border shadow-sm"
+              className="bg-card rounded-2xl p-8 border border-border shadow-sm flex flex-col h-full"
             >
-              <h3 className="text-2xl font-display font-bold mb-4">Expert Guides Series</h3>
-              <p className="text-muted-foreground mb-6">Deep dives into complex preparedness topics, written by industry professionals and former military.</p>
-              <div className="space-y-3">
-                {[
-                  'The Complete Guide to Solar Generators', 
-                  'Vehicle Armor & Security Modifications', 
-                  'EMP Protection Myths & Realities'
-                ].map((guide, i) => (
-                  <Link key={i} href="/category/skills-&-strategy" className="flex items-center justify-between p-4 rounded-xl bg-background hover:border-primary/50 border border-transparent transition-colors group" data-testid={`link-guide-${i}`}>
-                    <span className="font-medium group-hover:text-primary transition-colors">{guide}</span>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
-                  </Link>
-                ))}
+              <h3 className="text-2xl font-display font-bold mb-4">Latest Articles</h3>
+              <p className="text-muted-foreground mb-6">Stay up to date with our newest field notes, reviews, and strategies from the community.</p>
+              <div className="space-y-3 flex-1 flex flex-col justify-center">
+                {isLoadingPosts ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className="h-16 bg-muted rounded-xl animate-pulse"></div>
+                    ))}
+                  </div>
+                ) : latestPosts.length > 0 ? (
+                  latestPosts.map((post, i) => (
+                    <a key={i} href={post.link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 rounded-xl bg-background hover:border-primary/50 border border-transparent transition-colors group" data-testid={`link-latest-article-${i}`}>
+                      <span className="font-medium group-hover:text-primary transition-colors line-clamp-2 pr-4" dangerouslySetInnerHTML={{ __html: post.title }} />
+                      <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary shrink-0" />
+                    </a>
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">No articles found.</p>
+                )}
               </div>
             </motion.div>
           </div>
