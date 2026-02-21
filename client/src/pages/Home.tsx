@@ -83,8 +83,8 @@ export default function Home() {
             >
               {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            <Button className="hidden md:inline-flex bg-primary hover:bg-primary/90 text-primary-foreground min-h-[44px]" data-testid="button-nav-start">
-              Start Here
+            <Button className="hidden md:inline-flex bg-primary hover:bg-primary/90 text-primary-foreground min-h-[44px]" data-testid="button-nav-start" asChild>
+              <Link href="/articles">Start Here</Link>
             </Button>
             
             {/* Mobile Menu Toggle */}
@@ -148,8 +148,8 @@ export default function Home() {
               </nav>
               
               <div className="mt-auto pt-8 border-t border-border">
-                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground min-h-[44px] text-lg" onClick={() => setIsMenuOpen(false)} data-testid="button-mobile-nav-start">
-                  Start Here
+                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground min-h-[44px] text-lg" onClick={() => setIsMenuOpen(false)} data-testid="button-mobile-nav-start" asChild>
+                  <Link href="/articles">Start Here</Link>
                 </Button>
               </div>
             </motion.div>
@@ -192,11 +192,15 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
-            <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all text-lg h-14 px-8" data-testid="button-hero-start">
-              Start Here <ChevronRight className="ml-2 w-5 h-5" />
+            <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all text-lg h-14 px-8" data-testid="button-hero-start" asChild>
+              <Link href="/articles">
+                Start Here <ChevronRight className="ml-2 w-5 h-5" />
+              </Link>
             </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/10 border-white/30 hover:bg-white/20 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all text-lg h-14 px-8 backdrop-blur-sm" data-testid="button-hero-browse">
-              Browse Gear Reviews
+            <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/10 border-white/30 hover:bg-white/20 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all text-lg h-14 px-8 backdrop-blur-sm" data-testid="button-hero-browse" asChild>
+              <Link href="/category/gear-reviews">
+                Browse Gear Reviews
+              </Link>
             </Button>
           </div>
           
@@ -223,9 +227,9 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: "Bug Out Bags", icon: Battery, desc: "Build the perfect 72-hour kit for any scenario." },
-              { title: "Overland Navigation", icon: Navigation, desc: "Find your way when the grid goes down." },
-              { title: "Water Procurement", icon: Shield, desc: "Filtration, purification, and storage techniques." }
+              { title: "Bug Out Bags", icon: Battery, desc: "Build the perfect 72-hour kit for any scenario.", link: "/category/preparedness" },
+              { title: "Overland Navigation", icon: Navigation, desc: "Find your way when the grid goes down.", link: "/category/overlanding" },
+              { title: "Water Procurement", icon: Shield, desc: "Filtration, purification, and storage techniques.", link: "/category/skills-&-strategy" }
             ].map((feature, i) => (
               <motion.div 
                 key={i} 
@@ -241,7 +245,7 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-display font-semibold mb-3 group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
                 <p className="text-muted-foreground mb-6 flex-grow">{feature.desc}</p>
-                <Link href="/category/skills-&-strategy" className="inline-flex items-center text-primary font-medium group-hover:tracking-wide transition-all duration-300 mt-auto">
+                <Link href={feature.link} className="inline-flex items-center text-primary font-medium group-hover:tracking-wide transition-all duration-300 mt-auto">
                   Learn more <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
               </motion.div>
@@ -264,7 +268,7 @@ export default function Home() {
               <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 uppercase tracking-tight">Top Rated Gear</h2>
               <p className="text-muted-foreground font-medium text-lg">Field-tested equipment we trust with our lives.</p>
             </div>
-            <Button variant="outline" className="hidden md:flex" data-testid="button-view-all-reviews-desktop">View All Reviews</Button>
+            <Button variant="outline" className="hidden md:flex" data-testid="button-view-all-reviews-desktop" asChild><Link href="/category/gear-reviews">View All Reviews</Link></Button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -297,7 +301,7 @@ export default function Home() {
               </Link>
             ))}
           </div>
-          <Button variant="outline" className="w-full mt-8 md:hidden" data-testid="button-view-all-reviews-mobile">View All Reviews</Button>
+          <Button variant="outline" className="w-full mt-8 md:hidden" data-testid="button-view-all-reviews-mobile" asChild><Link href="/category/gear-reviews">View All Reviews</Link></Button>
         </div>
       </motion.section>
 
@@ -492,20 +496,20 @@ export default function Home() {
               <div>
                 <h4 className="text-white font-bold mb-4 uppercase tracking-wider text-sm">Explore</h4>
                 <ul className="space-y-2">
-                  <li><a href="#" className="hover:text-primary transition-colors">Gear Reviews</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Overlanding</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Camping</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Skills</a></li>
+                  <li><Link href="/category/gear-reviews" className="hover:text-primary transition-colors">Gear Reviews</Link></li>
+                  <li><Link href="/category/overlanding" className="hover:text-primary transition-colors">Overlanding</Link></li>
+                  <li><Link href="/category/camping" className="hover:text-primary transition-colors">Camping</Link></li>
+                  <li><Link href="/category/skills-&-strategy" className="hover:text-primary transition-colors">Skills</Link></li>
                 </ul>
               </div>
               
               <div>
                 <h4 className="text-white font-bold mb-4 uppercase tracking-wider text-sm">Company</h4>
                 <ul className="space-y-2">
-                  <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
+                  <li><Link href="/" className="hover:text-primary transition-colors">About Us</Link></li>
+                  <li><Link href="/" className="hover:text-primary transition-colors">Contact</Link></li>
+                  <li><Link href="/" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+                  <li><Link href="/" className="hover:text-primary transition-colors">Terms of Service</Link></li>
                 </ul>
               </div>
             </div>
