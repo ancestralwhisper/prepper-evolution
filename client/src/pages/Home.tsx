@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook, Menu, X } from "lucide-react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDarkMode } from "@/hooks/useDarkMode";
@@ -21,6 +21,7 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 
 export default function Home() {
   const { isDark, toggle } = useDarkMode();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   // Parallax setup
   const { scrollY } = useScroll();
@@ -63,21 +64,88 @@ export default function Home() {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <button 
               onClick={toggle}
-              className="p-2 rounded-full hover:bg-muted transition-colors focus:outline-none"
+              className="p-3 md:p-2 rounded-full hover:bg-muted transition-colors focus:outline-none"
               aria-label="Toggle dark mode"
               data-testid="button-theme-toggle"
             >
               {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            <Button className="hidden sm:inline-flex bg-primary hover:bg-primary/90 text-primary-foreground" data-testid="button-nav-start">
+            <Button className="hidden md:inline-flex bg-primary hover:bg-primary/90 text-primary-foreground min-h-[44px]" data-testid="button-nav-start">
               Start Here
             </Button>
+            
+            {/* Mobile Menu Toggle */}
+            <button 
+              className="md:hidden p-3 rounded-full hover:bg-muted transition-colors focus:outline-none"
+              onClick={() => setIsMenuOpen(true)}
+              aria-label="Open menu"
+              data-testid="button-mobile-menu-open"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
           </div>
         </div>
       </header>
+
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[60] md:hidden"
+              onClick={() => setIsMenuOpen(false)}
+            />
+            <motion.div 
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 bottom-0 w-[300px] bg-card border-l border-border z-[70] p-6 shadow-2xl flex flex-col md:hidden"
+            >
+              <div className="flex justify-between items-center mb-8">
+                <span className="font-display font-bold text-lg tracking-wider uppercase">
+                  Menu
+                </span>
+                <button 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-3 rounded-full hover:bg-muted transition-colors"
+                  aria-label="Close menu"
+                  data-testid="button-mobile-menu-close"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              
+              <nav className="flex flex-col gap-6 flex-1">
+                {['Preparedness', 'Overlanding', 'Camping', 'Gear Reviews', 'Skills & Strategy'].map((item) => (
+                  <a 
+                    key={item} 
+                    href={`#${item.toLowerCase().replace(/ /g, '-')}`}
+                    className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                    data-testid={`link-mobile-nav-${item.toLowerCase().replace(/ /g, '-')}`}
+                  >
+                    {item}
+                  </a>
+                ))}
+              </nav>
+              
+              <div className="mt-auto pt-8 border-t border-border">
+                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground min-h-[44px] text-lg" onClick={() => setIsMenuOpen(false)} data-testid="button-mobile-nav-start">
+                  Start Here
+                </Button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* 2. Hero Section */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-background">
