@@ -193,7 +193,7 @@ export default function Home() {
           
           <p className="mt-8 text-sm text-white/70 font-medium tracking-wide uppercase flex items-center justify-center gap-2">
             <Shield className="w-4 h-4 text-primary" />
-            Trusted by thousands of preppers and overlanders since 2025
+            Trusted by thousands of preppers and overlanders since 2026
           </p>
         </motion.div>
       </section>
@@ -449,7 +449,7 @@ export default function Home() {
           </div>
           
           <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
-            <p>&copy; 2025 Prepper Evolution. All rights reserved.</p>
+            <p>&copy; 2026 Prepper Evolution. All rights reserved.</p>
             <p className="font-display tracking-widest uppercase text-xs font-bold text-white/50">Built for the resilient.</p>
           </div>
         </div>
