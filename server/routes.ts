@@ -99,14 +99,20 @@ export async function registerRoutes(
   // --- WordPress API Proxy ---
   app.get("/api/wp/posts", async (req, res) => {
     try {
-      const { page = "1", per_page = "10", categories, slug } = req.query;
+      const { page = "1", per_page = "10", categories, slug, search } = req.query;
       let url = `${WP_API_URL}/posts?_embed&per_page=${per_page}&page=${page}&status=publish&orderby=date&order=desc`;
       if (categories) url += `&categories=${categories}`;
       if (slug) url += `&slug=${slug}`;
+      if (search) url += `&search=${encodeURIComponent(String(search))}`;
 
-      const wpRes = await fetch(url);
-      if (!wpRes.ok) {
-        return res.status(wpRes.status).json({ message: "WordPress API error" });
+      const wpRes = await fetch(url, { signal: AbortSignal.timeout(10000) });
+      
+      const contentType = wpRes.headers.get("content-type") || "";
+      if (!wpRes.ok || !contentType.includes("application/json")) {
+        console.error(`WordPress API returned status ${wpRes.status}, content-type: ${contentType}`);
+        res.set("x-wp-totalpages", "0");
+        res.set("x-wp-total", "0");
+        return res.json([]);
       }
 
       const totalPages = wpRes.headers.get("x-wp-totalpages") || "1";
@@ -118,21 +124,25 @@ export async function registerRoutes(
       res.json(posts);
     } catch (error) {
       console.error("Error proxying WP posts:", error);
-      res.status(500).json({ message: "Failed to fetch posts" });
+      res.set("x-wp-totalpages", "0");
+      res.set("x-wp-total", "0");
+      res.json([]);
     }
   });
 
   app.get("/api/wp/categories", async (_req, res) => {
     try {
-      const wpRes = await fetch(`${WP_API_URL}/categories?per_page=100`);
-      if (!wpRes.ok) {
-        return res.status(wpRes.status).json({ message: "WordPress API error" });
+      const wpRes = await fetch(`${WP_API_URL}/categories?per_page=100`, { signal: AbortSignal.timeout(10000) });
+      
+      const contentType = wpRes.headers.get("content-type") || "";
+      if (!wpRes.ok || !contentType.includes("application/json")) {
+        return res.json([]);
       }
       const categories = await wpRes.json();
       res.json(categories);
     } catch (error) {
       console.error("Error proxying WP categories:", error);
-      res.status(500).json({ message: "Failed to fetch categories" });
+      res.json([]);
     }
   });
 

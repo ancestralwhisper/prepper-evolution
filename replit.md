@@ -42,7 +42,7 @@ Preferred communication style: Simple, everyday language.
 - `GET /api/comparisons/:slug` — Single comparison by slug
 - `POST /api/newsletter` — Newsletter email signup
 - `GET /api/wp/posts` — Proxy to WordPress REST API for blog posts (cached)
-- WordPress proxy endpoints pass through to `https://prepperevolution.com/wp-json/wp/v2`
+- WordPress proxy endpoints pass through to `https://wp.prepperevolution.com/wp-json/wp/v2`
 
 ### Database (PostgreSQL + Drizzle ORM)
 - **ORM**: Drizzle ORM with PostgreSQL dialect
@@ -56,7 +56,7 @@ Preferred communication style: Simple, everyday language.
 
 ### Content Strategy
 - **Products & Comparisons**: Stored in PostgreSQL, seeded with real affiliate product data
-- **Articles/Blog**: Fetched from WordPress headless CMS at `prepperevolution.com/wp-json/wp/v2` via server-side proxy
+- **Articles/Blog**: Fetched from WordPress headless CMS at `wp.prepperevolution.com/wp-json/wp/v2` via server-side proxy
 - **Article Images**: Slug-based fallback image map using Unsplash URLs when WordPress featured images aren't available
 - **Caching**: WordPress API responses cached for 5 minutes on the server side
 
@@ -103,7 +103,7 @@ shared/          — Shared code between client and server
 - **connect-pg-simple** — PostgreSQL session store (available but sessions not actively used)
 
 ### WordPress CMS
-- **WordPress REST API** at `https://prepperevolution.com/wp-json/wp/v2` — Headless CMS for all blog/article content
+- **WordPress REST API** at `https://wp.prepperevolution.com/wp-json/wp/v2` — Headless CMS for all blog/article content
 - Posts fetched with `?_embed` parameter for featured images, authors, and categories in single requests
 
 ### Amazon Affiliate Program
