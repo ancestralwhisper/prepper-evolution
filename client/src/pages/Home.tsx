@@ -168,20 +168,22 @@ export default function Home() {
           <p className="text-white/80 text-lg mb-10 max-w-2xl mx-auto drop-shadow-sm">
             Join 50,000+ preppers receiving our weekly intelligence briefings, gear discounts, and survival strategies.
           </p>
-          <form className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto" onSubmit={(e) => e.preventDefault()}>
-            <Input 
-              type="email" 
-              placeholder="Enter your email address" 
-              className="h-14 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-primary shadow-inner"
-              data-testid="input-newsletter-email"
-            />
-            <Button size="lg" className="h-14 bg-primary hover:bg-primary/90 text-primary-foreground px-8 whitespace-nowrap shadow-md" data-testid="button-newsletter-submit">
-              Get Briefings
-            </Button>
-          </form>
-          <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm text-white/70">
-            <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> No spam</span>
-            <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Unsubscribe anytime</span>
+          <div className="flex flex-col gap-3 max-w-lg mx-auto">
+            <form className="flex flex-col sm:flex-row gap-3" onSubmit={(e) => e.preventDefault()}>
+              <Input 
+                type="email" 
+                placeholder="Enter your email address" 
+                className="h-14 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-primary shadow-inner flex-1"
+                data-testid="input-newsletter-email"
+              />
+              <Button size="lg" className="h-14 bg-primary hover:bg-primary/90 text-primary-foreground px-8 whitespace-nowrap shadow-md" data-testid="button-newsletter-submit">
+                Get Briefings
+              </Button>
+            </form>
+            <div className="flex flex-wrap justify-center sm:justify-start gap-4 text-sm text-white/70 sm:pl-4">
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> No spam</span>
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Unsubscribe anytime</span>
+            </div>
           </div>
         </div>
       </section>
