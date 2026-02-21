@@ -1,4 +1,4 @@
-import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation } from "lucide-react";
+import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDarkMode } from "@/hooks/useDarkMode";
@@ -7,6 +7,12 @@ import heroBg from "@/assets/images/hero-bg.png";
 import gearBackpack from "@/assets/images/gear-backpack.png";
 import gearKnife from "@/assets/images/gear-knife.png";
 import gearFilter from "@/assets/images/gear-filter.png";
+
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.61-5.66-.21-3.11 1.73-6.19 4.63-7.14.39-.12.81-.22 1.22-.27.06.6.01 1.2.03 1.8.03 1.13.06 2.27.04 3.4-.38.07-.76.15-1.13.29-1.2.4-2.14 1.4-2.31 2.66-.21 1.34.34 2.76 1.42 3.53 1.09.77 2.65.91 3.93.3 1.25-.56 2.1-1.78 2.23-3.19.16-3.83.07-7.67.1-11.51.01-2.42-.02-4.83.01-7.25z"/>
+  </svg>
+);
 
 export default function Home() {
   const { isDark, toggle } = useDarkMode();
@@ -255,9 +261,21 @@ export default function Home() {
                 Dedicated to helping individuals and families adapt, prepare, and evolve for whatever challenges lie ahead.
               </p>
               <div className="flex gap-4">
-                <div className="w-10 h-10 rounded-full bg-white/10 hover:bg-primary transition-colors flex items-center justify-center cursor-pointer"></div>
-                <div className="w-10 h-10 rounded-full bg-white/10 hover:bg-primary transition-colors flex items-center justify-center cursor-pointer"></div>
-                <div className="w-10 h-10 rounded-full bg-white/10 hover:bg-primary transition-colors flex items-center justify-center cursor-pointer"></div>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/10 hover:bg-primary transition-colors flex items-center justify-center cursor-pointer" aria-label="X (Twitter)">
+                  <Twitter className="w-4 h-4 text-white" />
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/10 hover:bg-primary transition-colors flex items-center justify-center cursor-pointer" aria-label="Instagram">
+                  <Instagram className="w-4 h-4 text-white" />
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/10 hover:bg-primary transition-colors flex items-center justify-center cursor-pointer" aria-label="YouTube">
+                  <Youtube className="w-4 h-4 text-white" />
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/10 hover:bg-primary transition-colors flex items-center justify-center cursor-pointer" aria-label="TikTok">
+                  <TikTokIcon className="w-4 h-4 text-white" />
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/10 hover:bg-primary transition-colors flex items-center justify-center cursor-pointer" aria-label="Facebook">
+                  <Facebook className="w-4 h-4 text-white" />
+                </a>
               </div>
             </div>
             
