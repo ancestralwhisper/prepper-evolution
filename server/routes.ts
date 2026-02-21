@@ -7,7 +7,7 @@ import { db } from "./db";
 import { desc, eq } from "drizzle-orm";
 import { runFullLinkCheck, checkProductLink, getLatestHealthForProduct } from "./linkChecker";
 
-const WP_API_URL = "https://prepperevolution.com/wp-json/wp/v2";
+const WP_API_URL = "https://wp.prepperevolution.com/wp-json/wp/v2";
 
 export async function registerRoutes(
   httpServer: Server,
