@@ -84,7 +84,7 @@ export default function Home() {
               {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
             <Button className="hidden md:inline-flex bg-primary hover:bg-primary/90 text-primary-foreground min-h-[44px]" data-testid="button-nav-start" asChild>
-              <Link href="/articles">Start Here</Link>
+              <Link href="/start-here">Start Here</Link>
             </Button>
             
             {/* Mobile Menu Toggle */}
@@ -149,7 +149,7 @@ export default function Home() {
               
               <div className="mt-auto pt-8 border-t border-border">
                 <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground min-h-[44px] text-lg" onClick={() => setIsMenuOpen(false)} data-testid="button-mobile-nav-start" asChild>
-                  <Link href="/articles">Start Here</Link>
+                  <Link href="/start-here">Start Here</Link>
                 </Button>
               </div>
             </motion.div>
@@ -193,7 +193,7 @@ export default function Home() {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
             <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all text-lg h-14 px-8" data-testid="button-hero-start" asChild>
-              <Link href="/articles">
+              <Link href="/start-here">
                 Start Here <ChevronRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>

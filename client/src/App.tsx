@@ -10,6 +10,7 @@ import Article from "@/pages/Article";
 import Product from "@/pages/Product";
 import Comparison from "@/pages/Comparison";
 import Category from "@/pages/Category";
+import StartHere from "@/pages/StartHere";
 
 function Router() {
   const [location] = useLocation();
@@ -26,6 +27,7 @@ function Router() {
       >
         <Switch location={location}>
           <Route path="/" component={Home} />
+          <Route path="/start-here" component={StartHere} />
           <Route path="/articles/:slug" component={Article} />
           <Route path="/products/:slug" component={Product} />
           <Route path="/comparisons/:slug" component={Comparison} />
