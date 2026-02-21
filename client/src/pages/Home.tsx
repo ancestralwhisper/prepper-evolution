@@ -1,12 +1,13 @@
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
-import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook, Menu, X, RefreshCw } from "lucide-react";
+import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook, Menu, X, RefreshCw, Search, FileText, Package } from "lucide-react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { useQuery } from "@tanstack/react-query";
-import { fetchLatestPosts, decodeHtmlEntities, getPostImage } from "@/lib/wp";
+import { fetchLatestPosts, decodeHtmlEntities, getPostImage, searchPosts, WPPost } from "@/lib/wp";
+import { mockProducts, Product } from "@/content/products";
 
 import heroBg from "@/assets/images/hero-bg.png";
 import gearBackpack from "@/assets/images/gear-backpack.png";
@@ -18,6 +19,151 @@ const TikTokIcon = ({ className }: { className?: string }) => (
     <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.61-5.66-.21-3.11 1.73-6.19 4.63-7.14.39-.12.81-.22 1.22-.27.06.6.01 1.2.03 1.8.03 1.13.06 2.27.04 3.4-.38.07-.76.15-1.13.29-1.2.4-2.14 1.4-2.31 2.66-.21 1.34.34 2.76 1.42 3.53 1.09.77 2.65.91 3.93.3 1.25-.56 2.1-1.78 2.23-3.19.16-3.83.07-7.67.1-11.51.01-2.42-.02-4.83.01-7.25z"/>
   </svg>
 );
+
+function SiteSearch({ onClose }: { onClose: () => void }) {
+  const [query, setQuery] = useState("");
+  const [articleResults, setArticleResults] = useState<WPPost[]>([]);
+  const [productResults, setProductResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    if (query.length < 2) {
+      setArticleResults([]);
+      setProductResults([]);
+      return;
+    }
+
+    const q = query.toLowerCase();
+    const filtered = mockProducts.filter(
+      p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
+    ).slice(0, 4);
+    setProductResults(filtered);
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const posts = await searchPosts(query);
+        setArticleResults(posts);
+      } catch {
+        setArticleResults([]);
+      }
+      setIsSearching(false);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
+  const hasResults = articleResults.length > 0 || productResults.length > 0;
+  const hasQuery = query.length >= 2;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[80] flex items-start justify-center pt-[10vh] px-4"
+    >
+      <div className="absolute inset-0 bg-background/90 backdrop-blur-sm" onClick={onClose} />
+      <motion.div
+        initial={{ opacity: 0, y: -20, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -20, scale: 0.98 }}
+        transition={{ duration: 0.2 }}
+        className="relative w-full max-w-[560px] bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
+      >
+        <div className="flex items-center gap-3 px-4 border-b border-border">
+          <Search className="w-5 h-5 text-muted-foreground shrink-0" />
+          <input
+            autoFocus
+            type="text"
+            placeholder="Search articles, products, topics..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full h-14 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none text-base"
+            data-testid="input-site-search"
+          />
+          <button onClick={onClose} className="p-2 rounded-md hover:bg-muted text-muted-foreground shrink-0" data-testid="button-search-close">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {hasQuery && (
+          <div className="max-h-[60vh] overflow-y-auto p-2">
+            {productResults.length > 0 && (
+              <div className="mb-2">
+                <div className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Products</div>
+                {productResults.map(p => (
+                  <Link
+                    key={p.slug}
+                    href={`/products/${p.slug}`}
+                    onClick={onClose}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted transition-colors"
+                    data-testid={`search-result-product-${p.slug}`}
+                  >
+                    <Package className="w-4 h-4 text-primary shrink-0" />
+                    <div className="min-w-0">
+                      <div className="font-medium text-sm text-foreground truncate">{p.name}</div>
+                      <div className="text-xs text-muted-foreground truncate">{p.category} — ${p.price}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {articleResults.length > 0 && (
+              <div className="mb-2">
+                <div className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Articles</div>
+                {articleResults.map(post => (
+                  <Link
+                    key={post.id}
+                    href={`/articles/${post.slug}`}
+                    onClick={onClose}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted transition-colors"
+                    data-testid={`search-result-article-${post.slug}`}
+                  >
+                    <FileText className="w-4 h-4 text-primary shrink-0" />
+                    <div className="min-w-0">
+                      <div className="font-medium text-sm text-foreground truncate">{decodeHtmlEntities(post.title.rendered)}</div>
+                      <div className="text-xs text-muted-foreground truncate">
+                        {decodeHtmlEntities(post.excerpt.rendered.replace(/<[^>]*>/g, '')).slice(0, 80)}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {!hasResults && !isSearching && (
+              <div className="px-3 py-8 text-center text-muted-foreground text-sm">
+                No results found for "{query}"
+              </div>
+            )}
+
+            {isSearching && !hasResults && (
+              <div className="px-3 py-8 text-center text-muted-foreground text-sm">
+                Searching...
+              </div>
+            )}
+          </div>
+        )}
+
+        {!hasQuery && (
+          <div className="px-3 py-6 text-center text-muted-foreground text-sm">
+            Start typing to search across articles and gear...
+          </div>
+        )}
+      </motion.div>
+    </motion.div>
+  );
+}
 
 function NewsletterForm() {
   const [email, setEmail] = useState("");
@@ -92,6 +238,7 @@ function NewsletterForm() {
 export default function Home() {
   const { isDark, toggle } = useDarkMode();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   
   // Parallax setup
   const { scrollY } = useScroll();
@@ -145,6 +292,14 @@ export default function Home() {
 
           {/* Actions */}
           <div className="flex items-center gap-2 md:gap-4">
+            <button 
+              onClick={() => setIsSearchOpen(true)}
+              className="p-3 md:p-2 rounded-full hover:bg-muted transition-colors focus:outline-none"
+              aria-label="Search"
+              data-testid="button-search-open"
+            >
+              <Search className="w-5 h-5" />
+            </button>
             <button 
               onClick={toggle}
               className="p-3 md:p-2 rounded-full hover:bg-muted transition-colors focus:outline-none"
@@ -225,6 +380,11 @@ export default function Home() {
             </motion.div>
           </>
         )}
+      </AnimatePresence>
+
+      {/* Search Overlay */}
+      <AnimatePresence>
+        {isSearchOpen && <SiteSearch onClose={() => setIsSearchOpen(false)} />}
       </AnimatePresence>
 
       {/* 2. Hero Section */}

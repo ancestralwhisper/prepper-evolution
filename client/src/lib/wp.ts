@@ -55,6 +55,12 @@ export async function fetchCategories(): Promise<WPCategory[]> {
   return await res.json();
 }
 
+export async function searchPosts(query: string): Promise<WPPost[]> {
+  const res = await fetch(`/api/wp/posts?search=${encodeURIComponent(query)}&per_page=5`);
+  if (!res.ok) return [];
+  return await res.json();
+}
+
 export function decodeHtmlEntities(str: string): string {
   const textarea = document.createElement("textarea");
   textarea.innerHTML = str;
