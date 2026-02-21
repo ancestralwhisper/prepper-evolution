@@ -278,14 +278,21 @@ export default function Home() {
 
           {/* Nav Links */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            {['Preparedness', 'Overlanding', 'Camping', 'Gear Reviews', 'Skills & Strategy'].map((item) => (
+            {[
+              { label: 'Preparedness', href: '/category/preparedness' },
+              { label: 'Overlanding', href: '/category/overlanding' },
+              { label: 'Camping', href: '/category/camping' },
+              { label: 'Gear Reviews', href: '/category/gear-reviews' },
+              { label: 'Shop Gear', href: '/products' },
+              { label: 'Skills & Strategy', href: '/category/skills-&-strategy' },
+            ].map((item) => (
               <Link 
-                key={item} 
-                href={`/category/${item.toLowerCase().replace(/ /g, '-')}`}
+                key={item.label} 
+                href={item.href}
                 className="text-foreground/80 hover:text-primary transition-colors hover:underline decoration-primary underline-offset-4"
-                data-testid={`link-nav-${item.toLowerCase().replace(/ /g, '-')}`}
+                data-testid={`link-nav-${item.label.toLowerCase().replace(/ /g, '-')}`}
               >
-                {item}
+                {item.label}
               </Link>
             ))}
           </nav>
@@ -359,15 +366,22 @@ export default function Home() {
               </div>
               
               <nav className="flex flex-col gap-6 flex-1">
-                {['Preparedness', 'Overlanding', 'Camping', 'Gear Reviews', 'Skills & Strategy'].map((item) => (
+                {[
+                  { label: 'Preparedness', href: '/category/preparedness' },
+                  { label: 'Overlanding', href: '/category/overlanding' },
+                  { label: 'Camping', href: '/category/camping' },
+                  { label: 'Gear Reviews', href: '/category/gear-reviews' },
+                  { label: 'Shop Gear', href: '/products' },
+                  { label: 'Skills & Strategy', href: '/category/skills-&-strategy' },
+                ].map((item) => (
                   <Link 
-                    key={item} 
-                    href={`/category/${item.toLowerCase().replace(/ /g, '-')}`}
+                    key={item.label} 
+                    href={item.href}
                     className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors py-2"
                     onClick={() => setIsMenuOpen(false)}
-                    data-testid={`link-mobile-nav-${item.toLowerCase().replace(/ /g, '-')}`}
+                    data-testid={`link-mobile-nav-${item.label.toLowerCase().replace(/ /g, '-')}`}
                   >
-                    {item}
+                    {item.label}
                   </Link>
                 ))}
               </nav>

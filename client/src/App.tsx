@@ -13,6 +13,7 @@ import Category from "@/pages/Category";
 import StartHere from "@/pages/StartHere";
 import AdminLinkHealth from "@/pages/AdminLinkHealth";
 import Articles from "@/pages/Articles";
+import Products from "@/pages/Products";
 
 function Router() {
   const [location] = useLocation();
@@ -32,6 +33,7 @@ function Router() {
           <Route path="/start-here" component={StartHere} />
           <Route path="/articles" component={Articles} />
           <Route path="/articles/:slug" component={Article} />
+          <Route path="/products" component={Products} />
           <Route path="/products/:slug" component={Product} />
           <Route path="/comparisons/:slug" component={Comparison} />
           <Route path="/category/:name" component={Category} />
