@@ -24,34 +24,38 @@
 }
 
 :root {
-  /* Overland Event Light Mode */
-  --background: 0 0% 100%; 
-  --foreground: 0 0% 10%; 
-  --primary: 20 100% 50%;    /* Vibrant Overland Orange */
-  --primary-foreground: 0 0% 100%;
-  --border: 0 0% 90%;     
-  --card: 0 0% 98%;       
-  --card-foreground: 0 0% 10%;
-  --muted: 0 0% 95%;      
-  --muted-foreground: 0 0% 40%;
-  --accent: 0 0% 95%;
+  /* Tactical & Premium Outdoor Brand (Dark by Default) */
+  --background: 0 0% 10%; /* #1A1A1A Dark background */
+  --foreground: 30 33% 94%; /* #F5F0EB Light text */
+  --primary: 22 65% 50%; /* #D46A2D Primary burnt orange */
+  --primary-foreground: 30 33% 94%; /* Light text for contrast */
+  --border: 0 0% 20%;
+  --card: 0 0% 14%; /* #242424 Card backgrounds */
+  --card-foreground: 30 33% 94%;
+  --muted: 0 0% 18%;
+  --muted-foreground: 30 15% 70%;
+  --accent: 35 47% 56%; /* #C4975A Accent muted gold */
   --accent-foreground: 0 0% 10%;
-  --radius: 0.25rem; /* Sharper, more industrial corners */
+  --secondary: 123 17% 21%; /* #2C3E2D Secondary deep forest green */
+  --secondary-foreground: 30 33% 94%;
+  --radius: 0.15rem; /* Modern, sharper corners */
 }
 
 .dark {
-  /* Overland Event Dark Mode */
-  --background: 0 0% 7%; /* Near Black */
-  --foreground: 0 0% 95%; 
-  --primary: 20 100% 50%;    /* Vibrant Overland Orange */
-  --primary-foreground: 0 0% 100%;
-  --border: 0 0% 20%;     
-  --card: 0 0% 11%;       
-  --card-foreground: 0 0% 95%;
-  --muted: 0 0% 15%;      
-  --muted-foreground: 0 0% 65%;
-  --accent: 0 0% 15%;
-  --accent-foreground: 0 0% 95%;
+  /* Overland Event Dark Mode (Same as root for forced dark vibe) */
+  --background: 0 0% 10%;
+  --foreground: 30 33% 94%;
+  --primary: 22 65% 50%;
+  --primary-foreground: 30 33% 94%;
+  --border: 0 0% 20%;
+  --card: 0 0% 14%;
+  --card-foreground: 30 33% 94%;
+  --muted: 0 0% 18%;
+  --muted-foreground: 30 15% 70%;
+  --accent: 35 47% 56%;
+  --accent-foreground: 0 0% 10%;
+  --secondary: 123 17% 21%;
+  --secondary-foreground: 30 33% 94%;
 }
 
 @layer base {
