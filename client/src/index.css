@@ -26,7 +26,7 @@
 :root {
   --background: 60 10% 96%; 
   --foreground: 0 0% 12%; 
-  --primary: 152 40% 35%; /* Tactical Green */
+  --primary: 85 40% 30%; /* Olive Drab */
   --primary-foreground: 0 0% 100%;
   --border: 60 5% 85%;
   --card: 0 0% 100%;
@@ -41,7 +41,7 @@
 .dark {
   --background: 0 0% 9%; /* Pure Charcoal */
   --foreground: 0 0% 90%; 
-  --primary: 152 40% 45%;
+  --primary: 85 40% 40%; /* Lighter Olive Drab for dark mode */
   --primary-foreground: 0 0% 100%;
   --border: 0 0% 18%;
   --card: 0 0% 12%; 
