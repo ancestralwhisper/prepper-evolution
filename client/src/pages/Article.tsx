@@ -7,7 +7,41 @@ import { Link } from "wouter";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
-// Helper to parse TOC from content
+function transformProTips(html: string): string {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+
+  const proTipHeader = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><span style="font-size:16px;">🔥</span><span style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#D46A2D;">PRO TIP</span></div>`;
+
+  const wrapInCallout = (bodyHtml: string) =>
+    `<div style="border-left:4px solid #D46A2D;background:#2A2218;padding:24px;border-radius:0 8px 8px 0;margin:32px 0;">${proTipHeader}<div style="color:#F5F0EB;line-height:1.8;">${bodyHtml}</div></div>`;
+
+  doc.querySelectorAll('div.pro-tip').forEach(el => {
+    const wrapper = doc.createElement('div');
+    wrapper.innerHTML = wrapInCallout(el.innerHTML);
+    el.replaceWith(wrapper.firstElementChild!);
+  });
+
+  const proTipRegex = /^pro\s*tip\s*:/i;
+
+  doc.querySelectorAll('blockquote, div, p').forEach(el => {
+    if (el.closest('[data-protip-done]')) return;
+    const text = el.textContent?.trim() || '';
+    if (!proTipRegex.test(text)) return;
+
+    let bodyHtml = el.innerHTML;
+    bodyHtml = bodyHtml.replace(/^(\s*<[^>]*>\s*)*pro\s*tip\s*:\s*/i, '$1');
+    bodyHtml = bodyHtml.replace(/^pro\s*tip\s*:\s*/i, '');
+
+    const wrapper = doc.createElement('div');
+    wrapper.setAttribute('data-protip-done', '1');
+    wrapper.innerHTML = wrapInCallout(bodyHtml);
+    el.replaceWith(wrapper.firstElementChild!);
+  });
+
+  return doc.body.innerHTML;
+}
+
 function extractHeadings(htmlContent: string) {
   const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
   const headings = Array.from(doc.querySelectorAll('h2, h3')) as HTMLElement[];
@@ -67,6 +101,8 @@ export default function Article() {
   headings.forEach(h => {
     contentHtml = contentHtml.replace(`>${h.text}</${h.level}>`, ` id="${h.id}">${h.text}</${h.level}>`);
   });
+
+  contentHtml = transformProTips(contentHtml);
 
   const schemaMarkup = {
     "@context": "https://schema.org",
