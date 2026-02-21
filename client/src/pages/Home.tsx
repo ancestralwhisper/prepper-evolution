@@ -7,6 +7,9 @@ import heroBg from "@/assets/images/hero-bg.png";
 import gearBackpack from "@/assets/images/gear-backpack.png";
 import gearKnife from "@/assets/images/gear-knife.png";
 import gearFilter from "@/assets/images/gear-filter.png";
+import articleWinter from "@/assets/images/article-winter.png";
+import articleComms from "@/assets/images/article-comms.png";
+import articleFood from "@/assets/images/article-food.png";
 
 const TikTokIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -201,18 +204,18 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="space-y-8">
               {[
-                "Winter Overlanding: 10 Critical Upgrades", 
-                "Comms Down: Building a Local Radio Network", 
-                "Food Storage Rotation Methods That Work"
-              ].map((title, i) => (
+                { title: "Winter Overlanding: 10 Critical Upgrades", image: articleWinter }, 
+                { title: "Comms Down: Building a Local Radio Network", image: articleComms }, 
+                { title: "Food Storage Rotation Methods That Work", image: articleFood }
+              ].map((article, i) => (
                 <div key={i} className="flex gap-6 group cursor-pointer border-b border-border/50 pb-8 last:border-0 last:pb-0" data-testid={`card-article-${i}`}>
-                  <div className="w-24 h-24 md:w-32 md:h-24 rounded-lg bg-muted flex-shrink-0 overflow-hidden">
-                    <div className="w-full h-full bg-accent group-hover:scale-105 transition-transform" />
+                  <div className="w-24 h-24 md:w-32 md:h-24 rounded-lg bg-muted flex-shrink-0 overflow-hidden relative">
+                    <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   </div>
                   <div>
                     <div className="text-xs text-primary font-bold uppercase tracking-wider mb-2">Strategy</div>
                     <h3 className="text-lg font-bold font-display group-hover:text-primary transition-colors leading-snug">
-                      {title}
+                      {article.title}
                     </h3>
                   </div>
                 </div>
