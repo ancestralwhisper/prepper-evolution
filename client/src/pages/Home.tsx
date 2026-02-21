@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDarkMode } from "@/hooks/useDarkMode";
@@ -20,6 +21,20 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 
 export default function Home() {
   const { isDark, toggle } = useDarkMode();
+  
+  // Parallax setup
+  const { scrollY } = useScroll();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile(); // Check on mount
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Parallax subtle movement
+  const heroBgY = useTransform(scrollY, [0, 800], [0, isMobile ? 0 : 150]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -70,7 +85,8 @@ export default function Home() {
         <motion.div 
           initial={{ scale: 1.05, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          style={{ y: heroBgY }}
           className="absolute inset-0 z-0"
         >
           <img 
@@ -87,7 +103,7 @@ export default function Home() {
         <motion.div 
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
           className="relative z-10 max-w-[1200px] mx-auto px-4 md:px-6 flex flex-col items-center text-center"
         >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold uppercase tracking-tight text-white drop-shadow-sm mb-6" data-testid="text-hero-headline">
@@ -115,10 +131,10 @@ export default function Home() {
 
       {/* 3. Featured Content */}
       <motion.section 
-        initial={{ y: 40, opacity: 0 }}
+        initial={{ y: 20, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.4 }}
         className="py-20 bg-background"
       >
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">
@@ -133,7 +149,15 @@ export default function Home() {
               { title: "Overland Navigation", icon: Navigation, desc: "Find your way when the grid goes down." },
               { title: "Water Procurement", icon: Shield, desc: "Filtration, purification, and storage techniques." }
             ].map((feature, i) => (
-              <div key={i} className="group p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-xl hover:border-primary/50 hover:-translate-y-2 transition-all duration-300 cursor-pointer flex flex-col h-full" data-testid={`card-feature-${i}`}>
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.3, delay: i * 0.1 }}
+                className="group p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-xl hover:border-primary/50 hover:-translate-y-2 transition-all duration-300 cursor-pointer flex flex-col h-full" 
+                data-testid={`card-feature-${i}`}
+              >
                 <div className="w-12 h-12 rounded-lg bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-6 transition-colors duration-300">
                   <feature.icon className="w-6 h-6 text-primary group-hover:scale-110 transition-transform duration-300" />
                 </div>
@@ -142,7 +166,7 @@ export default function Home() {
                 <a href="#" className="inline-flex items-center text-primary font-medium group-hover:tracking-wide transition-all duration-300 mt-auto">
                   Learn more <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
                 </a>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -150,10 +174,10 @@ export default function Home() {
 
       {/* 4. Best Of Picks */}
       <motion.section 
-        initial={{ y: 40, opacity: 0 }}
+        initial={{ y: 20, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.4 }}
         className="py-20 bg-card border-y border-border"
       >
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">
@@ -171,7 +195,15 @@ export default function Home() {
               { img: gearKnife, name: "Bushcraft Survival Blade", category: "Tools", rating: 4.8 },
               { img: gearFilter, name: "Pro-Gravity Water Filter", category: "Hydration", rating: 5.0 }
             ].map((item, i) => (
-              <div key={i} className="group cursor-pointer" data-testid={`card-gear-${i}`}>
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.3, delay: i * 0.1 }}
+                className="group cursor-pointer" 
+                data-testid={`card-gear-${i}`}
+              >
                 <div className="aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-muted relative">
                   <img src={item.img} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold uppercase tracking-wider text-foreground">
@@ -183,7 +215,7 @@ export default function Home() {
                   <span className="font-medium text-sm text-foreground">{item.rating}</span>
                 </div>
                 <h3 className="text-lg font-bold font-display group-hover:text-primary transition-colors">{item.name}</h3>
-              </div>
+              </motion.div>
             ))}
           </div>
           <Button variant="outline" className="w-full mt-8 md:hidden" data-testid="button-view-all-reviews-mobile">View All Reviews</Button>
@@ -195,7 +227,7 @@ export default function Home() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.4 }}
         className="py-24 relative overflow-hidden bg-primary dark:bg-primary"
       >
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
@@ -228,10 +260,10 @@ export default function Home() {
 
       {/* 6. Latest Articles */}
       <motion.section 
-        initial={{ y: 40, opacity: 0 }}
+        initial={{ y: 20, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.4 }}
         className="py-20 bg-background"
       >
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">
@@ -243,7 +275,15 @@ export default function Home() {
                 { title: "Comms Down: Building a Local Radio Network", image: articleComms }, 
                 { title: "Food Storage Rotation Methods That Work", image: articleFood }
               ].map((article, i) => (
-                <div key={i} className="flex gap-6 group cursor-pointer border-b border-border/50 pb-8 last:border-0 last:pb-0" data-testid={`card-article-${i}`}>
+                <motion.div 
+                  key={i} 
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.3, delay: i * 0.1 }}
+                  className="flex gap-6 group cursor-pointer border-b border-border/50 pb-8 last:border-0 last:pb-0" 
+                  data-testid={`card-article-${i}`}
+                >
                   <div className="w-24 h-24 md:w-32 md:h-24 rounded-lg bg-muted flex-shrink-0 overflow-hidden relative">
                     <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   </div>
@@ -253,11 +293,17 @@ export default function Home() {
                       {article.title}
                     </h3>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
             
-            <div className="bg-card rounded-2xl p-8 border border-border shadow-sm">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
+              className="bg-card rounded-2xl p-8 border border-border shadow-sm"
+            >
               <h3 className="text-2xl font-display font-bold mb-4">Expert Guides Series</h3>
               <p className="text-muted-foreground mb-6">Deep dives into complex preparedness topics, written by industry professionals and former military.</p>
               <div className="space-y-3">
@@ -272,7 +318,7 @@ export default function Home() {
                   </a>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </motion.section>
