@@ -10,21 +10,43 @@ import { Button } from "@/components/ui/button";
 function transformProTips(html: string): string {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
+  const proTipRegex = /^pro\s*tip\s*:/i;
 
-  const proTipHeader = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><span style="font-size:16px;">🔥</span><span style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#D46A2D;">PRO TIP</span></div>`;
+  const proTipHeader = (subtitle: string) => {
+    const subtitleHtml = subtitle ? `<div style="font-size:18px;font-weight:700;color:#F5F0EB;margin-bottom:8px;">${subtitle}</div>` : '';
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><span style="font-size:16px;">🔥</span><span style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#D46A2D;">PRO TIP</span></div>${subtitleHtml}`;
+  };
 
-  const wrapInCallout = (bodyHtml: string) =>
-    `<div style="border-left:4px solid #D46A2D;background:#2A2218;padding:24px;border-radius:0 8px 8px 0;margin:32px 0;">${proTipHeader}<div style="color:#F5F0EB;line-height:1.8;">${bodyHtml}</div></div>`;
+  const wrapInCallout = (headerSubtitle: string, bodyHtml: string) =>
+    `<div style="border-left:4px solid #D46A2D;background:#2A2218;padding:24px;border-radius:0 8px 8px 0;margin:32px 0;">${proTipHeader(headerSubtitle)}<div style="color:#F5F0EB;line-height:1.8;">${bodyHtml}</div></div>`;
 
   doc.querySelectorAll('div.pro-tip').forEach(el => {
     const wrapper = doc.createElement('div');
-    wrapper.innerHTML = wrapInCallout(el.innerHTML);
+    wrapper.innerHTML = wrapInCallout('', el.innerHTML);
     el.replaceWith(wrapper.firstElementChild!);
   });
 
-  const proTipRegex = /^pro\s*tip\s*:/i;
+  doc.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(heading => {
+    const text = heading.textContent?.trim() || '';
+    if (!proTipRegex.test(text)) return;
 
-  doc.querySelectorAll('blockquote, div, p').forEach(el => {
+    const subtitle = text.replace(proTipRegex, '').trim();
+    const bodyParts: string[] = [];
+    const toRemove: Element[] = [];
+    let sibling = heading.nextElementSibling;
+    while (sibling && !/^H[1-6]$/i.test(sibling.tagName)) {
+      bodyParts.push(sibling.outerHTML);
+      toRemove.push(sibling);
+      sibling = sibling.nextElementSibling;
+    }
+
+    toRemove.forEach(el => el.remove());
+    const wrapper = doc.createElement('div');
+    wrapper.innerHTML = wrapInCallout(subtitle, bodyParts.join(''));
+    heading.replaceWith(wrapper.firstElementChild!);
+  });
+
+  doc.querySelectorAll('blockquote, p').forEach(el => {
     if (el.closest('[data-protip-done]')) return;
     const text = el.textContent?.trim() || '';
     if (!proTipRegex.test(text)) return;
@@ -35,7 +57,7 @@ function transformProTips(html: string): string {
 
     const wrapper = doc.createElement('div');
     wrapper.setAttribute('data-protip-done', '1');
-    wrapper.innerHTML = wrapInCallout(bodyHtml);
+    wrapper.innerHTML = wrapInCallout('', bodyHtml);
     el.replaceWith(wrapper.firstElementChild!);
   });
 
@@ -45,11 +67,13 @@ function transformProTips(html: string): string {
 function extractHeadings(htmlContent: string) {
   const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
   const headings = Array.from(doc.querySelectorAll('h2, h3')) as HTMLElement[];
-  return headings.map((h) => ({
-    id: h.id || h.textContent?.replace(/\s+/g, '-').toLowerCase() || '',
-    text: h.textContent || '',
-    level: h.tagName.toLowerCase()
-  }));
+  return headings
+    .filter(h => !/^pro\s*tip\s*:/i.test(h.textContent?.trim() || ''))
+    .map((h) => ({
+      id: h.id || h.textContent?.replace(/\s+/g, '-').toLowerCase() || '',
+      text: h.textContent || '',
+      level: h.tagName.toLowerCase()
+    }));
 }
 
 export default function Article() {
