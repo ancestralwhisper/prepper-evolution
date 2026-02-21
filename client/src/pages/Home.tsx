@@ -168,7 +168,7 @@ export default function Home() {
       </section>
 
       {/* 5. Lead Capture */}
-      <section className="py-24 relative overflow-hidden bg-[#3E2723] dark:bg-[#2C1C19]">
+      <section className="py-24 relative overflow-hidden bg-[#1A1A1A] dark:bg-[#0D0D0D]">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10"></div>
         <div className="relative z-10 max-w-[800px] mx-auto px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6 drop-shadow-sm">
