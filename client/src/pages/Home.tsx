@@ -394,11 +394,12 @@ export default function Home() {
 
       {/* 7. Trust Bar */}
       <div className="border-y border-border bg-card py-10">
-        <div className="max-w-[1200px] mx-auto px-4 md:px-6 flex flex-wrap justify-center gap-8 md:gap-16 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
-          <div className="text-xl font-display font-bold uppercase tracking-widest text-foreground">Outdoor Mag</div>
-          <div className="text-xl font-display font-bold uppercase tracking-widest text-foreground">Overland Bound</div>
-          <div className="text-xl font-display font-bold uppercase tracking-widest text-foreground">Prepper Daily</div>
-          <div className="text-xl font-display font-bold uppercase tracking-widest text-foreground">Survivalist</div>
+        <div className="max-w-[1200px] mx-auto px-4 md:px-6">
+          <img 
+            src="/image_1771694563348.png" 
+            alt="Trusted by Outdoor Mag, Overland Bound, Prepper Daily, and Survivalist" 
+            className="w-full h-auto max-w-[800px] mx-auto opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+          />
         </div>
       </div>
 
