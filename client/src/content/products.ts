@@ -85,7 +85,7 @@ export const mockProducts: Product[] = [
     price: 4899.00,
     category: "Shelter & Sleep Systems",
     imageUrl: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7",
-    amazonLink: "https://www.amazon.com/dp/B0C1J4NYRL?tag=prepperevo-20",
+    amazonLink: "https://www.amazon.com/dp/B0CB6RX4RT?tag=prepperevo-20",
     features: ["Hard-shell design", "Sleeps 2-3", "1-minute setup"]
   },
   {
@@ -107,7 +107,7 @@ export const mockProducts: Product[] = [
     price: 1795.00,
     category: "Shelter & Sleep Systems",
     imageUrl: "https://images.unsplash.com/photo-1533560904424-a0c61dc306fc",
-    amazonLink: "https://www.amazon.com/dp/B01FHBXM2E?tag=prepperevo-20",
+    amazonLink: "https://www.amazon.com/dp/B001RDLGG6?tag=prepperevo-20",
     features: ["Soft-shell design", "Sleeps 2", "Great value"]
   },
   {
@@ -162,7 +162,7 @@ export const mockProducts: Product[] = [
     price: 199.99,
     category: "Food & Cooking",
     imageUrl: "https://images.unsplash.com/photo-1504198458649-3128b932f49e",
-    amazonLink: "https://www.amazon.com/dp/B003ZQ6NME?tag=prepperevo-20",
+    amazonLink: "https://www.amazon.com/dp/B0006VORDY?tag=prepperevo-20",
     features: ["Dual burners", "30,000 BTU each", "Sturdy legs"]
   },
   {
@@ -184,7 +184,7 @@ export const mockProducts: Product[] = [
     price: 1299.00,
     category: "Overlanding Vehicles",
     imageUrl: "https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8",
-    amazonLink: "https://www.amazon.com/dp/B08RDG4HQZ?tag=prepperevo-20",
+    amazonLink: "https://www.amazon.com/dp/B083G3NBNZ?tag=prepperevo-20",
     features: ["53L capacity", "Built-in ice maker", "Dual voltage"]
   },
   {
@@ -272,7 +272,7 @@ export const mockProducts: Product[] = [
     price: 999.95,
     category: "Power & Energy",
     imageUrl: "/images/product-goalzero.png",
-    amazonLink: "https://www.amazon.com/dp/B0BF3V6VDV?tag=prepperevo-20",
+    amazonLink: "https://www.amazon.com/dp/B096ST3VMS?tag=prepperevo-20",
     features: ["983Wh capacity", "Multiple port options", "Fast charging"]
   }
 ];
