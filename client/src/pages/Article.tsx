@@ -5,6 +5,7 @@ import { fetchPostBySlug, fetchPosts, decodeHtmlEntities, getPostImage } from "@
 import { ChevronLeft, Calendar, User, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 // Helper to parse TOC from content
 function extractHeadings(htmlContent: string) {
@@ -89,9 +90,13 @@ export default function Article() {
         <img src={featuredImage} alt={article.title.rendered} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
         <div className="absolute bottom-0 w-full p-6 md:p-12 max-w-[800px] mx-auto left-0 right-0">
-          <Link href="/articles" className="inline-flex items-center text-primary hover:text-primary/80 mb-6 font-medium">
-            <ChevronLeft className="w-4 h-4 mr-1" /> Back to Articles
-          </Link>
+          <Button 
+            variant="ghost" 
+            className="text-primary hover:text-primary/80 hover:bg-transparent px-0 mb-6 font-medium"
+            onClick={() => window.history.length > 1 ? window.history.back() : window.location.href = '/articles'}
+          >
+            <ChevronLeft className="w-4 h-4 mr-1" /> Back
+          </Button>
           <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4 font-medium">
             <span className="text-primary tracking-wider uppercase font-bold">{categoryName}</span>
             <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> {dateFormatted}</span>
