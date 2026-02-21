@@ -351,8 +351,8 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-12 uppercase tracking-tight">Field Notes & Intel</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:h-[450px]">
+            <div className="space-y-8 h-full flex flex-col justify-center">
               {isLoadingPosts ? (
                 [1, 2, 3].map(i => (
                   <div key={i} className="h-24 bg-muted rounded-xl animate-pulse"></div>
@@ -375,7 +375,7 @@ export default function Home() {
                         <div className="w-24 h-24 md:w-32 md:h-24 rounded-lg bg-muted flex-shrink-0 overflow-hidden relative">
                           <img src={featuredImage} alt={post.title.rendered} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 flex flex-col justify-center">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-xs text-primary font-bold uppercase tracking-wider">{category}</span>
                             <span className="text-xs text-muted-foreground font-medium">• {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
@@ -412,7 +412,7 @@ export default function Home() {
                 </Button>
               </div>
               <p className="text-muted-foreground mb-6">Stay up to date with our newest field notes, reviews, and strategies from the community.</p>
-              <div className="space-y-4 flex-1 flex flex-col justify-center">
+              <div className="space-y-4 flex-1 flex flex-col justify-between">
                 {isLoadingPosts ? (
                   [1, 2, 3].map(i => (
                     <div key={i} className="h-20 bg-muted rounded-xl animate-pulse"></div>
