@@ -62,18 +62,37 @@ export async function registerRoutes(
   app.post("/api/newsletter", async (req, res) => {
     try {
       const parsed = insertNewsletterSchema.parse(req.body);
-      const existing = await storage.getNewsletterSubscriber(parsed.email);
-      if (existing) {
-        return res.status(200).json({ message: "Already subscribed", subscriber: existing });
+
+      const kitApiKey = process.env.KIT_API_KEY;
+      if (kitApiKey) {
+        const kitRes = await fetch("https://api.kit.com/v4/subscribers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${kitApiKey}`,
+          },
+          body: JSON.stringify({ email_address: parsed.email }),
+        });
+
+        if (!kitRes.ok) {
+          const kitError = await kitRes.json().catch(() => ({}));
+          console.error("Kit API error:", kitRes.status, kitError);
+          return res.status(400).json({ message: "Something went wrong. Try again or check your email address." });
+        }
       }
-      const subscriber = await storage.subscribeNewsletter(parsed);
-      res.status(201).json({ message: "Successfully subscribed", subscriber });
+
+      const existing = await storage.getNewsletterSubscriber(parsed.email);
+      if (!existing) {
+        await storage.subscribeNewsletter(parsed);
+      }
+
+      res.status(200).json({ message: "You're in! Check your inbox for your first briefing." });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid email address" });
+        return res.status(400).json({ message: "Something went wrong. Try again or check your email address." });
       }
       console.error("Error subscribing:", error);
-      res.status(500).json({ message: "Failed to subscribe" });
+      res.status(500).json({ message: "Something went wrong. Try again or check your email address." });
     }
   });
 

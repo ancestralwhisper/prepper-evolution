@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
-import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook, Menu, X, RefreshCw, Search, FileText, Package } from "lucide-react";
+import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook, Menu, X, RefreshCw, Search, FileText, Package, Loader2 } from "lucide-react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchLatestPosts, decodeHtmlEntities, getPostImage, searchPosts, WPPost } from "@/lib/wp";
 import { mockProducts, Product } from "@/content/products";
 
+import { useToast } from "@/hooks/use-toast";
 import heroBg from "@/assets/images/hero-bg.png";
 import gearBackpack from "@/assets/images/gear-backpack.png";
 import gearKnife from "@/assets/images/gear-knife.png";
@@ -168,7 +169,7 @@ function SiteSearch({ onClose }: { onClose: () => void }) {
 function NewsletterForm() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -183,15 +184,15 @@ function NewsletterForm() {
       const data = await res.json();
       if (res.ok) {
         setStatus("success");
-        setMessage(data.message);
         setEmail("");
+        toast({ title: data.message || "You're in! Check your inbox for your first briefing." });
       } else {
         setStatus("error");
-        setMessage(data.message || "Something went wrong");
+        toast({ title: data.message || "Something went wrong. Try again or check your email address.", variant: "destructive" });
       }
     } catch {
       setStatus("error");
-      setMessage("Failed to subscribe. Please try again.");
+      toast({ title: "Something went wrong. Try again or check your email address.", variant: "destructive" });
     }
   };
 
@@ -199,7 +200,7 @@ function NewsletterForm() {
     return (
       <div className="flex flex-col items-center gap-3 max-w-lg mx-auto">
         <div className="flex items-center gap-2 text-white text-lg font-bold">
-          <CheckCircle2 className="w-6 h-6" /> You're in! Welcome to the briefing.
+          <CheckCircle2 className="w-6 h-6" /> You're in! Check your inbox for your first briefing.
         </div>
       </div>
     );
@@ -223,10 +224,11 @@ function NewsletterForm() {
           data-testid="button-newsletter-submit"
           disabled={status === "loading"}
         >
-          {status === "loading" ? "Subscribing..." : "Get Briefings"}
+          {status === "loading" ? (
+            <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" /> Subscribing...</span>
+          ) : "Get Briefings"}
         </Button>
       </form>
-      {status === "error" && <p className="text-white/90 text-sm font-medium">{message}</p>}
       <div className="flex flex-wrap justify-center sm:justify-start gap-4 text-sm text-white sm:pl-4 font-medium">
         <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> No spam</span>
         <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Unsubscribe anytime</span>
