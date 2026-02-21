@@ -1,4 +1,5 @@
 import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDarkMode } from "@/hooks/useDarkMode";
@@ -66,7 +67,12 @@ export default function Home() {
       {/* 2. Hero Section */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-background">
         {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
+        <motion.div 
+          initial={{ scale: 1.05, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="absolute inset-0 z-0"
+        >
           <img 
             src={heroBg} 
             alt="Rugged overlanding vehicle in forest" 
@@ -76,9 +82,14 @@ export default function Home() {
           {/* Gradient overlays to ensure text readability */}
           <div className="absolute inset-0 bg-gradient-to-b from-background/75 via-background/55 to-background/75 dark:from-[#1A1A2E]/75 dark:via-[#1A1A2E]/55 dark:to-[#1A1A2E]/80"></div>
           <div className="absolute inset-0 bg-black/0 dark:bg-black/25"></div>
-        </div>
+        </motion.div>
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-4 md:px-6 flex flex-col items-center text-center">
+        <motion.div 
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          className="relative z-10 max-w-[1200px] mx-auto px-4 md:px-6 flex flex-col items-center text-center"
+        >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold uppercase tracking-tight text-foreground drop-shadow-sm mb-6" data-testid="text-hero-headline">
             Adapt. Prepare. <span className="text-primary">Evolve.</span>
           </h1>
@@ -99,11 +110,17 @@ export default function Home() {
             <Shield className="w-4 h-4 text-primary" />
             Trusted by thousands of preppers and overlanders since 2025
           </p>
-        </div>
+        </motion.div>
       </section>
 
       {/* 3. Featured Content */}
-      <section className="py-20 bg-background">
+      <motion.section 
+        initial={{ y: 40, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+        className="py-20 bg-background"
+      >
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 uppercase tracking-tight">Master The Essentials</h2>
@@ -129,10 +146,16 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* 4. Best Of Picks */}
-      <section className="py-20 bg-card border-y border-border">
+      <motion.section 
+        initial={{ y: 40, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+        className="py-20 bg-card border-y border-border"
+      >
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
             <div>
@@ -165,10 +188,16 @@ export default function Home() {
           </div>
           <Button variant="outline" className="w-full mt-8 md:hidden" data-testid="button-view-all-reviews-mobile">View All Reviews</Button>
         </div>
-      </section>
+      </motion.section>
 
       {/* 5. Lead Capture */}
-      <section className="py-24 relative overflow-hidden bg-primary dark:bg-primary">
+      <motion.section 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="py-24 relative overflow-hidden bg-primary dark:bg-primary"
+      >
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
         <div className="relative z-10 max-w-[800px] mx-auto px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6 drop-shadow-md uppercase tracking-wider">
@@ -195,10 +224,16 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* 6. Latest Articles */}
-      <section className="py-20 bg-background">
+      <motion.section 
+        initial={{ y: 40, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+        className="py-20 bg-background"
+      >
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-12 uppercase tracking-tight">Field Notes & Intel</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -240,7 +275,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* 7. Trust Bar */}
       <div className="border-y border-border bg-card py-10">
