@@ -74,8 +74,8 @@ export default function Home() {
             data-testid="img-hero-bg"
           />
           {/* Gradient overlays to ensure text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/70 to-background/90 dark:from-[#1A1A2E]/90 dark:via-[#1A1A2E]/70 dark:to-[#1A1A2E]/95"></div>
-          <div className="absolute inset-0 bg-black/10 dark:bg-black/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-background/75 via-background/55 to-background/75 dark:from-[#1A1A2E]/75 dark:via-[#1A1A2E]/55 dark:to-[#1A1A2E]/80"></div>
+          <div className="absolute inset-0 bg-black/0 dark:bg-black/25"></div>
         </div>
 
         <div className="relative z-10 max-w-[1200px] mx-auto px-4 md:px-6 flex flex-col items-center text-center">
