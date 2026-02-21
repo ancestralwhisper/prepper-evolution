@@ -24,31 +24,31 @@
 }
 
 :root {
-  --background: 60 10% 96%; 
-  --foreground: 0 0% 12%; 
-  --primary: 152 40% 35%; /* Tactical Green */
+  --background: 60 14% 95%; 
+  --foreground: 0 0% 15%; 
+  --primary: 22 66% 51%; 
   --primary-foreground: 0 0% 100%;
-  --border: 60 5% 85%;
+  --border: 0 0% 85%;
   --card: 0 0% 100%;
-  --card-foreground: 0 0% 12%;
+  --card-foreground: 0 0% 15%;
   --muted: 60 5% 90%;
-  --muted-foreground: 0 0% 45%;
-  --accent: 60 5% 90%;
-  --accent-foreground: 0 0% 12%;
+  --muted-foreground: 0 0% 40%;
+  --accent: 0 0% 90%;
+  --accent-foreground: 0 0% 15%;
   --radius: 0.5rem;
 }
 
 .dark {
-  --background: 0 0% 9%; /* Pure Charcoal */
+  --background: 240 28% 14%; 
   --foreground: 0 0% 90%; 
-  --primary: 152 40% 45%;
+  --primary: 22 66% 51%;
   --primary-foreground: 0 0% 100%;
-  --border: 0 0% 18%;
-  --card: 0 0% 12%; 
+  --border: 240 20% 20%;
+  --card: 240 25% 12%; 
   --card-foreground: 0 0% 90%;
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 60%;
-  --accent: 0 0% 18%;
+  --muted: 240 20% 20%;
+  --muted-foreground: 0 0% 65%;
+  --accent: 240 25% 20%;
   --accent-foreground: 0 0% 90%;
 }
 
