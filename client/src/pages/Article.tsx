@@ -37,7 +37,7 @@ export default function Article() {
   });
 
   const categoryName = decodeHtmlEntities(article?._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");
-  const featuredImage = article ? getPostImage(article, categoryName) : "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09";
+  const featuredImage = article ? getPostImage(article) : "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09";
   const authorName = article?._embedded?.['author']?.[0]?.name || "Prepper Evolution Team";
   const dateFormatted = article ? new Date(article.date).toLocaleDateString() : "";
   
@@ -133,7 +133,7 @@ export default function Article() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {related.map(post => {
               const catName = decodeHtmlEntities(post._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");
-              const relImg = getPostImage(post, catName);
+              const relImg = getPostImage(post);
               return (
                 <Link key={post.id} href={`/articles/${post.slug}`} className="group block">
                   <div className="bg-card rounded-xl overflow-hidden border border-border shadow-sm hover:border-primary/50 transition-colors h-full flex flex-col">

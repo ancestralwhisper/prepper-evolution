@@ -1,0 +1,22 @@
+ The article fallback images are repeating because they're only based on category. Fix this by assigning a unique image to each article based on its slug or title. Use these
+  specific Unsplash images:
+
+  Article-specific fallback images:
+  - "beginners-guide-to-prepping" → https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600 (campfire survival)
+  - "building-your-first-bug-out-bag" → https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600 (tactical backpack)
+  - "water-purification-methods" → https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600 (flowing water)
+  - "long-term-food-storage-guide" → https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=600 (food storage shelves)
+  - "emergency-communication-grid-down" → https://images.unsplash.com/photo-1563203369-26f2e4a5ccf7?w=600 (radio equipment)
+  - "first-aid-essentials-survival" → https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=600 (first aid kit)
+  - "home-security-budget" → https://images.unsplash.com/photo-1558002038-1055907df827?w=600 (home security)
+  - "financial-preparedness" → https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600 (finance/planning)
+  - "urban-vs-rural-prepping" → https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600 (city skyline)
+  - "top-10-skills-every-prepper-should-learn" → https://images.unsplash.com/photo-1517824806704-9040b037703b?w=600 (wilderness skills)
+  - "overlanding-for-preppers-bug-out-vehicle" → https://images.unsplash.com/photo-1533591380348-14193f1de18f?w=600 (off-road vehicle)
+  - "overland-expo-guide-2026" → https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600 (road trip adventure)
+  - "best-overlanding-gear-emergency-preparedness" → https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600 (gear layout)
+  - "campsite-selection-wilderness-survival" → https://images.unsplash.com/photo-1478131143263-83f42b576904?w=600 (wilderness campsite)
+  - "ultralight-backpacking-gear-guide" → https://images.unsplash.com/photo-1551632811-561732d1e306?w=600 (hiker on trail)
+
+  Create a lookup map by slug. When a WordPress article comes in, check if its slug matches the map — if yes use that image. If no match (future articles), fall back to a hash of
+  the article title to pick from a pool of 10 generic outdoor images so they never repeat side by side.

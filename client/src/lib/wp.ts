@@ -65,21 +65,59 @@ export function decodeHtmlEntities(str: string): string {
 
 const DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600";
 
-export function getFallbackImageForCategory(categoryName: string): string {
-  const name = categoryName.toLowerCase();
-  if (name.includes("preparedness")) return "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600";
-  if (name.includes("overland")) return "https://images.unsplash.com/photo-1533591380348-14193f1de18f?w=600";
-  if (name.includes("camping") || name.includes("outdoor")) return "https://images.unsplash.com/photo-1478131143263-83f42b576904?w=600";
-  if (name.includes("gear")) return "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600";
-  if (name.includes("skills") || name.includes("strategy")) return "https://images.unsplash.com/photo-1517824806704-9040b037703b?w=600";
-  if (name.includes("backpack")) return "https://images.unsplash.com/photo-1551632811-561732d1e306?w=600";
-  if (name.includes("water")) return "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600";
-  if (name.includes("power") || name.includes("energy")) return "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600";
-  if (name.includes("bug out") || name.includes("emergency")) return "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600";
-  return DEFAULT_FALLBACK_IMAGE;
+const SLUG_IMAGE_MAP: Record<string, string> = {
+  "beginners-guide-to-prepping": "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600",
+  "building-your-first-bug-out-bag": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600",
+  "water-purification-methods": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600",
+  "long-term-food-storage-guide": "https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=600",
+  "emergency-communication-grid-down": "https://images.unsplash.com/photo-1563203369-26f2e4a5ccf7?w=600",
+  "first-aid-essentials-survival": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=600",
+  "home-security-budget": "https://images.unsplash.com/photo-1558002038-1055907df827?w=600",
+  "financial-preparedness": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600",
+  "urban-vs-rural-prepping": "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600",
+  "top-10-skills-every-prepper-should-learn": "https://images.unsplash.com/photo-1517824806704-9040b037703b?w=600",
+  "overlanding-for-preppers-bug-out-vehicle": "https://images.unsplash.com/photo-1533591380348-14193f1de18f?w=600",
+  "overland-expo-guide-2026": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600",
+  "best-overlanding-gear-emergency-preparedness": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600",
+  "campsite-selection-wilderness-survival": "https://images.unsplash.com/photo-1478131143263-83f42b576904?w=600",
+  "ultralight-backpacking-gear-guide": "https://images.unsplash.com/photo-1551632811-561732d1e306?w=600"
+};
+
+const GENERIC_FALLBACK_IMAGES = [
+  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600", // Mountain landscape
+  "https://images.unsplash.com/photo-1455448972184-de647495d428?w=600", // Forest fog
+  "https://images.unsplash.com/photo-1445307399708-84c4ee5908b8?w=600", // Forest cabin
+  "https://images.unsplash.com/photo-1465310477141-6fb93167a273?w=600", // River valley
+  "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=600", // Tent under stars
+  "https://images.unsplash.com/photo-1478131143263-83f42b576904?w=600", // Wilderness campsite
+  "https://images.unsplash.com/photo-1517824806704-9040b037703b?w=600", // Fire building
+  "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600", // Open road van
+  "https://images.unsplash.com/photo-1508873696983-2dfd5898f08b?w=600", // Misty trees
+  "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600"  // Deep woods
+];
+
+function getHash(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
 }
 
-export function getPostImage(post: any, decodedCategory: string): string {
+export function getFallbackImageForArticle(slug: string, title: string): string {
+  // First check if we have a specific mapping for this slug
+  if (SLUG_IMAGE_MAP[slug]) {
+    return SLUG_IMAGE_MAP[slug];
+  }
+  
+  // If no specific mapping, use a hash of the title to deterministically pick a generic fallback
+  const index = getHash(title) % GENERIC_FALLBACK_IMAGES.length;
+  return GENERIC_FALLBACK_IMAGES[index];
+}
+
+export function getPostImage(post: any): string {
   const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
   
   // The user mentioned "all share the same default image". We need to check for missing image OR that specific default image
@@ -88,7 +126,7 @@ export function getPostImage(post: any, decodedCategory: string): string {
   // Actually, wait, maybe WordPress itself is returning a specific fallback? If it's returning a generic WP fallback we should catch it.
   // But if it's missing, it's undefined. 
   if (!featuredImage || featuredImage.includes("photo-1542601906990-b4d3fb778b09")) {
-    return getFallbackImageForCategory(decodedCategory);
+    return getFallbackImageForArticle(post.slug, post.title?.rendered || '');
   }
   return featuredImage;
 }

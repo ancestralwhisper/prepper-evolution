@@ -74,7 +74,7 @@ export default function Category() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {categoryArticles.map(article => {
                 const categoryName = decodeHtmlEntities(article._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");
-                const featuredImage = getPostImage(article, categoryName);
+                const featuredImage = getPostImage(article);
                 return (
                   <Link key={article.id} href={`/articles/${article.slug}`} className="group block h-full">
                     <div className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-300 h-full flex flex-col">

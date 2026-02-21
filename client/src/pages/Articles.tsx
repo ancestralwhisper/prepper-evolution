@@ -54,7 +54,7 @@ export default function Articles() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {data?.posts.map((post) => {
                 const category = decodeHtmlEntities(post._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");
-                const featuredImage = getPostImage(post, category);
+                const featuredImage = getPostImage(post);
 
                 return (
                   <Link key={post.id} href={`/articles/${post.slug}`} className="group block h-full">

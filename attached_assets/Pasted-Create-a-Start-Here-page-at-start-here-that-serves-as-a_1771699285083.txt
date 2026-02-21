@@ -1,0 +1,37 @@
+Create a "Start Here" page at /start-here that serves as a welcome guide for new visitors. Structure it like this:
+
+  HERO SECTION:
+  - Headline: "New to Prepping? Start Here."
+  - Subtext: "Whether you're a complete beginner or an experienced overlander looking to level up, we've got you covered. No fear-mongering, no tinfoil hats — just practical,
+  field-tested knowledge."
+
+  SECTION 1 - "Read This First":
+  - Link to the article: /articles/beginners-guide-to-prepping
+  - Short description: "Our complete beginner's guide covers everything you need to know to start preparing — without overwhelming you or breaking the bank."
+
+  SECTION 2 - "Build Your Foundation" (3 cards):
+  - Card 1: "Build Your Bug Out Bag" → /articles/building-your-first-bug-out-bag
+  - Card 2: "Learn Water Purification" → /articles/water-purification-methods
+  - Card 3: "Stock Your Food Supply" → /articles/long-term-food-storage-guide
+
+  SECTION 3 - "Go Deeper" (3 cards):
+  - Card 1: "Emergency Comms" → /articles/emergency-communication-grid-down
+  - Card 2: "First Aid Essentials" → /articles/first-aid-essentials-survival
+  - Card 3: "Home Security on a Budget" → /articles/home-security-budget
+
+  SECTION 4 - "Explore by Interest" (category links):
+  - Preparedness → /category/preparedness
+  - Overlanding → /category/overlanding
+  - Camping → /category/camping
+  - Gear Reviews → /category/gear-reviews
+  - Skills & Strategy → /category/skills-strategy
+
+  SECTION 5 - "Browse Our Top Gear":
+  - Link to /products
+  - Short description: "Every product we recommend has been researched, compared, and vetted. No sponsored picks — just gear that works."
+
+  FOOTER CTA:
+  - "Ready to dig in? Start with The Complete Beginner's Guide to Prepping"
+  - Button linking to /articles/beginners-guide-to-prepping
+
+  Style it to match the light or dark theme that the user has defined in their browser settings, if no settings are present in their browser default to the light theme. Make sure both "Start Here" buttons (hero and header) link to /start-here.

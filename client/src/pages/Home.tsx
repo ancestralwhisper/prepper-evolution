@@ -364,7 +364,7 @@ export default function Home() {
               ) : fieldNotes.length > 0 ? (
                 fieldNotes.map((post: any, i: number) => {
                   const category = decodeHtmlEntities(post._embedded?.['wp:term']?.[0]?.[0]?.name || "Strategy");
-                  const featuredImage = getPostImage(post, category);
+                  const featuredImage = getPostImage(post);
                   
                   return (
                     <Link key={i} href={`/articles/${post.slug}`} className="block">
@@ -424,7 +424,7 @@ export default function Home() {
                 ) : widgetArticles.length > 0 ? (
                   widgetArticles.map((post: any, i: number) => {
                     const category = decodeHtmlEntities(post._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");
-                    const featuredImage = getPostImage(post, category);
+                    const featuredImage = getPostImage(post);
                     const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'short',
