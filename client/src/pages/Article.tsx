@@ -120,9 +120,9 @@ export default function Article() {
           </div>
         )}
 
-        <div className="col-span-1 lg:col-span-3 prose prose-invert prose-lg md:prose-xl prose-p:text-muted-foreground prose-headings:font-display prose-headings:font-bold prose-a:text-primary hover:prose-a:text-primary/80 prose-blockquote:border-l-primary prose-blockquote:bg-primary/5 prose-blockquote:p-4 prose-blockquote:rounded-r-lg prose-img:rounded-xl">
+        <div className="col-span-1 lg:col-span-3">
           <div className="text-xl md:text-2xl font-medium text-foreground/90 border-l-4 border-primary pl-6 mb-12" dangerouslySetInnerHTML={{ __html: article.excerpt.rendered }} />
-          <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+          <div className="wp-article-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
         </div>
       </div>
 
