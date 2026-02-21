@@ -14,7 +14,7 @@ export default function StartHere() {
     <div className="min-h-screen bg-background pb-20">
       {/* Hero Section */}
       <section className="bg-muted/30 py-20 md:py-32 border-b border-border">
-        <div className="max-w-[1000px] mx-auto px-4 md:px-6 text-center">
+        <div className="max-w-[1000px] mx-auto px-4 md:px-6">
           <Link href="/" className="inline-flex items-center text-primary hover:text-primary/80 mb-8 font-medium">
             <ChevronLeft className="w-4 h-4 mr-1" /> Back to Home
           </Link>
@@ -22,6 +22,7 @@ export default function StartHere() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
+            className="text-center"
           >
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold uppercase tracking-tight mb-6">
               New to Prepping? <span className="text-primary block md:inline">Start Here.</span>
