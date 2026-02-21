@@ -304,8 +304,11 @@ export default function Home() {
           <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6 drop-shadow-md uppercase tracking-wider">
             Don't Wait Until It's Too Late
           </h2>
+          <p className="text-white text-xl md:text-2xl font-display font-bold mb-3 drop-shadow-md uppercase tracking-wider">
+            STAY READY. STAY SHARP.
+          </p>
           <p className="text-white text-lg mb-10 max-w-2xl mx-auto drop-shadow-md font-medium">
-            Join 50,000+ preppers receiving our weekly intelligence briefings, gear discounts, and survival strategies.
+            Get weekly gear reviews, field-tested strategies, and exclusive deals — straight to your inbox.
           </p>
           <div className="flex flex-col gap-3 max-w-lg mx-auto">
             <form className="flex flex-col sm:flex-row gap-3" onSubmit={(e) => e.preventDefault()}>
