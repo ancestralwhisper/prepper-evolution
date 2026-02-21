@@ -260,9 +260,9 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {[
-              { img: "https://images.unsplash.com/photo-1596706917688-662f6bfa9f45", name: "ESEE 4", category: "Survival Tools & Knives", rating: 4.9, slug: "esee-4" },
-              { img: "https://images.unsplash.com/photo-1620804797089-32da5707bcf8", name: "EcoFlow DELTA 2 Max", category: "Power & Energy", rating: 4.9, slug: "ecoflow-delta-2-max" },
-              { img: "https://images.unsplash.com/photo-1523362628745-0c100150b504", name: "LifeStraw Personal Water Filter", category: "Water Purification", rating: 4.8, slug: "lifestraw-personal-water-filter" }
+              { img: "/images/product-esee4.png", name: "ESEE 4", category: "Survival Tools & Knives", rating: 4.9, slug: "esee-4" },
+              { img: "/images/product-ecoflow.png", name: "EcoFlow DELTA 2 Max", category: "Power & Energy", rating: 4.9, slug: "ecoflow-delta-2-max" },
+              { img: "/images/product-lifestraw.png", name: "LifeStraw Personal Water Filter", category: "Water Purification", rating: 4.8, slug: "lifestraw-personal-water-filter" }
             ].map((item, i) => (
               <Link key={i} href={`/products/${item.slug}`}>
                 <motion.div 

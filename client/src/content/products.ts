@@ -18,7 +18,7 @@ export const mockProducts: Product[] = [
     description: "Filters up to 1,000 gallons, removes 99.99% of bacteria",
     price: 17.97,
     category: "Water Purification",
-    imageUrl: "https://images.unsplash.com/photo-1523362628745-0c100150b504",
+    imageUrl: "/images/product-lifestraw.png",
     amazonLink: "https://www.amazon.com/dp/B006QF3TW4?tag=prepperevo-20",
     features: ["Filters 1000 gallons", "Removes 99.99% bacteria", "Ultralight"]
   },
@@ -51,7 +51,7 @@ export const mockProducts: Product[] = [
     description: "2048Wh LiFePO4, powers everything from fridges to power tools",
     price: 1599.00,
     category: "Power & Energy",
-    imageUrl: "https://images.unsplash.com/photo-1620804797089-32da5707bcf8",
+    imageUrl: "/images/product-ecoflow.png",
     amazonLink: "https://www.amazon.com/dp/B0BX57LMY4?tag=prepperevo-20",
     features: ["2048Wh capacity", "LiFePO4 battery", "Heavy duty output"]
   },
@@ -238,7 +238,7 @@ export const mockProducts: Product[] = [
     description: "1095 carbon steel, bombproof, lifetime no-questions warranty",
     price: 134.95,
     category: "Survival Tools & Knives",
-    imageUrl: "https://images.unsplash.com/photo-1596706917688-662f6bfa9f45",
+    imageUrl: "/images/product-esee4.png",
     amazonLink: "https://www.amazon.com/dp/B001DZZJ6C?tag=prepperevo-20",
     features: ["1095 carbon steel", "Micarta handle", "Lifetime warranty"]
   },
