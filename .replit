@@ -46,3 +46,9 @@ waitForPort = 5000
 [agent]
 stack = "MOCKUP_JS"
 mockupState = "FULLSTACK"
+
+[userenv]
+
+[userenv.shared]
+TELEGRAM_BOT_TOKEN = "7911688977:AAE0huO4PVJvMHJ3ruE6LxB92kj5hq4-NHw"
+TELEGRAM_CHAT_ID = "7252981740"

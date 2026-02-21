@@ -1,13 +1,17 @@
 import { useParams } from "wouter";
 import { useSEO } from "@/hooks/useSEO";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, ShoppingCart, Check } from "lucide-react";
+import { ChevronLeft, ShoppingCart, Check, AlertTriangle } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 import type { Product as ProductType } from "@shared/schema";
 
 export default function Product() {
   const { slug } = useParams();
+  const { toast } = useToast();
+  const [isCheckingLink, setIsCheckingLink] = useState(false);
 
   const { data: product, isLoading } = useQuery<ProductType>({
     queryKey: ["product", slug],
@@ -19,6 +23,45 @@ export default function Product() {
     enabled: !!slug,
     staleTime: 5 * 60 * 1000,
   });
+
+  const { data: linkHealth } = useQuery<{ isHealthy: boolean }>({
+    queryKey: ["link-health-product", slug],
+    queryFn: async () => {
+      const res = await fetch(`/api/link-health/product/${slug}`);
+      if (!res.ok) return { isHealthy: true };
+      return res.json();
+    },
+    enabled: !!slug,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const isLinkHealthy = linkHealth?.isHealthy !== false;
+
+  const handleAmazonClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!product || !isLinkHealthy) return;
+    
+    e.preventDefault();
+    setIsCheckingLink(true);
+
+    try {
+      const res = await fetch(`/api/link-health/check/${slug}`);
+      const result = await res.json();
+
+      if (result.isHealthy) {
+        window.open(product.amazonLink, "_blank", "noopener,noreferrer");
+      } else {
+        toast({
+          title: "This product may be unavailable",
+          description: "The Amazon link appears to be temporarily down. We've logged this for review.",
+          variant: "destructive",
+        });
+      }
+    } catch {
+      window.open(product.amazonLink, "_blank", "noopener,noreferrer");
+    } finally {
+      setIsCheckingLink(false);
+    }
+  };
 
   useSEO({
     title: product?.name || "Product Not Found",
@@ -47,7 +90,7 @@ export default function Product() {
       "@type": "Offer",
       "priceCurrency": "USD",
       "price": price,
-      "availability": "https://schema.org/InStock"
+      "availability": isLinkHealthy ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
     }
   };
 
@@ -92,15 +135,38 @@ export default function Product() {
               </ul>
             </div>
             
-            <Button size="lg" className="w-full h-14 text-lg font-bold tracking-wider uppercase shadow-xl" asChild>
-              <a href={product.amazonLink} target="_blank" rel="noopener noreferrer">
-                <ShoppingCart className="w-5 h-5 mr-2" />
-                Check Price on Amazon
-              </a>
-            </Button>
-            <p className="text-xs text-muted-foreground text-center">
-              As an Amazon Associate we earn from qualifying purchases (Tag: prepperevo-20).
-            </p>
+            {isLinkHealthy ? (
+              <>
+                <Button 
+                  size="lg" 
+                  className="w-full h-14 text-lg font-bold tracking-wider uppercase shadow-xl" 
+                  disabled={isCheckingLink}
+                  asChild
+                >
+                  <a 
+                    href={product.amazonLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    onClick={handleAmazonClick}
+                    data-testid="button-buy-amazon"
+                  >
+                    <ShoppingCart className="w-5 h-5 mr-2" />
+                    {isCheckingLink ? "Checking availability..." : "Check Price on Amazon"}
+                  </a>
+                </Button>
+                <p className="text-xs text-muted-foreground text-center">
+                  As an Amazon Associate we earn from qualifying purchases (Tag: prepperevo-20).
+                </p>
+              </>
+            ) : (
+              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 text-center" data-testid="status-unavailable">
+                <AlertTriangle className="w-8 h-8 text-yellow-500 mx-auto mb-3" />
+                <h3 className="font-bold text-lg mb-1">Currently Unavailable</h3>
+                <p className="text-muted-foreground text-sm">
+                  This product's Amazon listing is temporarily unavailable. Check back soon — we're monitoring it.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

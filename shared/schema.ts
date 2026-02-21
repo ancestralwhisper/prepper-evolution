@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, numeric, serial, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, numeric, serial, timestamp, integer, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -30,6 +30,27 @@ export const newsletterSubscribers = pgTable("newsletter_subscribers", {
   subscribedAt: timestamp("subscribed_at").defaultNow().notNull(),
 });
 
+export const linkHealthChecks = pgTable("link_health_checks", {
+  id: serial("id").primaryKey(),
+  runId: integer("run_id"),
+  productId: integer("product_id").notNull(),
+  productSlug: text("product_slug").notNull(),
+  productName: text("product_name").notNull(),
+  url: text("url").notNull(),
+  statusCode: integer("status_code"),
+  isHealthy: boolean("is_healthy").notNull().default(true),
+  errorMessage: text("error_message"),
+  checkedAt: timestamp("checked_at").defaultNow().notNull(),
+});
+
+export const linkHealthRuns = pgTable("link_health_runs", {
+  id: serial("id").primaryKey(),
+  totalChecked: integer("total_checked").notNull().default(0),
+  totalBroken: integer("total_broken").notNull().default(0),
+  totalHealthy: integer("total_healthy").notNull().default(0),
+  completedAt: timestamp("completed_at").defaultNow().notNull(),
+});
+
 export const insertProductSchema = createInsertSchema(products).omit({ id: true });
 export const insertComparisonSchema = createInsertSchema(comparisons).omit({ id: true });
 export const insertNewsletterSchema = createInsertSchema(newsletterSubscribers).omit({ id: true, subscribedAt: true });
@@ -40,3 +61,5 @@ export type InsertComparison = z.infer<typeof insertComparisonSchema>;
 export type Comparison = typeof comparisons.$inferSelect;
 export type InsertNewsletter = z.infer<typeof insertNewsletterSchema>;
 export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
+export type LinkHealthCheck = typeof linkHealthChecks.$inferSelect;
+export type LinkHealthRun = typeof linkHealthRuns.$inferSelect;

@@ -11,6 +11,8 @@ import Product from "@/pages/Product";
 import Comparison from "@/pages/Comparison";
 import Category from "@/pages/Category";
 import StartHere from "@/pages/StartHere";
+import AdminLinkHealth from "@/pages/AdminLinkHealth";
+import Articles from "@/pages/Articles";
 
 function Router() {
   const [location] = useLocation();
@@ -32,6 +34,7 @@ function Router() {
           <Route path="/products/:slug" component={Product} />
           <Route path="/comparisons/:slug" component={Comparison} />
           <Route path="/category/:name" component={Category} />
+          <Route path="/admin/link-health" component={AdminLinkHealth} />
           <Route component={NotFound} />
         </Switch>
       </motion.div>

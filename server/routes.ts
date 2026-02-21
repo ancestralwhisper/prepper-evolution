@@ -1,8 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertNewsletterSchema } from "@shared/schema";
+import { insertNewsletterSchema, linkHealthChecks, linkHealthRuns } from "@shared/schema";
 import { z } from "zod";
+import { db } from "./db";
+import { desc, eq } from "drizzle-orm";
+import { runFullLinkCheck, checkProductLink, getLatestHealthForProduct } from "./linkChecker";
 
 const WP_API_URL = "https://prepperevolution.com/wp-json/wp/v2";
 
@@ -111,6 +114,58 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error proxying WP categories:", error);
       res.status(500).json({ message: "Failed to fetch categories" });
+    }
+  });
+
+  // --- Link Health ---
+  app.get("/api/link-health", async (_req, res) => {
+    try {
+      const [latestRun] = await db.select().from(linkHealthRuns).orderBy(desc(linkHealthRuns.completedAt)).limit(1);
+      
+      if (!latestRun) {
+        return res.json({ lastRun: null, checks: [] });
+      }
+
+      const checks = await db
+        .select()
+        .from(linkHealthChecks)
+        .where(eq(linkHealthChecks.runId, latestRun.id))
+        .orderBy(linkHealthChecks.productName);
+
+      res.json({ lastRun: latestRun, checks });
+    } catch (error) {
+      console.error("Error fetching link health:", error);
+      res.status(500).json({ message: "Failed to fetch link health data" });
+    }
+  });
+
+  app.post("/api/link-health/run", async (_req, res) => {
+    try {
+      res.json({ message: "Link check started" });
+      runFullLinkCheck().catch(err => console.error("Manual link check failed:", err));
+    } catch (error) {
+      console.error("Error starting link check:", error);
+      res.status(500).json({ message: "Failed to start link check" });
+    }
+  });
+
+  app.get("/api/link-health/check/:slug", async (req, res) => {
+    try {
+      const result = await checkProductLink(req.params.slug);
+      res.json(result);
+    } catch (error) {
+      console.error("Error checking product link:", error);
+      res.status(500).json({ message: "Failed to check link" });
+    }
+  });
+
+  app.get("/api/link-health/product/:slug", async (req, res) => {
+    try {
+      const isHealthy = await getLatestHealthForProduct(req.params.slug);
+      res.json({ isHealthy });
+    } catch (error) {
+      console.error("Error getting product health:", error);
+      res.json({ isHealthy: true });
     }
   });
 
