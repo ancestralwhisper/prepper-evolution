@@ -74,7 +74,7 @@ const SLUG_IMAGE_MAP: Record<string, string> = {
   "building-your-first-bug-out-bag": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600",
   "water-purification-methods": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600",
   "long-term-food-storage-guide": "https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=600",
-  "emergency-communication-grid-down": "https://images.unsplash.com/photo-1563203369-26f2e4a5ccf7?w=600",
+  "emergency-communication-grid-down": "/images/articles/emergency-communication-grid-down.png",
   "first-aid-essentials-survival": "/images/articles/first-aid-essentials.png",
   "home-security-budget": "https://images.unsplash.com/photo-1558002038-1055907df827?w=600",
   "financial-preparedness": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600",
