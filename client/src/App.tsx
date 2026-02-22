@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AnimatePresence, motion } from "framer-motion";
+import SiteHeader from "@/components/SiteHeader";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Article from "@/pages/Article";
@@ -50,6 +51,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
+        <SiteHeader />
         <Router />
       </TooltipProvider>
     </QueryClientProvider>

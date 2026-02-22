@@ -1,13 +1,11 @@
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
-import { Moon, Sun, ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook, Menu, X, RefreshCw, Search, FileText, Package, Loader2 } from "lucide-react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook, RefreshCw, Loader2 } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useDarkMode } from "@/hooks/useDarkMode";
 import { useQuery } from "@tanstack/react-query";
-import { fetchLatestPosts, decodeHtmlEntities, getPostImage, searchPosts, WPPost } from "@/lib/wp";
-import { mockProducts, Product } from "@/content/products";
+import { fetchLatestPosts, decodeHtmlEntities, getPostImage } from "@/lib/wp";
 
 import { useToast } from "@/hooks/use-toast";
 import heroBg from "@/assets/images/hero-bg.png";
@@ -21,150 +19,6 @@ const TikTokIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-function SiteSearch({ onClose }: { onClose: () => void }) {
-  const [query, setQuery] = useState("");
-  const [articleResults, setArticleResults] = useState<WPPost[]>([]);
-  const [productResults, setProductResults] = useState<Product[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-
-  useEffect(() => {
-    if (query.length < 2) {
-      setArticleResults([]);
-      setProductResults([]);
-      return;
-    }
-
-    const q = query.toLowerCase();
-    const filtered = mockProducts.filter(
-      p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
-    ).slice(0, 4);
-    setProductResults(filtered);
-
-    const timer = setTimeout(async () => {
-      setIsSearching(true);
-      try {
-        const posts = await searchPosts(query);
-        setArticleResults(posts);
-      } catch {
-        setArticleResults([]);
-      }
-      setIsSearching(false);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [query]);
-
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [onClose]);
-
-  const hasResults = articleResults.length > 0 || productResults.length > 0;
-  const hasQuery = query.length >= 2;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[80] flex items-start justify-center pt-[10vh] px-4"
-    >
-      <div className="absolute inset-0 bg-background/90 backdrop-blur-sm" onClick={onClose} />
-      <motion.div
-        initial={{ opacity: 0, y: -20, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: -20, scale: 0.98 }}
-        transition={{ duration: 0.2 }}
-        className="relative w-full max-w-[560px] bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
-      >
-        <div className="flex items-center gap-3 px-4 border-b border-border">
-          <Search className="w-5 h-5 text-muted-foreground shrink-0" />
-          <input
-            autoFocus
-            type="text"
-            placeholder="Search articles, products, topics..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="w-full h-14 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none text-base"
-            data-testid="input-site-search"
-          />
-          <button onClick={onClose} className="p-2 rounded-md hover:bg-muted text-muted-foreground shrink-0" data-testid="button-search-close">
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        {hasQuery && (
-          <div className="max-h-[60vh] overflow-y-auto p-2">
-            {productResults.length > 0 && (
-              <div className="mb-2">
-                <div className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Products</div>
-                {productResults.map(p => (
-                  <Link
-                    key={p.slug}
-                    href={`/products/${p.slug}`}
-                    onClick={onClose}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted transition-colors"
-                    data-testid={`search-result-product-${p.slug}`}
-                  >
-                    <Package className="w-4 h-4 text-primary shrink-0" />
-                    <div className="min-w-0">
-                      <div className="font-medium text-sm text-foreground truncate">{p.name}</div>
-                      <div className="text-xs text-muted-foreground truncate">{p.category} — ${p.price}</div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-
-            {articleResults.length > 0 && (
-              <div className="mb-2">
-                <div className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Articles</div>
-                {articleResults.map(post => (
-                  <Link
-                    key={post.id}
-                    href={`/articles/${post.slug}`}
-                    onClick={onClose}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted transition-colors"
-                    data-testid={`search-result-article-${post.slug}`}
-                  >
-                    <FileText className="w-4 h-4 text-primary shrink-0" />
-                    <div className="min-w-0">
-                      <div className="font-medium text-sm text-foreground truncate">{decodeHtmlEntities(post.title.rendered)}</div>
-                      <div className="text-xs text-muted-foreground truncate">
-                        {decodeHtmlEntities(post.excerpt.rendered.replace(/<[^>]*>/g, '')).slice(0, 80)}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-
-            {!hasResults && !isSearching && (
-              <div className="px-3 py-8 text-center text-muted-foreground text-sm">
-                No results found for "{query}"
-              </div>
-            )}
-
-            {isSearching && !hasResults && (
-              <div className="px-3 py-8 text-center text-muted-foreground text-sm">
-                Searching...
-              </div>
-            )}
-          </div>
-        )}
-
-        {!hasQuery && (
-          <div className="px-3 py-6 text-center text-muted-foreground text-sm">
-            Start typing to search across articles and gear...
-          </div>
-        )}
-      </motion.div>
-    </motion.div>
-  );
-}
 
 function NewsletterForm() {
   const [email, setEmail] = useState("");
@@ -238,10 +92,6 @@ function NewsletterForm() {
 }
 
 export default function Home() {
-  const { isDark, toggle } = useDarkMode();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  
   // Parallax setup
   const { scrollY } = useScroll();
   const [isMobile, setIsMobile] = useState(false);
@@ -268,141 +118,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* 1. Sticky Header */}
-      <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-background/80 border-b border-border/50">
-        <div className="max-w-[1200px] mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <span className="font-display font-bold text-xl tracking-wider uppercase">
-              Prepper <span className="text-primary">Evolution</span>
-            </span>
-          </div>
-
-          {/* Nav Links */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            {[
-              { label: 'Preparedness', href: '/category/preparedness' },
-              { label: 'Overlanding', href: '/category/overlanding' },
-              { label: 'Camping', href: '/category/camping' },
-              { label: 'Gear Reviews', href: '/category/gear-reviews' },
-              { label: 'Shop Gear', href: '/products' },
-              { label: 'Skills & Strategy', href: '/category/skills-&-strategy' },
-            ].map((item) => (
-              <Link 
-                key={item.label} 
-                href={item.href}
-                className="text-foreground/80 hover:text-primary transition-colors hover:underline decoration-primary underline-offset-4"
-                data-testid={`link-nav-${item.label.toLowerCase().replace(/ /g, '-')}`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Actions */}
-          <div className="flex items-center gap-2 md:gap-4">
-            <button 
-              onClick={() => setIsSearchOpen(true)}
-              className="p-3 md:p-2 rounded-full hover:bg-muted transition-colors focus:outline-none"
-              aria-label="Search"
-              data-testid="button-search-open"
-            >
-              <Search className="w-5 h-5" />
-            </button>
-            <button 
-              onClick={toggle}
-              className="p-3 md:p-2 rounded-full hover:bg-muted transition-colors focus:outline-none"
-              aria-label="Toggle dark mode"
-              data-testid="button-theme-toggle"
-            >
-              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
-            <Button className="hidden md:inline-flex bg-primary hover:bg-primary/90 text-primary-foreground min-h-[44px]" data-testid="button-nav-start" asChild>
-              <Link href="/start-here">Start Here</Link>
-            </Button>
-            
-            {/* Mobile Menu Toggle */}
-            <button 
-              className="md:hidden p-3 rounded-full hover:bg-muted transition-colors focus:outline-none"
-              onClick={() => setIsMenuOpen(true)}
-              aria-label="Open menu"
-              data-testid="button-mobile-menu-open"
-            >
-              <Menu className="w-6 h-6" />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile Menu Drawer */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <>
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[60] md:hidden"
-              onClick={() => setIsMenuOpen(false)}
-            />
-            <motion.div 
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-[300px] bg-card border-l border-border z-[70] p-6 shadow-2xl flex flex-col md:hidden"
-            >
-              <div className="flex justify-between items-center mb-8">
-                <span className="font-display font-bold text-lg tracking-wider uppercase">
-                  Menu
-                </span>
-                <button 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-3 rounded-full hover:bg-muted transition-colors"
-                  aria-label="Close menu"
-                  data-testid="button-mobile-menu-close"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-              
-              <nav className="flex flex-col gap-6 flex-1">
-                {[
-                  { label: 'Preparedness', href: '/category/preparedness' },
-                  { label: 'Overlanding', href: '/category/overlanding' },
-                  { label: 'Camping', href: '/category/camping' },
-                  { label: 'Gear Reviews', href: '/category/gear-reviews' },
-                  { label: 'Shop Gear', href: '/products' },
-                  { label: 'Skills & Strategy', href: '/category/skills-&-strategy' },
-                ].map((item) => (
-                  <Link 
-                    key={item.label} 
-                    href={item.href}
-                    className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors py-2"
-                    onClick={() => setIsMenuOpen(false)}
-                    data-testid={`link-mobile-nav-${item.label.toLowerCase().replace(/ /g, '-')}`}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-              
-              <div className="mt-auto pt-8 border-t border-border">
-                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground min-h-[44px] text-lg" onClick={() => setIsMenuOpen(false)} data-testid="button-mobile-nav-start" asChild>
-                  <Link href="/start-here">Start Here</Link>
-                </Button>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Search Overlay */}
-      <AnimatePresence>
-        {isSearchOpen && <SiteSearch onClose={() => setIsSearchOpen(false)} />}
-      </AnimatePresence>
-
       {/* 2. Hero Section */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-background">
         {/* Background Image with Overlay */}
