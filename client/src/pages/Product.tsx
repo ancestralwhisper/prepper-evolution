@@ -1,7 +1,7 @@
 import { useParams } from "wouter";
 import { useSEO } from "@/hooks/useSEO";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, ShoppingCart, Check, AlertTriangle } from "lucide-react";
+import { ChevronLeft, ShoppingCart, Check, AlertTriangle, Tag } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -80,6 +80,8 @@ export default function Product() {
 
   const price = typeof product.price === 'string' ? parseFloat(product.price) : product.price;
 
+  const displayPrice = product.onSale && product.salePrice ? parseFloat(String(product.salePrice)) : price;
+
   const schemaMarkup = {
     "@context": "https://schema.org/",
     "@type": "Product",
@@ -89,7 +91,7 @@ export default function Product() {
     "offers": {
       "@type": "Offer",
       "priceCurrency": "USD",
-      "price": price,
+      "price": displayPrice,
       "availability": isLinkHealthy ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
     }
   };
@@ -108,15 +110,31 @@ export default function Product() {
         </Button>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-          <div className="bg-card rounded-2xl overflow-hidden border border-border p-8 flex items-center justify-center aspect-square">
+          <div className="bg-card rounded-2xl overflow-hidden border border-border p-8 flex items-center justify-center aspect-square relative">
             <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover rounded-xl" />
+            {product.onSale && product.salePrice && (
+              <div className="absolute top-4 right-4 bg-red-600 text-white text-sm font-bold px-3 py-1.5 rounded-lg shadow-lg" data-testid="badge-sale-detail">
+                {Math.round((1 - parseFloat(String(product.salePrice)) / parseFloat(String(product.price))) * 100)}% OFF
+              </div>
+            )}
           </div>
           
           <div className="space-y-8">
             <div>
               <span className="text-primary font-bold tracking-wider uppercase text-sm mb-2 block">{product.category}</span>
               <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">{product.name}</h1>
-              <p className="text-2xl font-bold text-foreground/80">${price.toFixed(2)}</p>
+              {product.onSale && product.salePrice ? (
+                <div className="flex items-center gap-3 flex-wrap">
+                  <p className="text-2xl font-bold text-red-600">${parseFloat(String(product.salePrice)).toFixed(2)}</p>
+                  <p className="text-lg text-muted-foreground line-through">${price.toFixed(2)}</p>
+                  <span className="inline-flex items-center gap-1 bg-red-600/10 text-red-600 text-sm font-bold px-2.5 py-1 rounded-md">
+                    <Tag className="w-3.5 h-3.5" />
+                    Save ${(price - parseFloat(String(product.salePrice))).toFixed(2)}
+                  </span>
+                </div>
+              ) : (
+                <p className="text-2xl font-bold text-foreground/80">${price.toFixed(2)}</p>
+              )}
             </div>
             
             <p className="text-lg text-muted-foreground leading-relaxed">

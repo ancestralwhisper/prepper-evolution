@@ -47,7 +47,7 @@ Preferred communication style: Simple, everyday language.
 ### Database (PostgreSQL + Drizzle ORM)
 - **ORM**: Drizzle ORM with PostgreSQL dialect
 - **Schema** (in `shared/schema.ts`):
-  - `products` — Gear/product listings (slug, name, description, price, category, imageUrl, amazonLink, features array)
+  - `products` — Gear/product listings (slug, name, description, price, salePrice, onSale, category, imageUrl, amazonLink, features array)
   - `comparisons` — Head-to-head comparison guides (slug, title, description, productSlugs array, verdict)
   - `newsletter_subscribers` — Email signups (email, subscribedAt timestamp)
 - **Migrations**: Managed via `drizzle-kit push` (schema push approach, not migration files)

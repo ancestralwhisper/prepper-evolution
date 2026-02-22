@@ -95,7 +95,7 @@ export default function Products() {
               data-testid={`card-product-${product.slug}`}
             >
               <Link href={`/products/${product.slug}`}>
-                <div className="aspect-square overflow-hidden bg-muted">
+                <div className="aspect-square overflow-hidden bg-muted relative">
                   <img
                     src={product.imageUrl}
                     alt={product.name}
@@ -103,6 +103,11 @@ export default function Products() {
                     loading="lazy"
                     data-testid={`img-product-${product.slug}`}
                   />
+                  {product.onSale && product.salePrice && (
+                    <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg" data-testid={`badge-sale-${product.slug}`}>
+                      {Math.round((1 - parseFloat(String(product.salePrice)) / parseFloat(String(product.price))) * 100)}% OFF
+                    </div>
+                  )}
                 </div>
               </Link>
               <div className="p-4 flex flex-col gap-2">
@@ -120,12 +125,16 @@ export default function Products() {
                     {product.name}
                   </h3>
                 </Link>
-                <p
-                  className="text-lg font-bold text-primary"
-                  data-testid={`text-price-${product.slug}`}
-                >
-                  ${parseFloat(String(product.price)).toFixed(2)}
-                </p>
+                <div data-testid={`text-price-${product.slug}`}>
+                  {product.onSale && product.salePrice ? (
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg font-bold text-red-600">${parseFloat(String(product.salePrice)).toFixed(2)}</span>
+                      <span className="text-sm text-muted-foreground line-through">${parseFloat(String(product.price)).toFixed(2)}</span>
+                    </div>
+                  ) : (
+                    <span className="text-lg font-bold text-primary">${parseFloat(String(product.price)).toFixed(2)}</span>
+                  )}
+                </div>
                 <Button
                   asChild
                   size="sm"

@@ -104,7 +104,13 @@ export function SiteSearch({ onClose }: { onClose: () => void }) {
                     <Package className="w-4 h-4 text-primary shrink-0" />
                     <div className="min-w-0">
                       <div className="font-medium text-sm text-foreground truncate">{p.name}</div>
-                      <div className="text-xs text-muted-foreground truncate">{p.category} — ${p.price}</div>
+                      <div className="text-xs text-muted-foreground truncate">
+                        {p.category} — {p.onSale && p.salePrice ? (
+                          <><span className="text-red-600 font-semibold">${parseFloat(String(p.salePrice)).toFixed(2)}</span> <span className="line-through">${parseFloat(String(p.price)).toFixed(2)}</span></>
+                        ) : (
+                          <>${parseFloat(String(p.price)).toFixed(2)}</>
+                        )}
+                      </div>
                     </div>
                   </Link>
                 ))}

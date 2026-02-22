@@ -9,6 +9,8 @@ export const products = pgTable("products", {
   name: text("name").notNull(),
   description: text("description").notNull(),
   price: numeric("price", { precision: 10, scale: 2 }).notNull(),
+  salePrice: numeric("sale_price", { precision: 10, scale: 2 }),
+  onSale: boolean("on_sale").notNull().default(false),
   category: text("category").notNull(),
   imageUrl: text("image_url").notNull(),
   amazonLink: text("amazon_link").notNull(),

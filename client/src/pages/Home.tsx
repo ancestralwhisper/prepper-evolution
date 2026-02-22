@@ -1,11 +1,12 @@
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
-import { ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook, RefreshCw, Loader2 } from "lucide-react";
+import { ChevronRight, CheckCircle2, Star, Shield, Battery, Navigation, Twitter, Instagram, Youtube, Facebook, RefreshCw, Loader2, Tag } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import { fetchLatestPosts, decodeHtmlEntities, getPostImage } from "@/lib/wp";
+import type { Product } from "@shared/schema";
 
 import { useToast } from "@/hooks/use-toast";
 import heroBg from "@/assets/images/hero-bg.png";
@@ -102,6 +103,21 @@ export default function Home() {
     staleTime: 2 * 60 * 1000,
     refetchOnWindowFocus: true,
   });
+
+  const { data: allProducts = [] } = useQuery<Product[]>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await fetch("/api/products");
+      if (!res.ok) return [];
+      return res.json();
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const featuredSlugs = ["esee-4", "ecoflow-delta-2-max", "lifestraw-personal-water-filter"];
+  const featuredProducts = featuredSlugs
+    .map(s => allProducts.find(p => p.slug === s))
+    .filter((p): p is Product => !!p);
 
   const fieldNotes = latestPosts?.slice(0, 3) || [];
   const widgetArticles = latestPosts?.slice(3, 6) || [];
@@ -233,11 +249,11 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {[
-              { img: "/images/product-esee4.png", name: "ESEE 4", category: "Survival Tools & Knives", rating: 4.9, slug: "esee-4" },
-              { img: "/images/product-ecoflow.png", name: "EcoFlow DELTA 2 Max", category: "Power & Energy", rating: 4.9, slug: "ecoflow-delta-2-max" },
-              { img: "/images/product-lifestraw.png", name: "LifeStraw Personal Water Filter", category: "Water Purification", rating: 4.8, slug: "lifestraw-personal-water-filter" }
-            ].map((item, i) => (
+            {(featuredProducts.length > 0 ? featuredProducts : [
+              { slug: "esee-4", name: "ESEE 4", category: "Survival Tools & Knives", imageUrl: "/images/product-esee4.png", price: "134.95", onSale: false, salePrice: null } as Product,
+              { slug: "ecoflow-delta-2-max", name: "EcoFlow DELTA 2 Max", category: "Power & Energy", imageUrl: "/images/product-ecoflow.png", price: "1599.00", onSale: false, salePrice: null } as Product,
+              { slug: "lifestraw-personal-water-filter", name: "LifeStraw Personal Water Filter", category: "Water Purification", imageUrl: "/images/product-lifestraw.png", price: "17.97", onSale: false, salePrice: null } as Product,
+            ]).map((item, i) => (
               <Link key={i} href={`/products/${item.slug}`}>
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
@@ -248,16 +264,31 @@ export default function Home() {
                   data-testid={`card-gear-${i}`}
                 >
                   <div className="aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-muted relative">
-                    <img src={item.img} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold uppercase tracking-wider text-foreground">
                       {item.category}
                     </div>
+                    {item.onSale && item.salePrice && (
+                      <div className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
+                        {Math.round((1 - parseFloat(String(item.salePrice)) / parseFloat(String(item.price))) * 100)}% OFF
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center gap-1 mb-2 text-primary">
                     <Star className="w-4 h-4 fill-current" />
-                    <span className="font-medium text-sm text-foreground">{item.rating}</span>
+                    <span className="font-medium text-sm text-foreground">4.9</span>
                   </div>
-                  <h3 className="text-lg font-bold font-display group-hover:text-primary transition-colors mt-auto">{item.name}</h3>
+                  <h3 className="text-lg font-bold font-display group-hover:text-primary transition-colors">{item.name}</h3>
+                  <div className="mt-1">
+                    {item.onSale && item.salePrice ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-base font-bold text-red-600">${parseFloat(String(item.salePrice)).toFixed(2)}</span>
+                        <span className="text-sm text-muted-foreground line-through">${parseFloat(String(item.price)).toFixed(2)}</span>
+                      </div>
+                    ) : (
+                      <span className="text-base font-bold text-primary">${parseFloat(String(item.price)).toFixed(2)}</span>
+                    )}
+                  </div>
                 </motion.div>
               </Link>
             ))}
