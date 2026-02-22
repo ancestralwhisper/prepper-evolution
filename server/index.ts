@@ -3,6 +3,7 @@ import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import { initLinkChecker } from "./linkChecker";
+import { seedDatabase } from "./seed";
 
 const app = express();
 const httpServer = createServer(app);
@@ -97,8 +98,13 @@ app.use((req, res, next) => {
       host: "0.0.0.0",
       reusePort: true,
     },
-    () => {
+    async () => {
       log(`serving on port ${port}`);
+      try {
+        await seedDatabase();
+      } catch (err) {
+        console.error("Auto-seed failed:", err);
+      }
       initLinkChecker();
     },
   );

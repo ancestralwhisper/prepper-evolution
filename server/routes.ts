@@ -63,27 +63,30 @@ export async function registerRoutes(
     try {
       const parsed = insertNewsletterSchema.parse(req.body);
 
-      const kitApiKey = process.env.KIT_API_KEY;
-      if (kitApiKey) {
-        const kitRes = await fetch("https://api.kit.com/v4/subscribers", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${kitApiKey}`,
-          },
-          body: JSON.stringify({ email_address: parsed.email }),
-        });
-
-        if (!kitRes.ok) {
-          const kitError = await kitRes.json().catch(() => ({}));
-          console.error("Kit API error:", kitRes.status, kitError);
-          return res.status(400).json({ message: "Something went wrong. Try again or check your email address." });
-        }
-      }
-
       const existing = await storage.getNewsletterSubscriber(parsed.email);
       if (!existing) {
         await storage.subscribeNewsletter(parsed);
+      }
+
+      const kitApiKey = process.env.KIT_API_KEY;
+      if (kitApiKey) {
+        try {
+          const kitRes = await fetch("https://api.kit.com/v4/subscribers", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${kitApiKey}`,
+            },
+            body: JSON.stringify({ email_address: parsed.email }),
+          });
+
+          if (!kitRes.ok) {
+            const kitError = await kitRes.json().catch(() => ({}));
+            console.error("Kit API error:", kitRes.status, kitError);
+          }
+        } catch (kitErr) {
+          console.error("Kit API request failed:", kitErr);
+        }
       }
 
       res.status(200).json({ message: "You're in! Check your inbox for your first briefing." });

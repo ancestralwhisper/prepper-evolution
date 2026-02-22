@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { useSEO } from "@/hooks/useSEO";
-import { mockProducts } from "@/content/products";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Filter } from "lucide-react";
+import { ShoppingCart, Filter, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import type { Product } from "@shared/schema";
 
 const categories = [
   "All",
@@ -21,14 +22,24 @@ const categories = [
 export default function Products() {
   const [activeCategory, setActiveCategory] = useState("All");
 
+  const { data: products = [], isLoading } = useQuery<Product[]>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await fetch("/api/products");
+      if (!res.ok) throw new Error("Failed to fetch products");
+      return res.json();
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
   useSEO({
     title: "Shop Gear | Prepper Evolution",
     description: "Browse our curated selection of survival, overlanding, and preparedness gear. Tested and reviewed by real preppers.",
   });
 
   const filtered = activeCategory === "All"
-    ? mockProducts
-    : mockProducts.filter((p) => p.category === activeCategory);
+    ? products
+    : products.filter((p) => p.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -62,6 +73,12 @@ export default function Products() {
             </button>
           ))}
         </div>
+
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          </div>
+        ) : null}
 
         <p className="text-sm text-muted-foreground mb-6" data-testid="text-products-count">
           Showing {filtered.length} product{filtered.length !== 1 ? "s" : ""}
@@ -107,7 +124,7 @@ export default function Products() {
                   className="text-lg font-bold text-primary"
                   data-testid={`text-price-${product.slug}`}
                 >
-                  ${product.price.toFixed(2)}
+                  ${parseFloat(String(product.price)).toFixed(2)}
                 </p>
                 <Button
                   asChild

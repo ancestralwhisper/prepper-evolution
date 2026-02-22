@@ -1,15 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { Search, X, FileText, Package } from "lucide-react";
 import { motion } from "framer-motion";
 import { searchPosts, decodeHtmlEntities, WPPost } from "@/lib/wp";
-import { mockProducts, Product } from "@/content/products";
+import type { Product } from "@shared/schema";
 
 export function SiteSearch({ onClose }: { onClose: () => void }) {
   const [query, setQuery] = useState("");
   const [articleResults, setArticleResults] = useState<WPPost[]>([]);
   const [productResults, setProductResults] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const allProductsRef = useRef<Product[]>([]);
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then(r => r.json())
+      .then(data => { allProductsRef.current = data; })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (query.length < 2) {
@@ -19,8 +27,8 @@ export function SiteSearch({ onClose }: { onClose: () => void }) {
     }
 
     const q = query.toLowerCase();
-    const filtered = mockProducts.filter(
-      p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
+    const filtered = allProductsRef.current.filter(
+      (p: Product) => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
     ).slice(0, 4);
     setProductResults(filtered);
 

@@ -32,15 +32,14 @@ const comparisonData = [
   { slug: "best-gravity-water-filters-2025", title: "The Best Gravity Water Filters of 2025: Head-to-Head", description: "We tested the top 5 gravity water filters in back-country conditions to see which one actually delivers.", productSlugs: ["lifestraw-personal-water-filter", "sawyer-squeeze-water-filter", "berkey-water-filter"], verdict: "The Berkey takes the top spot for base camp use, while the Sawyer Squeeze wins for portability." },
 ];
 
-async function seed() {
-  console.log("Seeding database...");
-
+export async function seedDatabase() {
   const existingProducts = await db.select().from(products);
   if (existingProducts.length > 0) {
     console.log(`Database already has ${existingProducts.length} products. Skipping seed.`);
-    process.exit(0);
+    return;
   }
 
+  console.log("Seeding database...");
   await db.insert(products).values(productData);
   console.log(`Inserted ${productData.length} products.`);
 
@@ -48,10 +47,13 @@ async function seed() {
   console.log(`Inserted ${comparisonData.length} comparisons.`);
 
   console.log("Seed complete.");
-  process.exit(0);
 }
 
-seed().catch((err) => {
-  console.error("Seed failed:", err);
-  process.exit(1);
-});
+if (process.argv[1]?.endsWith("seed.ts") || process.argv[1]?.endsWith("seed.js")) {
+  seedDatabase()
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error("Seed failed:", err);
+      process.exit(1);
+    });
+}
