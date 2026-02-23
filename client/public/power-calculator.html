@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Off-Grid Power Calculator | Prepper Evolution</title>
+  <meta name="description" content="Calculate exactly how much portable power you need for off-grid living, camping, emergencies, and overlanding. Get personalized power station recommendations." />
+  <meta property="og:title" content="Off-Grid Power Calculator | Prepper Evolution" />
+  <meta property="og:description" content="Calculate your off-grid power needs and get personalized power station recommendations." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VETV00HHJY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VETV00HHJY');
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1115;
+      --bg-card: #1a1d23;
+      --bg-input: #22252b;
+      --border: #2e3138;
+      --text: #e8e9eb;
+      --text-muted: #9ca3af;
+      --primary: #c8a960;
+      --primary-hover: #d4b96e;
+      --danger: #ef4444;
+      --danger-hover: #dc2626;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --blue: #3b82f6;
+      --radius: 10px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .font-display { font-family: 'Oswald', sans-serif; }
+
+    /* Header */
+    .site-header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .back-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--primary); }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #1a1d23 0%, #0f1115 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 20px 40px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .hero h1 span { color: var(--primary); }
+    .hero p {
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1rem;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    @media (min-width: 900px) {
+      .layout { grid-template-columns: 1fr 380px; }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .card-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title svg { color: var(--primary); flex-shrink: 0; }
+
+    /* Quick-add presets */
+    .presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .preset-btn {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .preset-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(200, 169, 96, 0.08);
+    }
+
+    /* Device rows */
+    .device-row {
+      display: grid;
+      grid-template-columns: 1fr 90px 80px 40px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 600px) {
+      .device-row { grid-template-columns: 1fr 70px 60px 36px; gap: 6px; }
+    }
+    .device-row label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    input[type="text"], input[type="number"] {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    input::placeholder { color: #555; }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .remove-btn:hover { color: var(--danger); background: rgba(239,68,68,0.1); }
+
+    .add-btn {
+      background: rgba(200, 169, 96, 0.1);
+      border: 1px dashed var(--primary);
+      color: var(--primary);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+    .add-btn:hover { background: rgba(200, 169, 96, 0.18); }
+
+    /* Days input */
+    .days-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+    .days-row label { font-size: 0.9rem; font-weight: 500; white-space: nowrap; }
+    .days-row input { max-width: 80px; text-align: center; }
+
+    /* Results panel */
+    .results-panel { position: sticky; top: 80px; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-box {
+      background: var(--bg-input);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+    .stat-box.full { grid-column: 1 / -1; }
+    .stat-value {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    /* Recommendation cards */
+    .rec-section { margin-top: 24px; }
+    .rec-section h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .rec-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+    .rec-card:hover { border-color: var(--primary); }
+    .rec-card.best { border-color: var(--success); }
+    .rec-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .rec-badge.best { background: rgba(34,197,94,0.15); color: var(--success); }
+    .rec-badge.upgrade { background: rgba(59,130,246,0.15); color: var(--blue); }
+    .rec-badge.budget { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .rec-name {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    .rec-specs {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .rec-specs span { color: var(--text); font-weight: 500; }
+    .rec-bar-wrap {
+      background: var(--bg);
+      border-radius: 4px;
+      height: 6px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    .rec-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    .rec-bar.green { background: var(--success); }
+    .rec-bar.yellow { background: var(--warning); }
+    .rec-bar.red { background: var(--danger); }
+    .rec-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary);
+      color: #000;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .rec-link:hover { background: var(--primary-hover); }
+
+    /* Tips section */
+    .tips { margin-top: 28px; }
+    .tip-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .tip-icon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+      margin-top: 2px;
+    }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 20px;
+      text-align: center;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-inner p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .footer-inner a { color: var(--primary); text-decoration: none; }
+    .footer-inner a:hover { text-decoration: underline; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.3s ease; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="logo">Prepper Evolution</a>
+      <a href="/" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        Back to site
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1 class="font-display">Off-Grid <span>Power Calculator</span></h1>
+    <p>Add your devices, set your runtime, and find out exactly how much portable power you need. We'll recommend the right power station for your setup.</p>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="layout">
+
+      <!-- Left: Device Input -->
+      <div>
+        <div class="card">
+          <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.19M15 6h2.81A2 2 0 0 1 20 8v8a2 2 0 0 1-2 2h-2"/><line x1="23" y1="13" x2="23" y2="11"/><polyline points="11 6 7 12 13 12 9 18"/></svg>
+            Quick Add Common Devices
+          </div>
+          <div class="presets" id="presets"></div>
+
+          <div class="card-title" style="margin-top:8px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            Your Devices
+          </div>
+
+          <div class="device-row">
+            <label>Device</label>
+            <label>Watts</label>
+            <label>Hrs/day</label>
+            <label></label>
+          </div>
+          <div id="device-list"></div>
+          <button class="add-btn" onclick="addDevice('', '', '')" data-testid="button-add-device">+ Add Device</button>
+
+          <div class="days-row">
+            <label for="days-input">Days of autonomy:</label>
+            <input type="number" id="days-input" value="1" min="1" max="30" onchange="calculate()" data-testid="input-days">
+            <span style="font-size:0.8rem;color:var(--text-muted)">(how many days without recharging)</span>
+          </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="card tips" style="margin-top:20px">
+          <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Power Planning Tips
+          </div>
+          <div class="tip-item">
+            <svg class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <span><strong>Add 20% buffer</strong> &mdash; Real-world power draw is often higher than rated wattage. Inverter efficiency, temperature, and aging batteries all reduce usable capacity.</span>
+          </div>
+          <div class="tip-item">
+            <svg class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <span><strong>Solar extends everything</strong> &mdash; A 200W solar panel can replenish 600-1000Wh per day in good sun, dramatically extending your runtime.</span>
+          </div>
+          <div class="tip-item">
+            <svg class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span><strong>LiFePO4 is king</strong> &mdash; LFP batteries last 3,000+ cycles vs 500 for standard lithium-ion. They're safer, more stable in heat, and the clear choice for preparedness.</span>
+          </div>
+          <div class="tip-item">
+            <svg class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+            <span><strong>Night drain matters</strong> &mdash; CPAP machines, mini fridges, and security cameras run 8-12 hours overnight. Factor these into your daily calculation.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Results -->
+      <div class="results-panel">
+        <div class="card">
+          <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Your Power Needs
+          </div>
+
+          <div id="results-content">
+            <div class="empty-state">
+              Add devices above to see your power requirements and recommendations.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>&copy; 2026 <a href="/">Prepper Evolution</a>. All rights reserved.</p>
+      <p style="font-size:0.7rem;margin-top:8px">As an Amazon Associate, we earn from qualifying purchases. Product recommendations are based on your calculated power needs.</p>
+    </div>
+  </footer>
+
+  <script>
+    const PRESETS = [
+      { name: 'Phone Charger', watts: 20, hours: 2 },
+      { name: 'Laptop', watts: 65, hours: 4 },
+      { name: 'LED Lights', watts: 10, hours: 6 },
+      { name: 'Mini Fridge', watts: 60, hours: 24 },
+      { name: 'CPAP Machine', watts: 30, hours: 8 },
+      { name: 'Starlink Mini', watts: 30, hours: 12 },
+      { name: 'Fan', watts: 40, hours: 8 },
+      { name: 'TV (32")', watts: 50, hours: 4 },
+      { name: 'Coffee Maker', watts: 900, hours: 0.25 },
+      { name: 'Microwave', watts: 1000, hours: 0.25 },
+      { name: 'Electric Blanket', watts: 75, hours: 8 },
+      { name: 'HAM Radio', watts: 25, hours: 3 },
+      { name: 'Drone Charger', watts: 80, hours: 1 },
+      { name: 'Camera Charger', watts: 15, hours: 1 },
+      { name: 'Router/Modem', watts: 15, hours: 24 },
+    ];
+
+    const POWER_STATIONS = [
+      {
+        name: 'Jackery Explorer 300 Plus',
+        wh: 288,
+        watts: 300,
+        battery: 'LiFePO4',
+        price: '$289',
+        amazon: 'https://www.amazon.com/dp/B0CFV93GZM?tag=prepperevo-20',
+        tier: 'budget'
+      },
+      {
+        name: 'Bluetti AC180',
+        wh: 1152,
+        watts: 1800,
+        battery: 'LiFePO4',
+        price: '$649',
+        amazon: 'https://www.amazon.com/dp/B0C1SMJTDT?tag=prepperevo-20',
+        tier: 'mid'
+      },
+      {
+        name: 'EcoFlow DELTA 2',
+        wh: 1024,
+        watts: 1800,
+        battery: 'LiFePO4',
+        price: '$649',
+        amazon: 'https://www.amazon.com/dp/B0B9XB57XM?tag=prepperevo-20',
+        tier: 'mid'
+      },
+      {
+        name: 'Jackery Explorer 1000 Plus',
+        wh: 1264,
+        watts: 2000,
+        battery: 'LiFePO4',
+        price: '$1,099',
+        amazon: 'https://www.amazon.com/dp/B0CG5BP68F?tag=prepperevo-20',
+        tier: 'mid-high'
+      },
+      {
+        name: 'EcoFlow DELTA 2 Max',
+        wh: 2048,
+        watts: 2400,
+        battery: 'LiFePO4',
+        price: '$1,599',
+        amazon: 'https://www.amazon.com/dp/B0C4DW17PD?tag=prepperevo-20',
+        tier: 'high'
+      },
+    ];
+
+    let devices = [];
+    let deviceId = 0;
+
+    function init() {
+      const presetsEl = document.getElementById('presets');
+      PRESETS.forEach(p => {
+        const btn = document.createElement('button');
+        btn.className = 'preset-btn';
+        btn.textContent = p.name;
+        btn.onclick = () => addDevice(p.name, p.watts, p.hours);
+        presetsEl.appendChild(btn);
+      });
+      addDevice('Phone Charger', 20, 2);
+      addDevice('LED Lights', 10, 6);
+    }
+
+    function addDevice(name, watts, hours) {
+      const id = ++deviceId;
+      devices.push({ id, name: name || '', watts: watts || '', hours: hours || '' });
+      renderDevices();
+      calculate();
+    }
+
+    function removeDevice(id) {
+      devices = devices.filter(d => d.id !== id);
+      renderDevices();
+      calculate();
+    }
+
+    function updateDevice(id, field, value) {
+      const d = devices.find(d => d.id === id);
+      if (d) d[field] = value;
+      calculate();
+    }
+
+    function renderDevices() {
+      const list = document.getElementById('device-list');
+      list.innerHTML = '';
+      devices.forEach(d => {
+        const row = document.createElement('div');
+        row.className = 'device-row fade-in';
+        row.innerHTML = `
+          <input type="text" value="${d.name}" placeholder="Device name" onchange="updateDevice(${d.id},'name',this.value)" data-testid="input-device-name-${d.id}">
+          <input type="number" value="${d.watts}" placeholder="W" min="0" onchange="updateDevice(${d.id},'watts',this.value)" oninput="updateDevice(${d.id},'watts',this.value)" data-testid="input-device-watts-${d.id}">
+          <input type="number" value="${d.hours}" placeholder="Hrs" min="0" step="0.25" onchange="updateDevice(${d.id},'hours',this.value)" oninput="updateDevice(${d.id},'hours',this.value)" data-testid="input-device-hours-${d.id}">
+          <button class="remove-btn" onclick="removeDevice(${d.id})" data-testid="button-remove-device-${d.id}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function calculate() {
+      const days = parseInt(document.getElementById('days-input').value) || 1;
+      let dailyWh = 0;
+      let peakWatts = 0;
+
+      devices.forEach(d => {
+        const w = parseFloat(d.watts) || 0;
+        const h = parseFloat(d.hours) || 0;
+        dailyWh += w * h;
+        if (w > peakWatts) peakWatts = w;
+      });
+
+      const totalWh = dailyWh * days;
+      const withBuffer = Math.ceil(totalWh * 1.2);
+
+      const content = document.getElementById('results-content');
+
+      if (dailyWh === 0) {
+        content.innerHTML = '<div class="empty-state">Add devices above to see your power requirements and recommendations.</div>';
+        return;
+      }
+
+      let recs = getRecommendations(withBuffer, peakWatts);
+
+      content.innerHTML = `
+        <div class="stat-grid fade-in">
+          <div class="stat-box">
+            <div class="stat-value" data-testid="text-daily-wh">${Math.round(dailyWh)}</div>
+            <div class="stat-label">Wh / Day</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" data-testid="text-peak-watts">${Math.round(peakWatts)}W</div>
+            <div class="stat-label">Peak Draw</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" data-testid="text-total-wh">${withBuffer.toLocaleString()}</div>
+            <div class="stat-label">Total Wh Needed (${days} day${days>1?'s':''} + 20% buffer)</div>
+          </div>
+        </div>
+
+        <div class="rec-section fade-in">
+          <h3>Recommended Power Stations</h3>
+          ${recs.map(r => renderRec(r, withBuffer, peakWatts)).join('')}
+        </div>
+      `;
+    }
+
+    function getRecommendations(neededWh, peakWatts) {
+      let sorted = [...POWER_STATIONS].sort((a, b) => a.wh - b.wh);
+
+      let bestIdx = sorted.findIndex(s => s.wh >= neededWh && s.watts >= peakWatts);
+
+      if (bestIdx === -1) {
+        let maxWh = sorted[sorted.length - 1];
+        return sorted.slice(-3).reverse().map(s => ({
+          ...s,
+          tag: s === maxWh ? 'best' : 'upgrade',
+          tagLabel: s === maxWh ? 'Closest Fit' : 'Also Consider',
+          note: `You need ${neededWh.toLocaleString()}Wh — consider multiple units or solar to supplement.`
+        }));
+      }
+
+      let results = [];
+      let best = sorted[bestIdx];
+      results.push({ ...best, tag: 'best', tagLabel: 'Best Match' });
+
+      if (bestIdx + 1 < sorted.length) {
+        results.push({ ...sorted[bestIdx + 1], tag: 'upgrade', tagLabel: 'Extra Headroom' });
+      }
+
+      if (bestIdx > 0) {
+        results.push({ ...sorted[bestIdx - 1], tag: 'budget', tagLabel: 'Budget Option' });
+      } else if (bestIdx + 2 < sorted.length) {
+        results.push({ ...sorted[bestIdx + 2], tag: 'upgrade', tagLabel: 'Max Power' });
+      }
+
+      return results;
+    }
+
+    function renderRec(rec, neededWh, peakWatts) {
+      const coverage = Math.min(100, Math.round((rec.wh / neededWh) * 100));
+      const barColor = coverage >= 100 ? 'green' : coverage >= 70 ? 'yellow' : 'red';
+      const wattsOk = rec.watts >= peakWatts;
+      const noteHtml = rec.note ? `<div style="font-size:0.75rem;color:var(--warning);margin-bottom:8px">${rec.note}</div>` : '';
+
+      return `
+        <div class="rec-card ${rec.tag === 'best' ? 'best' : ''}">
+          <span class="rec-badge ${rec.tag}">${rec.tagLabel}</span>
+          <div class="rec-name">${rec.name}</div>
+          <div class="rec-specs">
+            <span>${rec.wh.toLocaleString()}Wh</span> capacity &middot;
+            <span>${rec.watts.toLocaleString()}W</span> output &middot;
+            ${rec.battery} &middot;
+            <span>${rec.price}</span>
+          </div>
+          ${noteHtml}
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);margin-bottom:4px">
+            <span>Covers ${coverage}% of your needs</span>
+            <span>${wattsOk ? '&#10003; Handles peak draw' : '&#9888; Peak draw may exceed output'}</span>
+          </div>
+          <div class="rec-bar-wrap">
+            <div class="rec-bar ${barColor}" style="width:${coverage}%"></div>
+          </div>
+          <a href="${rec.amazon}" target="_blank" rel="noopener noreferrer nofollow" class="rec-link" data-testid="link-amazon-${rec.name.replace(/\s+/g,'-').toLowerCase()}">
+            Check Price on Amazon
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      `;
+    }
+
+    init();
+  </script>
+</body>
+</html>
