@@ -75,7 +75,7 @@ export async function registerRoutes(
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${kitApiKey}`,
+              "X-Kit-Api-Key": kitApiKey,
             },
             body: JSON.stringify({ email_address: parsed.email }),
           });
@@ -83,6 +83,8 @@ export async function registerRoutes(
           if (!kitRes.ok) {
             const kitError = await kitRes.json().catch(() => ({}));
             console.error("Kit API error:", kitRes.status, kitError);
+          } else {
+            console.log("Kit subscriber added:", parsed.email);
           }
         } catch (kitErr) {
           console.error("Kit API request failed:", kitErr);
