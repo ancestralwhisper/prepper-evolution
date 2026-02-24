@@ -121,12 +121,26 @@ export default function Category() {
                 return (
                   <Link key={product.id} href={`/products/${product.slug}`} className="group block">
                     <div className="bg-card rounded-2xl overflow-hidden border border-border p-4 hover:border-primary/50 transition-colors h-full flex flex-col">
-                      <div className="aspect-square bg-muted rounded-xl overflow-hidden mb-4">
+                      <div className="aspect-square bg-muted rounded-xl overflow-hidden mb-4 relative">
                         <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        {product.onSale && product.salePrice && (
+                          <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg" data-testid={`badge-sale-${product.slug}`}>
+                            {Math.round((1 - parseFloat(String(product.salePrice)) / parseFloat(String(product.price))) * 100)}% OFF
+                          </div>
+                        )}
                       </div>
                       <h3 className="font-bold mb-2 group-hover:text-primary transition-colors">{product.name}</h3>
                       <p className="text-muted-foreground text-sm flex-1 line-clamp-2 mb-4">{product.description}</p>
-                      <p className="font-bold text-lg mt-auto">${price.toFixed(2)}</p>
+                      <div className="mt-auto" data-testid={`text-price-${product.slug}`}>
+                        {product.onSale && product.salePrice ? (
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-lg text-red-600">${parseFloat(String(product.salePrice)).toFixed(2)}</span>
+                            <span className="text-sm text-muted-foreground line-through">${price.toFixed(2)}</span>
+                          </div>
+                        ) : (
+                          <p className="font-bold text-lg">${price.toFixed(2)}</p>
+                        )}
+                      </div>
                     </div>
                   </Link>
                 );
