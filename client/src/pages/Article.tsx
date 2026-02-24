@@ -83,7 +83,9 @@ export default function Article() {
     queryKey: ["wp-post", slug],
     queryFn: () => fetchPostBySlug(slug!),
     enabled: !!slug,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
+    retry: 3,
+    retryDelay: (attemptIndex: number) => Math.min(1000 * (attemptIndex + 1), 5000),
   });
 
   const categoryId = article?._embedded?.['wp:term']?.[0]?.[0]?.id;
@@ -92,7 +94,9 @@ export default function Article() {
     queryKey: ["wp-related", categoryId, slug],
     queryFn: () => fetchPosts(1, categoryId),
     enabled: !!categoryId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
+    retry: 3,
+    retryDelay: (attemptIndex: number) => Math.min(1000 * (attemptIndex + 1), 5000),
   });
 
   const categoryName = decodeHtmlEntities(article?._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");

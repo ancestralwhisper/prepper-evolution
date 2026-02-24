@@ -9,6 +9,26 @@ import { runFullLinkCheck, checkProductLink, getLatestHealthForProduct } from ".
 
 const WP_API_URL = "https://wp.prepperevolution.com/wp-json/wp/v2";
 
+const wpCache: Map<string, { data: any; headers: Record<string, string>; timestamp: number }> = new Map();
+const WP_CACHE_TTL = 2 * 60 * 1000; // 2 minutes
+const WP_STALE_TTL = 60 * 60 * 1000; // 1 hour - serve stale if WP is down
+
+async function fetchFromWP(url: string, retries = 2): Promise<Response | null> {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
+      if (res.ok) return res;
+      console.error(`WordPress API attempt ${attempt + 1} returned status ${res.status}`);
+    } catch (error) {
+      console.error(`WordPress API attempt ${attempt + 1} failed:`, error instanceof Error ? error.message : error);
+    }
+    if (attempt < retries) {
+      await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+    }
+  }
+  return null;
+}
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
@@ -101,7 +121,7 @@ export async function registerRoutes(
     }
   });
 
-  // --- WordPress API Proxy ---
+  // --- WordPress API Proxy (with caching + retry) ---
   app.get("/api/wp/posts", async (req, res) => {
     try {
       const { page = "1", per_page = "10", categories, slug, search } = req.query;
@@ -110,43 +130,99 @@ export async function registerRoutes(
       if (slug) url += `&slug=${slug}`;
       if (search) url += `&search=${encodeURIComponent(String(search))}`;
 
-      const wpRes = await fetch(url, { signal: AbortSignal.timeout(10000) });
-      
-      const contentType = wpRes.headers.get("content-type") || "";
-      if (!wpRes.ok || !contentType.includes("application/json")) {
-        console.error(`WordPress API returned status ${wpRes.status}, content-type: ${contentType}`);
-        res.set("x-wp-totalpages", "0");
-        res.set("x-wp-total", "0");
-        return res.json([]);
+      const cacheKey = `posts:${url}`;
+      const cached = wpCache.get(cacheKey);
+      const now = Date.now();
+
+      if (cached && (now - cached.timestamp) < WP_CACHE_TTL) {
+        res.set("x-wp-totalpages", cached.headers["x-wp-totalpages"] || "1");
+        res.set("x-wp-total", cached.headers["x-wp-total"] || "0");
+        return res.json(cached.data);
       }
 
-      const totalPages = wpRes.headers.get("x-wp-totalpages") || "1";
-      const total = wpRes.headers.get("x-wp-total") || "0";
-      const posts = await wpRes.json();
+      const wpRes = await fetchFromWP(url);
 
-      res.set("x-wp-totalpages", totalPages);
-      res.set("x-wp-total", total);
-      res.json(posts);
+      if (wpRes) {
+        const contentType = wpRes.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+          const totalPages = wpRes.headers.get("x-wp-totalpages") || "1";
+          const total = wpRes.headers.get("x-wp-total") || "0";
+          const posts = await wpRes.json();
+
+          if (Array.isArray(posts) && posts.length > 0) {
+            wpCache.set(cacheKey, {
+              data: posts,
+              headers: { "x-wp-totalpages": totalPages, "x-wp-total": total },
+              timestamp: now,
+            });
+          }
+
+          res.set("x-wp-totalpages", totalPages);
+          res.set("x-wp-total", total);
+          return res.json(posts);
+        }
+      }
+
+      if (cached && (now - cached.timestamp) < WP_STALE_TTL) {
+        console.log("WordPress unavailable, serving stale cached posts");
+        res.set("x-wp-totalpages", cached.headers["x-wp-totalpages"] || "1");
+        res.set("x-wp-total", cached.headers["x-wp-total"] || "0");
+        return res.json(cached.data);
+      }
+
+      console.error("WordPress API unavailable and no cache available");
+      return res.status(503).json({ error: "WordPress temporarily unavailable" });
     } catch (error) {
       console.error("Error proxying WP posts:", error);
-      res.set("x-wp-totalpages", "0");
-      res.set("x-wp-total", "0");
-      res.json([]);
+      const { page: pg = "1", per_page: pp = "10", categories: cat, slug: sl, search: sr } = req.query;
+      let errUrl = `${WP_API_URL}/posts?_embed&per_page=${pp}&page=${pg}&status=publish&orderby=date&order=desc`;
+      if (cat) errUrl += `&categories=${cat}`;
+      if (sl) errUrl += `&slug=${sl}`;
+      if (sr) errUrl += `&search=${encodeURIComponent(String(sr))}`;
+      const errCacheKey = `posts:${errUrl}`;
+      const errCached = wpCache.get(errCacheKey);
+      if (errCached) {
+        res.set("x-wp-totalpages", errCached.headers["x-wp-totalpages"] || "1");
+        res.set("x-wp-total", errCached.headers["x-wp-total"] || "0");
+        return res.json(errCached.data);
+      }
+      return res.status(503).json({ error: "WordPress temporarily unavailable" });
     }
   });
 
   app.get("/api/wp/categories", async (_req, res) => {
     try {
-      const wpRes = await fetch(`${WP_API_URL}/categories?per_page=100`, { signal: AbortSignal.timeout(10000) });
-      
-      const contentType = wpRes.headers.get("content-type") || "";
-      if (!wpRes.ok || !contentType.includes("application/json")) {
-        return res.json([]);
+      const cacheKey = "categories";
+      const cached = wpCache.get(cacheKey);
+      const now = Date.now();
+
+      if (cached && (now - cached.timestamp) < WP_CACHE_TTL) {
+        return res.json(cached.data);
       }
-      const categories = await wpRes.json();
-      res.json(categories);
+
+      const wpRes = await fetchFromWP(`${WP_API_URL}/categories?per_page=100`);
+
+      if (wpRes) {
+        const contentType = wpRes.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+          const categories = await wpRes.json();
+          if (Array.isArray(categories) && categories.length > 0) {
+            wpCache.set(cacheKey, { data: categories, headers: {}, timestamp: now });
+          }
+          return res.json(categories);
+        }
+      }
+
+      if (cached && (now - cached.timestamp) < WP_STALE_TTL) {
+        console.log("WordPress unavailable, serving stale cached categories");
+        return res.json(cached.data);
+      }
+
+      res.json([]);
     } catch (error) {
       console.error("Error proxying WP categories:", error);
+      const cached = wpCache.get("categories");
+      if (cached) return res.json(cached.data);
       res.json([]);
     }
   });

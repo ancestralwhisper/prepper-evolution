@@ -19,7 +19,7 @@ export interface WPCategory {
 }
 
 export async function fetchPosts(page = 1, categoryId?: number): Promise<{ posts: WPPost[], totalPages: number }> {
-  let url = `/api/wp/posts?per_page=10&page=${page}`;
+  let url = `/api/wp/posts?per_page=10&page=${page}&_t=${Date.now()}`;
   if (categoryId) {
     url += `&categories=${categoryId}`;
   }
@@ -30,18 +30,33 @@ export async function fetchPosts(page = 1, categoryId?: number): Promise<{ posts
   const totalPages = parseInt(res.headers.get("x-wp-totalpages") || "1", 10);
   const posts = await res.json();
   
+  if (!Array.isArray(posts)) {
+    throw new Error("Invalid response from WordPress");
+  }
+  
+  if (posts.length === 0 && !categoryId && page === 1) {
+    throw new Error("No posts returned from main feed - will retry");
+  }
+  
   return { posts, totalPages };
 }
 
 export async function fetchLatestPosts(limit = 3): Promise<WPPost[]> {
-  const url = `/api/wp/posts?per_page=${limit}`;
+  const url = `/api/wp/posts?per_page=${limit}&_t=${Date.now()}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error("Failed to fetch latest posts");
-  return await res.json();
+  const posts = await res.json();
+  if (!Array.isArray(posts)) {
+    throw new Error("Invalid response from WordPress");
+  }
+  if (posts.length === 0) {
+    throw new Error("No posts returned - will retry");
+  }
+  return posts;
 }
 
 export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
-  const res = await fetch(`/api/wp/posts?slug=${slug}`);
+  const res = await fetch(`/api/wp/posts?slug=${slug}&_t=${Date.now()}`);
   if (!res.ok) throw new Error("Failed to fetch post");
   
   const posts = await res.json();
@@ -49,14 +64,14 @@ export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
 }
 
 export async function fetchCategories(): Promise<WPCategory[]> {
-  const res = await fetch(`/api/wp/categories`);
+  const res = await fetch(`/api/wp/categories?_t=${Date.now()}`);
   if (!res.ok) throw new Error("Failed to fetch categories");
   
   return await res.json();
 }
 
 export async function searchPosts(query: string): Promise<WPPost[]> {
-  const res = await fetch(`/api/wp/posts?search=${encodeURIComponent(query)}&per_page=5`);
+  const res = await fetch(`/api/wp/posts?search=${encodeURIComponent(query)}&per_page=5&_t=${Date.now()}`);
   if (!res.ok) return [];
   return await res.json();
 }

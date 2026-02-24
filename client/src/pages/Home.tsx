@@ -100,8 +100,10 @@ export default function Home() {
   const { data: latestPosts, isLoading: isLoadingPosts, refetch, isFetching } = useQuery({
     queryKey: ["wp-latest-posts"],
     queryFn: () => fetchLatestPosts(6),
-    staleTime: 2 * 60 * 1000,
+    staleTime: 60 * 1000,
     refetchOnWindowFocus: true,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * (attemptIndex + 1), 5000),
   });
 
   const { data: allProducts = [] } = useQuery<Product[]>({

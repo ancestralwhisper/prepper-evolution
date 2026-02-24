@@ -17,8 +17,10 @@ export default function Articles() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["wp-posts", page],
     queryFn: () => fetchPosts(page),
-    staleTime: 2 * 60 * 1000, // Cache for 2 minutes
+    staleTime: 60 * 1000,
     refetchOnWindowFocus: true,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * (attemptIndex + 1), 5000),
   });
 
   return (

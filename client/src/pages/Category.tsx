@@ -30,7 +30,9 @@ export default function Category() {
   const { data: categories } = useQuery({
     queryKey: ["wp-categories"],
     queryFn: fetchCategories,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
+    retry: 3,
+    retryDelay: (attemptIndex: number) => Math.min(1000 * (attemptIndex + 1), 5000),
   });
 
   const wpCategory = categories?.find(c => c.name.toLowerCase() === categoryTitle.toLowerCase());
@@ -39,7 +41,9 @@ export default function Category() {
     queryKey: ["wp-posts-by-category", wpCategory?.id],
     queryFn: () => fetchPosts(1, wpCategory!.id),
     enabled: !!wpCategory?.id,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
+    retry: 3,
+    retryDelay: (attemptIndex: number) => Math.min(1000 * (attemptIndex + 1), 5000),
   });
 
   const { data: allProducts } = useQuery<Product[]>({
