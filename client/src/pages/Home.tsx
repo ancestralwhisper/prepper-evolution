@@ -206,9 +206,9 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: "Bug Out Bags", icon: Battery, desc: "Build the perfect 72-hour kit for any scenario.", link: "/category/preparedness" },
-              { title: "Overland Navigation", icon: Navigation, desc: "Find your way when the grid goes down.", link: "/category/overlanding" },
-              { title: "Water Procurement", icon: Shield, desc: "Filtration, purification, and storage techniques.", link: "/category/skills-&-strategy" }
+              { title: "Bug Out Bags", icon: Battery, desc: "Build the perfect 72-hour kit for any scenario.", link: "/articles/best-bug-out-bags-compared-military-surplus-vs-premium-2026" },
+              { title: "Overland Navigation", icon: Navigation, desc: "Find your way when the grid goes down.", link: "/articles/overlanding-for-preppers-bug-out-vehicle" },
+              { title: "Water Procurement", icon: Shield, desc: "Filtration, purification, and storage techniques.", link: "/articles/best-water-filters-for-preppers-overlanders-2026-complete-comparison" }
             ].map((feature, i) => (
               <motion.div 
                 key={i} 
