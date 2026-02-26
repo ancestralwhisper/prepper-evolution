@@ -34,6 +34,24 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
 
+  // --- WordPress category slug redirects (social media links use /category/slug format) ---
+  const wpCategories = [
+    "gear", "preparedness", "bags-packs", "communication", "overlanding",
+    "water", "water-filters", "food-storage", "first-aid", "security",
+    "financial", "skills", "wilderness", "campsite-skills", "getting-started",
+    "knives-tools", "electronics", "recovery-gear", "rooftop-tents",
+    "fridges-coolers", "power-stations", "stoves-cooking", "vehicle-builds",
+    "overland-expo", "camping", "car-camping", "backpacking", "cold-weather",
+    "urban-survival", "uncategorized",
+  ];
+
+  for (const category of wpCategories) {
+    app.get(`/${category}/*slug`, (req, res) => {
+      const slug = req.params.slug;
+      res.redirect(301, `/articles/${slug}`);
+    });
+  }
+
   // --- Products ---
   app.get("/api/products", async (_req, res) => {
     try {
