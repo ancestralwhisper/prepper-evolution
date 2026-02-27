@@ -16,7 +16,7 @@ export interface GearCategory {
   items: GearItem[];
 }
 
-const TAG = "prepperevo-20";
+const A = (asin: string) => `https://www.amazon.com/dp/${asin}?tag=prepperevo-20`;
 
 export const gearCategories: GearCategory[] = [
   {
@@ -25,9 +25,15 @@ export const gearCategories: GearCategory[] = [
     color: "#8B6F47",
     icon: "Backpack",
     items: [
-      { id: "rush72", name: "5.11 Rush 72 2.0 (55L)", weightOz: 85, category: "pack", essential: true, affiliateUrl: `https://www.amazon.com/dp/B08R7Y9R7Y?tag=${TAG}`, affiliateNote: "$185 — Our top BOB pick" },
-      { id: "mystery-ranch", name: "Mystery Ranch 3-Day Assault", weightOz: 72, category: "pack", essential: false },
-      { id: "goruck-gr2", name: "GoRuck GR2 (40L)", weightOz: 68, category: "pack", essential: false },
+      { id: "rush72", name: "5.11 Rush 72 2.0 (55L)", weightOz: 85, category: "pack", essential: true, affiliateUrl: A("B0D9R239MT"), affiliateNote: "$185 — Our top BOB pick" },
+      { id: "mystery-ranch", name: "Mystery Ranch 2 Day (27L)", weightOz: 72, category: "pack", essential: false, affiliateUrl: A("B0DTB48FW4"), affiliateNote: "$249" },
+      { id: "goruck-rucker", name: "GORUCK Rucker 4.0 (20L)", weightOz: 68, category: "pack", essential: false, affiliateUrl: A("B0DDZPCXZD"), affiliateNote: "$255" },
+      { id: "molle-ii", name: "Akmax MOLLE II Medium Ruck", weightOz: 96, category: "pack", essential: false, affiliateUrl: A("B09H71PN7H"), affiliateNote: "Budget military surplus" },
+      { id: "helikon-raccoon", name: "Helikon-Tex Raccoon Mk2 (20L)", weightOz: 38, category: "pack", essential: false, affiliateUrl: A("B0D8HCRCYR"), affiliateNote: "$86 — Budget lightweight" },
+      { id: "osprey-atmos", name: "Osprey Atmos AG 65", weightOz: 73, category: "pack", essential: false, affiliateUrl: A("B09JXQDZG5"), affiliateNote: "$350 — Best comfort" },
+      { id: "kelty-redwing", name: "Kelty Redwing 50", weightOz: 56, category: "pack", essential: false, affiliateUrl: A("B0DT2FZGYV"), affiliateNote: "$200" },
+      { id: "maxpedition-falcon", name: "Maxpedition Falcon-II", weightOz: 64, category: "pack", essential: false, affiliateUrl: A("B0013AXY54"), affiliateNote: "$167" },
+      { id: "vertx-gamut", name: "Vertx Gamut 22L Sling", weightOz: 44, category: "pack", essential: false, affiliateUrl: A("B0G2MY4814"), affiliateNote: "$230 — Gray man EDC" },
     ],
   },
   {
@@ -36,10 +42,11 @@ export const gearCategories: GearCategory[] = [
     color: "#8B5E3C",
     icon: "Tent",
     items: [
-      { id: "tent-2p", name: "2-Person Backpacking Tent", weightOz: 56, category: "shelter", essential: false },
+      { id: "tent-2p", name: "Big Agnes Copper Spur HV UL2", weightOz: 42, category: "shelter", essential: false, affiliateUrl: A("B0817CJLHN"), affiliateNote: "Ultralight 2P tent" },
       { id: "tarp", name: "Emergency Tarp (10x10)", weightOz: 24, category: "shelter", essential: false },
-      { id: "sleeping-bag", name: "3-Season Sleeping Bag", weightOz: 40, category: "shelter", essential: false },
-      { id: "sleeping-pad", name: "Inflatable Sleeping Pad", weightOz: 16, category: "shelter", essential: false },
+      { id: "sol-bivvy", name: "SOL Emergency Bivvy", weightOz: 4, category: "shelter", essential: false, affiliateUrl: A("B08KWQVBT7"), affiliateNote: "Reusable emergency shelter" },
+      { id: "sleeping-bag", name: "Featherstone Moondance 25", weightOz: 40, category: "shelter", essential: false, affiliateUrl: A("B0B17FCP29"), affiliateNote: "850-fill down bag" },
+      { id: "sleeping-pad", name: "Therm-a-Rest NeoAir XLite NXT", weightOz: 13, category: "shelter", essential: false, affiliateUrl: A("B0CS4NHPVP"), affiliateNote: "Ultralight inflatable pad" },
       { id: "mylar-blanket", name: "Mylar Emergency Blanket (2x)", weightOz: 2, category: "shelter", essential: true },
     ],
   },
@@ -49,9 +56,13 @@ export const gearCategories: GearCategory[] = [
     color: "#3B82F6",
     icon: "Droplets",
     items: [
-      { id: "sawyer-squeeze", name: "Sawyer Squeeze Filter", weightOz: 3, category: "water", essential: true, affiliateUrl: `https://www.amazon.com/dp/B00B1OSU4W?tag=${TAG}`, affiliateNote: "$38 — Best value filter" },
+      { id: "sawyer-squeeze", name: "Sawyer Squeeze Filter", weightOz: 3, category: "water", essential: true, affiliateUrl: A("B00B1OSU4W"), affiliateNote: "$38 — Best value filter" },
+      { id: "lifestraw", name: "LifeStraw Personal Filter", weightOz: 2, category: "water", essential: false, affiliateUrl: A("B006QF3TW4"), affiliateNote: "$18 — Ultralight backup" },
+      { id: "lifestraw-peak", name: "LifeStraw Peak Solo", weightOz: 2, category: "water", essential: false, affiliateUrl: A("B0CHXTXZ2S"), affiliateNote: "$34 — Next-gen filter" },
+      { id: "katadyn-befree", name: "Katadyn BeFree Ultralight", weightOz: 2, category: "water", essential: false, affiliateUrl: A("B0BFQMMJVS"), affiliateNote: "Fast flow ultralight" },
+      { id: "grayl-geopress", name: "GRAYL GeoPress Purifier", weightOz: 16, category: "water", essential: false, affiliateUrl: A("B0D3HB3V5Z"), affiliateNote: "$100 — Removes viruses" },
       { id: "nalgene-32", name: "Nalgene Bottle (32oz)", weightOz: 6, category: "water", essential: true },
-      { id: "purification-tabs", name: "Aquamira Purification Tablets", weightOz: 1, category: "water", essential: false },
+      { id: "purification-tabs", name: "Aquamira Purification Tablets", weightOz: 1, category: "water", essential: false, affiliateUrl: A("B01AUWUAQ6"), affiliateNote: "Chemical backup" },
       { id: "hydration-bladder", name: "Hydration Bladder (3L)", weightOz: 6, category: "water", essential: false },
     ],
   },
@@ -61,12 +72,15 @@ export const gearCategories: GearCategory[] = [
     color: "#22C55E",
     icon: "UtensilsCrossed",
     items: [
+      { id: "mh-supply", name: "Mountain House Freeze-Dried Meals", weightOz: 5, category: "food", essential: false, affiliateUrl: A("B0BPVMJKV2"), affiliateNote: "25-year shelf life" },
       { id: "mre-1", name: "MRE (1 meal)", weightOz: 24, category: "food", essential: false },
       { id: "mre-2", name: "MRE (2nd meal)", weightOz: 24, category: "food", essential: false },
       { id: "freeze-dried-1", name: "Freeze-Dried Meal (1)", weightOz: 5, category: "food", essential: false },
       { id: "freeze-dried-2", name: "Freeze-Dried Meal (2)", weightOz: 5, category: "food", essential: false },
       { id: "energy-bars", name: "Energy Bars (6-pack)", weightOz: 12, category: "food", essential: true },
-      { id: "cooking-kit", name: "Compact Stove + Pot Kit", weightOz: 16, category: "food", essential: false },
+      { id: "jetboil", name: "Jetboil Flash Cooking System", weightOz: 13, category: "food", essential: false, affiliateUrl: A("B0DXQC9B14"), affiliateNote: "Boils water in 100 sec" },
+      { id: "cooking-kit", name: "GSI Pinnacle Camper Cookset", weightOz: 32, category: "food", essential: false, affiliateUrl: A("B0DJPSBDYN"), affiliateNote: "Full camp kitchen" },
+      { id: "biolite-stove", name: "BioLite CampStove 2+", weightOz: 33, category: "food", essential: false, affiliateUrl: A("B08S46HLM1"), affiliateNote: "Burns wood + charges USB" },
     ],
   },
   {
@@ -87,9 +101,9 @@ export const gearCategories: GearCategory[] = [
     color: "#F97316",
     icon: "Heart",
     items: [
-      { id: "ifak", name: "IFAK / First Aid Kit", weightOz: 16, category: "firstaid", essential: true },
+      { id: "ifak", name: "IFAK Trauma Kit", weightOz: 16, category: "firstaid", essential: true, affiliateUrl: A("B0FYF2S1HM"), affiliateNote: "Complete trauma kit" },
       { id: "medications", name: "Personal Medications", weightOz: 4, category: "firstaid", essential: true },
-      { id: "tourniquet", name: "CAT Tourniquet", weightOz: 3, category: "firstaid", essential: false },
+      { id: "tourniquet", name: "CAT Tourniquet Gen 7", weightOz: 3, category: "firstaid", essential: false, affiliateUrl: A("B0DVZR1XHP"), affiliateNote: "Buy genuine — beware counterfeits" },
       { id: "israeli-bandage", name: "Israeli Bandage", weightOz: 4, category: "firstaid", essential: false },
     ],
   },
@@ -99,8 +113,11 @@ export const gearCategories: GearCategory[] = [
     color: "#6B7280",
     icon: "Wrench",
     items: [
-      { id: "esee4", name: "ESEE-4 Fixed Blade Knife", weightOz: 12, category: "tools", essential: true, affiliateUrl: `https://www.amazon.com/dp/B004GHYK2K?tag=${TAG}`, affiliateNote: "$150 — Lifetime warranty" },
-      { id: "multitool", name: "Leatherman Multi-Tool", weightOz: 9, category: "tools", essential: true },
+      { id: "esee4", name: "ESEE-4 Fixed Blade Knife", weightOz: 12, category: "tools", essential: true, affiliateUrl: A("B0848RXQ1W"), affiliateNote: "$127 — Lifetime no-questions warranty" },
+      { id: "morakniv", name: "Morakniv Companion", weightOz: 4, category: "tools", essential: false, affiliateUrl: A("B004TNWD40"), affiliateNote: "$16 — Budget workhorse" },
+      { id: "morakniv-bushcraft", name: "Morakniv Bushcraft Survival", weightOz: 5, category: "tools", essential: false, affiliateUrl: A("B00BFI8TOA"), affiliateNote: "$59 — Includes fire starter" },
+      { id: "benchmade-bugout", name: "Benchmade Bugout 535", weightOz: 2, category: "tools", essential: false, affiliateUrl: A("B07452LTBD"), affiliateNote: "1.85oz EDC folder" },
+      { id: "multitool", name: "Leatherman Wave+", weightOz: 9, category: "tools", essential: true, affiliateUrl: A("B07BK58NX2"), affiliateNote: "Best multi-tool" },
       { id: "folding-saw", name: "Folding Saw", weightOz: 8, category: "tools", essential: false },
       { id: "paracord", name: "Paracord (100ft)", weightOz: 7, category: "tools", essential: true },
       { id: "duct-tape", name: "Duct Tape (mini roll)", weightOz: 3, category: "tools", essential: false },
@@ -114,7 +131,7 @@ export const gearCategories: GearCategory[] = [
     items: [
       { id: "compass", name: "Baseplate Compass", weightOz: 2, category: "navigation", essential: true },
       { id: "topo-maps", name: "Local Topo Maps (printed)", weightOz: 3, category: "navigation", essential: true },
-      { id: "garmin-inreach", name: "Garmin inReach Mini 2", weightOz: 7, category: "navigation", essential: false, affiliateUrl: `https://www.amazon.com/dp/B09RMD3B9P?tag=${TAG}`, affiliateNote: "$400 — Satellite SOS + messaging" },
+      { id: "garmin-inreach", name: "Garmin inReach Mini 2", weightOz: 7, category: "navigation", essential: false, affiliateUrl: A("B09X4GJ924"), affiliateNote: "$400 — Satellite SOS + messaging" },
     ],
   },
   {
@@ -123,7 +140,10 @@ export const gearCategories: GearCategory[] = [
     color: "#06B6D4",
     icon: "Radio",
     items: [
-      { id: "baofeng", name: "Baofeng UV-5R Radio", weightOz: 10, category: "communication", essential: false, affiliateUrl: `https://www.amazon.com/dp/B007H4VT7A?tag=${TAG}`, affiliateNote: "$25 — License required" },
+      { id: "baofeng", name: "Baofeng UV-5R Radio", weightOz: 10, category: "communication", essential: false, affiliateUrl: A("B007H4VT7A"), affiliateNote: "$25 — Ham license required" },
+      { id: "midland-gxt", name: "Midland GXT1000 GMRS Radio", weightOz: 12, category: "communication", essential: false, affiliateUrl: A("B001WMFYH4"), affiliateNote: "$73 — 36-mile range" },
+      { id: "midland-cb", name: "Midland 75-822 CB Radio", weightOz: 14, category: "communication", essential: false, affiliateUrl: A("B00000K2YR"), affiliateNote: "$100 — No license needed" },
+      { id: "zoleo", name: "Zoleo Satellite Messenger", weightOz: 5, category: "communication", essential: false, affiliateUrl: A("B07X59RH7T"), affiliateNote: "$149 — Budget satellite" },
       { id: "whistle", name: "Emergency Whistle", weightOz: 1, category: "communication", essential: true },
       { id: "signal-mirror", name: "Signal Mirror", weightOz: 2, category: "communication", essential: false },
     ],
@@ -148,8 +168,10 @@ export const gearCategories: GearCategory[] = [
     items: [
       { id: "document-kit", name: "Document Kit (IDs, cash)", weightOz: 4, category: "misc", essential: true },
       { id: "usb-drive", name: "USB Drive (docs backup)", weightOz: 1, category: "misc", essential: false },
-      { id: "headlamp", name: "Headlamp + Batteries", weightOz: 4, category: "misc", essential: true },
+      { id: "headlamp", name: "Petzl Actik Core Headlamp", weightOz: 3, category: "misc", essential: true, affiliateUrl: A("B0FHKTNR6T"), affiliateNote: "Rechargeable, 600 lumens" },
+      { id: "solar-panel", name: "BigBlue 28W Solar Charger", weightOz: 21, category: "misc", essential: false, affiliateUrl: A("B01EXWCPLC"), affiliateNote: "Keep devices charged" },
       { id: "trash-bags", name: "Heavy Duty Trash Bags (2x)", weightOz: 2, category: "misc", essential: false },
+      { id: "mylar-bags", name: "Mylar Bags + O2 Absorbers", weightOz: 8, category: "misc", essential: false, affiliateUrl: A("B0CZ7VVJZ6"), affiliateNote: "Long-term food storage" },
     ],
   },
 ];

@@ -27,6 +27,8 @@ Preferred communication style: Simple, everyday language.
 - `/products/:slug` — Individual product pages (data from PostgreSQL)
 - `/comparisons/:slug` — Head-to-head gear comparison pages
 - `/category/:name` — Category-filtered content pages
+- `/tools` — Tools index page (calculators and interactive tools)
+- `/tools/bug-out-bag-calculator` — Interactive BOB weight calculator with 60+ gear items, donut chart, affiliate links, print/share
 
 ### Backend (Express 5)
 - **Runtime**: Node.js with TypeScript via `tsx`
@@ -76,7 +78,9 @@ Preferred communication style: Simple, everyday language.
 client/          — Frontend React app
   src/
     pages/       — Route-level page components
+    pages/tools/ — Tools section (ToolsIndex, BugOutBagCalculator, gear-data)
     components/  — shadcn/ui components
+    components/tools/ — Tool-specific components (DonutChart)
     content/     — Static content data (products, articles, comparisons)
     hooks/       — Custom React hooks (dark mode, SEO, toast, mobile detection)
     lib/         — Utilities (queryClient, WordPress API helpers, cn utility)

@@ -130,10 +130,10 @@ export default function BugOutBagCalculator() {
     const missingEssentials = essentialItems.filter((e) => !selected[e.id]);
 
     const recommendations: GearItem[] = [];
-    const hasWaterFilter = selected["sawyer-squeeze"] || selected["purification-tabs"];
-    const hasKnife = selected["esee4"];
-    const hasBag = selected["rush72"] || selected["mystery-ranch"] || selected["goruck-gr2"];
-    const hasComms = selected["baofeng"] || selected["garmin-inreach"];
+    const hasWaterFilter = selected["sawyer-squeeze"] || selected["purification-tabs"] || selected["lifestraw"] || selected["lifestraw-peak"] || selected["katadyn-befree"] || selected["grayl-geopress"];
+    const hasKnife = selected["esee4"] || selected["morakniv"] || selected["morakniv-bushcraft"] || selected["benchmade-bugout"];
+    const hasBag = selected["rush72"] || selected["mystery-ranch"] || selected["goruck-rucker"] || selected["molle-ii"] || selected["helikon-raccoon"] || selected["osprey-atmos"] || selected["kelty-redwing"] || selected["maxpedition-falcon"] || selected["vertx-gamut"];
+    const hasComms = selected["baofeng"] || selected["garmin-inreach"] || selected["midland-gxt"] || selected["midland-cb"] || selected["zoleo"];
 
     if (!hasWaterFilter) {
       const item = allItems.find((i) => i.id === "sawyer-squeeze");
