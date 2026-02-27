@@ -166,7 +166,6 @@ export const gearCategories: GearCategory[] = [
       { id: "base-layer", name: "Base Layer Top", weightOz: 8, category: "clothing", essential: false },
       { id: "shemagh", name: "Shemagh / Bandana", weightOz: 4, category: "clothing", essential: false },
       { id: "gloves", name: "Mechanix M-Pact Gloves", weightOz: 5, category: "clothing", essential: false, affiliateUrl: A("B005YSS0EQ"), affiliateNote: "$35 — Impact protection" },
-      { id: "camp-sandals", name: "Camp Sandals (Chacos)", weightOz: 22, category: "clothing", essential: false, affiliateUrl: A("B01N4WP3I2"), affiliateNote: "$105 — River crossings + camp" },
     ],
   },
   {
@@ -184,13 +183,10 @@ export const gearCategories: GearCategory[] = [
       { id: "power-bank", name: "Anker 737 Power Bank (24,000mAh)", weightOz: 22, category: "misc", essential: false, affiliateUrl: A("B09VPHVT2Z"), affiliateNote: "$110 — 140W, 3-port" },
       { id: "power-bank-prime", name: "Anker Prime 27,650mAh (250W)", weightOz: 24, category: "misc", essential: false, affiliateUrl: A("B0BYP2F3SG"), affiliateNote: "$180 — TSA-approved" },
       { id: "pepper-spray", name: "SABRE Red Pepper Spray", weightOz: 2, category: "misc", essential: false, affiliateUrl: A("B09TY94YZH"), affiliateNote: "$12 — Max police strength" },
-      { id: "bear-spray", name: "Counter Assault Bear Spray", weightOz: 14, category: "misc", essential: false, affiliateUrl: A("B0CXG2JR68"), affiliateNote: "$50 — 40ft range, 8-sec spray" },
-      { id: "bear-canister", name: "BearVault BV500 Bear Canister", weightOz: 41, category: "misc", essential: false, affiliateUrl: A("B0019LSGQE"), affiliateNote: "$100 — Required in many parks" },
       { id: "surefire", name: "SureFire G2X Tactical Flashlight", weightOz: 4, category: "misc", essential: false, affiliateUrl: A("B00FDWOGZ0"), affiliateNote: "$83 — 600 lumens, bombproof" },
       { id: "streamlight", name: "Streamlight ProTac HL USB", weightOz: 5, category: "misc", essential: false, affiliateUrl: A("B00T8J9FGO"), affiliateNote: "$110 — 1000 lumens, rechargeable" },
       { id: "dry-sacks", name: "Sea to Summit Dry Sack Set (3pc)", weightOz: 4, category: "misc", essential: false, affiliateUrl: A("B0BZ5LF3KQ"), affiliateNote: "$30 — Keep gear dry" },
       { id: "trekking-poles", name: "Black Diamond Distance Carbon Z", weightOz: 18, category: "misc", essential: false, affiliateUrl: A("B078XMKSVX"), affiliateNote: "$190 — Carbon fiber, foldable" },
-      { id: "camp-chair", name: "Helinox Chair Zero", weightOz: 18, category: "misc", essential: false, affiliateUrl: A("B01M07GTOE"), affiliateNote: "$150 — 1.1 lbs, 265 lb capacity" },
     ],
   },
 ];
