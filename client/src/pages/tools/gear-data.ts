@@ -4,6 +4,8 @@ export interface GearItem {
   weightOz: number;
   category: string;
   essential: boolean;
+  stackable?: boolean;
+  maxQty?: number;
   affiliateUrl?: string;
   affiliateNote?: string;
 }
@@ -64,8 +66,8 @@ export const gearCategories: GearCategory[] = [
       { id: "lifestraw-peak", name: "LifeStraw Peak Solo", weightOz: 2, category: "water", essential: false, affiliateUrl: A("B0CHXTXZ2S"), affiliateNote: "$34 — Next-gen filter" },
       { id: "katadyn-befree", name: "Katadyn BeFree Ultralight", weightOz: 2, category: "water", essential: false, affiliateUrl: A("B0BFQMMJVS"), affiliateNote: "Fast flow ultralight" },
       { id: "grayl-geopress", name: "GRAYL GeoPress Purifier", weightOz: 16, category: "water", essential: false, affiliateUrl: A("B0D3HB3V5Z"), affiliateNote: "$100 — Removes viruses" },
-      { id: "nalgene-32", name: "Nalgene Bottle (32oz)", weightOz: 6, category: "water", essential: true },
-      { id: "purification-tabs", name: "Aquamira Purification Tablets", weightOz: 1, category: "water", essential: false, affiliateUrl: A("B01AUWUAQ6"), affiliateNote: "Chemical backup" },
+      { id: "nalgene-32", name: "Nalgene Bottle (32oz)", weightOz: 6, category: "water", essential: true, stackable: true, maxQty: 3 },
+      { id: "purification-tabs", name: "Aquamira Purification Tablets (pack)", weightOz: 1, category: "water", essential: false, stackable: true, maxQty: 5, affiliateUrl: A("B01AUWUAQ6"), affiliateNote: "Chemical backup — per pack" },
       { id: "osprey-reservoir", name: "Osprey Hydraulics LT 2.5L", weightOz: 6, category: "water", essential: false, affiliateUrl: A("B017ONQM5W"), affiliateNote: "$39 — Bite valve reservoir" },
       { id: "platypus-bigzip", name: "Platypus Big Zip EVO 3L", weightOz: 6, category: "water", essential: false, affiliateUrl: A("B07P75ZVK3"), affiliateNote: "$50 — Wide-mouth zip opening" },
     ],
@@ -76,12 +78,11 @@ export const gearCategories: GearCategory[] = [
     color: "#22C55E",
     icon: "UtensilsCrossed",
     items: [
-      { id: "mh-supply", name: "Mountain House Freeze-Dried Meals", weightOz: 5, category: "food", essential: false, affiliateUrl: A("B0BPVMJKV2"), affiliateNote: "25-year shelf life" },
-      { id: "mre-1", name: "MRE (1 meal)", weightOz: 24, category: "food", essential: false },
-      { id: "mre-2", name: "MRE (2nd meal)", weightOz: 24, category: "food", essential: false },
-      { id: "freeze-dried-1", name: "Freeze-Dried Meal (1)", weightOz: 5, category: "food", essential: false },
-      { id: "freeze-dried-2", name: "Freeze-Dried Meal (2)", weightOz: 5, category: "food", essential: false },
-      { id: "energy-bars", name: "Energy Bars (6-pack)", weightOz: 12, category: "food", essential: true },
+      { id: "mh-supply", name: "Mountain House Freeze-Dried Meal", weightOz: 5, category: "food", essential: false, stackable: true, maxQty: 10, affiliateUrl: A("B0BPVMJKV2"), affiliateNote: "25-year shelf life — per pouch" },
+      { id: "mre", name: "MRE (full meal)", weightOz: 24, category: "food", essential: false, stackable: true, maxQty: 6 },
+      { id: "freeze-dried", name: "Freeze-Dried Meal (generic)", weightOz: 5, category: "food", essential: false, stackable: true, maxQty: 10 },
+      { id: "energy-bars", name: "Energy / Protein Bar", weightOz: 2, category: "food", essential: true, stackable: true, maxQty: 12 },
+      { id: "beef-jerky", name: "Beef Jerky Bag", weightOz: 7, category: "food", essential: false, stackable: true, maxQty: 6 },
       { id: "jetboil", name: "Jetboil Flash Cooking System", weightOz: 13, category: "food", essential: false, affiliateUrl: A("B0DXQC9B14"), affiliateNote: "Boils water in 100 sec" },
       { id: "cooking-kit", name: "GSI Pinnacle Camper Cookset", weightOz: 32, category: "food", essential: false, affiliateUrl: A("B0DJPSBDYN"), affiliateNote: "Full camp kitchen" },
       { id: "biolite-stove", name: "BioLite CampStove 2+", weightOz: 33, category: "food", essential: false, affiliateUrl: A("B08S46HLM1"), affiliateNote: "Burns wood + charges USB" },

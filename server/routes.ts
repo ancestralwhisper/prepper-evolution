@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertNewsletterSchema, linkHealthChecks, linkHealthRuns } from "@shared/schema";
+import { insertNewsletterSchema, linkHealthChecks, linkHealthRuns, gearRequests, gearTracking } from "@shared/schema";
 import { z } from "zod";
 import { db } from "./db";
 import { desc, eq } from "drizzle-orm";
@@ -136,6 +136,57 @@ export async function registerRoutes(
       }
       console.error("Error subscribing:", error);
       res.status(500).json({ message: "Something went wrong. Try again or check your email address." });
+    }
+  });
+
+  // --- Gear Request & Tracking ---
+  app.post("/api/gear-requests", async (req, res) => {
+    try {
+      const schema = z.object({
+        name: z.string().min(2).max(100),
+        brand: z.string().max(50).optional(),
+        weightOz: z.number().min(0.1).max(1000).optional(),
+        category: z.string().min(1),
+        amazonUrl: z.string().max(200).optional(),
+      });
+      const parsed = schema.parse(req.body);
+      await db.insert(gearRequests).values({
+        name: parsed.name,
+        brand: parsed.brand || null,
+        weightOz: parsed.weightOz?.toString() || null,
+        category: parsed.category,
+        amazonUrl: parsed.amazonUrl || null,
+      });
+      res.status(200).json({ message: "Request submitted" });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request data" });
+      }
+      console.error("Gear request error:", error);
+      res.status(500).json({ error: "Failed to submit request" });
+    }
+  });
+
+  app.post("/api/gear-tracking", async (req, res) => {
+    try {
+      const schema = z.object({
+        customItems: z.array(z.object({
+          name: z.string(),
+          weightOz: z.number(),
+          category: z.string(),
+        })),
+        totalItems: z.number(),
+        totalLbs: z.number(),
+      });
+      const parsed = schema.parse(req.body);
+      await db.insert(gearTracking).values({
+        customItems: JSON.stringify(parsed.customItems),
+        totalItems: parsed.totalItems,
+        totalLbs: parsed.totalLbs.toString(),
+      });
+      res.status(200).json({ message: "Tracked" });
+    } catch {
+      res.status(200).json({ message: "ok" });
     }
   });
 

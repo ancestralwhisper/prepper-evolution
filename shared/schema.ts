@@ -53,6 +53,25 @@ export const linkHealthRuns = pgTable("link_health_runs", {
   completedAt: timestamp("completed_at").defaultNow().notNull(),
 });
 
+export const gearRequests = pgTable("gear_requests", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  brand: text("brand"),
+  weightOz: numeric("weight_oz", { precision: 8, scale: 1 }),
+  category: text("category").notNull(),
+  amazonUrl: text("amazon_url"),
+  status: text("status").notNull().default("pending"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const gearTracking = pgTable("gear_tracking", {
+  id: serial("id").primaryKey(),
+  customItems: text("custom_items").notNull(),
+  totalItems: integer("total_items").notNull(),
+  totalLbs: numeric("total_lbs", { precision: 8, scale: 1 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const insertProductSchema = createInsertSchema(products).omit({ id: true });
 export const insertComparisonSchema = createInsertSchema(comparisons).omit({ id: true });
 export const insertNewsletterSchema = createInsertSchema(newsletterSubscribers).omit({ id: true, subscribedAt: true });
