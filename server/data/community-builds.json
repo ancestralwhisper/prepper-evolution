@@ -1,0 +1,102 @@
+[
+  {
+    "id": "build_001",
+    "nickname": "TrailGhost",
+    "buildType": "bob",
+    "title": "The Ultralight BOB",
+    "description": "Minimalist 72-hour bug out bag for a solo hiker. Every ounce counts — I cut toothbrush handles, ditched the tent for a SOL bivvy, and run a Sawyer Squeeze as my only water solution. Field-tested on a 40-mile traverse in the Cascades.",
+    "tags": ["ultralight", "solo", "72-hour", "hiking"],
+    "data": {
+      "totalWeightLbs": 18.4,
+      "itemCount": 22,
+      "bodyWeightLbs": 170,
+      "weightPercent": 10.8,
+      "topCategories": ["shelter", "water", "food"],
+      "essentialsCovered": 8,
+      "essentialsTotal": 9
+    },
+    "likes": 47,
+    "status": "approved",
+    "createdAt": "2026-02-10T14:30:00Z"
+  },
+  {
+    "id": "build_002",
+    "nickname": "MamaBear_Prepper",
+    "buildType": "bob",
+    "title": "Family of 4 Emergency Kit",
+    "description": "Two adults, two kids (ages 6 and 9). Split across two packs — Dad carries the heavy tools and shelter, Mom carries food and first aid. Kids each have a small daypack with snacks, water bottle, and a comfort item. Heavier than ideal but covers everyone.",
+    "tags": ["family", "kids", "72-hour", "suburban"],
+    "data": {
+      "totalWeightLbs": 52.3,
+      "itemCount": 48,
+      "bodyWeightLbs": 180,
+      "weightPercent": 29.1,
+      "topCategories": ["food", "shelter", "first-aid"],
+      "essentialsCovered": 9,
+      "essentialsTotal": 9
+    },
+    "likes": 83,
+    "status": "approved",
+    "createdAt": "2026-02-05T09:15:00Z"
+  },
+  {
+    "id": "build_003",
+    "nickname": "OverlandYeti",
+    "buildType": "solar",
+    "title": "Overlander's Solar Rig",
+    "description": "Full overland camp power setup for a 4Runner build. EcoFlow DELTA 2 Max with 220W bifacial panel on the roof rack. Powers a 12V fridge 24/7, charges devices, runs LED camp lights, and handles a portable fan on hot desert nights. 5+ days without shore power in the Southwest.",
+    "tags": ["overlanding", "4runner", "desert", "off-grid"],
+    "data": {
+      "totalDailyWh": 1240,
+      "batteryCapacityWh": 2048,
+      "solarWattsNeeded": 220,
+      "deviceCount": 7,
+      "peakWatts": 480,
+      "region": "Southwest US",
+      "days": 5
+    },
+    "likes": 112,
+    "status": "approved",
+    "createdAt": "2026-01-28T18:45:00Z"
+  },
+  {
+    "id": "build_004",
+    "nickname": "SleepApneaPrepper",
+    "buildType": "solar",
+    "title": "CPAP User's Power Plan",
+    "description": "My CPAP is non-negotiable — without it I am useless after one night. This build keeps my ResMed AirSense 11 running for 3 nights without solar, or indefinitely with the 200W panel. No heated humidifier (saves 400+ Wh/night). Also powers phone charging and a few LED lights.",
+    "tags": ["cpap", "medical", "emergency", "sleep-apnea"],
+    "data": {
+      "totalDailyWh": 380,
+      "batteryCapacityWh": 1260,
+      "solarWattsNeeded": 120,
+      "deviceCount": 4,
+      "peakWatts": 95,
+      "region": "Mid-Atlantic",
+      "days": 3
+    },
+    "likes": 91,
+    "status": "approved",
+    "createdAt": "2026-02-15T11:20:00Z"
+  },
+  {
+    "id": "build_005",
+    "nickname": "BudgetBugOut",
+    "buildType": "bob",
+    "title": "The Budget Prepper",
+    "description": "Complete 72-hour BOB for under $200. Military surplus MOLLE pack, generic Sawyer knockoff filter (works fine), dollar store first aid supplies beefed up with real tourniquets and Israeli bandages from eBay. Proves you do not need to spend a fortune to be prepared.",
+    "tags": ["budget", "under-200", "beginner", "surplus"],
+    "data": {
+      "totalWeightLbs": 28.6,
+      "itemCount": 31,
+      "bodyWeightLbs": 190,
+      "weightPercent": 15.1,
+      "topCategories": ["food", "water", "tools"],
+      "essentialsCovered": 7,
+      "essentialsTotal": 9
+    },
+    "likes": 65,
+    "status": "approved",
+    "createdAt": "2026-02-18T16:00:00Z"
+  }
+]

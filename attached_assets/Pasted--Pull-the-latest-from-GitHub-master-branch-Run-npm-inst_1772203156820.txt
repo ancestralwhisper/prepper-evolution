@@ -1,0 +1,59 @@
+ Pull the latest from GitHub (master branch). Run npm install to pick up the new jspdf dependency. Then add these two environment
+  variables (Secrets):
+
+  TOOL_REQUEST_BOT_TOKEN = 8718833693:AAHdGdGAmsRXoOD1_hZ1fBYp9moZx_TLATg
+  TOOL_REQUEST_CHAT_ID = 7252981740
+
+  Here's what changed — massive update with 12,800+ lines of new code:
+
+  NEW PAGES/TOOLS (8):
+  - /tools/solar-power-calculator — 70+ devices, 17 power stations, 17 solar panels with affiliate links
+  - /tools/water-storage-calculator — FEMA-based water planning, 18 products
+  - /tools/food-storage-calculator — Calorie planning, shopping lists, 16 products
+  - /tools/72-hour-kit-builder — 10-step questionnaire generating personalized checklists
+  - /tools/shtf-simulator — 5 branching choose-your-own-adventure survival scenarios
+  - /tools/community — Community Best Builds Gallery (submit, approve, browse)
+  - /tools/my-kits — Saved Kit Library Dashboard (reads from localStorage)
+  - /quiz — "What's Your Survival Score?" 10-question readiness quiz
+
+  NEW FEATURES:
+  - Branded PDF export (jspdf) on BOB + Solar calculators — new "PDF" button next to Print/Share
+  - PWA support — public/manifest.json updated, public/sw.js service worker added, layout.tsx registers it
+  - Background video hero on /tools page — public/tools-hero.mp4
+  - Product request forms on ALL 5 calculators (BOB, Solar, Water, Food, 72-Hr Kit) — all POST to /api/gear-requests with a "source" field,
+   notifications go to the new @toolreqbot via the env vars above
+  - Quiz integrated into: site nav, homepage (under featured section), all article pages, and tools page
+  - "Try the Live BOB Weight Calculator" CTA banner on bug-out-bag articles
+  - "My Saved Kits" pill link on tools page
+
+  NEW API ROUTES:
+  - /api/community-builds — GET (approved builds) and POST (submit with profanity filter + Telegram notification)
+  - /api/gear-requests updated — now accepts "source" field and uses TOOL_REQUEST_BOT_TOKEN env var
+  - /api/gear-tracking updated — same bot token fallback
+
+  NEW FILES IN PUBLIC:
+  - public/tools-hero.mp4 (2.9MB background video)
+  - public/sw.js (service worker for offline caching)
+  - public/manifest.json (updated for PWA)
+
+  MODIFIED FILES:
+  - app/layout.tsx — PWA meta tags + service worker registration
+  - app/page.tsx — Quiz CTA card on homepage
+  - app/config/site-config.ts — "Quiz" added to nav
+  - app/articles/[slug]/page.tsx — BOB calculator CTA + Quiz CTA on article pages
+  - app/tools/page.tsx — Video hero, quiz banner, saved kits link, all tools marked live
+  - app/tools/bug-out-bag-calculator/Calculator.tsx — PDF button + source tag on requests
+  - app/tools/solar-power-calculator/Calculator.tsx — PDF button + product request form
+  - package.json — jspdf dependency added
+
+  DATA FILES (163 unique affiliate ASINs total):
+  - device-data.ts — 17 power stations, 17 solar panels, 70+ devices
+  - water-data.ts — 18 water products
+  - food-data.ts — 16 food products
+  - kit-data.ts — 65+ kit items with affiliate links
+  - scenarios.ts — 5 scenarios with gear recommendations
+  - quiz-data.ts — Score-based product recommendations
+  - data/community-builds.json — 5 seed community builds
+
+  After pulling and installing, redeploy. All new routes and pages should work immediately. The only tools page still showing "Coming Soon"
+   is the Evacuation Route Planner.

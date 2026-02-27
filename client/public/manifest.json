@@ -1,0 +1,56 @@
+{
+  "name": "Prepper Evolution",
+  "short_name": "PrepperEvo",
+  "description": "Free prepper tools, calculators, and survival guides",
+  "start_url": "/tools",
+  "display": "standalone",
+  "background_color": "#FAF7F2",
+  "theme_color": "#C45D2C",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["utilities", "lifestyle"],
+  "icons": [
+    {
+      "src": "/pe-badge.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pe-badge.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pe-badge.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Bug Out Bag Calculator",
+      "short_name": "BOB Calc",
+      "url": "/tools/bug-out-bag-calculator",
+      "description": "Calculate your bug out bag weight and essentials"
+    },
+    {
+      "name": "Solar Power Calculator",
+      "short_name": "Solar Calc",
+      "url": "/tools/solar-power-calculator",
+      "description": "Size your off-grid solar power system"
+    },
+    {
+      "name": "Articles",
+      "url": "/articles",
+      "description": "Browse survival and prepping articles"
+    },
+    {
+      "name": "Gear & Products",
+      "url": "/products",
+      "description": "Shop recommended survival gear"
+    }
+  ]
+}

@@ -139,15 +139,32 @@ export async function registerRoutes(
     }
   });
 
+  // --- Telegram Notification Helper ---
+  async function sendTelegramNotification(text: string) {
+    const token = process.env.TOOL_REQUEST_BOT_TOKEN;
+    const chatId = process.env.TOOL_REQUEST_CHAT_ID;
+    if (!token || !chatId) return;
+    try {
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
+      });
+    } catch (err) {
+      console.error("Telegram notification failed:", err);
+    }
+  }
+
   // --- Gear Request & Tracking ---
   app.post("/api/gear-requests", async (req, res) => {
     try {
       const schema = z.object({
         name: z.string().min(2).max(100),
         brand: z.string().max(50).optional(),
-        weightOz: z.number().min(0.1).max(1000).optional(),
+        weightOz: z.number().min(0.1).max(10000).optional(),
         category: z.string().min(1),
         amazonUrl: z.string().max(200).optional(),
+        source: z.string().max(50).optional(),
       });
       const parsed = schema.parse(req.body);
       await db.insert(gearRequests).values({
@@ -157,6 +174,17 @@ export async function registerRoutes(
         category: parsed.category,
         amazonUrl: parsed.amazonUrl || null,
       });
+
+      const src = parsed.source || "unknown";
+      sendTelegramNotification(
+        `🔧 <b>New Gear Request</b> [${src}]\n` +
+        `Name: ${parsed.name}\n` +
+        `Brand: ${parsed.brand || "—"}\n` +
+        `Category: ${parsed.category}\n` +
+        (parsed.weightOz ? `Weight/Watts: ${parsed.weightOz}\n` : "") +
+        (parsed.amazonUrl ? `URL: ${parsed.amazonUrl}` : "")
+      );
+
       res.status(200).json({ message: "Request submitted" });
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -187,6 +215,86 @@ export async function registerRoutes(
       res.status(200).json({ message: "Tracked" });
     } catch {
       res.status(200).json({ message: "ok" });
+    }
+  });
+
+  // --- Community Builds ---
+  app.get("/api/community-builds", async (_req, res) => {
+    try {
+      const fs = await import("fs/promises");
+      const path = await import("path");
+      const filePath = path.join(process.cwd(), "server", "data", "community-builds.json");
+      const raw = await fs.readFile(filePath, "utf-8");
+      const builds = JSON.parse(raw);
+      const approved = builds.filter((b: any) => b.status === "approved");
+      res.json(approved);
+    } catch (error) {
+      console.error("Error reading community builds:", error);
+      res.json([]);
+    }
+  });
+
+  const profanityWords = ["fuck", "shit", "ass", "bitch", "damn", "cunt", "dick", "cock", "pussy", "nigger", "faggot", "retard"];
+
+  function hasProfanity(text: string): boolean {
+    const lower = text.toLowerCase();
+    return profanityWords.some((word) => lower.includes(word));
+  }
+
+  app.post("/api/community-builds", async (req, res) => {
+    try {
+      const schema = z.object({
+        nickname: z.string().min(2).max(30),
+        buildType: z.enum(["bob", "solar", "water", "food", "kit"]),
+        title: z.string().min(3).max(100),
+        description: z.string().min(10).max(500),
+        tags: z.array(z.string().max(30)).max(5).optional(),
+        data: z.record(z.any()),
+      });
+
+      const parsed = schema.parse(req.body);
+
+      if (hasProfanity(parsed.nickname) || hasProfanity(parsed.title) || hasProfanity(parsed.description)) {
+        return res.status(400).json({ error: "Please keep it clean — no profanity." });
+      }
+
+      const fs = await import("fs/promises");
+      const path = await import("path");
+      const filePath = path.join(process.cwd(), "server", "data", "community-builds.json");
+      const raw = await fs.readFile(filePath, "utf-8");
+      const builds = JSON.parse(raw);
+
+      const newBuild = {
+        id: `build_${Date.now()}`,
+        nickname: parsed.nickname,
+        buildType: parsed.buildType,
+        title: parsed.title,
+        description: parsed.description,
+        tags: parsed.tags || [],
+        data: parsed.data,
+        likes: 0,
+        status: "pending",
+        createdAt: new Date().toISOString(),
+      };
+
+      builds.push(newBuild);
+      await fs.writeFile(filePath, JSON.stringify(builds, null, 2));
+
+      sendTelegramNotification(
+        `🏗️ <b>New Community Build</b>\n` +
+        `By: ${parsed.nickname}\n` +
+        `Type: ${parsed.buildType}\n` +
+        `Title: ${parsed.title}\n` +
+        `Description: ${parsed.description.slice(0, 200)}${parsed.description.length > 200 ? "..." : ""}`
+      );
+
+      res.status(200).json({ message: "Build submitted for review!" });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid build data" });
+      }
+      console.error("Community build error:", error);
+      res.status(500).json({ error: "Failed to submit build" });
     }
   });
 

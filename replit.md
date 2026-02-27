@@ -25,10 +25,19 @@ Preferred communication style: Simple, everyday language.
 - `/articles/:slug` — Individual article pages (content from WordPress)
 - `/articles` — Article listing with pagination
 - `/products/:slug` — Individual product pages (data from PostgreSQL)
+- `/products` — Shop Gear page with all products
 - `/comparisons/:slug` — Head-to-head gear comparison pages
 - `/category/:name` — Category-filtered content pages
-- `/tools` — Tools index page (calculators and interactive tools)
+- `/tools` — Tools index page with video hero, quiz banner, saved kits link, all 7 tools
 - `/tools/bug-out-bag-calculator` — Interactive BOB weight calculator with 60+ gear items, donut chart, affiliate links, print/share
+- `/tools/solar-power-calculator` — Solar panel & power station sizing calculator with device library, region-based sun hours, PDF export
+- `/tools/water-storage-calculator` — Water storage calculator for household/emergency planning with usage breakdown donut chart
+- `/tools/food-storage-calculator` — Food storage calculator with calorie planning, shelf life tracking, family size support
+- `/tools/72-hour-kit-builder` — Guided questionnaire that generates a personalized 72-hour emergency kit checklist
+- `/tools/shtf-simulator` — Scenario-based survival simulator with branching decisions and scoring
+- `/tools/community` — Community gallery of shared builds (BOB, solar, water, food, kit) with submission form
+- `/tools/my-kits` — Local kit library dashboard (saved kits stored in localStorage)
+- `/quiz` — Preparedness quiz with scoring, results, and tool recommendations
 
 ### Backend (Express 5)
 - **Runtime**: Node.js with TypeScript via `tsx`
@@ -42,8 +51,14 @@ Preferred communication style: Simple, everyday language.
 - `GET /api/products/:slug` — Single product by slug
 - `GET /api/comparisons` — List all comparisons
 - `GET /api/comparisons/:slug` — Single comparison by slug
-- `POST /api/newsletter` — Newsletter email signup
+- `POST /api/newsletter` — Newsletter email signup (also sends to Kit API)
+- `POST /api/gear-requests` — Submit gear request with optional `source` field + Telegram notification
+- `POST /api/gear-tracking` — Anonymous usage tracking for calculators
+- `GET /api/community-builds` — List approved community builds (from JSON file)
+- `POST /api/community-builds` — Submit new community build with profanity filter + Telegram notification
 - `GET /api/wp/posts` — Proxy to WordPress REST API for blog posts (cached)
+- `GET /api/wp/categories` — Proxy to WordPress categories
+- `GET /api/link-health` — Link health check results
 - WordPress proxy endpoints pass through to `https://wp.prepperevolution.com/wp-json/wp/v2`
 
 ### Database (PostgreSQL + Drizzle ORM)
@@ -78,9 +93,9 @@ Preferred communication style: Simple, everyday language.
 client/          — Frontend React app
   src/
     pages/       — Route-level page components
-    pages/tools/ — Tools section (ToolsIndex, BugOutBagCalculator, gear-data)
+    pages/tools/ — Tools section (ToolsIndex, BugOutBagCalculator, SolarPowerCalculator, WaterStorageCalculator, FoodStorageCalculator, KitBuilder, SHTFSimulator, CommunityGallery, MyKits, gear-data, device-data, water-data, food-data, kit-data, scenarios)
     components/  — shadcn/ui components
-    components/tools/ — Tool-specific components (DonutChart)
+    components/tools/ — Tool-specific components (DonutChart, PdfExport)
     content/     — Static content data (products, articles, comparisons)
     hooks/       — Custom React hooks (dark mode, SEO, toast, mobile detection)
     lib/         — Utilities (queryClient, WordPress API helpers, cn utility)

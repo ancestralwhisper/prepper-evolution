@@ -17,6 +17,14 @@ import Articles from "@/pages/Articles";
 import Products from "@/pages/Products";
 import ToolsIndex from "@/pages/tools/ToolsIndex";
 import BugOutBagCalculator from "@/pages/tools/BugOutBagCalculator";
+import SolarPowerCalculator from "@/pages/tools/SolarPowerCalculator";
+import WaterStorageCalculator from "@/pages/tools/WaterStorageCalculator";
+import FoodStorageCalculator from "@/pages/tools/FoodStorageCalculator";
+import KitBuilder from "@/pages/tools/KitBuilder";
+import SHTFSimulator from "@/pages/tools/SHTFSimulator";
+import CommunityGallery from "@/pages/tools/CommunityGallery";
+import MyKits from "@/pages/tools/MyKits";
+import Quiz from "@/pages/Quiz";
 
 function Router() {
   const [location] = useLocation();
@@ -42,6 +50,14 @@ function Router() {
           <Route path="/category/:name" component={Category} />
           <Route path="/tools" component={ToolsIndex} />
           <Route path="/tools/bug-out-bag-calculator" component={BugOutBagCalculator} />
+          <Route path="/tools/solar-power-calculator" component={SolarPowerCalculator} />
+          <Route path="/tools/water-storage-calculator" component={WaterStorageCalculator} />
+          <Route path="/tools/food-storage-calculator" component={FoodStorageCalculator} />
+          <Route path="/tools/72-hour-kit-builder" component={KitBuilder} />
+          <Route path="/tools/shtf-simulator" component={SHTFSimulator} />
+          <Route path="/tools/community" component={CommunityGallery} />
+          <Route path="/tools/my-kits" component={MyKits} />
+          <Route path="/quiz" component={Quiz} />
           <Route path="/admin/link-health" component={AdminLinkHealth} />
           <Route component={NotFound} />
         </Switch>
