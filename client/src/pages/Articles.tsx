@@ -1,43 +1,103 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "wouter";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link, useSearch } from "wouter";
+import { ChevronRight } from "lucide-react";
 import { fetchPosts, decodeHtmlEntities, getPostImage } from "@/lib/wp";
 import { useSEO } from "@/hooks/useSEO";
-import { Button } from "@/components/ui/button";
+import CategoryFilter from "@/components/CategoryFilter";
+import Pagination from "@/components/Pagination";
+
+const ARTICLES_PER_PAGE = 12;
+
+const SITE_CATEGORIES = [
+  { id: "gear-reviews", name: "Gear Reviews", icon: "Backpack", wpIds: [3] },
+  { id: "overlanding", name: "Overlanding", icon: "Compass", wpIds: [5] },
+  { id: "camping", name: "Camping", icon: "Tent", wpIds: [9] },
+  { id: "skills-strategy", name: "Skills & Strategy", icon: "Target", wpIds: [4] },
+  { id: "water-food", name: "Water & Food", icon: "Droplets", wpIds: [6, 7] },
+  { id: "first-aid", name: "First Aid", icon: "Heart", wpIds: [8] },
+  { id: "communication", name: "Communication", icon: "Radio", wpIds: [10] },
+  { id: "security", name: "Security", icon: "Shield", wpIds: [11] },
+] as const;
 
 export default function Articles() {
-  const [page, setPage] = useState(1);
+  const searchString = useSearch();
+  const params = new URLSearchParams(searchString);
+  const pageParam = Math.max(1, parseInt(params.get("page") || "1", 10) || 1);
+  const categorySlug = params.get("category") || null;
+
+  const activeCategory = categorySlug
+    ? SITE_CATEGORIES.find((c) => c.id === categorySlug)
+    : null;
+
+  const categoryWpId = activeCategory?.wpIds?.[0] ?? undefined;
+
+  const titleParts: string[] = [];
+  if (activeCategory) titleParts.push(`${activeCategory.name} Articles`);
+  else titleParts.push("Prepping Articles & Guides");
+  if (pageParam > 1) titleParts.push(`Page ${pageParam}`);
+
+  let description: string;
+  if (activeCategory) {
+    description = `Expert ${activeCategory.name.toLowerCase()} articles for preppers, overlanders, and outdoor enthusiasts. Actionable guides with no fluff.`;
+  } else {
+    description = "Expert prepping articles covering water, food storage, first aid, communication, security, overlanding, camping, and survival skills. Actionable guides with no fear-mongering.";
+  }
+  if (pageParam > 1) description += ` Page ${pageParam}.`;
 
   useSEO({
-    title: "All Articles & Intel",
-    description: "Browse our complete archive of survival guides, gear reviews, and preparedness strategies.",
+    title: titleParts.join(" - ") + " | Prepper Evolution",
+    description,
   });
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["wp-posts", page],
-    queryFn: () => fetchPosts(page),
+    queryKey: ["wp-posts", pageParam, categoryWpId],
+    queryFn: () => fetchPosts(pageParam, categoryWpId),
     staleTime: 60 * 1000,
     refetchOnWindowFocus: true,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * (attemptIndex + 1), 5000),
   });
 
+  const totalPages = data?.totalPages || 1;
+  const posts = data?.posts || [];
+
   return (
     <div className="min-h-screen bg-background pt-24 pb-20">
-      <div className="max-w-[1200px] mx-auto px-4 md:px-6">
-        <Link href="/" className="inline-flex items-center text-primary hover:text-primary/80 mb-8 font-medium">
-          <ChevronLeft className="w-4 h-4 mr-1" /> Back to Home
-        </Link>
-        
-        <h1 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold uppercase tracking-tight mb-4">Field Notes</h1>
-        <p className="text-xl text-muted-foreground mb-16 max-w-2xl">
-          Our complete archive of expert guides, gear reviews, and survival intel.
-        </p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl sm:text-5xl font-extrabold mb-4" data-testid="text-articles-title">
+            {activeCategory ? (
+              <>
+                {activeCategory.name}{" "}
+                <span className="text-primary">Articles</span>
+              </>
+            ) : (
+              <>
+                Prepping <span className="text-primary">Articles</span>
+              </>
+            )}
+          </h1>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            {activeCategory
+              ? `Expert guides and deep dives on ${activeCategory.name.toLowerCase()}. No fluff, no fear-mongering.`
+              : "Actionable guides and deep dives on every aspect of emergency preparedness. No fluff, no fear-mongering."}
+          </p>
+          {posts.length > 0 && (
+            <p className="text-muted-foreground/60 text-sm mt-2" data-testid="text-articles-count">
+              {activeCategory ? `${activeCategory.name}` : ""}
+              {totalPages > 1 ? ` · Page ${pageParam} of ${totalPages}` : ""}
+            </p>
+          )}
+        </div>
+
+        <CategoryFilter
+          categories={SITE_CATEGORIES}
+          activeCategory={categorySlug}
+        />
 
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="bg-card rounded-2xl h-[400px] animate-pulse border border-border" />
             ))}
           </div>
@@ -46,20 +106,23 @@ export default function Articles() {
             <h3 className="text-2xl font-display font-bold text-destructive mb-2">Error Loading Articles</h3>
             <p className="text-muted-foreground">Unable to connect to the content server.</p>
           </div>
-        ) : data?.posts.length === 0 ? (
-          <div className="text-center py-20 bg-card rounded-2xl border border-border border-dashed">
-            <h3 className="text-2xl font-display font-bold mb-2">No Articles Found</h3>
-            <p className="text-muted-foreground">Check back soon for new content.</p>
+        ) : posts.length === 0 ? (
+          <div className="text-center py-16">
+            <p className="text-muted-foreground text-lg">
+              No articles found
+              {activeCategory ? ` in ${activeCategory.name}` : ""}. Check back
+              soon — new content is published regularly.
+            </p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {data?.posts.map((post) => {
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {posts.map((post: any) => {
                 const category = decodeHtmlEntities(post._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");
                 const featuredImage = getPostImage(post);
 
                 return (
-                  <Link key={post.id} href={`/articles/${post.slug}`} className="group block h-full">
+                  <Link key={post.id} href={`/articles/${post.slug}`} className="group block h-full" data-testid={`card-article-${post.id}`}>
                     <div className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-300 h-full flex flex-col">
                       <div className="aspect-video relative overflow-hidden bg-muted">
                         <img src={featuredImage} alt={post.title.rendered} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -80,28 +143,12 @@ export default function Articles() {
               })}
             </div>
 
-            {/* Pagination */}
-            {data && data.totalPages > 1 && (
-              <div className="flex justify-center items-center gap-4 border-t border-border pt-8">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={page === 1}
-                >
-                  <ChevronLeft className="w-4 h-4 mr-2" /> Previous
-                </Button>
-                <span className="text-sm font-medium text-muted-foreground">
-                  Page {page} of {data.totalPages}
-                </span>
-                <Button 
-                  variant="outline" 
-                  onClick={() => setPage(p => Math.min(data.totalPages, p + 1))}
-                  disabled={page === data.totalPages}
-                >
-                  Next <ChevronRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            )}
+            <Pagination
+              currentPage={pageParam}
+              totalPages={totalPages}
+              basePath="/articles"
+              categorySlug={categorySlug}
+            />
           </>
         )}
       </div>

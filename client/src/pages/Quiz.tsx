@@ -8,7 +8,6 @@ import {
   Shield,
   Trophy,
   RotateCcw,
-  Share2,
   Check,
   ArrowRight,
   Target,
@@ -18,6 +17,8 @@ import {
   Zap,
   ExternalLink,
   BookOpen,
+  Link2,
+  MessageCircle,
 } from "lucide-react";
 import {
   questions,
@@ -147,11 +148,23 @@ export default function Quiz() {
     window.history.replaceState({}, "", url.toString());
   }, []);
 
-  const shareScore = useCallback(async () => {
+  const getShareUrl = useCallback(() => {
     const url = new URL(window.location.href);
     url.searchParams.set("a", encodeAnswers(answers));
-    const shareUrl = url.toString();
+    return url.toString();
+  }, [answers]);
 
+  const getShareText = useCallback(() => {
+    const score = Object.values(answers).reduce((a, b) => a + b, 0);
+    const range = getScoreRange(score);
+    if (score < 15) {
+      return `I scored ${score}/${MAX_SCORE} on the Prepper Readiness Quiz... time to step up my prep game. How do you stack up?`;
+    }
+    return `I scored ${score}/${MAX_SCORE} on the Prepper Readiness Quiz — ${range.title}! Think you can beat my score?`;
+  }, [answers]);
+
+  const copyLink = useCallback(async () => {
+    const shareUrl = getShareUrl();
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
@@ -166,7 +179,7 @@ export default function Quiz() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     }
-  }, [answers]);
+  }, [getShareUrl]);
 
   const handleEmailSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -412,24 +425,97 @@ export default function Quiz() {
               </div>
             )}
 
+            <div className="bg-card border border-border rounded-lg p-6 sm:p-8 shadow-sm mb-8">
+              <h3 className="text-xl font-extrabold mb-2">Share Your Score</h3>
+              <p className="text-sm text-muted-foreground mb-5">
+                Challenge your friends — see if they can beat your score.
+              </p>
+
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareText())}&url=${encodeURIComponent(getShareUrl())}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-2 p-3 rounded-lg border border-border hover:border-[#000000] hover:bg-[#000000]/5 transition-all group"
+                  data-testid="button-share-x"
+                >
+                  <span className="w-10 h-10 rounded-full bg-[#000000] flex items-center justify-center text-white">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  </span>
+                  <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground">X</span>
+                </a>
+
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getShareUrl())}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-2 p-3 rounded-lg border border-border hover:border-[#1877F2] hover:bg-[#1877F2]/5 transition-all group"
+                  data-testid="button-share-facebook"
+                >
+                  <span className="w-10 h-10 rounded-full bg-[#1877F2] flex items-center justify-center text-white">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                  </span>
+                  <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground">Facebook</span>
+                </a>
+
+                <a
+                  href={`https://www.reddit.com/submit?url=${encodeURIComponent(getShareUrl())}&title=${encodeURIComponent(`I scored ${totalScore}/${MAX_SCORE} on the Prepper Readiness Quiz — ${scoreRange.title}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-2 p-3 rounded-lg border border-border hover:border-[#FF4500] hover:bg-[#FF4500]/5 transition-all group"
+                  data-testid="button-share-reddit"
+                >
+                  <span className="w-10 h-10 rounded-full bg-[#FF4500] flex items-center justify-center text-white">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 0-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+                  </span>
+                  <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground">Reddit</span>
+                </a>
+
+                <a
+                  href={`sms:?body=${encodeURIComponent(getShareText() + " " + getShareUrl())}`}
+                  className="flex flex-col items-center gap-2 p-3 rounded-lg border border-border hover:border-[#25D366] hover:bg-[#25D366]/5 transition-all group"
+                  data-testid="button-share-sms"
+                >
+                  <span className="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center text-white">
+                    <MessageCircle className="w-5 h-5" />
+                  </span>
+                  <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground">SMS</span>
+                </a>
+
+                <a
+                  href={`mailto:?subject=${encodeURIComponent(`I scored ${totalScore}/${MAX_SCORE} on the Prepper Readiness Quiz`)}&body=${encodeURIComponent(getShareText() + "\n\nTake the quiz: " + getShareUrl())}`}
+                  className="flex flex-col items-center gap-2 p-3 rounded-lg border border-border hover:border-[#6366F1] hover:bg-[#6366F1]/5 transition-all group"
+                  data-testid="button-share-email"
+                >
+                  <span className="w-10 h-10 rounded-full bg-[#6366F1] flex items-center justify-center text-white">
+                    <Mail className="w-5 h-5" />
+                  </span>
+                  <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground">Email</span>
+                </a>
+
+                <button
+                  onClick={copyLink}
+                  className="flex flex-col items-center gap-2 p-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all group"
+                  data-testid="button-share-copy"
+                >
+                  <span className={`w-10 h-10 rounded-full flex items-center justify-center text-white transition-colors ${copied ? "bg-secondary" : "bg-muted-foreground/60"}`}>
+                    {copied ? <Check className="w-5 h-5" /> : <Link2 className="w-5 h-5" />}
+                  </span>
+                  <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground">
+                    {copied ? "Copied!" : "Copy Link"}
+                  </span>
+                </button>
+              </div>
+
+              <div className="mt-5 bg-muted border border-border rounded-lg p-4 text-center">
+                <p className="text-sm text-muted-foreground italic">
+                  &ldquo;{getShareText()}&rdquo;
+                </p>
+                <p className="text-xs text-primary font-medium mt-1">prepperevolution.com/quiz</p>
+              </div>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-3 mb-8">
-              <button
-                onClick={shareScore}
-                className="flex-1 flex items-center justify-center gap-2 bg-card border border-border hover:border-primary hover:shadow-sm font-bold px-6 py-3.5 rounded-md transition-all uppercase tracking-wider text-sm"
-                data-testid="button-share"
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-4 h-4 text-secondary" />
-                    Link Copied!
-                  </>
-                ) : (
-                  <>
-                    <Share2 className="w-4 h-4" />
-                    Share Your Score
-                  </>
-                )}
-              </button>
               <Link
                 href="/start-here"
                 className="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 py-3.5 rounded-md transition-colors uppercase tracking-wider text-sm shadow-sm"
@@ -446,13 +532,6 @@ export default function Quiz() {
                 <RotateCcw className="w-4 h-4" />
                 Take Again
               </button>
-            </div>
-
-            <div className="bg-muted border border-border rounded-lg p-4 text-center">
-              <p className="text-sm text-muted-foreground italic">
-                &ldquo;I scored {totalScore}/{MAX_SCORE} on the Prepper Readiness Quiz — {scoreRange.title}! How prepared are you? Take the quiz:&rdquo;
-              </p>
-              <p className="text-xs text-primary font-medium mt-1">prepperevolution.com/quiz</p>
             </div>
           </div>
         </div>

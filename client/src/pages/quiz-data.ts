@@ -182,7 +182,7 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "5.11 RUSH72 Backpack",
-        url: "https://www.amazon.com/dp/B004D1WMG2?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0D9R239MT?tag=prepperevo-20",
         reason: "Built like a tank. Perfect foundation for your first Bug Out Bag.",
       },
       {
@@ -240,12 +240,12 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "Garmin inReach Mini 3 Plus",
-        url: "https://www.amazon.com/dp/B0D5B6CNKJ?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0G4RST8LV?tag=prepperevo-20",
         reason: "Two-way satellite messaging + SOS. Works anywhere on earth, no cell towers needed.",
       },
       {
         name: "ESEE 4 Fixed Blade Knife",
-        url: "https://www.amazon.com/dp/B004GHBYPA?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0848RXQ1W?tag=prepperevo-20",
         reason: "Bombproof fixed blade with a lifetime warranty. The only knife you need in the field.",
       },
       {
@@ -298,12 +298,12 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "Garmin inReach Mini 3 Plus",
-        url: "https://www.amazon.com/dp/B0D5B6CNKJ?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0G4RST8LV?tag=prepperevo-20",
         reason: "If you do not have satellite comms yet, this fills your last major gap.",
       },
       {
         name: "Baofeng BF-F8HP PRO",
-        url: "https://www.amazon.com/dp/B07KG4JLCZ?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0DHSS2NNF?tag=prepperevo-20",
         reason: "Tri-power HAM radio for when cell towers are down. Communicate locally and monitor emergency frequencies.",
       },
       {
@@ -346,12 +346,12 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "5.11 RUSH72 Backpack",
-        url: "https://www.amazon.com/dp/B004D1WMG2?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0D9R239MT?tag=prepperevo-20",
         reason: "If your BOB pack is getting worn, the RUSH72 is the benchmark upgrade.",
       },
       {
         name: "Baofeng BF-F8HP PRO",
-        url: "https://www.amazon.com/dp/B07KG4JLCZ?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0DHSS2NNF?tag=prepperevo-20",
         reason: "Tri-power HAM radio to maintain your comms edge. Monitor emergency frequencies and communicate when infrastructure fails.",
       },
       {

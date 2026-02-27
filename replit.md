@@ -37,7 +37,10 @@ Preferred communication style: Simple, everyday language.
 - `/tools/shtf-simulator` — Scenario-based survival simulator with branching decisions and scoring
 - `/tools/community` — Community gallery of shared builds (BOB, solar, water, food, kit) with submission form
 - `/tools/my-kits` — Local kit library dashboard (saved kits stored in localStorage)
-- `/quiz` — Preparedness quiz with scoring, results, and tool recommendations
+- `/quiz` — Preparedness quiz with scoring, results, social sharing (X, Facebook, Reddit, SMS, Email, Copy Link), and tool recommendations
+- `/contact` — Contact page with email, social links, gear request info
+- `/privacy-policy` — Full privacy policy (analytics, cookies, affiliate disclosure, CCPA/GDPR)
+- `/terms` — Terms of service (affiliate disclosure, calculator disclaimers, user content, liability)
 
 ### Backend (Express 5)
 - **Runtime**: Node.js with TypeScript via `tsx`

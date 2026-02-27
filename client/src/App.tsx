@@ -25,6 +25,9 @@ import SHTFSimulator from "@/pages/tools/SHTFSimulator";
 import CommunityGallery from "@/pages/tools/CommunityGallery";
 import MyKits from "@/pages/tools/MyKits";
 import Quiz from "@/pages/Quiz";
+import Contact from "@/pages/Contact";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import Terms from "@/pages/Terms";
 
 function Router() {
   const [location] = useLocation();
@@ -58,6 +61,9 @@ function Router() {
           <Route path="/tools/community" component={CommunityGallery} />
           <Route path="/tools/my-kits" component={MyKits} />
           <Route path="/quiz" component={Quiz} />
+          <Route path="/contact" component={Contact} />
+          <Route path="/privacy-policy" component={PrivacyPolicy} />
+          <Route path="/terms" component={Terms} />
           <Route path="/admin/link-health" component={AdminLinkHealth} />
           <Route component={NotFound} />
         </Switch>

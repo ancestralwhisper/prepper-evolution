@@ -18,8 +18,8 @@ export interface WPCategory {
   slug: string;
 }
 
-export async function fetchPosts(page = 1, categoryId?: number): Promise<{ posts: WPPost[], totalPages: number }> {
-  let url = `/api/wp/posts?per_page=10&page=${page}&_t=${Date.now()}`;
+export async function fetchPosts(page = 1, categoryId?: number, perPage = 12): Promise<{ posts: WPPost[], totalPages: number }> {
+  let url = `/api/wp/posts?per_page=${perPage}&page=${page}&_t=${Date.now()}`;
   if (categoryId) {
     url += `&categories=${categoryId}`;
   }
