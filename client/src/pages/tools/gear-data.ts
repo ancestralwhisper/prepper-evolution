@@ -42,7 +42,7 @@ export const gearCategories: GearCategory[] = [
     color: "#8B5E3C",
     icon: "Tent",
     items: [
-      { id: "tent-2p", name: "Big Agnes Copper Spur HV UL2", weightOz: 42, category: "shelter", essential: false, affiliateUrl: A("B0817CJLHN"), affiliateNote: "Ultralight 2P tent" },
+      { id: "tent-2p", name: "Big Agnes Copper Spur UL2 (2025)", weightOz: 40, category: "shelter", essential: false, affiliateUrl: A("B0DHF4JHQD"), affiliateNote: "Ultralight 2P tent — HyperBead fabric" },
       { id: "tarp", name: "Emergency Tarp (10x10)", weightOz: 24, category: "shelter", essential: false },
       { id: "sol-bivvy", name: "SOL Emergency Bivvy", weightOz: 4, category: "shelter", essential: false, affiliateUrl: A("B08KWQVBT7"), affiliateNote: "Reusable emergency shelter" },
       { id: "sleeping-bag", name: "Featherstone Moondance 25", weightOz: 40, category: "shelter", essential: false, affiliateUrl: A("B0B17FCP29"), affiliateNote: "850-fill down bag" },
@@ -57,7 +57,7 @@ export const gearCategories: GearCategory[] = [
     icon: "Droplets",
     items: [
       { id: "sawyer-squeeze", name: "Sawyer Squeeze Filter", weightOz: 3, category: "water", essential: true, affiliateUrl: A("B00B1OSU4W"), affiliateNote: "$38 — Best value filter" },
-      { id: "lifestraw", name: "LifeStraw Personal Filter", weightOz: 2, category: "water", essential: false, affiliateUrl: A("B006QF3TW4"), affiliateNote: "$18 — Ultralight backup" },
+      { id: "lifestraw", name: "LifeStraw Peak Series Straw", weightOz: 2, category: "water", essential: false, affiliateUrl: A("B0CFYHBWP4"), affiliateNote: "$20 — Redesigned 2025" },
       { id: "lifestraw-peak", name: "LifeStraw Peak Solo", weightOz: 2, category: "water", essential: false, affiliateUrl: A("B0CHXTXZ2S"), affiliateNote: "$34 — Next-gen filter" },
       { id: "katadyn-befree", name: "Katadyn BeFree Ultralight", weightOz: 2, category: "water", essential: false, affiliateUrl: A("B0BFQMMJVS"), affiliateNote: "Fast flow ultralight" },
       { id: "grayl-geopress", name: "GRAYL GeoPress Purifier", weightOz: 16, category: "water", essential: false, affiliateUrl: A("B0D3HB3V5Z"), affiliateNote: "$100 — Removes viruses" },
@@ -131,7 +131,7 @@ export const gearCategories: GearCategory[] = [
     items: [
       { id: "compass", name: "Baseplate Compass", weightOz: 2, category: "navigation", essential: true },
       { id: "topo-maps", name: "Local Topo Maps (printed)", weightOz: 3, category: "navigation", essential: true },
-      { id: "garmin-inreach", name: "Garmin inReach Mini 2", weightOz: 7, category: "navigation", essential: false, affiliateUrl: A("B09X4GJ924"), affiliateNote: "$400 — Satellite SOS + messaging" },
+      { id: "garmin-inreach", name: "Garmin inReach Mini 3 Plus", weightOz: 4, category: "navigation", essential: false, affiliateUrl: A("B0G4RST8LV"), affiliateNote: "$450 — Color touchscreen + SOS" },
     ],
   },
   {
@@ -140,7 +140,7 @@ export const gearCategories: GearCategory[] = [
     color: "#06B6D4",
     icon: "Radio",
     items: [
-      { id: "baofeng", name: "Baofeng UV-5R Radio", weightOz: 10, category: "communication", essential: false, affiliateUrl: A("B007H4VT7A"), affiliateNote: "$25 — Ham license required" },
+      { id: "baofeng", name: "Baofeng BF-F8HP PRO (10W)", weightOz: 10, category: "communication", essential: false, affiliateUrl: A("B0DHSS2NNF"), affiliateNote: "$45 — Tri-band, GPS, NOAA, USB-C" },
       { id: "midland-gxt", name: "Midland GXT1000 GMRS Radio", weightOz: 12, category: "communication", essential: false, affiliateUrl: A("B001WMFYH4"), affiliateNote: "$73 — 36-mile range" },
       { id: "midland-cb", name: "Midland 75-822 CB Radio", weightOz: 14, category: "communication", essential: false, affiliateUrl: A("B00000K2YR"), affiliateNote: "$100 — No license needed" },
       { id: "zoleo", name: "Zoleo Satellite Messenger", weightOz: 5, category: "communication", essential: false, affiliateUrl: A("B07X59RH7T"), affiliateNote: "$149 — Budget satellite" },
