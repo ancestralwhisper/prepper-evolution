@@ -15,6 +15,8 @@ import StartHere from "@/pages/StartHere";
 import AdminLinkHealth from "@/pages/AdminLinkHealth";
 import Articles from "@/pages/Articles";
 import Products from "@/pages/Products";
+import ToolsIndex from "@/pages/tools/ToolsIndex";
+import BugOutBagCalculator from "@/pages/tools/BugOutBagCalculator";
 
 function Router() {
   const [location] = useLocation();
@@ -38,6 +40,8 @@ function Router() {
           <Route path="/products/:slug" component={Product} />
           <Route path="/comparisons/:slug" component={Comparison} />
           <Route path="/category/:name" component={Category} />
+          <Route path="/tools" component={ToolsIndex} />
+          <Route path="/tools/bug-out-bag-calculator" component={BugOutBagCalculator} />
           <Route path="/admin/link-health" component={AdminLinkHealth} />
           <Route component={NotFound} />
         </Switch>

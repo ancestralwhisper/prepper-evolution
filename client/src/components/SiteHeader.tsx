@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { label: 'Gear Reviews', href: '/category/gear-reviews' },
   { label: 'Shop Gear', href: '/products' },
   { label: 'Skills & Strategy', href: '/category/skills-&-strategy' },
+  { label: 'Tools', href: '/tools' },
 ];
 
 export default function SiteHeader() {
