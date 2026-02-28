@@ -235,7 +235,7 @@ export const scoreRanges: ScoreRange[] = [
     products: [
       {
         name: "Jackery Explorer 1000 Plus",
-        url: "https://www.amazon.com/dp/B0CG5BP68F?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0CFVBGWBT?tag=prepperevo-20",
         reason: "1264Wh capacity. Powers devices, lights, and small appliances for days.",
       },
       {
@@ -265,7 +265,7 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "Aquamira Water Treatment Drops",
-        url: "https://www.amazon.com/dp/B000OR114S?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0078SA5SE?tag=prepperevo-20",
         reason: "Chemical water treatment that treats up to 30 gallons. Lightweight backup to your primary water filter.",
       },
     ],

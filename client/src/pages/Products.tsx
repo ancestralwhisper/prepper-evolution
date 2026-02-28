@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Filter, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import type { Product } from "@shared/schema";
+import { productArticleMap } from "@/content/products";
 
 const categories = [
   "All",
@@ -94,7 +95,7 @@ export default function Products() {
               className="group bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg hover:border-primary/30 transition-all duration-300"
               data-testid={`card-product-${product.slug}`}
             >
-              <Link href={`/products/${product.slug}`}>
+              <Link href={productArticleMap[product.slug] ? `/articles/${productArticleMap[product.slug]}` : `/products/${product.slug}`}>
                 <div className="aspect-square overflow-hidden bg-muted relative">
                   <img
                     src={product.imageUrl}
@@ -117,7 +118,7 @@ export default function Products() {
                 >
                   {product.category}
                 </span>
-                <Link href={`/products/${product.slug}`}>
+                <Link href={productArticleMap[product.slug] ? `/articles/${productArticleMap[product.slug]}` : `/products/${product.slug}`}>
                   <h3
                     className="font-semibold text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors"
                     data-testid={`text-name-${product.slug}`}
@@ -141,7 +142,7 @@ export default function Products() {
                   className="mt-1 w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                   data-testid={`button-view-${product.slug}`}
                 >
-                  <Link href={`/products/${product.slug}`}>
+                  <Link href={productArticleMap[product.slug] ? `/articles/${productArticleMap[product.slug]}` : `/products/${product.slug}`}>
                     <ShoppingCart className="w-4 h-4 mr-2" />
                     View Details
                   </Link>

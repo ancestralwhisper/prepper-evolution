@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import { fetchLatestPosts, decodeHtmlEntities, getPostImage } from "@/lib/wp";
 import type { Product } from "@shared/schema";
+import { productArticleMap } from "@/content/products";
 
 import { useToast } from "@/hooks/use-toast";
 import heroBg from "@/assets/images/hero-bg.png";
@@ -256,7 +257,7 @@ export default function Home() {
               { slug: "ecoflow-delta-2-max", name: "EcoFlow DELTA 2 Max", category: "Power & Energy", imageUrl: "/images/product-ecoflow.png", price: "1599.00", onSale: false, salePrice: null } as Product,
               { slug: "lifestraw-personal-water-filter", name: "LifeStraw Personal Water Filter", category: "Water Purification", imageUrl: "/images/product-lifestraw.png", price: "17.97", onSale: false, salePrice: null } as Product,
             ]).map((item, i) => (
-              <Link key={i} href={`/products/${item.slug}`}>
+              <Link key={i} href={productArticleMap[item.slug] ? `/articles/${productArticleMap[item.slug]}` : `/products/${item.slug}`}>
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}

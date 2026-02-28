@@ -1,0 +1,69 @@
+Hey - passing along instructions for Replit AI. Copy-paste this into Replit:
+
+---
+
+REPLIT: Product Card Routing + ASIN Fixes
+
+Two changes needed:
+
+1. Product cards must link to articles, not generic /products/[slug] pages
+
+The "Master The Essentials" product cards on the homepage (and /products page) currently link to /products/[slug] which are generic detail pages with no real content. Update the product card href to use /articles/{articleSlug} when a mapping exists.
+
+Here is the product-to-article mapping. Add this as a lookup object and use it in your product card rendering:
+
+const productArticleMap = {
+  "sawyer-squeeze-water-filter": "sawyer-squeeze-water-filter-review",
+  "waterdrop-king-tank": "waterdrop-king-tank-gravity-water-filter-review-2026",
+  "morakniv-companion-knife": "mora-companion-hd-review-best-budget-survival-knife-17",
+  "511-tactical-rush72": "5-11-rush-72-bug-out-bag-review",
+  "garmin-inreach-mini-2": "garmin-inreach-mini-2-review-satellite-sos-messaging",
+  "ikamper-skycamp-3-rooftop-tent": "ikamper-skycamp-3-review",
+  "maxtrax-mkii-recovery-boards": "maxtrax-vs-actiontrax-recovery-boards",
+  "dometic-cfx3-55im-portable-fridge": "dometic-cfx3-55im-review",
+  "jackery-explorer-1000-v2": "jackery-explorer-1000-v2-review",
+  "ecoflow-delta-2-max": "best-portable-power-stations-2026",
+  "leatherman-wave-plus": "best-survival-knives-compared-budget-to-premium-2026",
+  "cat-tourniquet-gen7": "first-aid-essentials-survival",
+  "ifak-trauma-kit": "first-aid-essentials-survival",
+  "baofeng-uv5r-radio": "baofeng-uv-5r-review-26-ham-radio-for-emergency-comms",
+  "molle-ii-rucksack": "molle-ii-rucksack-review-military-surplus-72hr-pack",
+  "sol-emergency-bivvy": "building-your-first-bug-out-bag",
+  "bigblue-28w-solar-charger": "renogy-200w-solar-panel-review",
+  "petzl-actik-core-headlamp": "best-portable-lighting-camping-2026",
+  "katadyn-befree-water-filter": "best-water-filters-preppers-2026",
+  "jetboil-flash-cooking-system": "best-camp-stoves-cooking-gear-compared-2026",
+  "gsi-pinnacle-camper-cookset": "best-camp-stoves-cooking-gear-compared-2026",
+  "big-agnes-copper-spur-hv-ul2": "ultralight-backpacking-gear-guide",
+  "thermarest-neoair-xlite-nxt": "ultralight-backpacking-gear-guide",
+  "enlightened-equipment-enigma-quilt": "ultralight-backpacking-gear-guide",
+  "osprey-atmos-ag-65-backpack": "ultralight-backpacking-gear-guide",
+  "mountain-house-14-day-emergency-food": "long-term-food-storage-guide",
+  "mylar-bags-oxygen-absorbers": "long-term-food-storage-guide",
+  "aquamira-water-purification-tablets": "water-purification-methods",
+  "dakota-alert-murs-sensor": "home-security-budget",
+  "511-tactical-rush24": "best-bug-out-bags-2026",
+  "mystery-ranch-3-day-assault": "best-bug-out-bags-2026",
+  "vertx-gamut-2": "best-bug-out-bags-2026",
+  "goruck-gr2-40l": "best-bug-out-bags-2026",
+  "maxpedition-falcon-ii": "best-bug-out-bags-2026",
+  "helikon-tex-raccoon-mk2": "best-bug-out-bags-2026",
+  "iceco-vl60-pros": "best-12v-fridges-overlanding",
+  "bougerv-cr45": "best-12v-fridges-overlanding",
+  "alpicool-c20": "best-12v-fridges-overlanding",
+  "setpower-pt45": "best-12v-fridges-overlanding",
+  "dometic-cfx3-35": "best-overlanding-fridges-compared-dometic-vs-arb-2026",
+  "arb-elements-60l": "arb-classic-series-ii-fridge-review"
+};
+
+Logic: When rendering a product card, check if productArticleMap[product.slug] exists. If yes, link to /articles/{articleSlug}. If no mapping exists, fall back to /products/{product.slug}.
+
+2. Fix these two broken ASINs in your DB/seed data:
+
+- Aquamira Water Treatment Drops: B000OR114S is WRONG (now points to Kelty product) -> use B0078SA5SE
+- Jackery Explorer 1000 Plus: B0CG5BP68F is WRONG (now points to womens top) -> use B0CFVBGWBT
+
+Search your seed.ts and any data files for these ASINs and replace them.
+
+After making these changes, pull latest from GitHub:
+cd /home/runner/workspace && git pull origin master && npm install && npm run build

@@ -240,7 +240,7 @@ export const kitItems: KitItem[] = [
     priority: "recommended",
     description: "Chemical water purification backup. Treats up to 30 gallons. Lightweight and has long shelf life.",
     estimatedCost: 15,
-    affiliateUrl: A("B000OR114S"),
+    affiliateUrl: A("B0078SA5SE"),
     affiliateNote: "$15 — Chemical backup to filters",
     budgetTier: "standard",
   },

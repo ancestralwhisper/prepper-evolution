@@ -132,7 +132,7 @@ export const containers: Container[] = [
     id: "aquamira-drops",
     name: "Aquamira Water Treatment Drops",
     gallons: 0,
-    affiliateUrl: A("B000OR114S"),
+    affiliateUrl: A("B0078SA5SE"),
     type: "treatment",
     note: "Chemical purification — treats 30 gallons per kit. Kills viruses that filters miss. 5-year shelf life.",
     portable: true,

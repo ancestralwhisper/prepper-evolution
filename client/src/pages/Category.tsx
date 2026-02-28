@@ -6,6 +6,7 @@ import { ChevronRight, ChevronLeft } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@shared/schema";
+import { productArticleMap } from "@/content/products";
 
 export default function Category() {
   const { name } = useParams();
@@ -119,7 +120,7 @@ export default function Category() {
               {categoryProducts.map(product => {
                 const price = typeof product.price === 'string' ? parseFloat(product.price) : product.price;
                 return (
-                  <Link key={product.id} href={`/products/${product.slug}`} className="group block">
+                  <Link key={product.id} href={productArticleMap[product.slug] ? `/articles/${productArticleMap[product.slug]}` : `/products/${product.slug}`} className="group block">
                     <div className="bg-card rounded-2xl overflow-hidden border border-border p-4 hover:border-primary/50 transition-colors h-full flex flex-col">
                       <div className="aspect-square bg-muted rounded-xl overflow-hidden mb-4 relative">
                         <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />

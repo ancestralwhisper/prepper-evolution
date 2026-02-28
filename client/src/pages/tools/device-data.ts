@@ -192,7 +192,7 @@ export interface PowerStationRec {
 export const powerStations: PowerStationRec[] = [
   { id: "jackery-300p", name: "Jackery Explorer 300 Plus", capacityWh: 288, maxOutputW: 300, price: "$249", affiliateUrl: A("B0CFV93GZM"), note: "Ultraportable, great for phones/lights" },
   { id: "ecoflow-river2", name: "EcoFlow RIVER 2", capacityWh: 256, maxOutputW: 300, price: "$179", affiliateUrl: A("B0B8MXPRDB"), note: "Fastest recharge in class (60 min)" },
-  { id: "jackery-1000p", name: "Jackery Explorer 1000 Plus", capacityWh: 1264, maxOutputW: 2000, price: "$799", affiliateUrl: A("B0CG5BP68F"), note: "Expandable to 5kWh" },
+  { id: "jackery-1000p", name: "Jackery Explorer 1000 Plus", capacityWh: 1264, maxOutputW: 2000, price: "$799", affiliateUrl: A("B0CFVBGWBT"), note: "Expandable to 5kWh" },
   { id: "ecoflow-delta2", name: "EcoFlow DELTA 2", capacityWh: 1024, maxOutputW: 1800, price: "$649", affiliateUrl: A("B0B9XB57XM"), note: "Best value mid-range" },
   { id: "bluetti-ac200max", name: "Bluetti AC200MAX", capacityWh: 2048, maxOutputW: 2200, price: "$1,599", affiliateUrl: A("B09M8J9LY7"), note: "LiFePO4 — 3,500+ cycles" },
   { id: "ecoflow-delta2max", name: "EcoFlow DELTA 2 Max", capacityWh: 2048, maxOutputW: 2400, price: "$1,599", affiliateUrl: A("B0C4DW17PD"), note: "Expandable to 6kWh" },

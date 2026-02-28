@@ -5,6 +5,7 @@ import { ChevronLeft, Trophy } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import type { Comparison as ComparisonType } from "@shared/schema";
+import { productArticleMap } from "@/content/products";
 
 export default function Comparison() {
   const { slug } = useParams();
@@ -66,7 +67,7 @@ export default function Comparison() {
           <ul>
             {comparison.productSlugs.map(p => (
               <li key={p}>
-                <Link href={`/products/${p}`} className="text-primary hover:underline">{p.replace(/-/g, ' ')}</Link>
+                <Link href={productArticleMap[p] ? `/articles/${productArticleMap[p]}` : `/products/${p}`} className="text-primary hover:underline">{p.replace(/-/g, ' ')}</Link>
               </li>
             ))}
           </ul>
