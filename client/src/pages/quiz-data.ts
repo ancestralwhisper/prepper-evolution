@@ -191,7 +191,7 @@ export const scoreRanges: ScoreRange[] = [
         reason: "24 servings of freeze-dried meals. 30-year shelf life, no cooking skill needed.",
       },
       {
-        name: "Anker PowerCore 20000mAh",
+        name: "Anker 737 Power Bank (24,000mAh)",
         url: "https://www.amazon.com/dp/B09VPHVT2Z?tag=prepperevo-20",
         reason: "Portable phone charger that keeps your devices alive for days. Charge your phone 5+ times on a single battery.",
       },
@@ -202,7 +202,7 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "SOL Emergency Blankets (4-pack)",
-        url: "https://www.amazon.com/dp/B07GLCYR5S?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B07Z5H98R7?tag=prepperevo-20",
         reason: "Mylar emergency blankets that reflect 90% of body heat. Waterproof, windproof, and weigh almost nothing.",
       },
       {

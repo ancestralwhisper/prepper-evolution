@@ -54,7 +54,7 @@ const GEAR = {
     url: "https://www.amazon.com/dp/B0D9R239MT?tag=prepperevo-20",
   },
   garminInreach: {
-    name: "Garmin inReach Mini 2",
+    name: "Garmin inReach Mini 3 Plus",
     url: "https://www.amazon.com/dp/B0G4RST8LV?tag=prepperevo-20",
   },
   goalZeroYeti: {

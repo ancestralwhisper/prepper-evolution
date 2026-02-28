@@ -333,7 +333,7 @@ export const productRecommendations: ProductRec[] = [
   {
     id: "readywise-bucket",
     name: "ReadyWise Emergency Food Bucket",
-    desc: "120 servings of entrees and breakfasts",
+    desc: "150 servings of entrees and breakfasts",
     price: "$90",
     affiliateUrl: A("B0CR5DCFTJ"),
     type: "food",

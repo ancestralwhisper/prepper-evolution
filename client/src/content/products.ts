@@ -113,7 +113,7 @@ export const mockProducts: Product[] = [
   {
     id: "10",
     slug: "garmin-inreach-mini-2",
-    name: "Garmin inReach Mini 2",
+    name: "Garmin inReach Mini 3 Plus",
     description: "Satellite messenger, SOS, GPS tracking, two-way texting",
     price: 399.99,
     category: "Navigation & Communication",

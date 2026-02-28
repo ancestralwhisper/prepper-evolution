@@ -401,7 +401,7 @@ export const kitItems: KitItem[] = [
     priority: "essential",
     description: "Reflects 90% of body heat. Waterproof, windproof. Weighs almost nothing. Always carry extras.",
     estimatedCost: 8,
-    affiliateUrl: A("B07GLCYR5S"),
+    affiliateUrl: A("B07Z5H98R7"),
     affiliateNote: "$8 — 4-pack, essential for every kit",
   },
   {
@@ -781,7 +781,7 @@ export const kitItems: KitItem[] = [
   },
   {
     id: "anker-powercore-20k",
-    name: "Anker PowerCore 20000",
+    name: "Anker 737 Power Bank (24,000mAh)",
     category: "communication",
     priority: "recommended",
     description: "Charge your phone 5+ times. Dual USB output charges two devices simultaneously. Keep communications alive for days.",

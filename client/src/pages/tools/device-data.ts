@@ -201,7 +201,7 @@ export const powerStations: PowerStationRec[] = [
   { id: "bluetti-ep500", name: "Bluetti EP500", capacityWh: 5100, maxOutputW: 2000, price: "$3,499", affiliateUrl: A("B0C1ZDF36J"), note: "Whole-home backup, UPS function" },
   { id: "gz-yeti-500x", name: "Goal Zero Yeti 500X", capacityWh: 505, maxOutputW: 300, price: "$400", affiliateUrl: A("B085KRMCCY"), note: "Lightweight, chain with Yeti Link" },
   { id: "gz-yeti-1000-core", name: "Goal Zero Yeti 1000 Core", capacityWh: 983, maxOutputW: 1500, price: "$800", affiliateUrl: A("B096ST3VMS"), note: "Wi-Fi app, expandable" },
-  { id: "jackery-500", name: "Jackery Explorer 500", capacityWh: 518, maxOutputW: 500, price: "$299", affiliateUrl: A("B082TMBYR6"), note: "Budget-friendly mid-size" },
+  { id: "jackery-500", name: "Jackery Explorer 500", capacityWh: 518, maxOutputW: 500, price: "$299", affiliateUrl: A("B07SM5HBK1"), note: "Budget-friendly mid-size" },
   { id: "anker-c1000", name: "Anker SOLIX C1000", capacityWh: 1056, maxOutputW: 1800, price: "$599", affiliateUrl: A("B0C5C89QKZ"), note: "HyperFlash recharge in 58 min" },
   { id: "bluetti-eb3a", name: "Bluetti EB3A", capacityWh: 268, maxOutputW: 600, price: "$199", affiliateUrl: A("B09WW3CTF4"), note: "UPS mode, great for CPAP travel" },
   { id: "ecoflow-river2max", name: "EcoFlow RIVER 2 Max", capacityWh: 512, maxOutputW: 500, price: "$349", affiliateUrl: A("B0B97H2XHS"), note: "X-Boost to 1000W for small appliances" },
