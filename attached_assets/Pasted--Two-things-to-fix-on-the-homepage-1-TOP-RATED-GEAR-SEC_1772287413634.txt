@@ -1,0 +1,38 @@
+ Two things to fix on the homepage:
+
+  1. "TOP RATED GEAR" SECTION — The ESEE 4, EcoFlow Delta 2, and Lifestraw product cards currently link to /products/[slug] which shows a
+  generic page with no useful content. Change these to link to their published article pages instead:
+
+     - ESEE 4 → /articles/esee-4-survival-knife-review
+     - EcoFlow Delta 2 Max → /articles/best-portable-power-stations-2026
+     - Lifestraw → /articles/lifestraw-personal-water-filter-review
+
+     Apply this same logic to ALL product cards site-wide. Here's the full mapping — if a product slug matches a key, link to
+  /articles/[value] instead of /products/[slug]:
+
+     "sawyer-squeeze-water-filter" → "sawyer-squeeze-water-filter-review"
+     "ecoflow-delta-2-max" → "best-portable-power-stations-2026"
+     "morakniv-companion-knife" → "mora-companion-hd-review-best-budget-survival-knife-17"
+     "leatherman-wave-plus" → "best-survival-knives-compared-budget-to-premium-2026"
+     "511-tactical-rush72" → "5-11-rush-72-bug-out-bag-review"
+     "garmin-inreach-mini-2" → "garmin-inreach-mini-2-review-satellite-sos-messaging"
+     "ikamper-skycamp-3-rooftop-tent" → "ikamper-skycamp-3-review"
+     "dometic-cfx3-55im-portable-fridge" → "dometic-cfx3-55im-review"
+     "jackery-explorer-1000-v2" → "jackery-explorer-1000-v2-review"
+     "cat-tourniquet-gen7" → "first-aid-essentials-survival"
+     "mountain-house-14-day-emergency-food" → "long-term-food-storage-guide"
+     "aquamira-water-purification-tablets" → "water-purification-methods"
+     "esee-4" → "esee-4-survival-knife-review"
+     "lifestraw" → "lifestraw-personal-water-filter-review"
+
+     Any product not in this map keeps its current /products/[slug] link.
+
+  2. "MASTER THE ESSENTIALS" SECTION — Verify these three cards still work correctly:
+     - Bug Out Bag → should link to /articles/building-your-first-bug-out-bag
+     - Overland Navigation → should link to its article
+     - Water Procurement → should link to /articles/water-purification-methods
+
+     If "Water Procurement" is showing "not found in database", make sure the link goes to /articles/water-purification-methods instead of
+  trying to look up a product.
+
+  After making changes, redeploy.

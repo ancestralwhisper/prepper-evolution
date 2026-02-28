@@ -209,7 +209,7 @@ export default function Home() {
             {[
               { title: "Bug Out Bags", icon: Battery, desc: "Build the perfect 72-hour kit for any scenario.", link: "/articles/building-your-first-bug-out-bag" },
               { title: "Overland Navigation", icon: Navigation, desc: "Find your way when the grid goes down.", link: "/articles/overlanding-for-preppers-bug-out-vehicle" },
-              { title: "Water Procurement", icon: Shield, desc: "Filtration, purification, and storage techniques.", link: "/articles/best-water-filters-for-preppers-overlanders-2026-complete-comparison" }
+              { title: "Water Procurement", icon: Shield, desc: "Filtration, purification, and storage techniques.", link: "/articles/water-purification-methods" }
             ].map((feature, i) => (
               <motion.div 
                 key={i} 

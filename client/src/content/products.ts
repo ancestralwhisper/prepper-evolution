@@ -281,6 +281,8 @@ export const productArticleMap: Record<string, string> = {
   "sawyer-squeeze-water-filter": "sawyer-squeeze-water-filter-review",
   "waterdrop-king-tank": "waterdrop-king-tank-gravity-water-filter-review-2026",
   "mora-companion-hd": "mora-companion-hd-review-best-budget-survival-knife-17",
+  "esee-4": "esee-4-survival-knife-review",
+  "lifestraw-personal-water-filter": "lifestraw-personal-water-filter-review",
   "511-tactical-rush72": "5-11-rush-72-bug-out-bag-review",
   "garmin-inreach-mini-2": "garmin-inreach-mini-2-review-satellite-sos-messaging",
   "ikamper-skycamp-3-0": "ikamper-skycamp-3-review",
