@@ -6,6 +6,9 @@ import {
   MessageSquarePlus, Send,
 } from "lucide-react";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
+import PrintQrCode from "@/components/tools/PrintQrCode";
+import InstallButton from "@/components/tools/InstallButton";
+import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import {
   usageBreakdown,
   climateZones,
@@ -202,7 +205,7 @@ export default function WaterStorageCalculator() {
     return `${g.toFixed(2)}`;
   };
 
-  const shareLink = () => {
+  const getShareUrl = useCallback(() => {
     const p = new URLSearchParams();
     p.set("a", String(state.adults));
     if (state.children > 0) p.set("c", String(state.children));
@@ -213,7 +216,11 @@ export default function WaterStorageCalculator() {
     p.set("cl", state.climate);
     p.set("ac", state.activity);
     if (state.hasFiltration) p.set("f", "1");
-    const url = `${window.location.origin}${window.location.pathname}?${p.toString()}`;
+    return `${window.location.origin}${window.location.pathname}?${p.toString()}`;
+  }, [state]);
+
+  const shareLink = () => {
+    const url = getShareUrl();
     navigator.clipboard.writeText(url).then(() => {
       setShowShareToast(true);
       setTimeout(() => setShowShareToast(false), 3000);
@@ -380,6 +387,8 @@ export default function WaterStorageCalculator() {
               ))}
             </ul>
           </div>
+
+          <PrintQrCode url={getShareUrl()} />
 
           <p className="print-footer">
             Generated at prepperevolution.com/tools/water-storage-calculator &mdash; {new Date().toLocaleDateString()}
@@ -909,6 +918,7 @@ export default function WaterStorageCalculator() {
                 >
                   <Share2 className="w-4 h-4" /> Share
                 </button>
+                <InstallButton />
               </div>
 
               {showShareToast && (
@@ -916,6 +926,8 @@ export default function WaterStorageCalculator() {
                   Link copied to clipboard!
                 </div>
               )}
+
+              <ToolSocialShare url={getShareUrl()} toolName="Water Storage Calculator" />
 
               <div className="bg-muted rounded-lg p-4">
                 <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">How We Calculate</h4>

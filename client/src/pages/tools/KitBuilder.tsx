@@ -4,6 +4,9 @@ import {
   Download, ExternalLink, Minus, Plus, ChevronDown, ChevronUp,
   AlertTriangle, Info, RotateCcw, X, Users, MessageSquarePlus, Send,
 } from "lucide-react";
+import PrintQrCode from "@/components/tools/PrintQrCode";
+import InstallButton from "@/components/tools/InstallButton";
+import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import {
   questions,
   kitItems,
@@ -269,8 +272,13 @@ export default function KitBuilder() {
 
   const handlePrint = () => window.print();
 
+  const getShareUrl = useCallback(() => {
+    if (typeof window === "undefined") return "";
+    return `${window.location.origin}${window.location.pathname}`;
+  }, []);
+
   const shareLink = () => {
-    const url = `${window.location.origin}${window.location.pathname}`;
+    const url = getShareUrl();
     navigator.clipboard.writeText(url).then(() => {
       setShowShareToast(true);
       setTimeout(() => setShowShareToast(false), 3000);
@@ -622,6 +630,8 @@ export default function KitBuilder() {
           </tbody>
         </table>
 
+        <PrintQrCode url={getShareUrl()} />
+
         <p className="print-footer">
           Generated at prepperevolution.com/tools/72-hour-kit-builder &mdash; {new Date().toLocaleDateString()}
         </p>
@@ -830,6 +840,7 @@ export default function KitBuilder() {
                 >
                   <Share2 className="w-4 h-4" /> Share
                 </button>
+                <InstallButton />
               </div>
 
               {showShareToast && (
@@ -837,6 +848,8 @@ export default function KitBuilder() {
                   Link copied to clipboard!
                 </div>
               )}
+
+              <ToolSocialShare url={getShareUrl()} toolName="72-Hour Kit Builder" />
 
               <div className="bg-card border border-border rounded-lg p-4">
                 <h3 className="text-sm font-bold uppercase tracking-wide mb-3">Cost Breakdown</h3>

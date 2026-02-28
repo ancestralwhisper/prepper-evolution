@@ -51,11 +51,11 @@ const GEAR = {
   },
   rush72: {
     name: "5.11 RUSH72 Backpack",
-    url: "https://www.amazon.com/dp/B004D1WMG2?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B0D9R239MT?tag=prepperevo-20",
   },
   garminInreach: {
     name: "Garmin inReach Mini 2",
-    url: "https://www.amazon.com/dp/B0D5B6CNKJ?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B0G4RST8LV?tag=prepperevo-20",
   },
   goalZeroYeti: {
     name: "Goal Zero Yeti 1000 Core",
@@ -63,7 +63,7 @@ const GEAR = {
   },
   esee4: {
     name: "ESEE 4 Fixed Blade Knife",
-    url: "https://www.amazon.com/dp/B004GHBYPA?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B0848RXQ1W?tag=prepperevo-20",
   },
   jackery1000: {
     name: "Jackery Explorer 1000 Plus",
@@ -71,7 +71,7 @@ const GEAR = {
   },
   ecoflowDelta2: {
     name: "EcoFlow DELTA 2",
-    url: "https://www.amazon.com/dp/B0BCC7SRQH?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B0B9XB57XM?tag=prepperevo-20",
   },
   renogy200w: {
     name: "Renogy 200W Solar Panel",
@@ -79,7 +79,7 @@ const GEAR = {
   },
   mountainHouse: {
     name: "Mountain House Meals (14-Day Supply)",
-    url: "https://www.amazon.com/dp/B084PD55JQ?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B00955DUHQ?tag=prepperevo-20",
   },
   midlandGXT1000: {
     name: "Midland GXT1000VP4 Walkie Talkies",
@@ -87,31 +87,31 @@ const GEAR = {
   },
   solBivvy: {
     name: "SOL Escape Bivvy",
-    url: "https://www.amazon.com/dp/B00EZMHPUS?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B0CYJX3QCL?tag=prepperevo-20",
   },
   ankerSolix: {
     name: "Anker SOLIX C1000 Power Station",
-    url: "https://www.amazon.com/dp/B0BZ6SCK6S?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B0C5C89QKZ?tag=prepperevo-20",
   },
   katadynBeFree: {
     name: "Katadyn BeFree 1L Water Filter",
-    url: "https://www.amazon.com/dp/B075X3MV3G?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B0BFQMMJVS?tag=prepperevo-20",
   },
   bioliteHeadlamp: {
     name: "BioLite HeadLamp 200",
-    url: "https://www.amazon.com/dp/B079BBQ8V4?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B07T25LMYB?tag=prepperevo-20",
   },
   gerberStrongarm: {
     name: "Gerber Strongarm Fixed Blade",
-    url: "https://www.amazon.com/dp/B00B1C0IA0?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B00U0ILXGC?tag=prepperevo-20",
   },
   midlandT77: {
     name: "Midland T77VP5 GMRS Radio",
-    url: "https://www.amazon.com/dp/B085ZPHSZ1?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B01LVUBPPA?tag=prepperevo-20",
   },
   readyWise: {
     name: "ReadyWise Emergency Food Supply",
-    url: "https://www.amazon.com/dp/B07D5C7P43?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B0CR5DCFTJ?tag=prepperevo-20",
   },
   survivalTabs: {
     name: "Survival Tabs 15-Day Supply",

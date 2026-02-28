@@ -4,6 +4,9 @@ import {
   ExternalLink, ShieldAlert, X, Package, MessageSquarePlus, Send, Users,
 } from "lucide-react";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
+import PrintQrCode from "@/components/tools/PrintQrCode";
+import InstallButton from "@/components/tools/InstallButton";
+import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import {
   gearCategories,
   essentialItems,
@@ -231,11 +234,16 @@ export default function BugOutBagCalculator() {
     }).catch(() => {});
   }, [customItems, selected, calculations.itemCount, calculations.totalLbs]);
 
-  const shareLink = () => {
+  const getShareUrl = useCallback(() => {
+    if (typeof window === "undefined") return "";
     const gearStr = Object.entries(selected)
       .map(([id, qty]) => `${id}:${qty}`)
       .join(",");
-    const url = `${window.location.origin}${window.location.pathname}?w=${bodyWeight}&g=${gearStr}`;
+    return `${window.location.origin}${window.location.pathname}?w=${bodyWeight}&g=${gearStr}`;
+  }, [selected, bodyWeight]);
+
+  const shareLink = () => {
+    const url = getShareUrl();
     navigator.clipboard.writeText(url).then(() => {
       setShowShareToast(true);
       setTimeout(() => setShowShareToast(false), 3000);
@@ -406,6 +414,8 @@ export default function BugOutBagCalculator() {
             </ul>
           </div>
         )}
+
+        <PrintQrCode url={getShareUrl()} />
 
         <p className="print-footer">
           Generated at prepperevolution.com/tools/bug-out-bag-calculator &mdash; {new Date().toLocaleDateString()}
@@ -966,6 +976,7 @@ export default function BugOutBagCalculator() {
                   >
                     <Share2 className="w-4 h-4" /> Share
                   </button>
+                  <InstallButton />
                 </div>
 
                 {showShareToast && (
@@ -973,6 +984,8 @@ export default function BugOutBagCalculator() {
                     Link copied to clipboard!
                   </div>
                 )}
+
+                <ToolSocialShare url={getShareUrl()} toolName="Bug Out Bag Calculator" />
 
                 <div className="bg-muted rounded-lg p-4 no-print">
                   <p className="text-[11px] text-muted-foreground leading-relaxed text-center">

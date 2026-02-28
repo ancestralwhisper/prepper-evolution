@@ -187,17 +187,17 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "Mountain House Classic Bucket",
-        url: "https://www.amazon.com/dp/B084PD55JQ?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B00955DUHQ?tag=prepperevo-20",
         reason: "24 servings of freeze-dried meals. 30-year shelf life, no cooking skill needed.",
       },
       {
         name: "Anker PowerCore 20000mAh",
-        url: "https://www.amazon.com/dp/B09SFK7VGK?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B09VPHVT2Z?tag=prepperevo-20",
         reason: "Portable phone charger that keeps your devices alive for days. Charge your phone 5+ times on a single battery.",
       },
       {
         name: "LifeStraw Peak Series",
-        url: "https://www.amazon.com/dp/B0CKVY3XYG?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0CFYHBWP4?tag=prepperevo-20",
         reason: "Personal water filter you can drink through directly. Filters 99.99% of bacteria and parasites from any freshwater source.",
       },
       {
@@ -212,7 +212,7 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "Adventure Medical Kits Ultralight",
-        url: "https://www.amazon.com/dp/B003BS2PUY?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0DV6PDY9R?tag=prepperevo-20",
         reason: "Compact first aid kit that covers the basics. Lightweight enough to toss in any bag.",
       },
     ],
@@ -250,7 +250,7 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "Black Diamond Spot 400",
-        url: "https://www.amazon.com/dp/B0B8KM3MBG?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0DK2QZYKG?tag=prepperevo-20",
         reason: "400-lumen headlamp with red night mode. Hands-free lighting is essential when the power goes out.",
       },
       {
@@ -260,7 +260,7 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "Eton Emergency Weather Radio",
-        url: "https://www.amazon.com/dp/B07PHPJHQ3?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0C5KSYZ1N?tag=prepperevo-20",
         reason: "Hand-crank AM/FM/NOAA weather radio with built-in phone charger. Information is survival when the grid goes down.",
       },
       {
@@ -293,7 +293,7 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "EcoFlow DELTA 2",
-        url: "https://www.amazon.com/dp/B0BCC7SRQH?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0B9XB57XM?tag=prepperevo-20",
         reason: "1024Wh with 1800W output. Charges from solar, car, or wall. Expandable to 3kWh.",
       },
       {
@@ -308,7 +308,7 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "Goal Zero Venture 75",
-        url: "https://www.amazon.com/dp/B07SZ5BTQH?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B095FCY299?tag=prepperevo-20",
         reason: "Waterproof power bank built for outdoor abuse. Charges phones and tablets in any weather condition.",
       },
       {
@@ -341,7 +341,7 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "EcoFlow DELTA 2",
-        url: "https://www.amazon.com/dp/B0BCC7SRQH?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0B9XB57XM?tag=prepperevo-20",
         reason: "Expandable power for long-term off-grid capability. 1800W pure sine wave output.",
       },
       {
@@ -356,12 +356,12 @@ export const scoreRanges: ScoreRange[] = [
       },
       {
         name: "Goal Zero Venture 75",
-        url: "https://www.amazon.com/dp/B07SZ5BTQH?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B095FCY299?tag=prepperevo-20",
         reason: "Waterproof power bank for your EDC and go-bag. Rugged enough for any environment you operate in.",
       },
       {
         name: "Black Diamond Spot 400",
-        url: "https://www.amazon.com/dp/B0B8KM3MBG?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0DK2QZYKG?tag=prepperevo-20",
         reason: "400-lumen headlamp with multiple modes including red night vision. Upgrade your hands-free lighting game.",
       },
       {

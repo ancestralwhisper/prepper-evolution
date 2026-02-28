@@ -6,6 +6,9 @@ import {
 } from "lucide-react";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import { generateSolarPdf, type SolarPdfData } from "@/components/tools/PdfExport";
+import PrintQrCode from "@/components/tools/PrintQrCode";
+import InstallButton from "@/components/tools/InstallButton";
+import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import {
   deviceCategories,
   solarRegions,
@@ -222,11 +225,16 @@ export default function SolarPowerCalculator() {
     return `${Math.round(w)} W`;
   };
 
-  const shareLink = () => {
+  const getShareUrl = useCallback(() => {
+    if (typeof window === "undefined") return "";
     const gearStr = Object.entries(selected)
       .map(([id, s]) => `${id}:${s.qty}:${s.hours}`)
       .join(",");
-    const url = `${window.location.origin}${window.location.pathname}?p=${people}&d=${days}&r=${region}&uc=${useCase}&g=${gearStr}`;
+    return `${window.location.origin}${window.location.pathname}?p=${people}&d=${days}&r=${region}&uc=${useCase}&g=${gearStr}`;
+  }, [selected, people, days, region, useCase]);
+
+  const shareLink = () => {
+    const url = getShareUrl();
     navigator.clipboard.writeText(url).then(() => {
       setShowShareToast(true);
       setTimeout(() => setShowShareToast(false), 3000);
@@ -439,6 +447,8 @@ export default function SolarPowerCalculator() {
             </ul>
           </div>
         )}
+
+        <PrintQrCode url={getShareUrl()} />
 
         <p className="print-footer">
           Generated at prepperevolution.com/tools/solar-power-calculator &mdash; {new Date().toLocaleDateString()}
@@ -1083,6 +1093,7 @@ export default function SolarPowerCalculator() {
                   >
                     <Share2 className="w-4 h-4" /> Share
                   </button>
+                  <InstallButton />
                 </div>
 
                 {showShareToast && (
@@ -1090,6 +1101,8 @@ export default function SolarPowerCalculator() {
                     Link copied to clipboard!
                   </div>
                 )}
+
+                <ToolSocialShare url={getShareUrl()} toolName="Solar Power Calculator" />
 
                 <div className="bg-muted rounded-lg p-4">
                   <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">How We Calculate</h4>

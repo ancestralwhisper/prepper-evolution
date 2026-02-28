@@ -5,6 +5,9 @@ import {
   CheckCircle, ShieldAlert, Package, MessageSquarePlus, Send,
 } from "lucide-react";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
+import PrintQrCode from "@/components/tools/PrintQrCode";
+import InstallButton from "@/components/tools/InstallButton";
+import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import {
   foodCategories,
   activityLevels,
@@ -173,8 +176,13 @@ export default function FoodStorageCalculator() {
     return `$${Math.round(amount)}`;
   };
 
+  const getShareUrl = useCallback(() => {
+    if (typeof window === "undefined") return "";
+    return `${window.location.origin}${window.location.pathname}?m=${group.males}&f=${group.females}&c=${group.children}&d=${durationDays}&a=${activity}`;
+  }, [group, durationDays, activity]);
+
   const shareLink = () => {
-    const url = `${window.location.origin}${window.location.pathname}?m=${group.males}&f=${group.females}&c=${group.children}&d=${durationDays}&a=${activity}`;
+    const url = getShareUrl();
     navigator.clipboard.writeText(url).then(() => {
       setShowShareToast(true);
       setTimeout(() => setShowShareToast(false), 3000);
@@ -293,6 +301,8 @@ export default function FoodStorageCalculator() {
             </tr>
           </tbody>
         </table>
+
+        <PrintQrCode url={getShareUrl()} />
 
         <p className="print-footer">
           Generated at prepperevolution.com/tools/food-storage-calculator &mdash; {new Date().toLocaleDateString()}
@@ -921,6 +931,7 @@ export default function FoodStorageCalculator() {
                   >
                     <Share2 className="w-4 h-4" /> Share
                   </button>
+                  <InstallButton />
                 </div>
 
                 {showShareToast && (
@@ -928,6 +939,8 @@ export default function FoodStorageCalculator() {
                     Link copied to clipboard!
                   </div>
                 )}
+
+                <ToolSocialShare url={getShareUrl()} toolName="Food Storage Calculator" />
 
                 <div className="bg-muted rounded-lg p-4">
                   <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">How We Calculate</h4>

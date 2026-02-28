@@ -98,7 +98,7 @@ client/          — Frontend React app
     pages/       — Route-level page components
     pages/tools/ — Tools section (ToolsIndex, BugOutBagCalculator, SolarPowerCalculator, WaterStorageCalculator, FoodStorageCalculator, KitBuilder, SHTFSimulator, CommunityGallery, MyKits, gear-data, device-data, water-data, food-data, kit-data, scenarios)
     components/  — shadcn/ui components
-    components/tools/ — Tool-specific components (DonutChart, PdfExport)
+    components/tools/ — Tool-specific components (DonutChart, PdfExport, PrintQrCode, InstallButton, ToolSocialShare)
     content/     — Static content data (products, articles, comparisons)
     hooks/       — Custom React hooks (dark mode, SEO, toast, mobile detection)
     lib/         — Utilities (queryClient, WordPress API helpers, cn utility)
@@ -139,6 +139,7 @@ shared/          — Shared code between client and server
 - **Embla Carousel** — Carousel component
 - **Lucide React** — Icon library
 - **cmdk** — Command palette component
+- **qrcode** — QR code generation for print-friendly shareable links on tool pages
 
 ### Image Sources
 - **Unsplash** — Fallback images for articles and some products

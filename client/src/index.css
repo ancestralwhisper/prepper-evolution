@@ -310,6 +310,35 @@
     text-align: center;
   }
 
+  .print-qr-section {
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+    page-break-inside: avoid;
+  }
+
+  .print-qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .print-qr-image {
+    width: 140px !important;
+    height: 140px !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .print-qr-text {
+    font-size: 9px;
+    color: #666 !important;
+    text-align: center;
+    font-style: italic;
+    margin: 0;
+  }
+
   @page {
     margin: 0.75in;
     size: letter;
