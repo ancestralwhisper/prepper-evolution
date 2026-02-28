@@ -1,0 +1,67 @@
+ Create a new file client/src/tools/components/DataPrivacyNotice.tsx with this exact content:
+
+  "use client";
+
+  import { Shield, HardDrive, AlertTriangle } from "lucide-react";
+
+  export default function DataPrivacyNotice() {
+    return (
+      <div className="bg-surface border border-card-border rounded-lg p-4 no-print">
+        <div className="flex items-center gap-2 mb-3">
+          <Shield className="w-4 h-4 text-accent flex-shrink-0" />
+          <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted">
+            Your Data, Your Device
+          </h4>
+        </div>
+        <div className="space-y-2.5">
+          <div className="flex gap-2">
+            <HardDrive className="w-3.5 h-3.5 text-success flex-shrink-0 mt-0.5" />
+            <p className="text-[11px] text-muted leading-relaxed">
+              All your data is <strong className="text-foreground">stored locally in your browser only</strong>.
+              Nothing is sent to our servers or shared with anyone &mdash; ever.
+              Your configurations, selections, and results never leave your device.
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <AlertTriangle className="w-3.5 h-3.5 text-warning flex-shrink-0 mt-0.5" />
+            <p className="text-[11px] text-muted leading-relaxed">
+              <strong className="text-foreground">Clearing your browser cache or site data will permanently erase</strong> all
+              saved progress across your calculators. To keep your data, avoid clearing browsing
+              data for this site.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  Then make these changes across the site:
+
+  1. Add <DataPrivacyNotice /> to these 5 calculator files, at the bottom of the sidebar (after the last section like "How We Calculate" or
+   "Community Note"), right before the sidebar's closing </div>:
+  - Bug Out Bag Calculator
+  - Water Storage Calculator
+  - Food Storage Calculator
+  - Solar Power Calculator
+  - 72-Hour Kit Builder
+
+  Each file needs: import DataPrivacyNotice from "../components/DataPrivacyNotice"; at the top, and <DataPrivacyNotice /> placed at the
+  bottom of the sidebar column.
+
+  Do NOT add it to the SHTF Simulator (it doesn't save data).
+
+  2. Update the /tools index page — find the paragraph that says "Every tool is free, works on mobile, and requires no account. Your data
+  stays in your browser" and replace it with:
+
+  Every tool is free, works on mobile, and requires no account. Your data is stored locally in your browser only — nothing is ever sent to
+  our servers or shared with anyone. Your configurations save automatically so you can pick up where you left off. Just keep in mind:
+  clearing your browser cache or site data will erase your saved progress. Share your results with a link or print them as a checklist.
+
+  3. Update the My Kits page — find the subtitle paragraph "All your calculator results in one place. Your data is saved automatically in
+  your browser" and replace with:
+
+  All your calculator results in one place. Your data is stored locally in your browser only — nothing is sent to our servers or shared
+  with anyone. No account required. Open any kit to pick up where you left off. Note: clearing your browser cache will erase saved data.
+
+  4. Update the KitDashboard — find the small text "Data stored locally in your browser" and change it to: "Saved locally in your browser
+  only — clearing cache erases data"

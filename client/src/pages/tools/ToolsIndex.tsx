@@ -213,9 +213,9 @@ export default function ToolsIndex() {
             a bug out bag you have carried for years.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            Every tool is free, works on mobile, and requires no account. Your data stays in your
-            browser — we do not store personal information. Share your results with a link or print
-            them as a checklist.
+            Every tool is free, works on mobile, and requires no account. Your data is stored locally in your browser only &mdash; nothing is ever sent to
+            our servers or shared with anyone. Your configurations save automatically so you can pick up where you left off. Just keep in mind:
+            clearing your browser cache or site data will erase your saved progress. Share your results with a link or print them as a checklist.
           </p>
         </div>
       </div>

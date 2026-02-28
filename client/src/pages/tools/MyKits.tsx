@@ -308,7 +308,8 @@ export default function MyKits() {
             My Saved <span className="text-primary">Kits</span>
           </h1>
           <p className="text-muted-foreground text-lg leading-relaxed" data-testid="text-page-description">
-            View and manage your saved calculator configurations. All data is stored locally in your browser.
+            All your calculator results in one place. Your data is stored locally in your browser only &mdash; nothing is sent to our servers or shared
+            with anyone. No account required. Open any kit to pick up where you left off. Note: clearing your browser cache will erase saved data.
           </p>
         </div>
 
@@ -369,7 +370,7 @@ export default function MyKits() {
                 saved kit{kits.length !== 1 ? "s" : ""}
               </p>
               <p className="text-xs text-muted-foreground/60">
-                Data stored locally in your browser
+                Saved locally in your browser only &mdash; clearing cache erases data
               </p>
             </div>
 

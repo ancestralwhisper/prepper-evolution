@@ -7,6 +7,7 @@ import {
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import { generateSolarPdf, type SolarPdfData } from "@/components/tools/PdfExport";
 import PrintQrCode from "@/components/tools/PrintQrCode";
+import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import {
@@ -927,6 +928,8 @@ export default function SolarPowerCalculator() {
                   ))}
                 </ul>
               </div>
+
+              <DataPrivacyNotice />
             </div>
 
             <div className="lg:col-span-1">

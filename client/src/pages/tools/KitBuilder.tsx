@@ -5,6 +5,7 @@ import {
   AlertTriangle, Info, RotateCcw, X, Users, MessageSquarePlus, Send,
 } from "lucide-react";
 import PrintQrCode from "@/components/tools/PrintQrCode";
+import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import {
@@ -1057,6 +1058,8 @@ export default function KitBuilder() {
                 Product links are affiliate links &mdash; we earn a commission at no extra cost to you.
                 Prices are estimated and may vary. Always verify current pricing before purchasing.
               </p>
+
+              <DataPrivacyNotice />
             </div>
           </div>
         </div>

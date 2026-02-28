@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import PrintQrCode from "@/components/tools/PrintQrCode";
+import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import {
@@ -724,6 +725,8 @@ export default function FoodStorageCalculator() {
                   ))}
                 </ul>
               </div>
+
+              <DataPrivacyNotice />
             </div>
 
             <div className="lg:col-span-1">
