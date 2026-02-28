@@ -26,7 +26,7 @@ import {
 import { useSEO } from "@/hooks/useSEO";
 
 interface SelectedDevices {
-  [id: string]: { qty: number; hours: number };
+  [id: string]: { qty: number; hours: number; watts?: number };
 }
 
 type UseCase = "emergency" | "offgrid" | "camping";
@@ -76,8 +76,10 @@ export default function SolarPowerCalculator() {
     if (g) {
       const devices: SelectedDevices = {};
       g.split(",").forEach((entry) => {
-        const [id, qty, hours] = entry.split(":");
-        if (id) devices[id] = { qty: parseInt(qty) || 1, hours: parseFloat(hours) || 0 };
+        const parts = entry.split(":");
+        const [id, qty, hours] = parts;
+        const w = parts[3] ? parseInt(parts[3]) : undefined;
+        if (id) devices[id] = { qty: parseInt(qty) || 1, hours: parseFloat(hours) || 0, ...(w ? { watts: w } : {}) };
       });
       setSelected(devices);
     }
@@ -96,7 +98,7 @@ export default function SolarPowerCalculator() {
       if (next[device.id]) {
         delete next[device.id];
       } else {
-        next[device.id] = { qty: 1, hours: device.defaultHours };
+        next[device.id] = { qty: 1, hours: device.defaultHours, watts: device.watts };
       }
       return next;
     });
@@ -124,6 +126,14 @@ export default function SolarPowerCalculator() {
     });
   }, []);
 
+  const setDeviceWatts = useCallback((id: string, watts: number) => {
+    setSelected((prev) => {
+      const current = prev[id];
+      if (!current) return prev;
+      return { ...prev, [id]: { ...current, watts: Math.max(1, Math.min(5000, watts)) } };
+    });
+  }, []);
+
   const toggleCategory = (catId: string) => {
     setExpandedCats((prev) => {
       const next = new Set(prev);
@@ -146,13 +156,14 @@ export default function SolarPowerCalculator() {
       for (const device of cat.devices) {
         const sel = selected[device.id];
         if (!sel) continue;
-        const dailyWh = device.watts * sel.hours * sel.qty;
+        const w = sel.watts ?? device.watts;
+        const dailyWh = w * sel.hours * sel.qty;
         totalDailyWh += dailyWh;
         categoryWh[cat.id] = (categoryWh[cat.id] || 0) + dailyWh;
-        peakWatts += device.watts * sel.qty;
+        peakWatts += w * sel.qty;
         deviceBreakdown.push({
           name: device.name,
-          watts: device.watts,
+          watts: w,
           qty: sel.qty,
           hours: sel.hours,
           dailyWh,
@@ -227,8 +238,13 @@ export default function SolarPowerCalculator() {
 
   const getShareUrl = useCallback(() => {
     if (typeof window === "undefined") return "";
+    const allDevices = deviceCategories.flatMap((c) => c.devices);
     const gearStr = Object.entries(selected)
-      .map(([id, s]) => `${id}:${s.qty}:${s.hours}`)
+      .map(([id, s]) => {
+        const base = `${id}:${s.qty}:${s.hours}`;
+        const dev = allDevices.find((d) => d.id === id);
+        return s.watts != null && dev && s.watts !== dev.watts ? `${base}:${s.watts}` : base;
+      })
       .join(",");
     return `${window.location.origin}${window.location.pathname}?p=${people}&d=${days}&r=${region}&uc=${useCase}&g=${gearStr}`;
   }, [selected, people, days, region, useCase]);
@@ -252,14 +268,15 @@ export default function SolarPowerCalculator() {
       for (const device of cat.devices) {
         const sel = selected[device.id];
         if (!sel) continue;
+        const w = sel.watts ?? device.watts;
         pdfDevices.push({
           name: device.name,
           category: cat.name,
           catColor: cat.color,
-          watts: device.watts,
+          watts: w,
           qty: sel.qty,
           hours: sel.hours,
-          dailyWh: device.watts * sel.hours * sel.qty,
+          dailyWh: w * sel.hours * sel.qty,
         });
       }
     }
@@ -340,12 +357,13 @@ export default function SolarPowerCalculator() {
       for (const device of cat.devices) {
         const sel = selected[device.id];
         if (!sel) continue;
+        const w = sel.watts ?? device.watts;
         items.push({
           name: device.name,
-          watts: device.watts,
+          watts: w,
           qty: sel.qty,
           hours: sel.hours,
-          dailyWh: device.watts * sel.hours * sel.qty,
+          dailyWh: w * sel.hours * sel.qty,
         });
       }
       if (items.length > 0) groups.push({ catName: cat.name, catColor: cat.color, items });
@@ -619,7 +637,10 @@ export default function SolarPowerCalculator() {
                         {cat.devices.map((device) => {
                           const sel = selected[device.id];
                           const isSelected = !!sel;
-                          const dailyWh = isSelected ? device.watts * sel.hours * sel.qty : 0;
+                          const currentWatts = isSelected ? (sel.watts ?? device.watts) : device.watts;
+                          const isCustomWatts = isSelected && sel.watts != null && sel.watts !== device.watts;
+                          const dailyWh = isSelected ? currentWatts * sel.hours * sel.qty : 0;
+                          const wattsStep = currentWatts >= 100 ? 10 : 5;
 
                           return (
                             <div
@@ -664,7 +685,48 @@ export default function SolarPowerCalculator() {
                               </div>
 
                               {isSelected && (
-                                <div className="flex items-center gap-4 mt-3 ml-11">
+                                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3 ml-11">
+                                  <div className="flex items-center gap-1.5">
+                                    <Zap className="w-3 h-3 text-muted-foreground" />
+                                    <span className="text-[10px] text-muted-foreground uppercase tracking-wide">W:</span>
+                                    <button
+                                      onClick={() => setDeviceWatts(device.id, currentWatts - wattsStep)}
+                                      className="w-6 h-6 rounded flex items-center justify-center bg-muted border border-border text-muted-foreground hover:border-primary/50 text-xs"
+                                      data-testid={`watts-decrease-${device.id}`}
+                                    >
+                                      <Minus className="w-3 h-3" />
+                                    </button>
+                                    <input
+                                      type="number"
+                                      min="1"
+                                      max="5000"
+                                      value={currentWatts}
+                                      onChange={(e) => setDeviceWatts(device.id, parseInt(e.target.value) || device.watts)}
+                                      className={`w-16 border rounded px-2 py-1 text-xs text-center font-bold focus:outline-none focus:border-primary ${
+                                        isCustomWatts
+                                          ? "bg-primary/10 border-primary text-primary"
+                                          : "bg-background border-border text-foreground"
+                                      }`}
+                                      data-testid={`input-watts-${device.id}`}
+                                    />
+                                    <button
+                                      onClick={() => setDeviceWatts(device.id, currentWatts + wattsStep)}
+                                      className="w-6 h-6 rounded flex items-center justify-center bg-primary text-primary-foreground text-xs"
+                                      data-testid={`watts-increase-${device.id}`}
+                                    >
+                                      <Plus className="w-3 h-3" />
+                                    </button>
+                                    {isCustomWatts && (
+                                      <button
+                                        onClick={() => setDeviceWatts(device.id, device.watts)}
+                                        className="text-[10px] text-primary hover:underline ml-0.5"
+                                        data-testid={`watts-reset-${device.id}`}
+                                      >
+                                        reset
+                                      </button>
+                                    )}
+                                  </div>
+
                                   <div className="flex items-center gap-1.5">
                                     <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Qty:</span>
                                     <button
