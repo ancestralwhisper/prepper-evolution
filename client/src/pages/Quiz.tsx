@@ -157,7 +157,7 @@ export default function Quiz() {
   const getShareText = useCallback(() => {
     const score = Object.values(answers).reduce((a, b) => a + b, 0);
     const range = getScoreRange(score);
-    if (score < 15) {
+    if (score < 50) {
       return `I scored ${score}/${MAX_SCORE} on the Prepper Readiness Quiz... time to step up my prep game. How do you stack up?`;
     }
     return `I scored ${score}/${MAX_SCORE} on the Prepper Readiness Quiz — ${range.title}! Think you can beat my score?`;
@@ -195,9 +195,9 @@ export default function Quiz() {
             name: "",
             interests: ["prepping"],
             experience:
-              totalScore >= 23
+              totalScore >= 76
                 ? "advanced"
-                : totalScore >= 15
+                : totalScore >= 51
                   ? "intermediate"
                   : "beginner",
             priority: "skills",

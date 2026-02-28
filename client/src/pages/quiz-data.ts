@@ -41,9 +41,9 @@ export const questions: QuizQuestion[] = [
     question: "Do you have a Bug Out Bag packed and ready?",
     answers: [
       { text: "No", score: 0, feedback: "A BOB is your grab-and-go lifeline. Start with a basic 72-hour kit." },
-      { text: "Started but incomplete", score: 1, feedback: "You have the right idea. Use a checklist to fill the gaps." },
-      { text: "Yes, basic kit", score: 2, feedback: "Solid start. Now test it — take it on a hike and see what you actually need." },
-      { text: "Yes, fully loaded + tested", score: 3, feedback: "Outstanding. You know your loadout works because you have proven it in the field." },
+      { text: "Started but incomplete", score: 3, feedback: "You have the right idea. Use a checklist to fill the gaps." },
+      { text: "Yes, basic kit", score: 7, feedback: "Solid start. Now test it — take it on a hike and see what you actually need." },
+      { text: "Yes, fully loaded + tested", score: 10, feedback: "Outstanding. You know your loadout works because you have proven it in the field." },
     ],
   },
   {
@@ -53,9 +53,9 @@ export const questions: QuizQuestion[] = [
     question: "How many days of water do you have stored?",
     answers: [
       { text: "None", score: 0, feedback: "Water is survival priority #1. Start with 1 gallon per person per day." },
-      { text: "1-2 days", score: 1, feedback: "Better than nothing, but most emergencies last longer. Aim for at least a week." },
-      { text: "3-7 days", score: 2, feedback: "You can ride out most short-term emergencies. Consider adding purification." },
-      { text: "2+ weeks", score: 3, feedback: "Excellent water security. You are ahead of 95% of households." },
+      { text: "1-2 days", score: 3, feedback: "Better than nothing, but most emergencies last longer. Aim for at least a week." },
+      { text: "3-7 days", score: 7, feedback: "You can ride out most short-term emergencies. Consider adding purification." },
+      { text: "2+ weeks", score: 10, feedback: "Excellent water security. You are ahead of 95% of households." },
     ],
   },
   {
@@ -65,9 +65,9 @@ export const questions: QuizQuestion[] = [
     question: "How many days of food do you have stored?",
     answers: [
       { text: "Just what is in the fridge", score: 0, feedback: "A fridge without power is a countdown clock. Start stocking shelf-stable food." },
-      { text: "3-7 days", score: 1, feedback: "Enough for a weekend emergency. Build toward two weeks of real calories." },
-      { text: "2 weeks to 1 month", score: 2, feedback: "Strong position. You can handle most disruptions without outside help." },
-      { text: "1+ month", score: 3, feedback: "Serious food security. Make sure you are rotating stock and storing it properly." },
+      { text: "3-7 days", score: 3, feedback: "Enough for a weekend emergency. Build toward two weeks of real calories." },
+      { text: "2 weeks to 1 month", score: 7, feedback: "Strong position. You can handle most disruptions without outside help." },
+      { text: "1+ month", score: 10, feedback: "Serious food security. Make sure you are rotating stock and storing it properly." },
     ],
   },
   {
@@ -77,9 +77,9 @@ export const questions: QuizQuestion[] = [
     question: "Do you have a way to purify water?",
     answers: [
       { text: "No", score: 0, feedback: "Stored water runs out. A filter or purification method means indefinite supply." },
-      { text: "Purification tabs only", score: 1, feedback: "Tabs work but are slow and limited. Add a filter for faster, reliable purification." },
-      { text: "Filter (Sawyer/LifeStraw)", score: 2, feedback: "Good primary method. Consider a backup in case your filter gets damaged." },
-      { text: "Multiple methods", score: 3, feedback: "Redundancy is the name of the game. Filter, tabs, and boiling — you are covered." },
+      { text: "Purification tabs only", score: 3, feedback: "Tabs work but are slow and limited. Add a filter for faster, reliable purification." },
+      { text: "Filter (Sawyer/LifeStraw)", score: 7, feedback: "Good primary method. Consider a backup in case your filter gets damaged." },
+      { text: "Multiple methods", score: 10, feedback: "Redundancy is the name of the game. Filter, tabs, and boiling — you are covered." },
     ],
   },
   {
@@ -89,9 +89,9 @@ export const questions: QuizQuestion[] = [
     question: "Can you start a fire without matches?",
     answers: [
       { text: "No", score: 0, feedback: "Fire means warmth, clean water, cooked food, and morale. Learn this skill first." },
-      { text: "Maybe, never tried", score: 1, feedback: "Theory without practice fails under stress. Practice before you need it." },
-      { text: "Yes, 1 method", score: 2, feedback: "Good. Now learn a backup method — ferro rod, flint, bow drill." },
-      { text: "Yes, 3+ methods", score: 3, feedback: "Impressive. You can make fire regardless of conditions or available tools." },
+      { text: "Maybe, never tried", score: 3, feedback: "Theory without practice fails under stress. Practice before you need it." },
+      { text: "Yes, 1 method", score: 7, feedback: "Good. Now learn a backup method — ferro rod, flint, bow drill." },
+      { text: "Yes, 3+ methods", score: 10, feedback: "Impressive. You can make fire regardless of conditions or available tools." },
     ],
   },
   {
@@ -101,9 +101,9 @@ export const questions: QuizQuestion[] = [
     question: "Do you have a communication plan if cell towers go down?",
     answers: [
       { text: "No plan", score: 0, feedback: "Cell towers have about 8 hours of backup. After that, you need alternatives." },
-      { text: "Family knows to meet somewhere", score: 1, feedback: "A meeting point is a start. Write it down and add backup locations." },
-      { text: "HAM radio or satellite communicator", score: 2, feedback: "Serious comms capability. Make sure your family knows how to use it too." },
-      { text: "Full comms plan with backup", score: 3, feedback: "Complete communication resilience. You can coordinate no matter what happens." },
+      { text: "Family knows to meet somewhere", score: 3, feedback: "A meeting point is a start. Write it down and add backup locations." },
+      { text: "HAM radio or satellite communicator", score: 7, feedback: "Serious comms capability. Make sure your family knows how to use it too." },
+      { text: "Full comms plan with backup", score: 10, feedback: "Complete communication resilience. You can coordinate no matter what happens." },
     ],
   },
   {
@@ -113,9 +113,9 @@ export const questions: QuizQuestion[] = [
     question: "Could you ruck 10 miles with a 30lb pack?",
     answers: [
       { text: "Definitely not", score: 0, feedback: "Fitness is the prep most people skip. Start with daily walks and build up." },
-      { text: "Struggle but maybe", score: 1, feedback: "Honest assessment. Start rucking with 15-20 lbs and gradually increase." },
-      { text: "Yes, but it would hurt", score: 2, feedback: "You can do it when it counts. Consistent training will make it easier." },
-      { text: "No problem", score: 3, feedback: "Peak readiness. Your body is as prepared as your gear. Well done." },
+      { text: "Struggle but maybe", score: 3, feedback: "Honest assessment. Start rucking with 15-20 lbs and gradually increase." },
+      { text: "Yes, but it would hurt", score: 7, feedback: "You can do it when it counts. Consistent training will make it easier." },
+      { text: "No problem", score: 10, feedback: "Peak readiness. Your body is as prepared as your gear. Well done." },
     ],
   },
   {
@@ -125,9 +125,9 @@ export const questions: QuizQuestion[] = [
     question: "Do you have a portable power solution?",
     answers: [
       { text: "No", score: 0, feedback: "Power keeps your devices, lights, and medical equipment running. Start simple." },
-      { text: "Power bank for phone", score: 1, feedback: "Covers phone charging. Consider something bigger for extended outages." },
-      { text: "Portable power station", score: 2, feedback: "Great capability. A solar panel would make you truly energy independent." },
-      { text: "Solar + power station setup", score: 3, feedback: "Indefinite power generation. You are off-grid capable." },
+      { text: "Power bank for phone", score: 3, feedback: "Covers phone charging. Consider something bigger for extended outages." },
+      { text: "Portable power station", score: 7, feedback: "Great capability. A solar panel would make you truly energy independent." },
+      { text: "Solar + power station setup", score: 10, feedback: "Indefinite power generation. You are off-grid capable." },
     ],
   },
   {
@@ -137,9 +137,9 @@ export const questions: QuizQuestion[] = [
     question: "Do you have a first aid kit and know how to use it?",
     answers: [
       { text: "No kit", score: 0, feedback: "Medical emergencies do not wait. A basic kit could save a life today." },
-      { text: "Basic kit, no training", score: 1, feedback: "Having supplies is step one. Take a Stop the Bleed class — they are free." },
-      { text: "Good kit + basic training", score: 2, feedback: "Solid medical readiness. Consider advancing to Wilderness First Aid." },
-      { text: "Advanced kit + first aid certified", score: 3, feedback: "Medical self-sufficiency. You are the person everyone turns to in a crisis." },
+      { text: "Basic kit, no training", score: 3, feedback: "Having supplies is step one. Take a Stop the Bleed class — they are free." },
+      { text: "Good kit + basic training", score: 7, feedback: "Solid medical readiness. Consider advancing to Wilderness First Aid." },
+      { text: "Advanced kit + first aid certified", score: 10, feedback: "Medical self-sufficiency. You are the person everyone turns to in a crisis." },
     ],
   },
   {
@@ -149,9 +149,9 @@ export const questions: QuizQuestion[] = [
     question: "Have you practiced or drilled your emergency plan?",
     answers: [
       { text: "What plan?", score: 0, feedback: "No plan survives first contact — but having one beats winging it every time." },
-      { text: "Have a plan, never practiced", score: 1, feedback: "A plan you have never tested is just theory. Run through it once this month." },
-      { text: "Practiced once", score: 2, feedback: "Good. Drilling reveals gaps you never noticed on paper. Do it again." },
-      { text: "Regular drills with family", score: 3, feedback: "Elite preparedness. Your family knows exactly what to do under pressure." },
+      { text: "Have a plan, never practiced", score: 3, feedback: "A plan you have never tested is just theory. Run through it once this month." },
+      { text: "Practiced once", score: 7, feedback: "Good. Drilling reveals gaps you never noticed on paper. Do it again." },
+      { text: "Regular drills with family", score: 10, feedback: "Elite preparedness. Your family knows exactly what to do under pressure." },
     ],
   },
 ];
@@ -161,7 +161,7 @@ export const questions: QuizQuestion[] = [
 export const scoreRanges: ScoreRange[] = [
   {
     min: 0,
-    max: 7,
+    max: 25,
     title: "Just Getting Started",
     description:
       "Everyone starts somewhere — and you just took the first step by assessing where you stand. The good news: small, consistent actions compound fast. Focus on the fundamentals below and you will be in a completely different position within 30 days.",
@@ -218,8 +218,8 @@ export const scoreRanges: ScoreRange[] = [
     ],
   },
   {
-    min: 8,
-    max: 14,
+    min: 26,
+    max: 50,
     title: "Building Your Foundation",
     description:
       "You have the basics started but there are gaps that could leave you vulnerable. You are past the 'I should probably do something' phase — now it is time to get systematic. Fill the weak spots below and you will jump into solid prepper territory fast.",
@@ -271,8 +271,8 @@ export const scoreRanges: ScoreRange[] = [
     ],
   },
   {
-    min: 15,
-    max: 22,
+    min: 51,
+    max: 75,
     title: "Solid Prepper",
     description:
       "You are more prepared than 90% of the population. Your fundamentals are strong, and you have real capability across multiple areas. Now it is about optimization, redundancy, and extending your self-sufficiency window. The recommendations below take you from prepared to truly resilient.",
@@ -319,8 +319,8 @@ export const scoreRanges: ScoreRange[] = [
     ],
   },
   {
-    min: 23,
-    max: 30,
+    min: 76,
+    max: 100,
     title: "Ready for Anything",
     description:
       "You are in elite company. Your preparedness covers all the fundamentals with depth and redundancy. You have trained, tested, and refined your systems. At this level, focus on community building, teaching others, and fine-tuning your edge cases. Consider helping others on their journey — the strongest communities are the most resilient.",
@@ -375,7 +375,7 @@ export const scoreRanges: ScoreRange[] = [
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-export const MAX_SCORE = questions.length * 3; // 30
+export const MAX_SCORE = questions.length * 10; // 100
 
 export function getScoreRange(score: number): ScoreRange {
   return scoreRanges.find((r) => score >= r.min && score <= r.max) || scoreRanges[0];
@@ -387,7 +387,7 @@ export function getCategoryScores(answers: Record<string, number>): { label: str
     if (!cats[q.category]) {
       cats[q.category] = { label: q.categoryLabel, score: 0, maxScore: 0 };
     }
-    cats[q.category].maxScore += 3;
+    cats[q.category].maxScore += 10;
     if (answers[q.id] !== undefined) {
       cats[q.category].score += answers[q.id];
     }
