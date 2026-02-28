@@ -207,6 +207,13 @@ export const powerStations: PowerStationRec[] = [
   { id: "ecoflow-river2max", name: "EcoFlow RIVER 2 Max", capacityWh: 512, maxOutputW: 500, price: "$349", affiliateUrl: A("B0B97H2XHS"), note: "X-Boost to 1000W for small appliances" },
   { id: "anker-f2000", name: "Anker SOLIX F2000 (PowerHouse 767)", capacityWh: 2048, maxOutputW: 2400, price: "$1,399", affiliateUrl: A("B09XM7WDZ2"), note: "LiFePO4, 3000+ cycles" },
   { id: "jackery-2000p", name: "Jackery Explorer 2000 Plus", capacityWh: 2042, maxOutputW: 3000, price: "$1,899", affiliateUrl: A("B0C6DHK68Q"), note: "Expandable to 12kWh, LiFePO4" },
+  // ─── High-kWh Home Backup Tier ───
+  { id: "jackery-3000pro", name: "Jackery Explorer 3000 Pro", capacityWh: 3024, maxOutputW: 3000, price: "$2,499", affiliateUrl: A("B0BZ8DZ3HR"), note: "Smart app control, 2.4hr fast charge" },
+  { id: "bluetti-ac500", name: "Bluetti AC500 + B300S", capacityWh: 3072, maxOutputW: 5000, price: "$3,499", affiliateUrl: A("B0BPRVQGVF"), note: "Modular — expandable to 18kWh, 10kW surge, 240V" },
+  { id: "ecoflow-deltapro3", name: "EcoFlow DELTA Pro 3", capacityWh: 4096, maxOutputW: 4000, price: "$2,799", affiliateUrl: A("B0D14FMFZD"), note: "LFP, expandable to 48kWh, 120/240V, powers 3-ton AC" },
+  { id: "bluetti-ep500pro", name: "Bluetti EP500Pro", capacityWh: 5100, maxOutputW: 3000, price: "$3,499", affiliateUrl: A("B0BCJ7HTS2"), note: "UPS function, 2400W solar input, whole-home backup" },
+  { id: "gz-yeti-6000x", name: "Goal Zero Yeti 6000X", capacityWh: 6000, maxOutputW: 2000, price: "$5,500", affiliateUrl: A("B08V8G9MVW"), note: "Home integration kit available, 600W MPPT solar" },
+  { id: "ecoflow-deltapro-ultra", name: "EcoFlow DELTA Pro Ultra", capacityWh: 6144, maxOutputW: 7200, price: "$5,799", affiliateUrl: A("B0D98PKKK5"), note: "Top tier — expandable to 90kWh, 120/240V, Smart Home Panel" },
 ];
 
 // ─── Solar Panel Recommendations ───
@@ -238,6 +245,10 @@ export const solarPanels: SolarPanelRec[] = [
   { id: "ecoflow-160", name: "EcoFlow 160W Portable", watts: 160, price: "$300", affiliateUrl: A("B0D3VCQV6W"), note: "Kickstand, pairs with RIVER series", portable: true },
   { id: "jackery-80", name: "Jackery SolarSaga 80", watts: 80, price: "$250", affiliateUrl: A("B0BMPJ2H5X"), note: "Double-sided, lightweight", portable: true },
   { id: "bougerv-200", name: "BougeRV 200W", watts: 200, price: "$280", affiliateUrl: A("B0C85XKYH2"), note: "Budget 200W option, CIGS tech", portable: true },
+  // ─── High-Watt Panels for Home Backup / Off-Grid ───
+  { id: "ecoflow-rigid-2x400", name: "EcoFlow 2x400W Rigid Panel Kit", watts: 800, price: "$799", affiliateUrl: A("B0CVL9S84Y"), note: "Permanent mount — balcony, RV, cabin rooftop", portable: false },
+  { id: "renogy-800-kit", name: "Renogy 800W Solar Kit (8x100W)", watts: 800, price: "$999", affiliateUrl: A("B08CKHPWHC"), note: "Complete kit — 60A MPPT controller, cables, brackets included", portable: false },
+  { id: "ecoflow-rigid-2x100", name: "EcoFlow 2x100W Rigid Panel", watts: 200, price: "$249", affiliateUrl: A("B0D5QXLVC9"), note: "IP68, permanent mount for RV/cabin", portable: false },
 ];
 
 // ─── Constants ───
