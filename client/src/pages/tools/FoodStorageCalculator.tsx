@@ -761,7 +761,7 @@ export default function FoodStorageCalculator() {
             </div>
 
             <div className="lg:col-span-1">
-              <div className="lg:sticky lg:top-24 space-y-5">
+              <div className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto scrollbar-none space-y-5" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
 
                 <div className="bg-card border border-border rounded-lg p-5">
                   <div className="flex items-center justify-between mb-4">

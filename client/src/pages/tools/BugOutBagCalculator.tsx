@@ -790,7 +790,7 @@ export default function BugOutBagCalculator() {
             </div>
 
             <div className="lg:col-span-1">
-              <div className="lg:sticky lg:top-24 space-y-5">
+              <div className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto scrollbar-none space-y-5" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 <div className="bg-card border border-border rounded-xl p-5">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-bold uppercase tracking-wide">Pack Weight</h3>
