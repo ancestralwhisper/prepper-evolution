@@ -300,6 +300,80 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* Free Tools Showcase */}
+      <motion.section
+        initial={{ y: 20, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.4 }}
+        className="py-20 bg-background"
+      >
+        <div className="max-w-[1200px] mx-auto px-4 md:px-6">
+          <div className="flex items-center justify-between mb-10">
+            <div className="flex items-center gap-3">
+              <h2 className="text-3xl sm:text-4xl font-display font-bold uppercase tracking-tight">
+                Free Prepper <span className="text-primary">Tools</span>
+              </h2>
+              <span className="bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full animate-pulse">
+                New
+              </span>
+            </div>
+            <Link
+              href="/tools"
+              className="text-primary hover:text-primary/90 font-semibold text-sm flex items-center gap-1 transition-colors"
+            >
+              View All Tools <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <p className="text-muted-foreground text-lg mb-8 max-w-2xl">
+            Interactive calculators built on real data &mdash; FEMA guidelines, US Army field manuals,
+            and hands-on experience. No sign-up required.
+          </p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              { name: "Bug Out Bag Calculator", desc: "Build your BOB, track weight limits, and find missing essentials.", href: "/tools/bug-out-bag-calculator", icon: Backpack, badge: "Popular" },
+              { name: "Solar & Power Calculator", desc: "Size your battery and solar panel setup for off-grid power.", href: "/tools/solar-power-calculator", icon: Zap, badge: "New" },
+              { name: "Water Storage Calculator", desc: "Calculate exactly how much water your family needs.", href: "/tools/water-storage-calculator", icon: Droplets, badge: "New" },
+              { name: "Food Storage Calculator", desc: "Plan your emergency food supply by calories and shelf life.", href: "/tools/food-storage-calculator", icon: UtensilsCrossed, badge: "New" },
+              { name: "72-Hour Kit Builder", desc: "Answer 10 questions, get a personalized emergency kit checklist.", href: "/tools/72-hour-kit-builder", icon: ClipboardList, badge: "New" },
+              { name: "SHTF Scenario Simulator", desc: "Face survival scenarios and test your decision-making.", href: "/tools/shtf-simulator", icon: Shield, badge: "New" },
+            ].map((tool) => {
+              const Icon = tool.icon;
+              return (
+                <Link key={tool.href} href={tool.href} className="group">
+                  <div className="bg-card border border-border rounded-lg p-5 h-full hover:shadow-lg hover:border-primary/30 transition-all">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Icon className="w-5 h-5 text-primary" />
+                      </div>
+                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                        tool.badge === "Popular"
+                          ? "bg-orange-500 text-white"
+                          : "bg-primary text-primary-foreground"
+                      }`}>
+                        {tool.badge}
+                      </span>
+                    </div>
+                    <h3 className="text-sm font-extrabold mb-1 group-hover:text-primary transition-colors">{tool.name}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{tool.desc}</p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-8">
+            <Link href="/tools">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-4 text-sm uppercase tracking-wider shadow-md" data-testid="button-explore-tools">
+                <Calculator className="w-5 h-5 mr-2" />
+                Explore All Free Tools <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </motion.section>
+
       {/* 5. Lead Capture */}
       <motion.section 
         initial={{ opacity: 0 }}
