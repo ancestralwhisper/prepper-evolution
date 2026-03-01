@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { ChevronRight, ChevronLeft, Map, Package, Shield, Battery, Navigation, BookOpen } from "lucide-react";
+import { ChevronRight, ChevronLeft, Map, Package, Shield, Battery, Navigation, BookOpen, Zap, TreePine, Mountain, Users, Target, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { motion } from "framer-motion";
@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 export default function StartHere() {
   useSEO({
     title: "Start Here | Prepper Evolution",
-    description: "New to Prepping? Start Here. A practical, field-tested guide to building your foundation without fear-mongering.",
+    description: "Meet Mike — a 21-year electrical worker from New Jersey who does mutual aid storm deployments across the country. Camping, overlanding, and building real-world preparedness skills.",
   });
 
   return (
@@ -228,6 +228,126 @@ export default function StartHere() {
             </Link>
           </motion.section>
         </div>
+
+        {/* Meet Mike */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.4 }}
+        >
+          <div className="border-t border-border pt-16">
+            <h2 className="text-3xl sm:text-4xl font-display font-bold uppercase tracking-tight mb-2">
+              Meet <span className="text-primary">Mike</span>
+            </h2>
+            <p className="text-sm text-muted-foreground uppercase tracking-widest font-bold mb-8">
+              Founder &amp; Editor
+            </p>
+
+            <div className="space-y-5 text-muted-foreground text-lg leading-relaxed">
+              <p>
+                Mike here — just your average guy from New Jersey who's been working in the
+                electrical trade for 21 years. Part of my job involves mutual aid deployments —
+                when major storms knock out power, I get sent wherever the damage is. I've
+                worked storm restoration in California, Texas, Florida, and Maine. You see a lot
+                when the grid goes down for real: people without water, without food, without a
+                plan. That experience is a big part of why this site exists.
+              </p>
+
+              <p>
+                When I'm not working, I'm outside. I have a cabin in Pennsylvania —
+                just a tank of gas away — that I get to as often as I can. Solo, with family,
+                or with friends. We hike, fly fish,
+                find swimming holes, kayak, ice fish in the winter, and practice the kind of outdoor
+                skills that most people only read about. The Pine Barrens, the Poconos, Delaware Water
+                Gap, PA state forests — that's my home turf.
+              </p>
+
+              <p>
+                I also get out West when I can. SxS and off-roading in Utah and Nevada, trail riding
+                in West Virginia, Pennsylvania, and Tennessee. There's something about running
+                trails in big open country that makes you appreciate being prepared and self-reliant
+                in a way that sitting at home never will.
+              </p>
+
+              <p>
+                I'm a family guy with a family of five. The gear I test has to work for
+                solo cabin weekends and family camping trips with kids. That's a different
+                standard than what most gear reviewers use, and it keeps my recommendations honest.
+              </p>
+
+              <p>
+                I built Prepper Evolution because most prepping content online is either
+                fear-mongering nonsense or robotic product lists written by people who've
+                never left their desk. I wanted a site with real experience, honest opinions, and
+                practical advice from someone who actually uses this stuff — not because the world
+                is ending, but because being prepared is just smart living.
+              </p>
+
+              <p className="text-foreground font-medium italic border-l-4 border-primary pl-5 py-2 bg-primary/5 rounded-r-lg">
+                "We're not here for a long time, so might as well have a good time. Do good,
+                be good."
+              </p>
+
+              <p>
+                God, family, the outdoors, hard work, and making the most of every moment — that's
+                my story. If you're into the same things, welcome to the crew.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-10">
+              <div className="bg-card border border-border rounded-lg p-4 text-center">
+                <Zap className="w-6 h-6 text-primary mx-auto mb-2" />
+                <p className="text-2xl font-extrabold">21</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Years as a Lineman</p>
+              </div>
+              <div className="bg-card border border-border rounded-lg p-4 text-center">
+                <Users className="w-6 h-6 text-primary mx-auto mb-2" />
+                <p className="text-2xl font-extrabold">5</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Family Members</p>
+              </div>
+              <div className="bg-card border border-border rounded-lg p-4 text-center">
+                <TreePine className="w-6 h-6 text-primary mx-auto mb-2" />
+                <p className="text-2xl font-extrabold">NJ</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Home Base</p>
+              </div>
+              <div className="bg-card border border-border rounded-lg p-4 text-center">
+                <Mountain className="w-6 h-6 text-primary mx-auto mb-2" />
+                <p className="text-2xl font-extrabold">&infin;</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Trails to Explore</p>
+              </div>
+            </div>
+
+            <div className="mt-12 bg-muted rounded-lg p-6 sm:p-8 border border-border">
+              <h3 className="text-xl font-extrabold mb-4">What Drives This Site</h3>
+              <div className="space-y-3 text-muted-foreground leading-relaxed">
+                <div className="flex items-start gap-3">
+                  <span className="w-2 h-2 rounded-full bg-primary shrink-0 mt-2" />
+                  <p>
+                    <strong className="text-foreground">Real experience, not armchair advice.</strong> Every
+                    piece of gear I recommend has been used in the field — on camping trips, overlanding runs,
+                    or stashed in a go-bag.
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="w-2 h-2 rounded-full bg-primary shrink-0 mt-2" />
+                  <p>
+                    <strong className="text-foreground">Preparedness meets adventure.</strong> Prepping
+                    isn't about hiding in a bunker. It's about having the skills and gear to
+                    handle whatever comes — and enjoying the outdoors while you build them.
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="w-2 h-2 rounded-full bg-primary shrink-0 mt-2" />
+                  <p>
+                    <strong className="text-foreground">Community over fear.</strong> No doomsday nonsense.
+                    Just like-minded people sharing knowledge, building skills, and strengthening each other.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.section>
 
         {/* Footer CTA */}
         <motion.section 
