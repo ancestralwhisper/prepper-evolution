@@ -418,11 +418,7 @@ function MpgBreakdownChart({ items }: { items: { label: string; penalty: number 
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════
 
-export default function VehicleProfileEditor() {
-  useSEO({
-    title: "Unified Vehicle Profile | Prepper Evolution",
-    description: "Build your complete rig profile from 30+ real vehicles. Track every mod and see real-time impact on payload, MPG, stability, and trail readiness.",
-  });
+function VehicleProfileEditor() {
 
   const [profile, setProfile] = useState<VehicleProfile>(createDefaultProfile);
   const [initialized, setInitialized] = useState(false);
@@ -1122,5 +1118,118 @@ export default function VehicleProfileEditor() {
         </>
       )}
     </div>
+  );
+}
+
+export default function VehicleProfilePage() {
+  useSEO({
+    title: "Unified Vehicle Profile | Ops Deck | Prepper Evolution",
+    description: "Build your complete vehicle profile with real manufacturer specs. Track modifications, calculate payload, estimate MPG impact, and assess trail readiness. The foundation of the Ops Deck — free, no sign-up.",
+  });
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Unified Vehicle Profile — Ops Deck",
+    description: "Build your complete vehicle profile with real manufacturer specs. Track modifications, calculate payload, estimate MPG impact, and assess trail readiness.",
+    url: "https://prepperevolution.com/tools/vehicle-profile",
+    applicationCategory: "UtilityApplication",
+    operatingSystem: "Any",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    creator: {
+      "@type": "Organization",
+      name: "Prepper Evolution",
+      url: "https://prepperevolution.com",
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      <div className="py-16 sm:py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="max-w-3xl mb-10 animate-fade-in-up">
+            <p className="text-primary text-sm font-bold uppercase tracking-widest mb-3">
+              Ops Deck
+            </p>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4">
+              Unified Vehicle <span className="text-primary">Profile</span>
+            </h1>
+            <p className="text-muted-foreground text-lg leading-relaxed">
+              Select your vehicle, input every modification, and see the real-world impact
+              on payload capacity, fuel economy, off-road geometry, stability, and trail
+              readiness — all computed from verified manufacturer specs and physics-based
+              multipliers. This profile feeds every tool in the Ops Deck.
+            </p>
+          </div>
+
+          <div className="animate-fade-in-up-delay-1">
+            <VehicleProfileEditor />
+          </div>
+
+          <div className="max-w-3xl mt-16 space-y-8 no-print">
+            <section>
+              <h2 className="text-2xl font-extrabold mb-4">
+                Why a Unified Vehicle Profile?
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Every modification you bolt onto your rig has consequences. A 3-inch lift raises
+                your center of gravity. 35-inch mud-terrains cut your fuel economy. A steel bumper
+                and winch add 200+ pounds to your front axle. Most people guess at the impact. This
+                tool calculates it.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The Vehicle Profile is the foundation of the entire Ops Deck. Once you build your
+                profile here, every other tool — Fuel &amp; Range Planner, Load Balancer, Threat
+                Dashboard — reads from it automatically. Change a tire size once, and your range,
+                payload, and stability numbers update across everything.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-extrabold mb-4">
+                How Accurate Is This?
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Every stock spec in our database comes from manufacturer spec sheets, NHTSA rollover
+                test data, and EPA fuel economy ratings. Modification penalties are derived from
+                published testing by Expedition Portal, Car and Driver, the National Academies, and
+                real-world controlled experiments — not forum opinions.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The Static Stability Factor (SSF) comes directly from NHTSA NCAP rollover ratings.
+                Center of gravity height is derived mathematically: CG = track width / (2 x SSF).
+                MPG penalties use a multiplicative chain model that accounts for tire type, tire
+                diameter, lift height, weight, roof drag, and tire pressure — each validated against
+                published data.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-extrabold mb-4">
+                What Vehicles Are Supported?
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Our database includes 30+ of the most popular overlanding, off-road, and bug-out
+                vehicles: Toyota 4Runner, Tacoma, Tundra, Land Cruiser; Jeep Wrangler, Gladiator,
+                Grand Cherokee; Ford Bronco, F-150, Ranger, F-250; Chevrolet Colorado ZR2, Silverado,
+                Tahoe; Ram 1500 Rebel, Power Wagon; Land Rover Defender; Lexus GX; Subaru Outback
+                and Crosstrek Wilderness; Rivian R1T; and even van builds like the Mercedes Sprinter
+                and Ford Transit. If your vehicle is not listed, you can enter all specs manually.
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

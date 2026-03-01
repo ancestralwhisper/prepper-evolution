@@ -1,0 +1,198 @@
+import Hero from "./components/Hero";
+import ArticleCard from "./components/ArticleCard";
+import ProductCard from "./components/ProductCard";
+import CategoryBadge from "./components/CategoryBadge";
+import PrepQuiz from "./components/PrepQuiz";
+import SocialCTA from "./components/SocialCTA";
+import JsonLd, { websiteSchema, organizationSchema } from "./components/JsonLd";
+import { getAllArticles } from "./lib/wp-api";
+import products from "./content/products";
+import siteConfig from "./config/site-config";
+import Link from "next/link";
+import { ArrowRight, Target, Backpack, Zap, Droplets, UtensilsCrossed, ClipboardList, Shield, Calculator } from "lucide-react";
+
+export const revalidate = 3600;
+
+export default async function Home() {
+  const articles = await getAllArticles();
+  const featuredArticles = articles.slice(0, 3);
+  const featuredProducts = products.filter((p) => p.featured).slice(0, 4);
+
+  return (
+    <>
+      <JsonLd data={[websiteSchema(), organizationSchema()]} />
+      <Hero />
+
+      {/* Categories */}
+      <section className="py-16 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold mb-6 text-center">
+            Explore <span className="text-accent">Topics</span>
+          </h2>
+          <div className="flex flex-wrap justify-center gap-3">
+            {siteConfig.categories.map((cat) => (
+              <CategoryBadge
+                key={cat.id}
+                id={cat.id}
+                name={cat.name}
+                icon={cat.icon}
+                href="/articles"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="topo-divider h-16" />
+
+      {/* Featured Articles */}
+      <section className="py-20 bg-surface">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-3xl sm:text-4xl font-extrabold">
+              Latest <span className="text-accent">Articles</span>
+            </h2>
+            <Link
+              href="/articles"
+              className="text-accent hover:text-accent-hover font-semibold text-sm flex items-center gap-1 transition-colors"
+            >
+              View All <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {featuredArticles.map((article) => (
+              <ArticleCard key={article.slug} article={article} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Free Tools Showcase ─── */}
+      <section className="py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-10">
+            <div className="flex items-center gap-3">
+              <h2 className="text-3xl sm:text-4xl font-extrabold">
+                Free Prepper <span className="text-accent">Tools</span>
+              </h2>
+              <span className="bg-accent text-background text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full animate-pulse">
+                New
+              </span>
+            </div>
+            <Link
+              href="/tools"
+              className="text-accent hover:text-accent-hover font-semibold text-sm flex items-center gap-1 transition-colors"
+            >
+              View All Tools <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <p className="text-muted text-lg mb-8 max-w-2xl">
+            Interactive calculators built on real data &mdash; FEMA guidelines, US Army field manuals,
+            and hands-on experience. No sign-up required.
+          </p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              { name: "Bug Out Bag Calculator", desc: "Build your BOB, track weight limits, and find missing essentials.", href: "/tools/bug-out-bag-calculator", icon: Backpack, badge: "Popular" },
+              { name: "Solar & Power Calculator", desc: "Size your battery and solar panel setup for off-grid power.", href: "/tools/solar-power-calculator", icon: Zap, badge: "New" },
+              { name: "Water Storage Calculator", desc: "Calculate exactly how much water your family needs.", href: "/tools/water-storage-calculator", icon: Droplets, badge: "New" },
+              { name: "Food Storage Calculator", desc: "Plan your emergency food supply by calories and shelf life.", href: "/tools/food-storage-calculator", icon: UtensilsCrossed, badge: "New" },
+              { name: "72-Hour Kit Builder", desc: "Answer 10 questions, get a personalized emergency kit checklist.", href: "/tools/72-hour-kit-builder", icon: ClipboardList, badge: "New" },
+              { name: "SHTF Scenario Simulator", desc: "Face survival scenarios and test your decision-making.", href: "/tools/shtf-simulator", icon: Shield, badge: "New" },
+            ].map((tool) => {
+              const Icon = tool.icon;
+              return (
+                <Link key={tool.href} href={tool.href} className="group">
+                  <div className="bg-card-bg border border-card-border rounded-lg p-5 h-full hover:shadow-lg hover:border-accent/30 transition-all">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                        <Icon className="w-5 h-5 text-accent" />
+                      </div>
+                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                        tool.badge === "Popular"
+                          ? "bg-secondary text-background"
+                          : "bg-accent text-background"
+                      }`}>
+                        {tool.badge}
+                      </span>
+                    </div>
+                    <h3 className="text-sm font-extrabold mb-1 group-hover:text-accent transition-colors">{tool.name}</h3>
+                    <p className="text-xs text-muted leading-relaxed">{tool.desc}</p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-8">
+            <Link
+              href="/tools"
+              className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-background font-bold px-8 py-4 rounded-md transition-colors text-sm uppercase tracking-wider shadow-md"
+            >
+              <Calculator className="w-5 h-5" />
+              Explore All Free Tools <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <div className="topo-divider h-16" />
+
+      {/* Featured Products */}
+      <section className="py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-3xl sm:text-4xl font-extrabold">
+              Essential <span className="text-accent">Gear</span>
+            </h2>
+            <Link
+              href="/products"
+              className="text-accent hover:text-accent-hover font-semibold text-sm flex items-center gap-1 transition-colors"
+            >
+              Browse All <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.slug} product={product} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Quiz CTA */}
+      <section className="py-20 bg-surface">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-card-bg border-2 border-accent/30 rounded-lg p-8 sm:p-10 text-center shadow-md relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-accent" />
+              <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
+                <Target className="w-8 h-8 text-accent" />
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold mb-3">
+                What&apos;s Your <span className="text-accent">Survival Score?</span>
+              </h2>
+              <p className="text-muted text-lg mb-8 max-w-lg mx-auto">
+                Take our 2-minute quiz to find out how prepared you really are.
+                Get a personalized score and actionable recommendations.
+              </p>
+              <Link
+                href="/quiz"
+                className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-background font-bold px-8 py-4 rounded-md transition-colors text-lg uppercase tracking-wider shadow-md"
+              >
+                Take the Quiz <ArrowRight className="w-5 h-5" />
+              </Link>
+              <p className="text-xs text-muted/50 mt-4">
+                10 questions. No sign-up required. Free forever.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <SocialCTA />
+
+      <PrepQuiz />
+    </>
+  );
+}
