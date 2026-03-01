@@ -266,8 +266,9 @@ export default function StartHere() {
               <p>
                 I also get out West when I can. SxS and off-roading in Utah and Nevada, trail riding
                 in West Virginia, Pennsylvania, and Tennessee. There's something about running
-                trails in big open country that makes you appreciate being prepared and self-reliant
-                in a way that sitting at home never will.
+                trails with a great group of friends (I consider family) in big open country that
+                makes you appreciate being prepared and self-reliant in a way that sitting at home
+                never will.
               </p>
 
               <p>
