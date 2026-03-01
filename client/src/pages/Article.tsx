@@ -176,7 +176,7 @@ export default function Article() {
           <div className="hidden lg:block col-span-1">
             <div className="sticky top-24 bg-card border border-border rounded-xl p-6 max-h-[calc(100vh-8rem)] flex flex-col">
               <h3 className="font-display font-bold text-lg mb-4 border-b border-border pb-2 shrink-0">Table of Contents</h3>
-              <ul className="space-y-3 text-sm overflow-y-auto overscroll-contain">
+              <ul className="space-y-3 text-sm overflow-y-auto overscroll-contain scrollbar-none" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {headings.map(h => (
                   <li key={h.id} className={h.level === 'h3' ? 'pl-4' : ''}>
                     <a href={`#${h.id}`} className="text-muted-foreground hover:text-primary transition-colors block leading-tight">
