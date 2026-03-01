@@ -14,6 +14,7 @@ import Product from "@/pages/Product";
 import Comparison from "@/pages/Comparison";
 import Category from "@/pages/Category";
 import StartHere from "@/pages/StartHere";
+import About from "@/pages/About";
 import AdminLinkHealth from "@/pages/AdminLinkHealth";
 import Articles from "@/pages/Articles";
 import Products from "@/pages/Products";
@@ -58,6 +59,7 @@ function Router() {
           <Switch location={location}>
             <Route path="/" component={Home} />
             <Route path="/start-here" component={StartHere} />
+            <Route path="/about" component={About} />
             <Route path="/articles" component={Articles} />
             <Route path="/articles/:slug" component={Article} />
             <Route path="/products" component={Products} />
