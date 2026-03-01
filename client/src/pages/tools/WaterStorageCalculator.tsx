@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Plus, Minus, Droplets, Users, Clock, Printer, Share2,
   AlertTriangle, CheckCircle, Info, X, ExternalLink,
-  Thermometer, Activity, Baby, Dog, Cat, Heart,
+  Thermometer, Activity, Baby, Dog, Cat, Heart, Home,
   MessageSquarePlus, Send,
 } from "lucide-react";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
@@ -10,6 +10,8 @@ import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
+import ZipLookup from "@/components/tools/ZipLookup";
+import type { ZipPrefixData } from "@/pages/tools/zip-types";
 import {
   usageBreakdown,
   climateZones,
@@ -18,6 +20,8 @@ import {
   filtrationProducts,
   storageTips,
   dataSources,
+  livingSituations,
+  apartmentWaterTips,
   BASE_GALLONS_PER_PERSON_PER_DAY,
   NURSING_MOTHER_EXTRA_GAL,
   CHILD_UNDER_5_MULTIPLIER,
@@ -25,6 +29,7 @@ import {
   PET_CAT_GAL_PER_DAY,
   type ClimateZone,
   type ActivityLevel,
+  type LivingSituation,
 } from "./water-data";
 import { useSEO } from "@/hooks/useSEO";
 
@@ -38,6 +43,7 @@ interface State {
   climate: string;
   activity: string;
   hasFiltration: boolean;
+  livingSituation: LivingSituation;
 }
 
 const DEFAULT_STATE: State = {
@@ -50,6 +56,7 @@ const DEFAULT_STATE: State = {
   climate: "temperate",
   activity: "sedentary",
   hasFiltration: false,
+  livingSituation: "house",
 };
 
 export default function WaterStorageCalculator() {
@@ -93,6 +100,8 @@ export default function WaterStorageCalculator() {
     if (cl && climateZones.some((z) => z.id === cl)) updates.climate = cl;
     if (ac && activityLevels.some((l) => l.id === ac)) updates.activity = ac;
     if (f === "1") updates.hasFiltration = true;
+    const ls = params.get("ls");
+    if (ls && livingSituations.some((l) => l.id === ls)) updates.livingSituation = ls as LivingSituation;
 
     if (Object.keys(updates).length > 0) {
       setState((prev) => ({ ...prev, ...updates }));
@@ -127,6 +136,10 @@ export default function WaterStorageCalculator() {
   const dec = useCallback((key: keyof State, min: number) => {
     setState((prev) => ({ ...prev, [key]: Math.max(min, (prev[key] as number) - 1) }));
   }, []);
+
+  const handleZipResult = useCallback((data: ZipPrefixData | null) => {
+    if (data) set("climate", data.cz);
+  }, [set]);
 
   const calc = useMemo(() => {
     const climateZone = climateZones.find((z) => z.id === state.climate) || climateZones[0];
@@ -163,7 +176,15 @@ export default function WaterStorageCalculator() {
     const totalHygiene = hygienePerAdult * effectivePeople * state.days + (nursingExtra * state.days * (usageBreakdown[2].gallons / BASE_GALLONS_PER_PERSON_PER_DAY));
     const totalPets = petGallonsPerDay * state.days;
 
-    const containerRecs = storageContainers
+    const isApartment = state.livingSituation === "apartment";
+    const isRv = state.livingSituation === "rv";
+    const filteredContainers = isApartment
+      ? storageContainers.filter((c) => c.portable)
+      : isRv
+        ? storageContainers.filter((c) => c.portable && c.gallons <= 7)
+        : storageContainers;
+
+    const containerRecs = filteredContainers
       .map((c) => ({
         ...c,
         needed: Math.ceil(totalGallons / c.gallons),
@@ -217,6 +238,7 @@ export default function WaterStorageCalculator() {
     p.set("cl", state.climate);
     p.set("ac", state.activity);
     if (state.hasFiltration) p.set("f", "1");
+    if (state.livingSituation !== "house") p.set("ls", state.livingSituation);
     return `${window.location.origin}${window.location.pathname}?${p.toString()}`;
   }, [state]);
 
@@ -476,6 +498,8 @@ export default function WaterStorageCalculator() {
               )}
             </div>
 
+            <ZipLookup onResult={handleZipResult} showFields={["climate", "hazard"]} />
+
             <div className="bg-card border border-border rounded-lg p-5 space-y-4">
               <h3 className="text-sm font-bold uppercase tracking-wide">
                 <Thermometer className="w-3.5 h-3.5 inline mr-1.5" />
@@ -530,6 +554,42 @@ export default function WaterStorageCalculator() {
                 <Info className="w-3 h-3 text-primary shrink-0" />
                 {calc.activityLevel.note}
               </p>
+            </div>
+
+            <div className="bg-card border border-border rounded-lg p-5 space-y-4">
+              <h3 className="text-sm font-bold uppercase tracking-wide">
+                <Home className="w-3.5 h-3.5 inline mr-1.5" />
+                Living Situation
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {livingSituations.map((ls) => (
+                  <button
+                    key={ls.id}
+                    onClick={() => set("livingSituation", ls.id)}
+                    className={`text-left p-3 rounded-lg border transition-colors ${
+                      state.livingSituation === ls.id
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/30"
+                    }`}
+                    data-testid={`button-living-${ls.id}`}
+                  >
+                    <span className="text-sm font-bold block">{ls.name}</span>
+                    <span className="text-[11px] text-muted-foreground leading-snug block mt-0.5">{ls.desc}</span>
+                  </button>
+                ))}
+              </div>
+              {state.livingSituation === "apartment" && (
+                <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                  <Info className="w-3 h-3 text-primary shrink-0" />
+                  Showing portable, stackable containers only — 55-gallon drums and large fixed tanks are excluded.
+                </p>
+              )}
+              {state.livingSituation === "rv" && (
+                <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                  <Info className="w-3 h-3 text-primary shrink-0" />
+                  Showing portable containers 7 gallons or smaller for mobile storage.
+                </p>
+              )}
             </div>
 
             <div className="bg-card border border-border rounded-lg p-5">
@@ -894,10 +954,29 @@ export default function WaterStorageCalculator() {
                 </p>
               </div>
 
+              {state.livingSituation === "apartment" && (
+                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <Home className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold mb-1">Apartment Storage Note</p>
+                      <p className="text-xs text-muted-foreground">
+                        Your {calc.totalGallons.toFixed(0)} gallons weighs approximately{" "}
+                        <strong className="text-foreground">{Math.round(calc.totalWeightLbs)} lbs</strong>.
+                        Focus on stackable containers (WaterBricks, Aqua-Tainers) that fit in closets
+                        and under sinks. Your water heater is also a hidden 30-50 gallon emergency reserve.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="bg-card border border-border rounded-lg p-4">
-                <h3 className="text-sm font-bold uppercase tracking-wide mb-3">Storage Tips</h3>
+                <h3 className="text-sm font-bold uppercase tracking-wide mb-3">
+                  {state.livingSituation === "apartment" ? "Apartment Storage Tips" : "Storage Tips"}
+                </h3>
                 <ul className="space-y-2">
-                  {storageTips.slice(0, 5).map((tip, i) => (
+                  {(state.livingSituation === "apartment" ? apartmentWaterTips : storageTips).slice(0, 6).map((tip, i) => (
                     <li key={i} className="text-xs text-muted-foreground leading-relaxed flex gap-2">
                       <span className="text-primary shrink-0 mt-0.5">&bull;</span>
                       <span>{tip}</span>

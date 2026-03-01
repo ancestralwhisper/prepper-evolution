@@ -8,6 +8,9 @@ import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
+import ZipLookup from "@/components/tools/ZipLookup";
+import type { ZipPrefixData } from "./zip-types";
+import { hazardToKitClimate } from "./zip-types";
 import {
   questions,
   kitItems,
@@ -174,6 +177,13 @@ export default function KitBuilder() {
       return { ...prev, [questionId]: Math.max(min, Math.min(max, current + delta)) };
     });
   }, []);
+
+  const handleZipResult = useCallback((data: ZipPrefixData | null) => {
+    if (data) {
+      setAnswer("region", data.kr);
+      setAnswer("climate", hazardToKitClimate[data.hz] || data.hz);
+    }
+  }, [setAnswer]);
 
   const currentQuestion = questions[step];
   const totalSteps = questions.length;
@@ -422,6 +432,10 @@ export default function KitBuilder() {
               ))}
             </div>
           </div>
+
+          {step <= 1 && (
+            <ZipLookup onResult={handleZipResult} showFields={["region", "climate", "hazard"]} />
+          )}
 
           {currentQuestion && (
             <div className="bg-card border border-border rounded-lg p-6 sm:p-8 animate-fade-in-up" data-testid="card-question">

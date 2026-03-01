@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Plus, Minus, Sun, Zap, Battery, ChevronDown, ChevronUp,
   ExternalLink, Printer, Share2, MapPin, Users, Clock, AlertTriangle,
-  CheckCircle, Info, X, Download, MessageSquarePlus, Send,
+  CheckCircle, Info, X, Download, Home, MessageSquarePlus, Send,
 } from "lucide-react";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import { generateSolarPdf, type SolarPdfData } from "@/components/tools/PdfExport";
@@ -10,6 +10,8 @@ import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
+import ZipLookup from "@/components/tools/ZipLookup";
+import type { ZipPrefixData } from "@/pages/tools/zip-types";
 import {
   deviceCategories,
   solarRegions,
@@ -19,10 +21,12 @@ import {
   BATTERY_DOD,
   BUFFER_FACTOR,
   dataSources,
+  livingSituations,
   type Device,
   type SolarRegion,
   type PowerStationRec,
   type SolarPanelRec,
+  type LivingSituation,
 } from "./device-data";
 import { useSEO } from "@/hooks/useSEO";
 
@@ -53,6 +57,7 @@ export default function SolarPowerCalculator() {
   const [showShareToast, setShowShareToast] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [showTip, setShowTip] = useState(true);
+  const [livingSituation, setLivingSituation] = useState<LivingSituation>("house");
 
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestName, setRequestName] = useState("");
@@ -84,14 +89,20 @@ export default function SolarPowerCalculator() {
       });
       setSelected(devices);
     }
+    const ls = params.get("ls");
+    if (ls && livingSituations.some((l) => l.id === ls)) setLivingSituation(ls as LivingSituation);
     setInitialized(true);
   }, []);
 
   useEffect(() => {
     if (!initialized) return;
-    const data = { people, days, region, useCase, selected, timestamp: Date.now() };
+    const data = { people, days, region, useCase, selected, livingSituation, timestamp: Date.now() };
     localStorage.setItem("pe-solar-calculator", JSON.stringify(data));
-  }, [people, days, region, useCase, selected, initialized]);
+  }, [people, days, region, useCase, selected, livingSituation, initialized]);
+
+  const handleZipResult = useCallback((data: ZipPrefixData | null) => {
+    if (data) setRegion(data.sr);
+  }, []);
 
   const toggleDevice = useCallback((device: Device) => {
     setSelected((prev) => {
@@ -182,24 +193,34 @@ export default function SolarPowerCalculator() {
       ? (totalDailyWh * BUFFER_FACTOR) / (peakSunHours * (1 - SYSTEM_LOSS))
       : 0;
 
-    const matchedStations = powerStations
+    const isApartment = livingSituation === "apartment";
+
+    const eligibleStations = isApartment
+      ? powerStations.filter((ps) => ps.capacityWh <= 2500)
+      : powerStations;
+
+    const matchedStations = eligibleStations
       .filter((ps) => ps.capacityWh >= batteryCapacityNeeded * 0.7)
       .slice(0, 3);
 
     const stationRecs: PowerStationRec[] = matchedStations.length > 0
       ? matchedStations
       : totalDailyWh > 0
-        ? powerStations.slice(-2)
+        ? eligibleStations.slice(-2)
         : [];
 
-    const matchedPanels = solarPanels
+    const eligiblePanels = isApartment
+      ? solarPanels.filter((p) => p.portable && p.watts <= 200)
+      : solarPanels;
+
+    const matchedPanels = eligiblePanels
       .filter((p) => p.watts >= solarWattsNeeded * 0.5)
       .slice(0, 3);
 
     const panelRecs: SolarPanelRec[] = matchedPanels.length > 0
       ? matchedPanels
       : totalDailyWh > 0
-        ? solarPanels.filter((p) => p.portable).slice(-2)
+        ? eligiblePanels.slice(-2)
         : [];
 
     const deviceCount = Object.keys(selected).length;
@@ -219,7 +240,7 @@ export default function SolarPowerCalculator() {
       panelRecs,
       selectedRegion,
     };
-  }, [selected, region, days, people]);
+  }, [selected, region, days, people, livingSituation]);
 
   const chartSegments = deviceCategories.map((cat) => ({
     label: cat.name,
@@ -247,8 +268,10 @@ export default function SolarPowerCalculator() {
         return s.watts != null && dev && s.watts !== dev.watts ? `${base}:${s.watts}` : base;
       })
       .join(",");
-    return `${window.location.origin}${window.location.pathname}?p=${people}&d=${days}&r=${region}&uc=${useCase}&g=${gearStr}`;
-  }, [selected, people, days, region, useCase]);
+    let url = `${window.location.origin}${window.location.pathname}?p=${people}&d=${days}&r=${region}&uc=${useCase}&g=${gearStr}`;
+    if (livingSituation !== "house") url += `&ls=${livingSituation}`;
+    return url;
+  }, [selected, people, days, region, useCase, livingSituation]);
 
   const shareLink = () => {
     const url = getShareUrl();
@@ -531,6 +554,29 @@ export default function SolarPowerCalculator() {
                   </div>
                 </div>
 
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+                    <Home className="w-3 h-3 inline mr-1" /> Living Situation
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {livingSituations.map((ls) => (
+                      <button
+                        key={ls.id}
+                        onClick={() => setLivingSituation(ls.id)}
+                        className={`text-left p-3 rounded-lg border transition-colors ${
+                          livingSituation === ls.id
+                            ? "border-primary bg-primary/5"
+                            : "border-border hover:border-primary/30"
+                        }`}
+                        data-testid={`button-living-${ls.id}`}
+                      >
+                        <span className="text-sm font-bold block">{ls.name}</span>
+                        <span className="text-[11px] text-muted-foreground leading-snug block mt-0.5">{ls.desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
@@ -577,6 +623,8 @@ export default function SolarPowerCalculator() {
                       </button>
                     </div>
                   </div>
+
+                  <ZipLookup onResult={handleZipResult} showFields={["solar", "hazard"]} compact />
 
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
@@ -1118,6 +1166,24 @@ export default function SolarPowerCalculator() {
                     <p className="text-[10px] text-muted-foreground/50 mt-3">
                       Affiliate links &mdash; we earn a commission at no extra cost to you.
                     </p>
+                  </div>
+                )}
+
+                {livingSituation === "apartment" && calculations.deviceCount > 0 && (
+                  <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <Home className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-bold mb-1">Apartment Solar Notes</p>
+                        <ul className="text-xs text-muted-foreground space-y-1">
+                          <li>&bull; Only portable/foldable panels shown (max 200W) — no rigid rooftop kits.</li>
+                          <li>&bull; Check your balcony weight limit before placing panels — most support 60-100 lbs/sqft.</li>
+                          <li>&bull; HOA or lease may restrict visible solar panels — foldable panels store when not in use.</li>
+                          <li>&bull; A south-facing balcony or window is ideal — even partial sun helps with portable stations.</li>
+                          <li>&bull; Power stations under 2.5 kWh are shown — large home backup units are not practical in apartments.</li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 )}
 

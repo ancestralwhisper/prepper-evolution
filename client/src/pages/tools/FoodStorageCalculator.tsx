@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Plus, Minus, Printer, Share2, ChevronDown, ChevronUp,
   ExternalLink, Info, X, Users, Clock, AlertTriangle,
-  CheckCircle, ShieldAlert, Package, MessageSquarePlus, Send,
+  CheckCircle, ShieldAlert, Package, Home, MessageSquarePlus, Send,
 } from "lucide-react";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import PrintQrCode from "@/components/tools/PrintQrCode";
@@ -19,9 +19,12 @@ import {
   shelfLifeTiers,
   dataSources,
   allFoodItems,
+  livingSituations,
+  apartmentFoodTips,
   type ActivityLevel,
   type FoodItem,
   type ShoppingItem,
+  type LivingSituation,
 } from "./food-data";
 import { useSEO } from "@/hooks/useSEO";
 
@@ -40,6 +43,7 @@ export default function FoodStorageCalculator() {
   const [initialized, setInitialized] = useState(false);
   const [showTip, setShowTip] = useState(true);
   const [activePreset, setActivePreset] = useState<string | null>("1m");
+  const [livingSituation, setLivingSituation] = useState<LivingSituation>("house");
 
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestName, setRequestName] = useState("");
@@ -77,14 +81,16 @@ export default function FoodStorageCalculator() {
     if (a && ["sedentary", "moderate", "heavy"].includes(a)) {
       setActivity(a as ActivityLevel);
     }
+    const ls = params.get("ls");
+    if (ls && livingSituations.some((l) => l.id === ls)) setLivingSituation(ls as LivingSituation);
     setInitialized(true);
   }, []);
 
   useEffect(() => {
     if (!initialized) return;
-    const data = { group, durationDays, activity, timestamp: Date.now() };
+    const data = { group, durationDays, activity, livingSituation, timestamp: Date.now() };
     localStorage.setItem("pe-food-calculator", JSON.stringify(data));
-  }, [group, durationDays, activity, initialized]);
+  }, [group, durationDays, activity, livingSituation, initialized]);
 
   const adjustGroup = useCallback((key: keyof GroupConfig, delta: number) => {
     setGroup((prev) => ({
@@ -179,8 +185,10 @@ export default function FoodStorageCalculator() {
 
   const getShareUrl = useCallback(() => {
     if (typeof window === "undefined") return "";
-    return `${window.location.origin}${window.location.pathname}?m=${group.males}&f=${group.females}&c=${group.children}&d=${durationDays}&a=${activity}`;
-  }, [group, durationDays, activity]);
+    let url = `${window.location.origin}${window.location.pathname}?m=${group.males}&f=${group.females}&c=${group.children}&d=${durationDays}&a=${activity}`;
+    if (livingSituation !== "house") url += `&ls=${livingSituation}`;
+    return url;
+  }, [group, durationDays, activity, livingSituation]);
 
   const shareLink = () => {
     const url = getShareUrl();
@@ -363,6 +371,29 @@ export default function FoodStorageCalculator() {
                       >
                         <span className="text-sm font-bold block">{level.name}</span>
                         <span className="text-[11px] text-muted-foreground leading-snug">{level.desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+                    <Home className="w-3 h-3 inline mr-1" /> Living Situation
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {livingSituations.map((ls) => (
+                      <button
+                        key={ls.id}
+                        onClick={() => setLivingSituation(ls.id)}
+                        className={`text-left p-3 rounded-lg border transition-colors ${
+                          livingSituation === ls.id
+                            ? "border-primary bg-primary/5"
+                            : "border-border hover:border-primary/30"
+                        }`}
+                        data-testid={`button-living-${ls.id}`}
+                      >
+                        <span className="text-sm font-bold block">{ls.name}</span>
+                        <span className="text-[11px] text-muted-foreground leading-snug block mt-0.5">{ls.desc}</span>
                       </button>
                     ))}
                   </div>
@@ -838,6 +869,30 @@ export default function FoodStorageCalculator() {
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Cooking water needed</span>
                         <span className="font-bold">~{calculations.waterGallonsForCooking} gal</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {livingSituation === "apartment" && calculations.totalPeople > 0 && (
+                  <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <Home className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-bold mb-1">Apartment Storage Tips</p>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          Your plan needs <strong className="text-foreground">{calculations.totalCubicFt.toFixed(1)} cu ft</strong> and{" "}
+                          <strong className="text-foreground">{Math.round(calculations.totalLbs).toLocaleString()} lbs</strong> of food.
+                          {calculations.totalCubicFt > 10 ? " That is a lot for an apartment — here is how to make it fit:" : " Here is how to optimize your space:"}
+                        </p>
+                        <ul className="space-y-1">
+                          {apartmentFoodTips.slice(0, 5).map((tip, i) => (
+                            <li key={i} className="text-xs text-muted-foreground leading-relaxed flex gap-2">
+                              <span className="text-primary shrink-0">&bull;</span>
+                              <span>{tip}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
                   </div>

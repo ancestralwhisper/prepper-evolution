@@ -244,6 +244,33 @@ export const storageTips = [
   "A water filter handles bacteria and protozoa, but you need purification drops or boiling to kill viruses.",
 ];
 
+// ─── Living Situations ───
+export type LivingSituation = "house" | "apartment" | "rural" | "rv";
+
+export interface LivingSituationOption {
+  id: LivingSituation;
+  name: string;
+  desc: string;
+}
+
+export const livingSituations: LivingSituationOption[] = [
+  { id: "house", name: "House", desc: "Garage, basement, dedicated storage space" },
+  { id: "apartment", name: "Apartment", desc: "Limited floor space, weight limits, no garage" },
+  { id: "rural", name: "Rural", desc: "Homestead with outbuildings, well water access" },
+  { id: "rv", name: "RV / Van", desc: "Mobile living — strict weight and space limits" },
+];
+
+export const apartmentWaterTips = [
+  "Use under-sink cabinet space for 2.5-gallon Aqua-Paks — fits 2-3 containers easily.",
+  "Stack WaterBricks in closets — they interlock vertically and save floor space.",
+  "Your water heater holds 30-50 gallons of drinkable water in an emergency — learn to drain it safely.",
+  "Use the top shelf of bedroom closets for 2.5-3.5 gallon portable containers.",
+  "Consider a WaterBOB for your bathtub — 100 gallons of surge capacity with zero permanent footprint.",
+  "Avoid 55-gallon drums — too heavy for most apartment floors (460+ lbs full) and impossible to move.",
+  "Keep a compact water filter (Sawyer Squeeze or Katadyn BeFree) in case tap water becomes unsafe.",
+  "Freeze water bottles in your freezer — they keep food cold during outages and provide drinking water as they melt.",
+];
+
 // ─── Data Sources ───
 export const dataSources = [
   { name: "FEMA / Ready.gov", url: "https://www.ready.gov/water", note: "1 gallon per person per day minimum recommendation" },

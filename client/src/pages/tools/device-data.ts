@@ -167,12 +167,13 @@ export interface SolarRegion {
 }
 
 export const solarRegions: SolarRegion[] = [
-  { id: "southwest", name: "Southwest (AZ, NM, NV, S. CA)", peakSunHours: 6.5, note: "Best solar in the US" },
-  { id: "south", name: "South (TX, LA, MS, AL, S. FL)", peakSunHours: 5.5, note: "Strong year-round" },
-  { id: "southeast", name: "Southeast (GA, SC, NC, N. FL)", peakSunHours: 5.0, note: "Good with some cloud cover" },
-  { id: "mountain", name: "Mountain (CO, UT, MT, WY, ID)", peakSunHours: 5.5, note: "High altitude helps efficiency" },
-  { id: "midwest", name: "Midwest (IL, IN, OH, MI, WI, MN)", peakSunHours: 4.2, note: "Seasonal variation — plan for winter" },
-  { id: "northeast", name: "Northeast (NY, NJ, PA, CT, MA)", peakSunHours: 4.0, note: "Winter dips significantly" },
+  { id: "southwest", name: "Southwest (AZ, NM, NV, UT, S. CA)", peakSunHours: 6.5, note: "Best solar in the US" },
+  { id: "south", name: "South (TX, OK, LA, AR, MS, AL, S. FL)", peakSunHours: 5.5, note: "Strong year-round" },
+  { id: "southeast", name: "Southeast (GA, SC, NC, VA, TN, KY, WV, N. FL)", peakSunHours: 5.0, note: "Good with some cloud cover" },
+  { id: "california", name: "California (N. CA, Central Valley)", peakSunHours: 5.5, note: "Varies by coast vs inland — strong overall" },
+  { id: "mountain", name: "Mountain (CO, MT, WY, ID)", peakSunHours: 5.5, note: "High altitude helps efficiency" },
+  { id: "midwest", name: "Midwest (IL, IN, OH, MI, WI, MN, IA, MO, ND, SD, NE, KS)", peakSunHours: 4.2, note: "Seasonal variation — plan for winter" },
+  { id: "northeast", name: "Northeast (NY, NJ, PA, CT, MA, ME, NH, VT, RI, DE, MD, DC)", peakSunHours: 4.0, note: "Winter dips significantly" },
   { id: "northwest", name: "Northwest (WA, OR)", peakSunHours: 3.5, note: "Lowest — oversize your panels" },
   { id: "hawaii", name: "Hawaii", peakSunHours: 6.0, note: "Consistent year-round" },
   { id: "alaska", name: "Alaska", peakSunHours: 3.0, note: "Extreme seasonal variation" },
@@ -237,7 +238,7 @@ export const solarPanels: SolarPanelRec[] = [
   { id: "renogy-400", name: "Renogy 400W Suitcase Panel", watts: 400, price: "$580", affiliateUrl: A("B0D4LMVKYD"), note: "23% efficiency, IP67", portable: true },
   { id: "rigid-100", name: "Renogy 100W Rigid Panel", watts: 100, price: "$90", affiliateUrl: A("B07GF5JY35"), note: "Permanent mount — RV/cabin rooftop", portable: false },
   { id: "rigid-200", name: "Renogy 200W Rigid Panel", watts: 200, price: "$170", affiliateUrl: A("B08CRJYJ22"), note: "Permanent mount — best efficiency", portable: false },
-  { id: "gz-nomad-50", name: "Goal Zero Nomad 50", watts: 50, price: "$195", affiliateUrl: A("B016UQNGFS"), note: "Compact foldable, great for phones", portable: true },
+  { id: "gz-nomad-100", name: "Goal Zero Nomad 100", watts: 100, price: "$300", affiliateUrl: A("B016UQNGFS"), note: "Monocrystalline foldable, pairs with Yeti stations", portable: true },
   { id: "anker-ps100", name: "Anker SOLIX PS100", watts: 100, price: "$190", affiliateUrl: A("B0CYSD1C6Y"), note: "IP67, lightweight foldable", portable: true },
   { id: "gz-boulder-100", name: "Goal Zero Boulder 100 Briefcase", watts: 100, price: "$250", affiliateUrl: A("B06Y3TC113"), note: "Rugged aluminum frame", portable: true },
   { id: "bluetti-pv200", name: "Bluetti PV200", watts: 200, price: "$350", affiliateUrl: A("B0CCXSFSSJ"), note: "23.4% efficiency, foldable", portable: true },
@@ -255,6 +256,22 @@ export const solarPanels: SolarPanelRec[] = [
 export const SYSTEM_LOSS = 0.15; // 15% loss for wiring, inverter, temperature
 export const BATTERY_DOD = 0.80; // Only use 80% of battery (protect longevity)
 export const BUFFER_FACTOR = 1.25; // 25% safety buffer on calculations
+
+// ─── Living Situations ───
+export type LivingSituation = "house" | "apartment" | "rural" | "rv";
+
+export interface LivingSituationOption {
+  id: LivingSituation;
+  name: string;
+  desc: string;
+}
+
+export const livingSituations: LivingSituationOption[] = [
+  { id: "house", name: "House", desc: "Roof or yard for panels, full outlet access" },
+  { id: "apartment", name: "Apartment", desc: "Balcony only, weight limits, HOA rules" },
+  { id: "rural", name: "Rural", desc: "Unlimited space, ground-mount possible" },
+  { id: "rv", name: "RV / Van", desc: "Roof-mounted or portable panels only" },
+];
 
 // ─── Data Sources ───
 export const dataSources = [

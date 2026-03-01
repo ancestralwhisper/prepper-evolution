@@ -43,10 +43,11 @@ export const questions: Question[] = [
     subtitle: "This determines climate-specific gear and regional hazard priorities.",
     type: "single",
     options: [
-      { value: "northeast", label: "Northeast", description: "ME, NH, VT, MA, RI, CT, NY, NJ, PA" },
-      { value: "southeast", label: "Southeast", description: "VA, NC, SC, GA, FL, AL, MS, TN, KY, WV" },
+      { value: "northeast", label: "Northeast", description: "ME, NH, VT, MA, RI, CT, NY, NJ, PA, DE, MD, DC" },
+      { value: "southeast", label: "Southeast", description: "VA, NC, SC, GA, FL, AL, MS, LA, AR, TN, KY, WV" },
       { value: "midwest", label: "Midwest", description: "OH, IN, IL, MI, WI, MN, IA, MO, ND, SD, NE, KS" },
       { value: "southwest", label: "Southwest", description: "TX, OK, NM, AZ" },
+      { value: "california", label: "California", description: "CA — earthquakes, wildfires, drought, diverse climates" },
       { value: "mountain", label: "Mountain West", description: "MT, ID, WY, CO, UT, NV" },
       { value: "pacific-nw", label: "Pacific Northwest", description: "WA, OR" },
       { value: "alaska", label: "Alaska", description: "Extreme cold, remote, limited infrastructure" },
@@ -1151,6 +1152,11 @@ export const regionTips: Record<string, string[]> = {
     "Altitude increases dehydration and calorie burn. Pack 25% more water and food than lowland estimates.",
     "Temperature swings of 40+ degrees in a single day are common. Layer system is mandatory.",
     "Snow can strand you for days. Keep a full winter kit in your vehicle from October through April.",
+  ],
+  california: [
+    "Earthquakes, wildfires, and drought are your big three. Prep for all of them, not just one.",
+    "Wildfire evacuations happen with minutes of notice. Keep your kit by the door, not in the garage.",
+    "Water infrastructure is fragile — store extra water and have purification. Aqueduct disruption is a real scenario.",
   ],
   "pacific-nw": [
     "The Cascadia Subduction Zone is overdue for a major earthquake. Earthquake prep is not optional here.",

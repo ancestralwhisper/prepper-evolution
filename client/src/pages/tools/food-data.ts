@@ -499,6 +499,33 @@ export const shelfLifeTiers: ShelfLifeTier[] = [
   },
 ];
 
+// ─── Living Situations ───
+export type LivingSituation = "house" | "apartment" | "rural" | "rv";
+
+export interface LivingSituationOption {
+  id: LivingSituation;
+  name: string;
+  desc: string;
+}
+
+export const livingSituations: LivingSituationOption[] = [
+  { id: "house", name: "House", desc: "Full pantry, garage, basement storage" },
+  { id: "apartment", name: "Apartment", desc: "Limited closet and cabinet space" },
+  { id: "rural", name: "Rural", desc: "Root cellar, outbuildings, bulk storage" },
+  { id: "rv", name: "RV / Van", desc: "Minimal storage, strict weight limits" },
+];
+
+export const apartmentFoodTips = [
+  "Use under-bed storage bins — a queen bed frame hides 15-20 cubic feet of storage.",
+  "Stack 5-gallon buckets of rice and beans in a closet corner — two buckets hold 50 lbs.",
+  "Top shelves of closets are perfect for freeze-dried pouches and lightweight bars.",
+  "Prioritize freeze-dried over canned — 3-4x more calories per cubic foot and much lighter.",
+  "A small bookshelf re-purposed as a pantry fits along any wall and holds hundreds of pounds of food.",
+  "Vertical stacking with shelf risers doubles your cabinet capacity instantly.",
+  "Vacuum-sealed mylar bags lay flat and slide under furniture, behind dressers, or between mattresses.",
+  "Rotate canned goods with your regular cooking — eat what you store, store what you eat.",
+];
+
 // ─── Data Sources ───
 export const dataSources = [
   { name: "USDA Dietary Guidelines 2020-2025", url: "https://www.dietaryguidelines.gov", note: "Calorie needs by age, sex, and activity level" },
