@@ -1,0 +1,426 @@
+// ─── Stock Vehicle Database ────────────────────────────────────────
+// Real manufacturer specs for the top overlanding/prepper vehicles.
+//
+// Sources:
+//   Weight/GVWR/towing: Manufacturer owner's manuals & spec sheets
+//   Geometry: Manufacturer off-road specifications
+//   MPG: FuelEconomy.gov EPA estimates
+//   SSF: NHTSA NCAP rollover ratings
+//   CG height: Derived from SSF = track / (2 × CG_h)
+//   Axle ratios: Manufacturer build sheets
+//   Alternator: Manufacturer electrical specs
+//   Wading depth: Manufacturer off-road specs (0 = not rated)
+
+import type { StockVehicle } from "./vehicle-types";
+
+export const vehicleDatabase: StockVehicle[] = [
+  // ─── TOYOTA ──────────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Toyota", model: "4Runner", trim: "TRD Off-Road 4WD",
+    curbWeightLbs: 4575, gvwrLbs: 5750, maxTowingLbs: 5000,
+    wheelbaseIn: 109.8, trackWidthIn: 63.2, groundClearanceIn: 9.6,
+    approachAngle: 33, departureAngle: 26, breakoverAngle: 24,
+    fuelTankGal: 23, stockTireSize: "265/70R17", stockTireDiameter: 31.6,
+    mpgCity: 16, mpgHighway: 19, mpgCombined: 17,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.13, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 3.73, alternatorAmps: 130,
+  },
+  {
+    year: 2024, make: "Toyota", model: "Tacoma", trim: "TRD Off-Road 4WD",
+    curbWeightLbs: 4515, gvwrLbs: 5800, maxTowingLbs: 6500,
+    wheelbaseIn: 127.4, trackWidthIn: 63.5, groundClearanceIn: 9.4,
+    approachAngle: 32, departureAngle: 23.5, breakoverAngle: 22,
+    fuelTankGal: 21.1, stockTireSize: "265/70R17", stockTireDiameter: 31.6,
+    mpgCity: 21, mpgHighway: 26, mpgCombined: 23,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.12, frontWeightPct: 57, stockWadingDepthIn: 0,
+    stockRatio: 3.73, alternatorAmps: 150,
+  },
+  {
+    year: 2023, make: "Toyota", model: "Tacoma", trim: "TRD Off-Road 4WD (3rd Gen)",
+    curbWeightLbs: 4480, gvwrLbs: 5600, maxTowingLbs: 6400,
+    wheelbaseIn: 127.4, trackWidthIn: 61.6, groundClearanceIn: 9.4,
+    approachAngle: 32, departureAngle: 23.7, breakoverAngle: 21,
+    fuelTankGal: 21.1, stockTireSize: "265/70R16", stockTireDiameter: 30.6,
+    mpgCity: 18, mpgHighway: 22, mpgCombined: 20,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.12, frontWeightPct: 57, stockWadingDepthIn: 0,
+    stockRatio: 3.73, alternatorAmps: 130,
+  },
+  {
+    year: 2024, make: "Toyota", model: "Tundra", trim: "TRD Off-Road 4WD",
+    curbWeightLbs: 5615, gvwrLbs: 7050, maxTowingLbs: 11450,
+    wheelbaseIn: 145.7, trackWidthIn: 67.0, groundClearanceIn: 10.6,
+    approachAngle: 28, departureAngle: 22, breakoverAngle: 20,
+    fuelTankGal: 32.2, stockTireSize: "275/65R18", stockTireDiameter: 32.1,
+    mpgCity: 18, mpgHighway: 24, mpgCombined: 20,
+    engineType: "hybrid", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.14, frontWeightPct: 54, stockWadingDepthIn: 0,
+    stockRatio: 3.91, alternatorAmps: 180,
+  },
+  {
+    year: 2024, make: "Toyota", model: "Land Cruiser", trim: "4WD",
+    curbWeightLbs: 5535, gvwrLbs: 7050, maxTowingLbs: 6000,
+    wheelbaseIn: 112.2, trackWidthIn: 66.5, groundClearanceIn: 8.7,
+    approachAngle: 31, departureAngle: 22.5, breakoverAngle: 22,
+    fuelTankGal: 22.5, stockTireSize: "265/65R18", stockTireDiameter: 31.6,
+    mpgCity: 19, mpgHighway: 22, mpgCombined: 20,
+    engineType: "hybrid", drivetrain: "4wd", transferCase: "full-time",
+    ssf: 1.16, frontWeightPct: 53, stockWadingDepthIn: 27,
+    stockRatio: 3.73, alternatorAmps: 180,
+  },
+  {
+    year: 2024, make: "Toyota", model: "Sequoia", trim: "TRD Off-Road 4WD",
+    curbWeightLbs: 5855, gvwrLbs: 7500, maxTowingLbs: 9000,
+    wheelbaseIn: 122, trackWidthIn: 67.5, groundClearanceIn: 9.1,
+    approachAngle: 25, departureAngle: 20, breakoverAngle: 17,
+    fuelTankGal: 22.5, stockTireSize: "275/65R18", stockTireDiameter: 32.1,
+    mpgCity: 19, mpgHighway: 22, mpgCombined: 20,
+    engineType: "hybrid", drivetrain: "4wd", transferCase: "full-time",
+    ssf: 1.14, frontWeightPct: 54, stockWadingDepthIn: 0,
+    stockRatio: 3.73, alternatorAmps: 180,
+  },
+
+  // ─── JEEP ────────────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Jeep", model: "Wrangler", trim: "Rubicon 4-Door (JLU)",
+    curbWeightLbs: 4595, gvwrLbs: 5700, maxTowingLbs: 3500,
+    wheelbaseIn: 118.4, trackWidthIn: 63.9, groundClearanceIn: 10.8,
+    approachAngle: 44, departureAngle: 37, breakoverAngle: 27.8,
+    fuelTankGal: 21.5, stockTireSize: "285/70R17", stockTireDiameter: 33,
+    mpgCity: 17, mpgHighway: 22, mpgCombined: 19,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.04, frontWeightPct: 53, stockWadingDepthIn: 30,
+    stockRatio: 4.10, alternatorAmps: 220,
+  },
+  {
+    year: 2024, make: "Jeep", model: "Wrangler", trim: "Sport 2-Door (JL)",
+    curbWeightLbs: 4095, gvwrLbs: 5200, maxTowingLbs: 2000,
+    wheelbaseIn: 96.8, trackWidthIn: 62.4, groundClearanceIn: 9.7,
+    approachAngle: 41.4, departureAngle: 36.1, breakoverAngle: 25.8,
+    fuelTankGal: 17.5, stockTireSize: "255/75R17", stockTireDiameter: 32,
+    mpgCity: 20, mpgHighway: 24, mpgCombined: 22,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.02, frontWeightPct: 54, stockWadingDepthIn: 30,
+    stockRatio: 3.73, alternatorAmps: 160,
+  },
+  {
+    year: 2024, make: "Jeep", model: "Gladiator", trim: "Rubicon 4WD",
+    curbWeightLbs: 5072, gvwrLbs: 6250, maxTowingLbs: 7700,
+    wheelbaseIn: 137.3, trackWidthIn: 63.9, groundClearanceIn: 11.1,
+    approachAngle: 43.4, departureAngle: 26, breakoverAngle: 20.3,
+    fuelTankGal: 22.5, stockTireSize: "285/70R17", stockTireDiameter: 33,
+    mpgCity: 16, mpgHighway: 23, mpgCombined: 19,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.06, frontWeightPct: 56, stockWadingDepthIn: 30,
+    stockRatio: 4.10, alternatorAmps: 220,
+  },
+  {
+    year: 2024, make: "Jeep", model: "Grand Cherokee", trim: "Trailhawk 4WD",
+    curbWeightLbs: 4870, gvwrLbs: 6100, maxTowingLbs: 6200,
+    wheelbaseIn: 116.7, trackWidthIn: 65.4, groundClearanceIn: 10.9,
+    approachAngle: 30.1, departureAngle: 28.1, breakoverAngle: 22.4,
+    fuelTankGal: 24.6, stockTireSize: "265/60R18", stockTireDiameter: 30.5,
+    mpgCity: 18, mpgHighway: 25, mpgCombined: 21,
+    engineType: "gas", drivetrain: "4wd", transferCase: "selectable",
+    ssf: 1.15, frontWeightPct: 53, stockWadingDepthIn: 24,
+    stockRatio: 3.45, alternatorAmps: 180,
+  },
+
+  // ─── FORD ────────────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Ford", model: "Bronco", trim: "Badlands 4-Door",
+    curbWeightLbs: 4845, gvwrLbs: 5800, maxTowingLbs: 3500,
+    wheelbaseIn: 116.1, trackWidthIn: 64.8, groundClearanceIn: 11.6,
+    approachAngle: 43.2, departureAngle: 37.2, breakoverAngle: 26.3,
+    fuelTankGal: 20.8, stockTireSize: "285/70R17", stockTireDiameter: 33,
+    mpgCity: 18, mpgHighway: 22, mpgCombined: 20,
+    engineType: "gas", drivetrain: "4wd", transferCase: "selectable",
+    ssf: 1.07, frontWeightPct: 55, stockWadingDepthIn: 33.5,
+    stockRatio: 4.70, alternatorAmps: 200,
+  },
+  {
+    year: 2024, make: "Ford", model: "F-150", trim: "XLT 4x4 (SuperCrew)",
+    curbWeightLbs: 4705, gvwrLbs: 7050, maxTowingLbs: 11300,
+    wheelbaseIn: 145.4, trackWidthIn: 67.8, groundClearanceIn: 9.4,
+    approachAngle: 25.7, departureAngle: 24.2, breakoverAngle: 21,
+    fuelTankGal: 26, stockTireSize: "275/65R18", stockTireDiameter: 32.1,
+    mpgCity: 20, mpgHighway: 26, mpgCombined: 22,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.18, frontWeightPct: 54, stockWadingDepthIn: 0,
+    stockRatio: 3.55, alternatorAmps: 175,
+  },
+  {
+    year: 2024, make: "Ford", model: "F-150", trim: "Tremor 4x4",
+    curbWeightLbs: 5345, gvwrLbs: 7150, maxTowingLbs: 10900,
+    wheelbaseIn: 145.4, trackWidthIn: 68.2, groundClearanceIn: 10.9,
+    approachAngle: 27.6, departureAngle: 24.9, breakoverAngle: 22.2,
+    fuelTankGal: 26, stockTireSize: "285/65R20", stockTireDiameter: 33.6,
+    mpgCity: 18, mpgHighway: 23, mpgCombined: 20,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.17, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 3.73, alternatorAmps: 175,
+  },
+  {
+    year: 2024, make: "Ford", model: "Ranger", trim: "Tremor 4WD",
+    curbWeightLbs: 4790, gvwrLbs: 6010, maxTowingLbs: 7500,
+    wheelbaseIn: 131.4, trackWidthIn: 64.6, groundClearanceIn: 9.8,
+    approachAngle: 30.9, departureAngle: 23.9, breakoverAngle: 21.9,
+    fuelTankGal: 21.1, stockTireSize: "285/65R18", stockTireDiameter: 32.6,
+    mpgCity: 21, mpgHighway: 26, mpgCombined: 23,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.13, frontWeightPct: 56, stockWadingDepthIn: 0,
+    stockRatio: 3.73, alternatorAmps: 175,
+  },
+  {
+    year: 2024, make: "Ford", model: "F-250", trim: "Lariat 4x4 (Super Duty)",
+    curbWeightLbs: 6850, gvwrLbs: 10000, maxTowingLbs: 20000,
+    wheelbaseIn: 148.8, trackWidthIn: 70.0, groundClearanceIn: 8.9,
+    approachAngle: 23.5, departureAngle: 21, breakoverAngle: 18,
+    fuelTankGal: 34, stockTireSize: "275/70R18", stockTireDiameter: 33.2,
+    mpgCity: 15, mpgHighway: 18, mpgCombined: 16,
+    engineType: "diesel", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.22, frontWeightPct: 56, stockWadingDepthIn: 0,
+    stockRatio: 3.55, alternatorAmps: 240,
+  },
+  {
+    year: 2024, make: "Ford", model: "Expedition", trim: "Timberline 4WD",
+    curbWeightLbs: 5815, gvwrLbs: 7500, maxTowingLbs: 9300,
+    wheelbaseIn: 122.5, trackWidthIn: 67.0, groundClearanceIn: 10.6,
+    approachAngle: 27.8, departureAngle: 22.5, breakoverAngle: 19.4,
+    fuelTankGal: 23.3, stockTireSize: "275/60R20", stockTireDiameter: 33,
+    mpgCity: 16, mpgHighway: 21, mpgCombined: 18,
+    engineType: "gas", drivetrain: "4wd", transferCase: "selectable",
+    ssf: 1.15, frontWeightPct: 53, stockWadingDepthIn: 0,
+    stockRatio: 3.73, alternatorAmps: 175,
+  },
+
+  // ─── CHEVROLET / GMC ─────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Chevrolet", model: "Colorado", trim: "ZR2 4WD",
+    curbWeightLbs: 4742, gvwrLbs: 5900, maxTowingLbs: 6000,
+    wheelbaseIn: 131.4, trackWidthIn: 65.7, groundClearanceIn: 10.7,
+    approachAngle: 36.9, departureAngle: 25.4, breakoverAngle: 23.5,
+    fuelTankGal: 21.3, stockTireSize: "275/70R17", stockTireDiameter: 32.2,
+    mpgCity: 17, mpgHighway: 22, mpgCombined: 19,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.10, frontWeightPct: 56, stockWadingDepthIn: 0,
+    stockRatio: 3.42, alternatorAmps: 170,
+  },
+  {
+    year: 2024, make: "Chevrolet", model: "Silverado 1500", trim: "Trail Boss 4WD",
+    curbWeightLbs: 5170, gvwrLbs: 7200, maxTowingLbs: 9500,
+    wheelbaseIn: 147.4, trackWidthIn: 68.0, groundClearanceIn: 10.9,
+    approachAngle: 26, departureAngle: 23, breakoverAngle: 20.5,
+    fuelTankGal: 24.0, stockTireSize: "275/60R20", stockTireDiameter: 33.0,
+    mpgCity: 16, mpgHighway: 22, mpgCombined: 18,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.18, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 3.42, alternatorAmps: 170,
+  },
+  {
+    year: 2024, make: "Chevrolet", model: "Tahoe", trim: "Z71 4WD",
+    curbWeightLbs: 5680, gvwrLbs: 7200, maxTowingLbs: 8400,
+    wheelbaseIn: 120.9, trackWidthIn: 67.0, groundClearanceIn: 10.0,
+    approachAngle: 28, departureAngle: 23, breakoverAngle: 18,
+    fuelTankGal: 24.0, stockTireSize: "275/60R20", stockTireDiameter: 33.0,
+    mpgCity: 16, mpgHighway: 20, mpgCombined: 17,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.13, frontWeightPct: 53, stockWadingDepthIn: 0,
+    stockRatio: 3.23, alternatorAmps: 170,
+  },
+  {
+    year: 2024, make: "Chevrolet", model: "Suburban", trim: "Z71 4WD",
+    curbWeightLbs: 5815, gvwrLbs: 7500, maxTowingLbs: 8300,
+    wheelbaseIn: 134.1, trackWidthIn: 67.0, groundClearanceIn: 10.0,
+    approachAngle: 26, departureAngle: 22, breakoverAngle: 17,
+    fuelTankGal: 28.0, stockTireSize: "275/60R20", stockTireDiameter: 33.0,
+    mpgCity: 15, mpgHighway: 20, mpgCombined: 17,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.13, frontWeightPct: 52, stockWadingDepthIn: 0,
+    stockRatio: 3.23, alternatorAmps: 170,
+  },
+  {
+    year: 2024, make: "GMC", model: "Sierra 1500", trim: "AT4 4WD",
+    curbWeightLbs: 5200, gvwrLbs: 7200, maxTowingLbs: 9500,
+    wheelbaseIn: 147.4, trackWidthIn: 68.2, groundClearanceIn: 10.9,
+    approachAngle: 26.5, departureAngle: 23, breakoverAngle: 21,
+    fuelTankGal: 24.0, stockTireSize: "275/60R20", stockTireDiameter: 33.0,
+    mpgCity: 16, mpgHighway: 21, mpgCombined: 18,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.17, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 3.42, alternatorAmps: 170,
+  },
+
+  // ─── RAM ─────────────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Ram", model: "1500", trim: "Rebel 4x4",
+    curbWeightLbs: 5245, gvwrLbs: 6900, maxTowingLbs: 11610,
+    wheelbaseIn: 144.5, trackWidthIn: 67.4, groundClearanceIn: 10.8,
+    approachAngle: 26.2, departureAngle: 23.5, breakoverAngle: 20.9,
+    fuelTankGal: 26.0, stockTireSize: "275/60R20", stockTireDiameter: 33.0,
+    mpgCity: 15, mpgHighway: 22, mpgCombined: 18,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.16, frontWeightPct: 54, stockWadingDepthIn: 0,
+    stockRatio: 3.21, alternatorAmps: 180,
+  },
+  {
+    year: 2024, make: "Ram", model: "2500", trim: "Power Wagon 4x4",
+    curbWeightLbs: 7265, gvwrLbs: 8510, maxTowingLbs: 12480,
+    wheelbaseIn: 149.0, trackWidthIn: 72.0, groundClearanceIn: 14.5,
+    approachAngle: 33.6, departureAngle: 26.2, breakoverAngle: 22.4,
+    fuelTankGal: 31.0, stockTireSize: "285/70R17", stockTireDiameter: 33.0,
+    mpgCity: 12, mpgHighway: 16, mpgCombined: 14,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.20, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 4.10, alternatorAmps: 220,
+  },
+
+  // ─── NISSAN ──────────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Nissan", model: "Frontier", trim: "PRO-4X 4WD",
+    curbWeightLbs: 4610, gvwrLbs: 5850, maxTowingLbs: 6610,
+    wheelbaseIn: 126.4, trackWidthIn: 63.0, groundClearanceIn: 9.4,
+    approachAngle: 30, departureAngle: 23, breakoverAngle: 20,
+    fuelTankGal: 21.1, stockTireSize: "265/70R17", stockTireDiameter: 31.6,
+    mpgCity: 17, mpgHighway: 22, mpgCombined: 19,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.11, frontWeightPct: 57, stockWadingDepthIn: 0,
+    stockRatio: 3.69, alternatorAmps: 150,
+  },
+
+  // ─── LAND ROVER ──────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Land Rover", model: "Defender", trim: "110 V8 AWD",
+    curbWeightLbs: 5590, gvwrLbs: 7165, maxTowingLbs: 8201,
+    wheelbaseIn: 119.0, trackWidthIn: 65.7, groundClearanceIn: 11.5,
+    approachAngle: 37.5, departureAngle: 40, breakoverAngle: 27.8,
+    fuelTankGal: 22.7, stockTireSize: "275/55R20", stockTireDiameter: 31.9,
+    mpgCity: 14, mpgHighway: 19, mpgCombined: 16,
+    engineType: "gas", drivetrain: "awd", transferCase: "full-time",
+    ssf: 1.09, frontWeightPct: 52, stockWadingDepthIn: 35.4,
+    stockRatio: 3.73, alternatorAmps: 250,
+  },
+
+  // ─── LEXUS ───────────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Lexus", model: "GX", trim: "550 Overtrail 4WD",
+    curbWeightLbs: 5440, gvwrLbs: 6834, maxTowingLbs: 6000,
+    wheelbaseIn: 112.2, trackWidthIn: 66.1, groundClearanceIn: 8.5,
+    approachAngle: 26, departureAngle: 22, breakoverAngle: 20,
+    fuelTankGal: 22.5, stockTireSize: "265/60R20", stockTireDiameter: 32.5,
+    mpgCity: 17, mpgHighway: 22, mpgCombined: 19,
+    engineType: "gas", drivetrain: "4wd", transferCase: "full-time",
+    ssf: 1.14, frontWeightPct: 53, stockWadingDepthIn: 27,
+    stockRatio: 3.73, alternatorAmps: 180,
+  },
+  {
+    year: 2023, make: "Lexus", model: "GX", trim: "460 4WD",
+    curbWeightLbs: 4875, gvwrLbs: 6300, maxTowingLbs: 6500,
+    wheelbaseIn: 109.8, trackWidthIn: 63.0, groundClearanceIn: 8.1,
+    approachAngle: 28, departureAngle: 25, breakoverAngle: 21,
+    fuelTankGal: 23, stockTireSize: "265/60R18", stockTireDiameter: 30.5,
+    mpgCity: 15, mpgHighway: 19, mpgCombined: 16,
+    engineType: "gas", drivetrain: "4wd", transferCase: "full-time",
+    ssf: 1.13, frontWeightPct: 54, stockWadingDepthIn: 27,
+    stockRatio: 3.73, alternatorAmps: 130,
+  },
+
+  // ─── SUBARU ──────────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Subaru", model: "Outback", trim: "Wilderness AWD",
+    curbWeightLbs: 3810, gvwrLbs: 4829, maxTowingLbs: 3500,
+    wheelbaseIn: 108.1, trackWidthIn: 61.8, groundClearanceIn: 9.5,
+    approachAngle: 20, departureAngle: 24, breakoverAngle: 21.2,
+    fuelTankGal: 18.5, stockTireSize: "225/60R18", stockTireDiameter: 28.6,
+    mpgCity: 24, mpgHighway: 28, mpgCombined: 26,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.18, frontWeightPct: 60, stockWadingDepthIn: 0,
+    stockRatio: 4.11, alternatorAmps: 110,
+  },
+  {
+    year: 2024, make: "Subaru", model: "Crosstrek", trim: "Wilderness AWD",
+    curbWeightLbs: 3395, gvwrLbs: 4277, maxTowingLbs: 3500,
+    wheelbaseIn: 104.9, trackWidthIn: 61.0, groundClearanceIn: 9.3,
+    approachAngle: 18, departureAngle: 30, breakoverAngle: 20.2,
+    fuelTankGal: 16.6, stockTireSize: "225/60R17", stockTireDiameter: 27.6,
+    mpgCity: 25, mpgHighway: 29, mpgCombined: 27,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.21, frontWeightPct: 61, stockWadingDepthIn: 0,
+    stockRatio: 4.11, alternatorAmps: 110,
+  },
+
+  // ─── RIVIAN ──────────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Rivian", model: "R1T", trim: "Quad Motor AWD",
+    curbWeightLbs: 7148, gvwrLbs: 8532, maxTowingLbs: 11000,
+    wheelbaseIn: 135.8, trackWidthIn: 67.0, groundClearanceIn: 14.9,
+    approachAngle: 35.5, departureAngle: 34, breakoverAngle: 26.7,
+    fuelTankGal: 0, stockTireSize: "275/65R20", stockTireDiameter: 34.1,
+    mpgCity: 74, mpgHighway: 66, mpgCombined: 69, // MPGe
+    engineType: "ev", drivetrain: "awd", transferCase: "none",
+    ssf: 1.11, frontWeightPct: 50, stockWadingDepthIn: 42,
+    stockRatio: 0, alternatorAmps: 0,
+  },
+
+  // ─── VAN BUILDS ──────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Mercedes-Benz", model: "Sprinter", trim: "2500 4x4 (144 WB)",
+    curbWeightLbs: 6613, gvwrLbs: 8550, maxTowingLbs: 5000,
+    wheelbaseIn: 144.3, trackWidthIn: 69.8, groundClearanceIn: 6.3,
+    approachAngle: 18, departureAngle: 28, breakoverAngle: 15,
+    fuelTankGal: 24.5, stockTireSize: "245/75R16", stockTireDiameter: 30.5,
+    mpgCity: 16, mpgHighway: 20, mpgCombined: 17,
+    engineType: "diesel", drivetrain: "4wd", transferCase: "selectable",
+    ssf: 1.25, frontWeightPct: 52, stockWadingDepthIn: 0,
+    stockRatio: 3.92, alternatorAmps: 220,
+  },
+  {
+    year: 2024, make: "Ford", model: "Transit", trim: "AWD (148 WB)",
+    curbWeightLbs: 6250, gvwrLbs: 9500, maxTowingLbs: 4600,
+    wheelbaseIn: 147.6, trackWidthIn: 72.4, groundClearanceIn: 6.1,
+    approachAngle: 16, departureAngle: 25, breakoverAngle: 14,
+    fuelTankGal: 25, stockTireSize: "235/65R16", stockTireDiameter: 28.0,
+    mpgCity: 14, mpgHighway: 18, mpgCombined: 15,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.30, frontWeightPct: 54, stockWadingDepthIn: 0,
+    stockRatio: 3.73, alternatorAmps: 175,
+  },
+];
+
+// ─── Helper: Get unique makes ──────────────────────────────────────
+
+export function getUniqueMakes(): string[] {
+  return [...new Set(vehicleDatabase.map((v) => v.make))].sort();
+}
+
+export function getModelsForMake(make: string): string[] {
+  return [...new Set(vehicleDatabase.filter((v) => v.make === make).map((v) => v.model))].sort();
+}
+
+export function getTrimsForModel(make: string, model: string): string[] {
+  return vehicleDatabase
+    .filter((v) => v.make === make && v.model === model)
+    .map((v) => `${v.year} ${v.trim}`)
+    .sort();
+}
+
+export function findVehicle(make: string, model: string, yearTrim: string): StockVehicle | undefined {
+  const year = parseInt(yearTrim);
+  const trim = yearTrim.replace(/^\d+\s*/, "");
+  return vehicleDatabase.find(
+    (v) => v.make === make && v.model === model && v.year === year && v.trim === trim,
+  );
+}
