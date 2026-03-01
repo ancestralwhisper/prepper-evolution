@@ -1,19 +1,33 @@
 import { Link } from "wouter";
 import {
   Backpack, Droplets, UtensilsCrossed, Zap, ClipboardList, Map,
-  ArrowRight, FolderOpen, Shield, Target,
+  ArrowRight, FolderOpen, Shield, Target, Crosshair,
+  Siren, Skull, Truck, Fuel, Weight, Brain,
+  AlertTriangle, BarChart3, Repeat,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 
-const tools = [
+interface Tool {
+  slug: string;
+  name: string;
+  description: string;
+  icon: React.ElementType;
+  status: "live" | "coming-soon";
+  badge?: string | null;
+  version?: string | null;
+  cta?: string;
+}
+
+const calculators: Tool[] = [
   {
     slug: "bug-out-bag-calculator",
     name: "Bug Out Bag Weight Calculator",
     description:
       "Build your BOB from 40+ gear items, track total weight vs. body weight limits, and get personalized recommendations for missing essentials.",
     icon: Backpack,
-    status: "live" as const,
+    status: "live",
     badge: "Popular",
+    version: "v1.3",
   },
   {
     slug: "water-storage-calculator",
@@ -21,8 +35,8 @@ const tools = [
     description:
       "Calculate exactly how much water your family needs based on group size, climate, and duration. Includes container recommendations and FEMA guidelines.",
     icon: Droplets,
-    status: "live" as const,
-    badge: "New",
+    status: "live",
+    version: "v1.2",
   },
   {
     slug: "food-storage-calculator",
@@ -30,8 +44,8 @@ const tools = [
     description:
       "Plan your emergency food supply by calories, macros, and shelf life. Input family size and duration to get a complete shopping list.",
     icon: UtensilsCrossed,
-    status: "live" as const,
-    badge: "New",
+    status: "live",
+    version: "v1.2",
   },
   {
     slug: "solar-power-calculator",
@@ -39,17 +53,8 @@ const tools = [
     description:
       "Input your devices and run times to calculate the watt-hours you need. Get matched to the right portable power station and solar panel setup for your location.",
     icon: Zap,
-    status: "live" as const,
-    badge: "New",
-  },
-  {
-    slug: "shtf-simulator",
-    name: "SHTF Scenario Simulator",
-    description:
-      "Face realistic emergency scenarios and make survival decisions. Your choices determine if you make it out — and what gear would have saved you.",
-    icon: Shield,
-    status: "live" as const,
-    badge: "New",
+    status: "live",
+    version: "v1.3",
   },
   {
     slug: "72-hour-kit-builder",
@@ -57,8 +62,21 @@ const tools = [
     description:
       "Answer questions about your region, climate, family, and needs to generate a custom 72-hour emergency kit checklist. Downloadable PDF.",
     icon: ClipboardList,
-    status: "live" as const,
-    badge: "New",
+    status: "live",
+    version: "v1.2",
+  },
+];
+
+const hardlineTools: Tool[] = [
+  {
+    slug: "shtf-simulator",
+    name: "SHTF Scenario Simulator",
+    description:
+      "Face realistic emergency scenarios and make survival decisions. Your choices determine if you make it out — and what gear would have saved you.",
+    icon: Skull,
+    status: "live",
+    version: "v1.0",
+    cta: "Launch Simulator",
   },
   {
     slug: "evacuation-route-planner",
@@ -66,14 +84,129 @@ const tools = [
     description:
       "Plan primary, secondary, and tertiary evacuation routes. Inspired by Joel Skousen's Strategic Relocation principles — avoid highways, choke points, and high-risk corridors.",
     icon: Map,
-    status: "coming-soon" as const,
+    status: "coming-soon",
+    cta: "Open Planner",
   },
 ];
+
+const opsDeckTools: Tool[] = [
+  {
+    slug: "vehicle-profile",
+    name: "Unified Vehicle Profile",
+    description:
+      "Build your complete rig profile from 30+ real vehicles. Track every mod — lift, tires, bumpers, winch, armor, fuel, electrical — and see real-time impact on payload, MPG, stability, and trail readiness.",
+    icon: Truck,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Build Profile",
+  },
+  {
+    slug: "fuel-range-planner",
+    name: "Fuel & Range Planner",
+    description:
+      "Plot waypoints on a map and watch your fuel burn in real-time. Calculates terrain-adjusted MPG, cache waypoints, altitude penalties, and shows exactly where you run dry.",
+    icon: Fuel,
+    status: "coming-soon",
+    cta: "Plan Route",
+  },
+  {
+    slug: "vehicle-load-balancer",
+    name: "Overland Load Balancer",
+    description:
+      "Drag-and-drop gear onto a vehicle diagram. See live front/rear weight split, center of gravity shift, rollover angle, and get warnings before you overload an axle.",
+    icon: Weight,
+    status: "coming-soon",
+    cta: "Balance Load",
+  },
+  {
+    slug: "skills-tracker",
+    name: "Skills & Knowledge Gap Analyzer",
+    description:
+      "Self-assess 60+ survival and overlanding skills across 8 domains. Get a personalized skill roadmap, priority training recommendations, and curated learning resources.",
+    icon: Brain,
+    status: "coming-soon",
+    cta: "Assess Skills",
+  },
+  {
+    slug: "threat-risk-dashboard",
+    name: "Threat-Specific Risk Dashboard",
+    description:
+      "Enter your ZIP code and get FEMA-sourced risk scores for 18 hazard types. See probability bars, top 5 priority actions, and generate a custom preparedness PDF.",
+    icon: AlertTriangle,
+    status: "coming-soon",
+    cta: "Check Threats",
+  },
+  {
+    slug: "barter-value-estimator",
+    name: "Barter & Trade Value Estimator",
+    description:
+      "Estimate post-collapse trade values for 100+ items across 6 scarcity tiers. Find the best ROI gear to stockpile and build optimized barter kits by budget.",
+    icon: Repeat,
+    status: "coming-soon",
+    cta: "Estimate Values",
+  },
+];
+
+function ToolCard({ tool }: { tool: Tool }) {
+  const Icon = tool.icon;
+  const isLive = tool.status === "live";
+  const cta = tool.cta || "Open Calculator";
+
+  const card = (
+    <div
+      className={`bg-card border border-border rounded-lg p-6 flex flex-col h-full transition-all ${
+        isLive
+          ? "hover:shadow-lg hover:border-primary/30 cursor-pointer"
+          : "opacity-60"
+      }`}
+      data-testid={`card-tool-${tool.slug}`}
+    >
+      <div className="flex items-start justify-between mb-4">
+        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+          <Icon className="w-6 h-6 text-primary" />
+        </div>
+        {tool.badge && (
+          <span className="text-xs font-bold uppercase tracking-wide bg-primary text-primary-foreground px-2 py-1 rounded">
+            {tool.badge}
+          </span>
+        )}
+        {!isLive && (
+          <span className="text-xs font-bold uppercase tracking-wide bg-muted text-muted-foreground px-2 py-1 rounded border border-border">
+            Coming Soon
+          </span>
+        )}
+      </div>
+
+      <h3 className="text-lg font-extrabold mb-2">{tool.name}</h3>
+      <p className="text-sm text-muted-foreground leading-relaxed flex-1">{tool.description}</p>
+
+      {isLive && (
+        <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
+          <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wide">
+            {cta} <ArrowRight className="w-4 h-4" />
+          </div>
+          {tool.version && (
+            <span className="text-[10px] font-mono font-bold text-muted-foreground/50 uppercase tracking-wider">
+              {tool.version}
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+
+  return isLive ? (
+    <Link href={`/tools/${tool.slug}`}>{card}</Link>
+  ) : (
+    <div>{card}</div>
+  );
+}
 
 export default function ToolsIndex() {
   useSEO({
     title: "Free Prepper Tools & Calculators | Prepper Evolution",
-    description: "Free interactive tools for preppers: bug out bag weight calculator, water storage calculator, food storage planner, power station sizing, 72-hour kit builder, and evacuation route planner.",
+    description: "Free interactive tools for preppers and overlanders: bug out bag calculator, water storage, food storage, power station sizing, 72-hour kit builder, SHTF simulator, and the Ops Deck — vehicle-aware preparedness tools with real physics.",
   });
 
   return (
@@ -150,58 +283,55 @@ export default function ToolsIndex() {
           </Link>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up-delay-1">
-          {tools.map((tool) => {
-            const Icon = tool.icon;
-            const isLive = tool.status === "live";
-
-            const card = (
-              <div
-                className={`bg-card border border-border rounded-lg p-6 flex flex-col h-full transition-all ${
-                  isLive
-                    ? "hover:shadow-lg hover:border-primary/30 cursor-pointer"
-                    : "opacity-60"
-                }`}
-                data-testid={`card-tool-${tool.slug}`}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-primary" />
-                  </div>
-                  {tool.badge && (
-                    <span className="text-xs font-bold uppercase tracking-wide bg-primary text-primary-foreground px-2 py-1 rounded">
-                      {tool.badge}
-                    </span>
-                  )}
-                  {!isLive && (
-                    <span className="text-xs font-bold uppercase tracking-wide bg-muted text-muted-foreground px-2 py-1 rounded border border-border">
-                      Coming Soon
-                    </span>
-                  )}
-                </div>
-
-                <h2 className="text-lg font-extrabold mb-2">{tool.name}</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed flex-1">{tool.description}</p>
-
-                {isLive && (
-                  <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wide mt-4 pt-4 border-t border-border">
-                    Open Calculator <ArrowRight className="w-4 h-4" />
-                  </div>
-                )}
-              </div>
-            );
-
-            return isLive ? (
-              <Link key={tool.slug} href={`/tools/${tool.slug}`}>
-                {card}
-              </Link>
-            ) : (
-              <div key={tool.slug}>{card}</div>
-            );
-          })}
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Crosshair className="w-4 h-4 text-primary" />
+            </div>
+            <h2 className="text-xl font-extrabold">Prep Calculators</h2>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up-delay-1">
+            {calculators.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
+          </div>
         </div>
 
-        <div className="max-w-3xl mt-16 space-y-6">
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center">
+              <Siren className="w-4 h-4 text-red-500" />
+            </div>
+            <h2 className="text-xl font-extrabold">Hardline Tools</h2>
+          </div>
+          <p className="text-sm text-muted-foreground mb-6 ml-11">
+            Scenario training and tactical planning. Where prep meets pressure.
+          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up-delay-1">
+            {hardlineTools.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
+          </div>
+        </div>
+
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+              <BarChart3 className="w-4 h-4 text-emerald-500" />
+            </div>
+            <h2 className="text-xl font-extrabold">Ops Deck</h2>
+          </div>
+          <p className="text-sm text-muted-foreground mb-6 ml-11">
+            Your rig. Your risks. Your readiness. One integrated system built on real physics and real data.
+          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up-delay-1">
+            {opsDeckTools.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
+          </div>
+        </div>
+
+        <div className="max-w-3xl space-y-6">
           <h2 className="text-2xl font-extrabold">
             Why Use Prepper Calculators?
           </h2>
@@ -213,9 +343,11 @@ export default function ToolsIndex() {
             a bug out bag you have carried for years.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            Every tool is free, works on mobile, and requires no account. Your data is stored locally in your browser only &mdash; nothing is ever sent to
-            our servers or shared with anyone. Your configurations save automatically so you can pick up where you left off. Just keep in mind:
-            clearing your browser cache or site data will erase your saved progress. Share your results with a link or print them as a checklist.
+            Every tool is free, works on mobile, and requires no account. Your data is stored
+            locally in your browser only — nothing is ever sent to our servers or shared with
+            anyone. Your configurations save automatically so you can pick up where you left off.
+            Just keep in mind: clearing your browser cache or site data will erase your saved progress.
+            Share your results with a link or print them as a checklist.
           </p>
         </div>
       </div>

@@ -401,11 +401,11 @@ export const vehicleDatabase: StockVehicle[] = [
 ];
 
 export function getUniqueMakes(): string[] {
-  return [...new Set(vehicleDatabase.map((v) => v.make))].sort();
+  return Array.from(new Set(vehicleDatabase.map((v) => v.make))).sort();
 }
 
 export function getModelsForMake(make: string): string[] {
-  return [...new Set(vehicleDatabase.filter((v) => v.make === make).map((v) => v.model))].sort();
+  return Array.from(new Set(vehicleDatabase.filter((v) => v.make === make).map((v) => v.model))).sort();
 }
 
 export function getTrimsForModel(make: string, model: string): string[] {

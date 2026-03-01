@@ -24,6 +24,7 @@ import KitBuilder from "@/pages/tools/KitBuilder";
 import SHTFSimulator from "@/pages/tools/SHTFSimulator";
 import CommunityGallery from "@/pages/tools/CommunityGallery";
 import MyKits from "@/pages/tools/MyKits";
+import VehicleProfile from "@/pages/tools/VehicleProfile";
 import Quiz from "@/pages/Quiz";
 import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
@@ -60,6 +61,7 @@ function Router() {
           <Route path="/tools/shtf-simulator" component={SHTFSimulator} />
           <Route path="/tools/community" component={CommunityGallery} />
           <Route path="/tools/my-kits" component={MyKits} />
+          <Route path="/tools/vehicle-profile" component={VehicleProfile} />
           <Route path="/quiz" component={Quiz} />
           <Route path="/contact" component={Contact} />
           <Route path="/privacy-policy" component={PrivacyPolicy} />
