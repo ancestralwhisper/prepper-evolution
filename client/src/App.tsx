@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AnimatePresence, motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Article from "@/pages/Article";
@@ -93,6 +94,7 @@ function App() {
         <Toaster />
         <SiteHeader />
         <Router />
+        <SiteFooter />
       </TooltipProvider>
     </QueryClientProvider>
   );
