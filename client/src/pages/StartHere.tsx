@@ -249,7 +249,8 @@ export default function StartHere() {
                 Mike here — just your average guy from New Jersey who's been working in the
                 electrical trade for 21 years. Part of my job involves mutual aid deployments —
                 when major storms knock out power, I get sent wherever the damage is. I've
-                worked storm restoration in California, Texas, Florida, and Maine. You see a lot
+                worked storm restoration in California, Texas, Florida, Long Island, New York,
+                New Jersey, and Maine. You see a lot
                 when the grid goes down for real: people without water, without food, without a
                 plan. That experience is a big part of why this site exists.
               </p>
