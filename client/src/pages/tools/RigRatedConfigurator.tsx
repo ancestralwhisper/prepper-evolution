@@ -1,12 +1,13 @@
+
 import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   ChevronDown, ChevronRight, AlertTriangle, Info,
   ShieldAlert, Truck, Package, Users, MapPin,
   Scale, Shield, Route, FileText, Award,
-  Sparkles, RotateCcw, Download, Fuel, Settings2,
+  Sparkles, RotateCcw, Download, Fuel, Settings2, Send,
 } from "lucide-react";
 import {
-  getUniqueMakes, getModelsForMake, getTrimsForModel, findMachine,
+  getUniqueMakes, getModelsForMake, getYearsForModel, getTrimsForModelYear, findMachineByYearTrim,
 } from "./rigrated-machines";
 import type { UTVMachine, UTVBodyType } from "./rigrated-machines";
 import { accessories, getAccessoryCategories, getAccessoriesByCategory, CATEGORY_LABELS } from "./rigrated-accessories";
@@ -28,6 +29,8 @@ import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import InstallButton from "@/components/tools/InstallButton";
 import { VEHICLE_PROFILE_KEY } from "./vehicle-types";
+
+// ─── SVG Gauge Component ──────────────────────────────────────────────
 
 function GaugeArc({
   value, max, label, unit, size = 120, warningThreshold, dangerThreshold,
@@ -87,6 +90,8 @@ function GaugeArc({
   );
 }
 
+// ─── Collapsible Section ──────────────────────────────────────────────
+
 function Section({
   title, icon: Icon, children, open, onToggle, iconColor, badge,
 }: {
@@ -112,6 +117,8 @@ function Section({
     </div>
   );
 }
+
+// ─── Input Helpers ────────────────────────────────────────────────────
 
 function NumberInput({
   label, value, onChange, min, max, step, unit, hint,
@@ -185,6 +192,8 @@ function Toggle({
   );
 }
 
+// ─── Status Badge ────────────────────────────────────────────────────
+
 function StatusBadge({ pct }: { pct: number }) {
   let color = "bg-green-500/10 text-green-500 border-green-500/30";
   let text = "Good";
@@ -198,6 +207,8 @@ function StatusBadge({ pct }: { pct: number }) {
     </span>
   );
 }
+
+// ─── Warning Panel ──────────────────────────────────────────────────
 
 function WarningsPanel({ warnings }: { warnings: RigRatedWarning[] }) {
   if (warnings.length === 0) return null;
@@ -218,6 +229,8 @@ function WarningsPanel({ warnings }: { warnings: RigRatedWarning[] }) {
     </div>
   );
 }
+
+// ─── Trail Score Card ────────────────────────────────────────────────
 
 function TrailCard({ score }: { score: RigRatedResult["trailScores"][0] }) {
   const trail = trails.find((t) => t.id === score.trailId);
@@ -249,10 +262,14 @@ function TrailCard({ score }: { score: RigRatedResult["trailScores"][0] }) {
   );
 }
 
+// ─── Main Component ──────────────────────────────────────────────────
+
 export default function RigRatedConfigurator() {
+  // ─── State ────────────────────────────────────────────────────
   const [config, setConfig] = useState<RigRatedConfig>(defaultRigRatedConfig);
   const [loaded, setLoaded] = useState(false);
 
+  // Section open state
   const [sections, setSections] = useState({
     machine: true,
     accessories: false,
@@ -264,14 +281,23 @@ export default function RigRatedConfigurator() {
     results: true,
   });
 
+  // Machine selector state
   const [selMake, setSelMake] = useState("");
   const [selModel, setSelModel] = useState("");
+  const [selYear, setSelYear] = useState<number | "">("");
   const [selTrim, setSelTrim] = useState("");
 
+  // Accessory category filter
   const [accCategory, setAccCategory] = useState<AccessoryCategory | "all">("all");
 
+  // Profile import
   const [profileAvailable, setProfileAvailable] = useState(false);
 
+  // Request form state
+  const [reqForm, setReqForm] = useState({ make: "", model: "", year: "", trim: "", notes: "", email: "" });
+  const [reqStatus, setReqStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  // ─── Load from localStorage ────────────────────────────────────
   useEffect(() => {
     try {
       const saved = localStorage.getItem(RIGRATED_KEY);
@@ -289,6 +315,7 @@ export default function RigRatedConfigurator() {
     setLoaded(true);
   }, []);
 
+  // ─── Save to localStorage ──────────────────────────────────────
   useEffect(() => {
     if (!loaded) return;
     try {
@@ -296,6 +323,7 @@ export default function RigRatedConfigurator() {
     } catch { /* ignore */ }
   }, [config, loaded]);
 
+  // ─── Update helpers ─────────────────────────────────────────────
   const update = useCallback(<K extends keyof RigRatedConfig>(key: K, value: RigRatedConfig[K]) => {
     setConfig((prev) => ({ ...prev, [key]: value }));
   }, []);
@@ -307,29 +335,39 @@ export default function RigRatedConfigurator() {
     }));
   }, []);
 
+  // ─── Machine selection ──────────────────────────────────────────
   const handleMakeChange = useCallback((make: string) => {
     setSelMake(make);
     setSelModel("");
+    setSelYear("");
     setSelTrim("");
     update("machine", null);
   }, [update]);
 
   const handleModelChange = useCallback((model: string) => {
     setSelModel(model);
+    setSelYear("");
+    setSelTrim("");
+    update("machine", null);
+  }, [update]);
+
+  const handleYearChange = useCallback((year: number | "") => {
+    setSelYear(year);
     setSelTrim("");
     update("machine", null);
   }, [update]);
 
   const handleTrimChange = useCallback((trim: string) => {
     setSelTrim(trim);
-    if (!selMake || !selModel || !trim) return;
-    const machine = findMachine(selMake, selModel, trim);
+    if (!selMake || !selModel || !selYear || !trim) return;
+    const machine = findMachineByYearTrim(selMake, selModel, selYear as number, trim);
     if (machine) {
-      update("machine", machine);
+      update("machine", { ...machine, year: selYear as number });
       update("useManual", false);
     }
-  }, [selMake, selModel, update]);
+  }, [selMake, selModel, selYear, update]);
 
+  // ─── Accessory toggle ───────────────────────────────────────────
   const toggleAccessory = useCallback((id: string) => {
     setConfig((prev) => {
       const has = prev.selectedAccessories.includes(id);
@@ -342,6 +380,7 @@ export default function RigRatedConfigurator() {
     });
   }, []);
 
+  // ─── Gear preset change ─────────────────────────────────────────
   const handlePresetChange = useCallback((days: number) => {
     const preset = findPreset(days);
     setConfig((prev) => ({
@@ -351,30 +390,36 @@ export default function RigRatedConfigurator() {
     }));
   }, []);
 
+  // ─── Section toggle ─────────────────────────────────────────────
   const toggleSection = useCallback((key: keyof typeof sections) => {
     setSections((prev) => ({ ...prev, [key]: !prev[key] }));
   }, []);
 
+  // ─── Reset ────────────────────────────────────────────────────
   const resetAll = useCallback(() => {
     setConfig(defaultRigRatedConfig);
     setSelMake("");
     setSelModel("");
+    setSelYear("");
     setSelTrim("");
     setAccCategory("all");
     try { localStorage.removeItem(RIGRATED_KEY); } catch { /* ignore */ }
   }, []);
 
+  // ─── Computed results ───────────────────────────────────────────
   const result = useMemo<RigRatedResult>(
     () => computeAll(config, accessories, trails, stateLegalData),
     [config]
   );
 
+  // ─── Derived values ─────────────────────────────────────────────
   const activeMachine = config.useManual ? config.manualMachine : config.machine;
   const bodyType: UTVBodyType = activeMachine?.bodyType ?? "2-seat-utility";
   const machineLabel = activeMachine
     ? ("id" in activeMachine ? `${activeMachine.year} ${activeMachine.make} ${activeMachine.model}` : `${activeMachine.year} ${activeMachine.make} ${activeMachine.model}`)
     : "Not selected";
 
+  // Determine which accessory layers to show on SVG
   const hasCategory = (cat: string) => config.selectedAccessories.some((id) => {
     const acc = accessories.find((a) => a.id === id);
     return acc?.category === cat;
@@ -387,9 +432,11 @@ export default function RigRatedConfigurator() {
 
   if (!loaded) return null;
 
+  // ─── Dropdown data ──────────────────────────────────────────────
   const makes = getUniqueMakes();
   const models = selMake ? getModelsForMake(selMake) : [];
-  const trims = selMake && selModel ? getTrimsForModel(selMake, selModel) : [];
+  const years = selMake && selModel ? getYearsForModel(selMake, selModel) : [];
+  const trims = selMake && selModel && selYear ? getTrimsForModelYear(selMake, selModel, selYear as number) : [];
 
   const categories = getAccessoryCategories(config.instagramMode);
   const filteredAccessories = accCategory === "all"
@@ -403,8 +450,10 @@ export default function RigRatedConfigurator() {
 
   return (
     <div className="space-y-6">
+      {/* Safety Disclaimer */}
       <ToolSafetyDisclaimer level="safety-critical" />
 
+      {/* Vehicle Profile Import Banner */}
       {profileAvailable && (
         <div className="bg-primary/5 border border-primary/30 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
           <Truck className="w-5 h-5 text-primary flex-shrink-0" />
@@ -415,6 +464,7 @@ export default function RigRatedConfigurator() {
         </div>
       )}
 
+      {/* SVG Visualization */}
       <RigRatedSvg
         bodyType={bodyType}
         showRoof={hasCategory("roof")}
@@ -429,8 +479,10 @@ export default function RigRatedConfigurator() {
         loadStatus={result.overallStatus}
       />
 
+      {/* Main config card */}
       <div className="bg-card border border-border rounded-lg overflow-hidden">
 
+        {/* ─── Section 1: Machine Selection ───────────────────────── */}
         <Section
           title="Machine Selection"
           icon={Truck}
@@ -447,7 +499,7 @@ export default function RigRatedConfigurator() {
             />
 
             {!config.useManual ? (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div>
                   <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Make</label>
                   <select value={selMake} onChange={(e) => handleMakeChange(e.target.value)}
@@ -465,9 +517,17 @@ export default function RigRatedConfigurator() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Year / Trim</label>
-                  <select value={selTrim} onChange={(e) => handleTrimChange(e.target.value)}
+                  <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Year</label>
+                  <select value={selYear} onChange={(e) => handleYearChange(e.target.value ? Number(e.target.value) : "")}
                     className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors" disabled={!selModel}>
+                    <option value="">Select Year</option>
+                    {years.map((y) => <option key={y} value={y}>{y}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Trim</label>
+                  <select value={selTrim} onChange={(e) => handleTrimChange(e.target.value)}
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors" disabled={!selYear}>
                     <option value="">Select Trim</option>
                     {trims.map((t) => <option key={t} value={t}>{t}</option>)}
                   </select>
@@ -507,21 +567,23 @@ export default function RigRatedConfigurator() {
               </div>
             )}
 
+            {/* Machine spec summary */}
             {activeMachine && (
               <div className="bg-muted border border-border rounded-lg p-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                <div><span className="text-muted-foreground block text-[10px]">Dry Weight</span><span className="font-bold">{activeMachine.dryWeightLbs.toLocaleString()} lbs</span></div>
-                <div><span className="text-muted-foreground block text-[10px]">GVWR</span><span className="font-bold">{activeMachine.gvwrLbs.toLocaleString()} lbs</span></div>
-                <div><span className="text-muted-foreground block text-[10px]">Payload</span><span className="font-bold">{activeMachine.payloadCapacityLbs} lbs</span></div>
-                <div><span className="text-muted-foreground block text-[10px]">Clearance</span><span className="font-bold">{activeMachine.groundClearanceIn}"</span></div>
-                <div><span className="text-muted-foreground block text-[10px]">HP</span><span className="font-bold">{activeMachine.horsePower}</span></div>
-                <div><span className="text-muted-foreground block text-[10px]">Fuel</span><span className="font-bold">{activeMachine.fuelCapacityGal} gal</span></div>
-                <div><span className="text-muted-foreground block text-[10px]">Width</span><span className="font-bold">{activeMachine.overallWidthIn}"</span></div>
-                <div><span className="text-muted-foreground block text-[10px]">Tow Rating</span><span className="font-bold">{activeMachine.towingCapacityLbs.toLocaleString()} lbs</span></div>
+                <div><span className="text-muted block text-[10px]">Dry Weight</span><span className="font-bold">{activeMachine.dryWeightLbs.toLocaleString()} lbs</span></div>
+                <div><span className="text-muted block text-[10px]">GVWR</span><span className="font-bold">{activeMachine.gvwrLbs.toLocaleString()} lbs</span></div>
+                <div><span className="text-muted block text-[10px]">Payload</span><span className="font-bold">{activeMachine.payloadCapacityLbs} lbs</span></div>
+                <div><span className="text-muted block text-[10px]">Clearance</span><span className="font-bold">{activeMachine.groundClearanceIn}"</span></div>
+                <div><span className="text-muted block text-[10px]">HP</span><span className="font-bold">{activeMachine.horsePower}</span></div>
+                <div><span className="text-muted block text-[10px]">Fuel</span><span className="font-bold">{activeMachine.fuelCapacityGal} gal</span></div>
+                <div><span className="text-muted block text-[10px]">Width</span><span className="font-bold">{activeMachine.overallWidthIn}"</span></div>
+                <div><span className="text-muted block text-[10px]">Tow Rating</span><span className="font-bold">{activeMachine.towingCapacityLbs.toLocaleString()} lbs</span></div>
               </div>
             )}
           </div>
         </Section>
 
+        {/* ─── Section 2: Accessories ──────────────────────────────── */}
         <Section
           title="Accessories"
           icon={Settings2}
@@ -539,6 +601,7 @@ export default function RigRatedConfigurator() {
               />
             </div>
 
+            {/* Category filter */}
             <div className="flex flex-wrap gap-1.5">
               <button
                 onClick={() => setAccCategory("all")}
@@ -561,6 +624,7 @@ export default function RigRatedConfigurator() {
               ))}
             </div>
 
+            {/* Accessory checkboxes */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[400px] overflow-y-auto">
               {filteredAccessories.map((acc) => {
                 const isSelected = config.selectedAccessories.includes(acc.id);
@@ -575,7 +639,7 @@ export default function RigRatedConfigurator() {
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => toggleAccessory(acc.id)}
-                      className="w-4 h-4 accent-primary mt-0.5"
+                      className="w-4 h-4 accent-accent mt-0.5"
                     />
                     <div className="flex-1 min-w-0">
                       <span className="text-xs font-bold block truncate">{acc.brand} {acc.model}</span>
@@ -597,6 +661,7 @@ export default function RigRatedConfigurator() {
           </div>
         </Section>
 
+        {/* ─── Section 3: Occupants & Gear ────────────────────────── */}
         <Section
           title="Occupants & Gear"
           icon={Users}
@@ -651,6 +716,7 @@ export default function RigRatedConfigurator() {
           </div>
         </Section>
 
+        {/* ─── Section 4: Trail Compatibility ──────────────────────── */}
         <Section
           title="Trail Compatibility"
           icon={Route}
@@ -672,6 +738,7 @@ export default function RigRatedConfigurator() {
           </div>
         </Section>
 
+        {/* ─── Section 5: Legal & Permits ──────────────────────────── */}
         <Section
           title="Legal & Permits"
           icon={Shield}
@@ -700,6 +767,7 @@ export default function RigRatedConfigurator() {
           </div>
         </Section>
 
+        {/* ─── Section 6: Drive vs Trailer ─────────────────────────── */}
         <Section
           title="Drive vs. Trailer"
           icon={Fuel}
@@ -748,6 +816,7 @@ export default function RigRatedConfigurator() {
           </div>
         </Section>
 
+        {/* ─── Section 7: Trip Plan ────────────────────────────────── */}
         <Section
           title="Trip Plan"
           icon={FileText}
@@ -767,6 +836,7 @@ export default function RigRatedConfigurator() {
           </div>
         </Section>
 
+        {/* ─── Section 8: Results Dashboard ────────────────────────── */}
         <Section
           title="Results Dashboard"
           icon={Scale}
@@ -776,6 +846,7 @@ export default function RigRatedConfigurator() {
         >
           <div className="px-4 space-y-6">
 
+            {/* Gauges row */}
             <div className="flex flex-wrap justify-center gap-6">
               <GaugeArc
                 value={result.payload.payloadPct}
@@ -799,6 +870,7 @@ export default function RigRatedConfigurator() {
               />
             </div>
 
+            {/* Payload bar */}
             <div className="bg-card border border-border rounded-lg p-3 space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Payload Budget</span>
@@ -819,6 +891,7 @@ export default function RigRatedConfigurator() {
               </div>
             </div>
 
+            {/* Axle distribution */}
             <div className="bg-card border border-border rounded-lg p-3 space-y-2">
               <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Axle Distribution</span>
               <div className="flex items-center gap-2">
@@ -835,6 +908,7 @@ export default function RigRatedConfigurator() {
               </div>
             </div>
 
+            {/* Weight breakdown donut */}
             {result.weightBreakdown.length > 0 && (
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <DonutChart
@@ -847,6 +921,7 @@ export default function RigRatedConfigurator() {
               </div>
             )}
 
+            {/* 14-Day Certified Badge */}
             <div className={`border rounded-lg p-4 ${
               result.certifiedBadge.earned
                 ? "border-emerald-500/50 bg-emerald-500/5"
@@ -879,13 +954,118 @@ export default function RigRatedConfigurator() {
               </div>
             </div>
 
+            {/* Warnings */}
             <WarningsPanel warnings={result.warnings} />
 
+            {/* Stability note */}
             <p className="text-xs text-muted-foreground">{result.stabilityNote}</p>
           </div>
         </Section>
       </div>
 
+      {/* Request a Machine */}
+      <div className="bg-card border border-border rounded-2xl p-6 space-y-4 no-print">
+        <h3 className="text-sm font-extrabold flex items-center gap-2">
+          <Send className="w-4 h-4 text-primary" />
+          Request a Machine
+        </h3>
+        <p className="text-xs text-muted-foreground">
+          Don&apos;t see your UTV or side-by-side? Submit a request and we&apos;ll add it to the database.
+        </p>
+        {reqStatus === "sent" ? (
+          <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold">
+            Request submitted! We&apos;ll review it and add the machine.
+          </div>
+        ) : (
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (!reqForm.make || !reqForm.model || !reqForm.year) return;
+              setReqStatus("sending");
+              try {
+                const res = await fetch("/api/vehicle-requests", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ ...reqForm, source: "rigrated" }),
+                });
+                if (res.ok) {
+                  setReqStatus("sent");
+                  setReqForm({ make: "", model: "", year: "", trim: "", notes: "", email: "" });
+                } else {
+                  const data = await res.json();
+                  alert(data.error || "Something went wrong.");
+                  setReqStatus("idle");
+                }
+              } catch {
+                alert("Network error. Please try again.");
+                setReqStatus("idle");
+              }
+            }}
+            className="space-y-3"
+          >
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Make *</label>
+                <input
+                  type="text" required minLength={2} maxLength={50} placeholder="e.g. Polaris"
+                  value={reqForm.make} onChange={(e) => setReqForm((p) => ({ ...p, make: e.target.value }))}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model *</label>
+                <input
+                  type="text" required minLength={2} maxLength={80} placeholder="e.g. RZR XP 1000"
+                  value={reqForm.model} onChange={(e) => setReqForm((p) => ({ ...p, model: e.target.value }))}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Year *</label>
+                <input
+                  type="text" required minLength={4} maxLength={4} placeholder="e.g. 2025"
+                  value={reqForm.year} onChange={(e) => setReqForm((p) => ({ ...p, year: e.target.value.replace(/\D/g, "").slice(0, 4) }))}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Trim</label>
+                <input
+                  type="text" maxLength={80} placeholder="e.g. Sport, Premium"
+                  value={reqForm.trim} onChange={(e) => setReqForm((p) => ({ ...p, trim: e.target.value }))}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Email</label>
+                <input
+                  type="email" maxLength={120} placeholder="Optional — notify me when added"
+                  value={reqForm.email} onChange={(e) => setReqForm((p) => ({ ...p, email: e.target.value }))}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Notes</label>
+              <textarea
+                maxLength={200} rows={2} placeholder="Any details that would help us add this machine..."
+                value={reqForm.notes} onChange={(e) => setReqForm((p) => ({ ...p, notes: e.target.value }))}
+                className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors resize-none"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={reqStatus === "sending"}
+              className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg text-xs font-bold uppercase hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              <Send className="w-3.5 h-3.5" />
+              {reqStatus === "sending" ? "Submitting..." : "Submit Request"}
+            </button>
+          </form>
+        )}
+      </div>
+
+      {/* Footer */}
       <div className="space-y-4 no-print">
         <DataPrivacyNotice />
 
@@ -908,6 +1088,8 @@ export default function RigRatedConfigurator() {
     </div>
   );
 }
+
+// ─── Helper to get machine object for non-React contexts ─────────────
 
 function getMachineObj(config: RigRatedConfig) {
   if (config.useManual || !config.machine) return config.manualMachine;

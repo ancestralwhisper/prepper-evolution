@@ -1,3 +1,4 @@
+
 import type { BodyType } from "./vehicle-types";
 
 interface RigSafeSvgProps {
@@ -14,149 +15,183 @@ interface RigSafeSvgProps {
   vehicleHeightIn: number;
 }
 
+// ─── Side-profile SVG paths for 8 body types ────────────────────────
+// Viewbox: 0 0 420 200. Ground at y=178.
+// Trucks have cab + bed separation. SUVs have continuous roofline.
+// All paths include wheel-well arches.
+
 const BODY_PATHS: Record<BodyType, string> = {
   "crew-cab-short":
-    "M 50 160 L 50 110 L 55 105 L 60 85 Q 65 70 90 68 L 180 68 L 185 70 L 190 85 L 195 85 L 200 70 L 205 68 L 300 68 L 310 70 L 320 85 L 330 105 L 335 110 L 340 160 Z",
+    // Full-size crew cab, short bed (F-150, Sierra, Silverado)
+    // Front wheel 95, rear 290
+    "M 50 152 L 48 120 L 52 105 L 62 88 L 78 76 L 92 72 L 178 72 L 184 72 L 186 84 L 310 84 L 318 86 L 325 100 L 330 120 L 335 152 L 308 152 A 18 12 0 0 1 272 152 L 113 152 A 18 12 0 0 1 77 152 Z",
 
   "crew-cab-standard":
-    "M 45 160 L 45 110 L 50 105 L 55 85 Q 60 70 85 68 L 175 68 L 180 70 L 185 85 L 190 85 L 195 70 L 200 68 L 330 68 L 340 70 L 350 85 L 355 105 L 358 110 L 360 160 Z",
+    // Full-size crew cab, standard bed (Super Duty, HD)
+    // Front wheel 90, rear 300
+    "M 45 152 L 43 120 L 47 105 L 57 88 L 73 76 L 87 72 L 173 72 L 179 72 L 181 84 L 335 84 L 342 86 L 348 100 L 352 120 L 355 152 L 318 152 A 18 12 0 0 1 282 152 L 108 152 A 18 12 0 0 1 72 152 Z",
 
   "crew-cab-long":
-    "M 40 160 L 40 110 L 45 105 L 50 85 Q 55 70 80 68 L 165 68 L 170 70 L 175 85 L 180 85 L 185 70 L 190 68 L 345 68 L 355 70 L 360 85 L 365 105 L 368 110 L 370 160 Z",
+    // Crew cab, 8-foot bed (heavy duty)
+    // Front wheel 85, rear 310
+    "M 40 152 L 38 120 L 42 105 L 52 88 L 68 76 L 82 72 L 162 72 L 168 72 L 170 84 L 355 84 L 360 86 L 364 100 L 367 120 L 370 152 L 328 152 A 18 12 0 0 1 292 152 L 103 152 A 18 12 0 0 1 67 152 Z",
 
   "mid-truck":
-    "M 60 160 L 60 115 L 65 108 L 72 88 Q 78 72 100 70 L 178 70 L 183 72 L 188 88 L 193 88 L 198 72 L 203 70 L 295 70 L 305 72 L 312 88 L 318 108 L 322 115 L 325 160 Z",
+    // Mid-size truck (Tacoma, Ranger, Canyon, Gladiator)
+    // Front wheel 100, rear 280
+    "M 60 152 L 58 122 L 62 108 L 72 92 L 86 80 L 100 76 L 178 76 L 184 76 L 186 88 L 298 88 L 304 90 L 308 104 L 312 122 L 318 152 L 298 152 A 18 12 0 0 1 262 152 L 118 152 A 18 12 0 0 1 82 152 Z",
 
   "suv-5door":
-    "M 55 160 L 55 110 L 60 105 L 68 85 Q 74 70 95 68 L 175 68 L 185 66 Q 195 65 305 65 L 310 66 L 315 75 L 325 90 L 330 110 L 335 160 Z",
+    // Full-size 5-door SUV (4Runner, Tahoe, Expedition, Defender 110)
+    // Front wheel 100, rear 280 — continuous roofline
+    "M 55 152 L 52 118 L 56 102 L 66 86 L 82 76 L 96 72 L 175 72 Q 185 70 300 70 L 308 72 L 315 82 L 322 100 L 328 118 L 332 152 L 298 152 A 18 12 0 0 1 262 152 L 118 152 A 18 12 0 0 1 82 152 Z",
 
   "suv-3door":
-    "M 65 160 L 65 112 L 70 105 L 78 88 Q 84 72 105 70 L 180 70 L 190 68 Q 200 67 280 67 L 285 68 L 290 78 L 298 95 L 305 112 L 308 160 Z",
+    // Shorter SUV (Bronco, Wrangler 4-door, Defender 90)
+    // Front wheel 108, rear 268
+    "M 65 152 L 62 118 L 67 105 L 76 90 L 90 80 L 104 76 L 175 76 Q 185 74 265 74 L 272 76 L 278 88 L 286 105 L 290 118 L 295 152 L 286 152 A 18 12 0 0 1 250 152 L 126 152 A 18 12 0 0 1 90 152 Z",
 
   crossover:
-    "M 70 160 L 70 118 L 75 112 L 82 95 Q 88 80 108 78 L 175 78 L 185 76 Q 195 75 275 75 L 280 76 L 285 82 L 292 98 L 298 118 L 302 160 Z",
+    // Compact crossover (Outback, Forester, RAV4, Crosstrek)
+    // Front wheel 110, rear 268
+    "M 70 152 L 68 122 L 72 110 L 80 96 L 94 86 L 108 82 L 172 82 Q 182 80 268 80 L 274 82 L 280 92 L 286 108 L 290 122 L 294 152 L 282 152 A 14 10 0 0 1 254 152 L 124 152 A 14 10 0 0 1 96 152 Z",
 
   van:
-    "M 50 170 L 50 65 Q 52 50 65 48 L 135 48 L 145 50 L 150 60 L 155 75 L 340 75 L 345 78 L 350 85 L 352 170 Z",
+    // Cargo/camper van (Transit, Sprinter, Promaster)
+    // Front wheel 120, rear 310
+    "M 55 152 L 52 60 Q 55 48 70 46 L 140 46 L 148 48 L 155 62 L 160 80 L 345 80 L 348 82 L 350 90 L 352 152 L 328 152 A 18 12 0 0 1 292 152 L 138 152 A 18 12 0 0 1 102 152 Z",
 };
 
-function TonneauLayer() {
-  return (
-    <rect x={200} y={65} width={100} height={4} rx={1} fill="#8B7355" opacity={0.7}>
-      <title>Tonneau Cover</title>
-    </rect>
-  );
+// ─── Wheel positions ────────────────────────────────────────────────────
+
+function getWheels(bodyType: BodyType) {
+  switch (bodyType) {
+    case "crew-cab-short":    return { front: 95,  rear: 290, y: 162, r: 16 };
+    case "crew-cab-standard": return { front: 90,  rear: 300, y: 162, r: 16 };
+    case "crew-cab-long":     return { front: 85,  rear: 310, y: 162, r: 16 };
+    case "mid-truck":         return { front: 100, rear: 280, y: 162, r: 16 };
+    case "suv-5door":         return { front: 100, rear: 280, y: 162, r: 16 };
+    case "suv-3door":         return { front: 108, rear: 268, y: 162, r: 16 };
+    case "crossover":         return { front: 110, rear: 268, y: 164, r: 14 };
+    case "van":               return { front: 120, rear: 310, y: 162, r: 16 };
+  }
+}
+
+// ─── Body detail helpers ────────────────────────────────────────────────
+
+function getBedRange(bodyType: BodyType): { x: number; w: number } | null {
+  switch (bodyType) {
+    case "crew-cab-short":    return { x: 188, w: 120 };
+    case "crew-cab-standard": return { x: 183, w: 148 };
+    case "crew-cab-long":     return { x: 172, w: 180 };
+    case "mid-truck":         return { x: 188, w: 108 };
+    default: return null;
+  }
+}
+
+function getRoofRange(bodyType: BodyType): { x: number; w: number; y: number } {
+  const isTruck = bodyType.includes("cab") || bodyType === "mid-truck";
+  if (isTruck) {
+    const bed = getBedRange(bodyType)!;
+    return { x: bed.x, w: bed.w, y: 76 };
+  }
+  switch (bodyType) {
+    case "suv-5door":  return { x: 100, w: 200, y: 64 };
+    case "suv-3door":  return { x: 108, w: 155, y: 68 };
+    case "crossover":  return { x: 115, w: 150, y: 74 };
+    case "van":        return { x: 160, w: 180, y: 74 };
+    default:           return { x: 100, w: 200, y: 64 };
+  }
+}
+
+// ─── Layer components ───────────────────────────────────────────────────
+
+function TonneauLayer({ bodyType }: { bodyType: BodyType }) {
+  const bed = getBedRange(bodyType);
+  if (!bed) return null;
+  return <rect x={bed.x} y={82} width={bed.w} height={4} rx={1} fill="#8B7355" opacity={0.7}><title>Tonneau Cover</title></rect>;
 }
 
 function RackLayer({ bodyType }: { bodyType: BodyType }) {
+  const r = getRoofRange(bodyType);
   const isTruck = bodyType.includes("cab") || bodyType === "mid-truck";
-  const x = isTruck ? 195 : 100;
-  const w = isTruck ? 110 : 200;
-  const y = 58;
-
+  const y = isTruck ? 76 : r.y - 6;
   return (
     <g>
-      <rect x={x} y={y} width={w} height={3} rx={1} fill="#555" opacity={0.8}>
-        <title>Rack</title>
-      </rect>
-      <rect x={x + 5} y={y + 3} width={3} height={8} fill="#555" opacity={0.6} />
-      <rect x={x + w - 8} y={y + 3} width={3} height={8} fill="#555" opacity={0.6} />
+      <rect x={r.x} y={y} width={r.w} height={3} rx={1} fill="#555" opacity={0.8}><title>Rack</title></rect>
+      <rect x={r.x + 5} y={y + 3} width={3} height={8} fill="#555" opacity={0.6} />
+      <rect x={r.x + r.w - 8} y={y + 3} width={3} height={8} fill="#555" opacity={0.6} />
     </g>
   );
 }
 
 function TentLayer({ bodyType }: { bodyType: BodyType }) {
+  const r = getRoofRange(bodyType);
   const isTruck = bodyType.includes("cab") || bodyType === "mid-truck";
-  const x = isTruck ? 200 : 110;
-  const w = isTruck ? 98 : 180;
-
-  return (
-    <rect x={x} y={44} width={w} height={13} rx={3} fill="#C45D2C" opacity={0.8}>
-      <title>Rooftop Tent (closed)</title>
-    </rect>
-  );
+  const y = isTruck ? 62 : r.y - 20;
+  return <rect x={r.x + 5} y={y} width={r.w - 10} height={13} rx={3} fill="#C45D2C" opacity={0.8}><title>Rooftop Tent (closed)</title></rect>;
 }
 
-function AnnexLayer({ side }: { side: "driver" | "passenger" | "rear" }) {
+function AnnexLayer({ bodyType, side }: { bodyType: BodyType; side: string }) {
+  const r = getRoofRange(bodyType);
   return (
-    <rect
-      x={260}
-      y={58}
-      width={35}
-      height={95}
-      rx={2}
-      fill="none"
-      stroke="#C45D2C"
-      strokeWidth={1.5}
-      strokeDasharray="4 3"
-      opacity={0.5}
-    >
+    <rect x={r.x + r.w - 40} y={r.y - 10} width={35} height={95} rx={2}
+      fill="none" stroke="#C45D2C" strokeWidth={1.5} strokeDasharray="4 3" opacity={0.5}>
       <title>Annex ({side} side)</title>
     </rect>
   );
 }
 
-function AwningLayer({ side }: { side: "driver" | "passenger" | "rear" }) {
+function AwningLayer({ bodyType, side }: { bodyType: BodyType; side: string }) {
+  const isTruck = bodyType.includes("cab") || bodyType === "mid-truck";
+  const startX = isTruck ? 60 : 65;
+  const topY = isTruck ? 70 : 68;
   return (
     <g opacity={0.4}>
-      <path
-        d="M 100 62 L 100 145 L 40 145 Z"
-        fill="#10B981"
-        stroke="#10B981"
-        strokeWidth={1}
-      >
+      <path d={`M ${startX + 50} ${topY} L ${startX + 50} 148 L ${startX - 10} 148 Z`} fill="#10B981" stroke="#10B981" strokeWidth={1}>
         <title>Awning ({side} side)</title>
       </path>
-      <line x1={40} y1={145} x2={40} y2={160} stroke="#666" strokeWidth={2} />
+      <line x1={startX - 10} y1={148} x2={startX - 10} y2={162} stroke="#666" strokeWidth={2} />
     </g>
   );
 }
 
+// ─── Height dimension line ──────────────────────────────────────────────
+
 function HeightDimension({ totalHeightIn }: { totalHeightIn: number }) {
   return (
     <g>
-      <line x1={380} y1={40} x2={380} y2={160} stroke="var(--muted)" strokeWidth={1} strokeDasharray="3 2" />
-      <line x1={375} y1={40} x2={385} y2={40} stroke="var(--muted)" strokeWidth={1} />
-      <line x1={375} y1={160} x2={385} y2={160} stroke="var(--muted)" strokeWidth={1} />
-      <text
-        x={388}
-        y={100}
-        className="fill-muted-foreground"
-        style={{ fontSize: 10 }}
-        transform="rotate(90, 388, 100)"
-        textAnchor="middle"
-      >
+      <line x1={385} y1={40} x2={385} y2={162} stroke="var(--muted)" strokeWidth={1} strokeDasharray="3 2" />
+      <line x1={380} y1={40} x2={390} y2={40} stroke="var(--muted)" strokeWidth={1} />
+      <line x1={380} y1={162} x2={390} y2={162} stroke="var(--muted)" strokeWidth={1} />
+      <text x={393} y={101} className="fill-muted-foreground" style={{ fontSize: 10 }} transform="rotate(90, 393, 101)" textAnchor="middle">
         {totalHeightIn > 0 ? `${totalHeightIn}"` : ""}
       </text>
     </g>
   );
 }
 
+// ─── Main Component ────────────────────────────────────────────────────
+
 export default function RigSafeSvg({
-  bodyType,
-  showTonneau,
-  showRack,
-  showTent,
-  showAnnex,
-  showAwning,
-  awningSide,
-  annexSide,
-  loadStatus,
-  totalHeightIn,
+  bodyType, showTonneau, showRack, showTent, showAnnex, showAwning,
+  awningSide, annexSide, loadStatus, totalHeightIn,
 }: RigSafeSvgProps) {
   const bodyPath = BODY_PATHS[bodyType] || BODY_PATHS["crew-cab-short"];
+  const wheels = getWheels(bodyType);
+  const isTruck = bodyType.includes("cab") || bodyType === "mid-truck";
+  const isVan = bodyType === "van";
 
   const statusColor =
     loadStatus === "red" ? "#EF4444" :
     loadStatus === "yellow" ? "#EAB308" :
     "#10B981";
 
-  const isTruck = bodyType.includes("cab") || bodyType === "mid-truck";
-  const isVan = bodyType === "van";
-  const wheelY = 160;
-  const frontWheelX = isVan ? 120 : isTruck ? 95 : 110;
-  const rearWheelX = isVan ? 310 : isTruck ? 290 : 270;
-  const wheelR = isVan ? 18 : 16;
+  // Headlight / taillight positions
+  const hlX = isVan ? 58 : isTruck ? 52 : 58;
+  const hlY = isVan ? 65 : 108;
+  const tlX = isVan ? 350 : isTruck ? (bodyType === "crew-cab-long" ? 366 : bodyType === "crew-cab-standard" ? 352 : 332) : bodyType === "suv-5door" ? 328 : bodyType === "suv-3door" ? 290 : bodyType === "crossover" ? 290 : 350;
+  const tlY = isVan ? 88 : 108;
 
   return (
     <div className="bg-muted border border-border rounded-lg p-4">
@@ -165,60 +200,72 @@ export default function RigSafeSvg({
           Rig Visualization
         </span>
         <div className="flex items-center gap-1.5">
-          <span
-            className="w-2.5 h-2.5 rounded-full"
-            style={{ backgroundColor: statusColor }}
-          />
+          <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: statusColor }} />
           <span className="text-[10px] font-bold text-muted-foreground uppercase">
             {loadStatus === "red" ? "Over Limit" : loadStatus === "yellow" ? "Caution" : "Good"}
           </span>
         </div>
       </div>
 
-      <svg
-        viewBox="0 0 420 200"
-        className="w-full max-w-lg mx-auto"
-        role="img"
-        aria-label={`${bodyType} vehicle with ${showTent ? "rooftop tent" : "no tent"}`}
-      >
-        <line x1={20} y1={178} x2={370} y2={178} stroke="var(--border)" strokeWidth={1} />
+      <svg viewBox="0 0 420 200" className="w-full max-w-lg mx-auto" role="img"
+        aria-label={`${bodyType} vehicle with ${showTent ? "rooftop tent" : "no tent"}`}>
 
-        {showAwning && <AwningLayer side={awningSide} />}
+        {/* Ground line */}
+        <line x1={20} y1={178} x2={400} y2={178} stroke="var(--border)" strokeWidth={1} />
 
-        <path
-          d={bodyPath}
-          fill="var(--card)"
-          stroke={statusColor}
-          strokeWidth={2.5}
-          className="transition-colors duration-500"
-        />
+        {/* Awning (behind body) */}
+        {showAwning && <AwningLayer bodyType={bodyType} side={awningSide} />}
 
-        <circle cx={frontWheelX} cy={wheelY} r={wheelR} fill="#333" stroke="#555" strokeWidth={2} />
-        <circle cx={frontWheelX} cy={wheelY} r={wheelR * 0.45} fill="#555" />
-        <circle cx={rearWheelX} cy={wheelY} r={wheelR} fill="#333" stroke="#555" strokeWidth={2} />
-        <circle cx={rearWheelX} cy={wheelY} r={wheelR * 0.45} fill="#555" />
+        {/* Vehicle body */}
+        <path d={bodyPath} fill="var(--card)" stroke={statusColor} strokeWidth={2.5} className="transition-colors duration-500" />
 
+        {/* Headlight + taillight */}
+        <circle cx={hlX} cy={hlY} r={3} fill="#FFE066" opacity={0.6} />
+        <circle cx={tlX} cy={tlY} r={3} fill="#EF4444" opacity={0.5} />
+
+        {/* Bed floor line (trucks only) */}
+        {isTruck && (() => {
+          const bed = getBedRange(bodyType);
+          return bed ? <line x1={bed.x} y1={135} x2={bed.x + bed.w - 5} y2={135} stroke="var(--border)" strokeWidth={1} opacity={0.3} /> : null;
+        })()}
+
+        {/* Wheels */}
+        {[wheels.front, wheels.rear].map((cx, i) => (
+          <g key={i}>
+            <circle cx={cx} cy={wheels.y} r={wheels.r} fill="#222" stroke="#444" strokeWidth={2.5} />
+            <circle cx={cx} cy={wheels.y} r={wheels.r - 3} fill="none" stroke="#333" strokeWidth={1} />
+            <circle cx={cx} cy={wheels.y} r={wheels.r * 0.35} fill="#555" stroke="#666" strokeWidth={1} />
+          </g>
+        ))}
+
+        {/* Windows */}
         {!isVan && (
           <path
             d={isTruck
-              ? "M 72 88 Q 78 74 98 72 L 175 72 L 180 88 Z"
-              : "M 78 88 Q 84 74 105 72 L 270 72 L 275 74 L 280 88 Z"}
-            fill="var(--muted)"
-            opacity={0.4}
+              ? "M 66 98 Q 76 80 96 76 L 174 74 L 178 82 Z"
+              : bodyType === "suv-5door"
+              ? "M 66 98 Q 76 80 96 76 L 280 72 L 300 74 L 308 80 Z"
+              : bodyType === "suv-3door"
+              ? "M 76 100 Q 84 84 104 80 L 240 76 L 258 78 L 268 86 Z"
+              : "M 80 104 Q 88 92 108 86 L 240 82 L 258 84 L 268 90 Z"}
+            fill="var(--muted)" opacity={0.4}
           />
         )}
-        {isVan && (
-          <rect x={60} y={52} width={70} height={20} rx={3} fill="var(--muted)" opacity={0.4} />
-        )}
+        {isVan && <rect x={60} y={50} width={75} height={22} rx={3} fill="var(--muted)" opacity={0.4} />}
 
-        {showTonneau && isTruck && <TonneauLayer />}
+        {/* Tonneau */}
+        {showTonneau && <TonneauLayer bodyType={bodyType} />}
 
+        {/* Rack */}
         {showRack && <RackLayer bodyType={bodyType} />}
 
+        {/* Tent */}
         {showTent && <TentLayer bodyType={bodyType} />}
 
-        {showAnnex && <AnnexLayer side={annexSide} />}
+        {/* Annex */}
+        {showAnnex && <AnnexLayer bodyType={bodyType} side={annexSide} />}
 
+        {/* Height dimension */}
         {(showRack || showTent) && <HeightDimension totalHeightIn={totalHeightIn} />}
       </svg>
     </div>

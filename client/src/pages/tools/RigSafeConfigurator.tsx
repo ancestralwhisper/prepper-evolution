@@ -1,8 +1,9 @@
+
 import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Truck, ChevronDown, ChevronRight, AlertTriangle, Info,
   ShieldAlert, Tent, Wind, Package, Users, Bed, Ruler,
-  Plus, Trash2, Save, RotateCcw, ExternalLink, Download,
+  Plus, Trash2, Save, RotateCcw, ExternalLink, Download, Send,
 } from "lucide-react";
 import {
   getUniqueMakes, getModelsForMake, getTrimsForModel, findVehicle,
@@ -30,6 +31,8 @@ import PrintQrCode from "@/components/tools/PrintQrCode";
 import InstallButton from "@/components/tools/InstallButton";
 import { generateRigSafePdf, type RigSafePdfData } from "@/components/tools/PdfExport";
 
+// ─── SVG Gauge Component ─────────────────────────────────────────────
+
 function GaugeArc({
   value, max, label, unit, size = 120, warningThreshold, dangerThreshold,
 }: {
@@ -55,7 +58,7 @@ function GaugeArc({
   const valSweep = sweepAngle * pct;
   const valLargeArc = valSweep > 180 ? 1 : 0;
 
-  let fillColor = "#10B981";
+  let fillColor = "#10B981"; // green
   const pctNum = pct * 100;
   if (dangerThreshold !== undefined && pctNum >= dangerThreshold) fillColor = "#EF4444";
   else if (warningThreshold !== undefined && pctNum >= warningThreshold) fillColor = "#EAB308";
@@ -88,6 +91,8 @@ function GaugeArc({
   );
 }
 
+// ─── Collapsible Section ─────────────────────────────────────────────
+
 function Section({
   title, icon: Icon, children, open, onToggle, iconColor, badge,
 }: {
@@ -113,6 +118,8 @@ function Section({
     </div>
   );
 }
+
+// ─── Input Helpers ───────────────────────────────────────────────────
 
 function NumberInput({
   label, value, onChange, min, max, step, unit, hint,
@@ -186,6 +193,8 @@ function Toggle({
   );
 }
 
+// ─── Status Badge ────────────────────────────────────────────────────
+
 function StatusBadge({ pct }: { pct: number }) {
   let color = "bg-green-500/10 text-green-500 border-green-500/30";
   let text = "Good";
@@ -199,6 +208,8 @@ function StatusBadge({ pct }: { pct: number }) {
     </span>
   );
 }
+
+// ─── Warning Panel ──────────────────────────────────────────────────
 
 function WarningsPanel({ warnings }: { warnings: RigSafeWarning[] }) {
   if (warnings.length === 0) return null;
@@ -220,6 +231,8 @@ function WarningsPanel({ warnings }: { warnings: RigSafeWarning[] }) {
     </div>
   );
 }
+
+// ─── Budget Card ─────────────────────────────────────────────────────
 
 function BudgetCard({ label, used, rating, remaining, pct, unit }: {
   label: string; used: number; rating: number; remaining: number; pct: number; unit?: string;
@@ -250,10 +263,14 @@ function BudgetCard({ label, used, rating, remaining, pct, unit }: {
   );
 }
 
+// ─── Main Component ────────────────────────────────────────────────
+
 export default function RigSafeConfigurator() {
+  // ─── State ─────────────────────────────────────────────────────
   const [config, setConfig] = useState<RigSafeConfig>(defaultRigSafeConfig);
   const [loaded, setLoaded] = useState(false);
 
+  // Section open state
   const [sections, setSections] = useState({
     vehicle: true,
     mounting: false,
@@ -264,18 +281,32 @@ export default function RigSafeConfigurator() {
     results: true,
   });
 
+  // Vehicle selector state
   const [selMake, setSelMake] = useState("");
   const [selModel, setSelModel] = useState("");
   const [selTrim, setSelTrim] = useState("");
 
+  // Rack selector state
   const [selRackBrand, setSelRackBrand] = useState("");
+
+  // Tent selector state
   const [selTentBrand, setSelTentBrand] = useState("");
+
+  // Awning selector state
   const [selAwningBrand, setSelAwningBrand] = useState("");
+
+  // Tonneau selector state
   const [selTonneauBrand, setSelTonneauBrand] = useState("");
 
+  // Profile import banner
   const [profileAvailable, setProfileAvailable] = useState(false);
   const [profileImported, setProfileImported] = useState(false);
 
+  // Request form state
+  const [reqForm, setReqForm] = useState({ make: "", model: "", year: "", trim: "", bodyType: "", notes: "", email: "" });
+  const [reqStatus, setReqStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  // ─── Load from localStorage ──────────────────────────────────────
   useEffect(() => {
     try {
       const saved = localStorage.getItem(RIGSAFE_KEY);
@@ -285,6 +316,7 @@ export default function RigSafeConfigurator() {
       }
     } catch { /* ignore */ }
 
+    // Check for vehicle profile
     try {
       const vp = localStorage.getItem(VEHICLE_PROFILE_KEY);
       if (vp) setProfileAvailable(true);
@@ -293,6 +325,7 @@ export default function RigSafeConfigurator() {
     setLoaded(true);
   }, []);
 
+  // ─── Save to localStorage ──────────────────────────────────────
   useEffect(() => {
     if (!loaded) return;
     try {
@@ -300,11 +333,13 @@ export default function RigSafeConfigurator() {
     } catch { /* ignore */ }
   }, [config, loaded]);
 
+  // ─── Import from Vehicle Profile ─────────────────────────────
   const importFromProfile = useCallback(() => {
     try {
       const raw = localStorage.getItem(VEHICLE_PROFILE_KEY);
       if (!raw) return;
       const vp = JSON.parse(raw);
+      // Find matching stock vehicle
       const stock = findVehicle(vp.make, vp.model, `${vp.year} ${vp.trim}`);
       if (stock) {
         setConfig((prev) => ({
@@ -345,6 +380,7 @@ export default function RigSafeConfigurator() {
     } catch { /* ignore */ }
   }, []);
 
+  // ─── Update config helper ──────────────────────────────────────
   const update = useCallback(<K extends keyof RigSafeConfig>(key: K, value: RigSafeConfig[K]) => {
     setConfig((prev) => ({ ...prev, [key]: value }));
   }, []);
@@ -384,6 +420,7 @@ export default function RigSafeConfigurator() {
     }));
   }, []);
 
+  // ─── Cargo items ──────────────────────────────────────────────
   const addCargoItem = useCallback(() => {
     setConfig((prev) => ({
       ...prev,
@@ -410,6 +447,7 @@ export default function RigSafeConfigurator() {
     }));
   }, []);
 
+  // ─── Vehicle selection ────────────────────────────────────────
   const handleMakeChange = useCallback((make: string) => {
     setSelMake(make);
     setSelModel("");
@@ -430,13 +468,16 @@ export default function RigSafeConfigurator() {
     if (stock) {
       update("vehicle", stock);
       update("useManual", false);
+      // Default mount type based on body type
       const isTruck = stock.bodyType.includes("cab") || stock.bodyType === "mid-truck";
       update("mountType", isTruck ? "bed-rack" : "roof-rack");
     }
   }, [selMake, selModel, update]);
 
+  // ─── Computed results ──────────────────────────────────────────
   const result = useMemo<RigSafeResult>(() => computeAll(config), [config]);
 
+  // ─── Derived values ──────────────────────────────────────────
   const activeVehicle = config.useManual ? config.manualVehicle : config.vehicle;
   const bodyType: BodyType = activeVehicle
     ? ("bodyType" in activeVehicle ? activeVehicle.bodyType : "crew-cab-short")
@@ -447,10 +488,12 @@ export default function RigSafeConfigurator() {
     result.safetyMarginStatus === "over-limit" ? "red" :
     result.safetyMarginStatus === "margin-warning" ? "yellow" : "green";
 
+  // ─── Toggle section ──────────────────────────────────────────
   const toggleSection = useCallback((key: keyof typeof sections) => {
     setSections((prev) => ({ ...prev, [key]: !prev[key] }));
   }, []);
 
+  // ─── Reset ────────────────────────────────────────────────────
   const resetAll = useCallback(() => {
     setConfig(defaultRigSafeConfig);
     setSelMake("");
@@ -466,6 +509,7 @@ export default function RigSafeConfigurator() {
 
   if (!loaded) return null;
 
+  // ─── Dropdown data ───────────────────────────────────────────
   const makes = getUniqueMakes();
   const models = selMake ? getModelsForMake(selMake) : [];
   const trims = selMake && selModel ? getTrimsForModel(selMake, selModel) : [];
@@ -485,8 +529,10 @@ export default function RigSafeConfigurator() {
 
   return (
     <div className="space-y-6">
+      {/* Safety Disclaimer */}
       <ToolSafetyDisclaimer level="safety-critical" />
 
+      {/* Vehicle Profile Import Banner */}
       {profileAvailable && !profileImported && (
         <div className="bg-primary/5 border border-primary/30 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
           <Truck className="w-5 h-5 text-primary flex-shrink-0" />
@@ -503,8 +549,10 @@ export default function RigSafeConfigurator() {
         </div>
       )}
 
+      {/* Main config card */}
       <div className="bg-card border border-border rounded-lg overflow-hidden">
 
+        {/* ─── Section 1: Vehicle Setup ─────────────────────────── */}
         <Section
           title="Vehicle Setup"
           icon={Truck}
@@ -522,6 +570,7 @@ export default function RigSafeConfigurator() {
 
             {!config.useManual ? (
               <>
+                {/* Make/Model/Trim dropdowns */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
                     <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Make</label>
@@ -563,39 +612,40 @@ export default function RigSafeConfigurator() {
                 {config.vehicle && (
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted-foreground block text-[10px] uppercase">Curb Weight</span>
+                      <span className="text-muted block text-[10px] uppercase">Curb Weight</span>
                       <span className="font-bold">{config.vehicle.curbWeightLbs.toLocaleString()} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted-foreground block text-[10px] uppercase">GVWR</span>
+                      <span className="text-muted block text-[10px] uppercase">GVWR</span>
                       <span className="font-bold">{config.vehicle.gvwrLbs.toLocaleString()} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted-foreground block text-[10px] uppercase">Payload</span>
+                      <span className="text-muted block text-[10px] uppercase">Payload</span>
                       <span className="font-bold">{(config.vehicle.gvwrLbs - config.vehicle.curbWeightLbs).toLocaleString()} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted-foreground block text-[10px] uppercase">Roof Dynamic</span>
+                      <span className="text-muted block text-[10px] uppercase">Roof Dynamic</span>
                       <span className="font-bold">{config.vehicle.roofDynamicLbs} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted-foreground block text-[10px] uppercase">Height</span>
+                      <span className="text-muted block text-[10px] uppercase">Height</span>
                       <span className="font-bold">{config.vehicle.overallHeightIn}&quot;</span>
                     </div>
                     {config.vehicle.bedLengthIn && (
                       <div className="bg-muted rounded-lg p-2">
-                        <span className="text-muted-foreground block text-[10px] uppercase">Bed Length</span>
+                        <span className="text-muted block text-[10px] uppercase">Bed Length</span>
                         <span className="font-bold">{config.vehicle.bedLengthIn}&quot;</span>
                       </div>
                     )}
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted-foreground block text-[10px] uppercase">Body Type</span>
+                      <span className="text-muted block text-[10px] uppercase">Body Type</span>
                       <span className="font-bold">{config.vehicle.bodyType}</span>
                     </div>
                   </div>
                 )}
               </>
             ) : (
+              /* Manual entry fields */
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 <NumberInput label="Year" value={config.manualVehicle.year} onChange={(v) => updateManualVehicle("year", v)} min={1990} max={2030} />
                 <div>
@@ -652,6 +702,7 @@ export default function RigSafeConfigurator() {
           </div>
         </Section>
 
+        {/* ─── Section 2: Mounting Configuration ────────────────── */}
         <Section
           title="Mounting Configuration"
           icon={Package}
@@ -660,6 +711,7 @@ export default function RigSafeConfigurator() {
           badge={config.rack ? `${config.rack.brand} ${config.rack.model}` : undefined}
         >
           <div className="px-4 space-y-4">
+            {/* Mount type */}
             <SelectInput
               label="Mount Type"
               value={config.mountType}
@@ -671,6 +723,7 @@ export default function RigSafeConfigurator() {
               ]}
             />
 
+            {/* Tonneau (trucks only) */}
             {isTruck && (
               <div className="space-y-3">
                 <Toggle
@@ -728,6 +781,7 @@ export default function RigSafeConfigurator() {
               </div>
             )}
 
+            {/* Rack selector */}
             <div className="space-y-3">
               <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Rack</h4>
               <Toggle
@@ -777,27 +831,29 @@ export default function RigSafeConfigurator() {
                 </div>
               )}
 
+              {/* Rack details (when selected from DB) */}
               {config.rack && !config.useManualRack && (
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted-foreground block text-[10px] uppercase">Static</span>
+                      <span className="text-muted block text-[10px] uppercase">Static</span>
                       <span className="font-bold">{config.rack.staticLbs} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted-foreground block text-[10px] uppercase">On-Road</span>
+                      <span className="text-muted block text-[10px] uppercase">On-Road</span>
                       <span className="font-bold">{config.rack.onRoadDynamicLbs} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted-foreground block text-[10px] uppercase">Off-Road</span>
+                      <span className="text-muted block text-[10px] uppercase">Off-Road</span>
                       <span className="font-bold">{config.rack.offRoadDynamicLbs} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted-foreground block text-[10px] uppercase">Weight</span>
+                      <span className="text-muted block text-[10px] uppercase">Weight</span>
                       <span className="font-bold">{config.rack.weightLbs} lbs</span>
                     </div>
                   </div>
 
+                  {/* Height setting selector */}
                   {config.rack.heightSettings && config.rack.heightSettings.length > 1 && (
                     <SelectInput
                       label="Height Setting"
@@ -821,6 +877,7 @@ export default function RigSafeConfigurator() {
           </div>
         </Section>
 
+        {/* ─── Section 3: Rooftop Tent ────────────────────────── */}
         <Section
           title="Rooftop Tent"
           icon={Tent}
@@ -884,19 +941,19 @@ export default function RigSafeConfigurator() {
                       <div className="space-y-3">
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                           <div className="bg-muted rounded-lg p-2">
-                            <span className="text-muted-foreground block text-[10px] uppercase">Weight</span>
+                            <span className="text-muted block text-[10px] uppercase">Weight</span>
                             <span className="font-bold">{config.tent.closedWeightLbs} lbs</span>
                           </div>
                           <div className="bg-muted rounded-lg p-2">
-                            <span className="text-muted-foreground block text-[10px] uppercase">Closed Height</span>
+                            <span className="text-muted block text-[10px] uppercase">Closed Height</span>
                             <span className="font-bold">{config.tent.closedHeightIn}&quot;</span>
                           </div>
                           <div className="bg-muted rounded-lg p-2">
-                            <span className="text-muted-foreground block text-[10px] uppercase">Marketing Sleeps</span>
+                            <span className="text-muted block text-[10px] uppercase">Marketing Sleeps</span>
                             <span className="font-bold">{config.tent.sleepsMarketing}</span>
                           </div>
                           <div className="bg-muted rounded-lg p-2">
-                            <span className="text-muted-foreground block text-[10px] uppercase">Realistic Sleeps</span>
+                            <span className="text-muted block text-[10px] uppercase">Realistic Sleeps</span>
                             <span className="font-bold text-primary">{config.tent.sleepsRealistic}</span>
                           </div>
                         </div>
@@ -928,6 +985,7 @@ export default function RigSafeConfigurator() {
                   </div>
                 )}
 
+                {/* Annex */}
                 {config.hasTent && (config.tent?.hasAnnex || config.useManualTent) && (
                   <div className="border-t border-border pt-4 space-y-3">
                     <Toggle
@@ -959,6 +1017,7 @@ export default function RigSafeConfigurator() {
           </div>
         </Section>
 
+        {/* ─── Section 4: Awning & Shelter ────────────────────── */}
         <Section
           title="Awning & Shelter"
           icon={Wind}
@@ -1017,15 +1076,15 @@ export default function RigSafeConfigurator() {
                     {config.awning && (
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                         <div className="bg-muted rounded-lg p-2">
-                          <span className="text-muted-foreground block text-[10px] uppercase">Total Weight</span>
+                          <span className="text-muted block text-[10px] uppercase">Total Weight</span>
                           <span className="font-bold">{config.awning.totalWeightLbs} lbs</span>
                         </div>
                         <div className="bg-muted rounded-lg p-2">
-                          <span className="text-muted-foreground block text-[10px] uppercase">Bracket Weight</span>
+                          <span className="text-muted block text-[10px] uppercase">Bracket Weight</span>
                           <span className="font-bold">{config.awning.mountedBracketWeightLbs} lbs</span>
                         </div>
                         <div className="bg-muted rounded-lg p-2">
-                          <span className="text-muted-foreground block text-[10px] uppercase">Coverage</span>
+                          <span className="text-muted block text-[10px] uppercase">Coverage</span>
                           <span className="font-bold">{config.awning.deployedCoverageSqFt} sq ft</span>
                         </div>
                       </div>
@@ -1051,6 +1110,7 @@ export default function RigSafeConfigurator() {
 
                 <p className="text-[10px] text-muted-foreground italic">Most awning weight transfers to ground poles when deployed. Only bracket weight (~10-15 lbs) stays on rack.</p>
 
+                {/* Wall Kit */}
                 {config.awning?.hasWallKit !== false && (
                   <div className="border-t border-border pt-4 space-y-3">
                     <Toggle
@@ -1072,6 +1132,7 @@ export default function RigSafeConfigurator() {
           </div>
         </Section>
 
+        {/* ─── Section 5: Additional Load ─────────────────────── */}
         <Section
           title="Cargo & Occupants"
           icon={Users}
@@ -1079,6 +1140,7 @@ export default function RigSafeConfigurator() {
           onToggle={() => toggleSection("cargo")}
         >
           <div className="px-4 space-y-6">
+            {/* Cargo Items */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Rack Cargo</h4>
@@ -1130,6 +1192,7 @@ export default function RigSafeConfigurator() {
               ))}
             </div>
 
+            {/* Occupants */}
             <div className="border-t border-border pt-4 space-y-3">
               <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Occupants</h4>
               <p className="text-[10px] text-muted-foreground">Occupant weight counts against rack static budget (sleeping) and vehicle payload (always).</p>
@@ -1141,6 +1204,7 @@ export default function RigSafeConfigurator() {
               </div>
             </div>
 
+            {/* Bedding */}
             <div className="border-t border-border pt-4 space-y-3">
               <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Bedding (in tent)</h4>
               <SelectInput
@@ -1158,6 +1222,7 @@ export default function RigSafeConfigurator() {
               )}
             </div>
 
+            {/* Garage & misc */}
             <div className="border-t border-border pt-4 space-y-3">
               <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Other</h4>
               <div className="grid grid-cols-2 gap-3">
@@ -1168,6 +1233,7 @@ export default function RigSafeConfigurator() {
           </div>
         </Section>
 
+        {/* ─── Section 6: Results Dashboard ───────────────────── */}
         <Section
           title="Results Dashboard"
           icon={Ruler}
@@ -1176,6 +1242,7 @@ export default function RigSafeConfigurator() {
           iconColor={overallLoadStatus === "red" ? "text-red-500" : overallLoadStatus === "yellow" ? "text-yellow-500" : "text-green-500"}
         >
           <div className="px-4 space-y-6">
+            {/* Safety margin reminder */}
             {result.safetyMarginStatus === "margin-warning" && (
               <div className="bg-yellow-500/5 border border-yellow-500/30 rounded-lg p-3 flex gap-2">
                 <AlertTriangle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
@@ -1193,6 +1260,7 @@ export default function RigSafeConfigurator() {
               </div>
             )}
 
+            {/* Three primary gauges */}
             <div>
               <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-3">Rack Load Budgets</h4>
               <div className="grid grid-cols-3 gap-2">
@@ -1229,6 +1297,7 @@ export default function RigSafeConfigurator() {
               </p>
             </div>
 
+            {/* Budget detail cards */}
             <div className="space-y-3">
               <BudgetCard label="Static (Sleeping)" {...result.rackStatic} />
               <BudgetCard label="On-Road Dynamic (Highway)" {...result.rackOnRoad} />
@@ -1236,21 +1305,22 @@ export default function RigSafeConfigurator() {
               <BudgetCard label="Vehicle Payload (GVWR)" {...result.vehiclePayload} />
             </div>
 
+            {/* Weakest Link */}
             <div className="bg-card border border-border rounded-lg p-4 space-y-2">
               <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Weakest Link Analysis</h4>
               <div className="grid grid-cols-3 gap-3 text-xs">
                 <div>
-                  <span className="text-muted-foreground block text-[10px] uppercase">Static Limit</span>
+                  <span className="text-muted block text-[10px] uppercase">Static Limit</span>
                   <span className="font-bold">{result.weakestLink.staticLimit} lbs</span>
                   <span className="block text-[10px] text-muted-foreground">({result.weakestLink.staticBottleneck})</span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground block text-[10px] uppercase">Dynamic Limit</span>
+                  <span className="text-muted block text-[10px] uppercase">Dynamic Limit</span>
                   <span className="font-bold">{result.weakestLink.dynamicLimit} lbs</span>
                   <span className="block text-[10px] text-muted-foreground">({result.weakestLink.dynamicBottleneck})</span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground block text-[10px] uppercase">Off-Road Limit</span>
+                  <span className="text-muted block text-[10px] uppercase">Off-Road Limit</span>
                   <span className="font-bold">{result.weakestLink.offRoadLimit} lbs</span>
                   <span className="block text-[10px] text-muted-foreground">({result.weakestLink.offRoadBottleneck})</span>
                 </div>
@@ -1258,6 +1328,7 @@ export default function RigSafeConfigurator() {
               <p className="text-[10px] text-muted-foreground italic">The lower rating between rack and vehicle roof is the effective limit.</p>
             </div>
 
+            {/* Garage Clearance */}
             <div className="flex items-center gap-4 bg-card border border-border rounded-lg p-4">
               <div className="flex-1">
                 <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Garage Clearance</h4>
@@ -1273,26 +1344,27 @@ export default function RigSafeConfigurator() {
               </span>
             </div>
 
+            {/* Sleeping Capacity */}
             <div className="bg-card border border-border rounded-lg p-4 space-y-2">
               <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Sleeping Capacity</h4>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 <div>
-                  <span className="text-muted-foreground block text-[10px] uppercase">Tent (Comfort)</span>
+                  <span className="text-muted block text-[10px] uppercase">Tent (Comfort)</span>
                   <span className="text-xl font-extrabold text-primary">{result.sleepingCapacity.tentComfort}</span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground block text-[10px] uppercase">Tent (Tight)</span>
+                  <span className="text-muted block text-[10px] uppercase">Tent (Tight)</span>
                   <span className="text-xl font-extrabold">{result.sleepingCapacity.tentTight}</span>
                 </div>
                 {result.sleepingCapacity.annexSleeps > 0 && (
                   <div>
-                    <span className="text-muted-foreground block text-[10px] uppercase">Annex</span>
+                    <span className="text-muted block text-[10px] uppercase">Annex</span>
                     <span className="text-xl font-extrabold">{result.sleepingCapacity.annexSleeps}</span>
                   </div>
                 )}
                 {result.sleepingCapacity.wallKitSleeps > 0 && (
                   <div>
-                    <span className="text-muted-foreground block text-[10px] uppercase">Wall Kit</span>
+                    <span className="text-muted block text-[10px] uppercase">Wall Kit</span>
                     <span className="text-xl font-extrabold">{result.sleepingCapacity.wallKitSleeps}</span>
                   </div>
                 )}
@@ -1300,6 +1372,7 @@ export default function RigSafeConfigurator() {
               <p className="text-xs font-bold">Total rig sleeping capacity: {result.sleepingCapacity.total}</p>
             </div>
 
+            {/* CG Impact */}
             {result.cgRaiseIn > 0 && (
               <div className="bg-card border border-border rounded-lg p-4">
                 <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Center of Gravity Impact</h4>
@@ -1308,6 +1381,7 @@ export default function RigSafeConfigurator() {
               </div>
             )}
 
+            {/* Bed Fitment (trucks) */}
             {!result.bedFitmentOk && (
               <div className="bg-yellow-500/5 border border-yellow-500/30 rounded-lg p-4">
                 <h4 className="text-[10px] font-bold uppercase tracking-wide text-yellow-500 mb-1">Bed Fitment</h4>
@@ -1315,6 +1389,7 @@ export default function RigSafeConfigurator() {
               </div>
             )}
 
+            {/* Weight Breakdown Donut */}
             {result.weightBreakdown.length > 0 && (
               <div className="bg-card border border-border rounded-lg p-4">
                 <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-3">Weight Breakdown</h4>
@@ -1330,6 +1405,7 @@ export default function RigSafeConfigurator() {
               </div>
             )}
 
+            {/* SVG Visualization */}
             <RigSafeSvg
               bodyType={bodyType}
               showTonneau={config.hasTonneau}
@@ -1344,6 +1420,7 @@ export default function RigSafeConfigurator() {
               vehicleHeightIn={activeVehicle?.overallHeightIn ?? 76}
             />
 
+            {/* Warnings */}
             {result.warnings.length > 0 && (
               <div>
                 <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">Warnings & Notes</h4>
@@ -1351,6 +1428,7 @@ export default function RigSafeConfigurator() {
               </div>
             )}
 
+            {/* Product Recommendations */}
             {(config.rack || config.tent || config.awning) && (
               <div className="bg-card border border-border rounded-lg p-4 space-y-3">
                 <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Product Links</h4>
@@ -1402,6 +1480,7 @@ export default function RigSafeConfigurator() {
         </Section>
       </div>
 
+      {/* Export & Reset */}
       <div className="flex justify-center gap-6">
         <button
           onClick={() => {
@@ -1446,6 +1525,126 @@ export default function RigSafeConfigurator() {
         </button>
       </div>
 
+      {/* Request a Vehicle */}
+      <div className="bg-card border border-border rounded-2xl p-6 space-y-4 no-print">
+        <h3 className="text-sm font-extrabold flex items-center gap-2">
+          <Send className="w-4 h-4 text-primary" />
+          Request a Vehicle
+        </h3>
+        <p className="text-xs text-muted-foreground">
+          Don&apos;t see your vehicle? Submit a request and we&apos;ll add it to the database.
+        </p>
+        {reqStatus === "sent" ? (
+          <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold">
+            Request submitted! We&apos;ll review it and add the vehicle.
+          </div>
+        ) : (
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (!reqForm.make || !reqForm.model || !reqForm.year) return;
+              setReqStatus("sending");
+              try {
+                const res = await fetch("/api/vehicle-requests", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ ...reqForm, source: "rigsafe" }),
+                });
+                if (res.ok) {
+                  setReqStatus("sent");
+                  setReqForm({ make: "", model: "", year: "", trim: "", bodyType: "", notes: "", email: "" });
+                } else {
+                  const data = await res.json();
+                  alert(data.error || "Something went wrong.");
+                  setReqStatus("idle");
+                }
+              } catch {
+                alert("Network error. Please try again.");
+                setReqStatus("idle");
+              }
+            }}
+            className="space-y-3"
+          >
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Make *</label>
+                <input
+                  type="text" required minLength={2} maxLength={50} placeholder="e.g. Toyota"
+                  value={reqForm.make} onChange={(e) => setReqForm((p) => ({ ...p, make: e.target.value }))}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model *</label>
+                <input
+                  type="text" required minLength={2} maxLength={80} placeholder="e.g. Tacoma"
+                  value={reqForm.model} onChange={(e) => setReqForm((p) => ({ ...p, model: e.target.value }))}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Year *</label>
+                <input
+                  type="text" required minLength={4} maxLength={4} placeholder="e.g. 2024"
+                  value={reqForm.year} onChange={(e) => setReqForm((p) => ({ ...p, year: e.target.value.replace(/\D/g, "").slice(0, 4) }))}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Trim</label>
+                <input
+                  type="text" maxLength={80} placeholder="e.g. TRD Off-Road"
+                  value={reqForm.trim} onChange={(e) => setReqForm((p) => ({ ...p, trim: e.target.value }))}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Body Type</label>
+                <select
+                  value={reqForm.bodyType} onChange={(e) => setReqForm((p) => ({ ...p, bodyType: e.target.value }))}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                >
+                  <option value="">Select...</option>
+                  <option value="mid-truck">Mid-Size Truck</option>
+                  <option value="full-truck">Full-Size Truck</option>
+                  <option value="heavy-truck">HD Truck</option>
+                  <option value="mid-suv">Mid-Size SUV</option>
+                  <option value="full-suv">Full-Size SUV</option>
+                  <option value="crossover">Crossover</option>
+                  <option value="van">Van</option>
+                  <option value="jeep">Jeep</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Email</label>
+                <input
+                  type="email" maxLength={120} placeholder="Optional — notify me"
+                  value={reqForm.email} onChange={(e) => setReqForm((p) => ({ ...p, email: e.target.value }))}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Notes</label>
+              <textarea
+                maxLength={200} rows={2} placeholder="Any details that would help us add this vehicle..."
+                value={reqForm.notes} onChange={(e) => setReqForm((p) => ({ ...p, notes: e.target.value }))}
+                className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors resize-none"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={reqStatus === "sending"}
+              className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg text-xs font-bold uppercase hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              <Send className="w-3.5 h-3.5" />
+              {reqStatus === "sending" ? "Submitting..." : "Submit Request"}
+            </button>
+          </form>
+        )}
+      </div>
+
+      {/* Shared footer components */}
       <DataPrivacyNotice />
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <ToolSocialShare

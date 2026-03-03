@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
 // RigRated UTV Machine Database
-// ~26 machines across 6 manufacturers (2024-2025 model year specs)
+// ~29 machines across 6 manufacturers, multi-year support (2020-2026)
 // ---------------------------------------------------------------------------
 
 export type UTVBodyType =
@@ -16,6 +16,7 @@ export interface UTVMachine {
   model: string;
   trim: string;
   year: number;
+  yearRange: [number, number];
   bodyType: UTVBodyType;
   seatingCapacity: 2 | 4 | 6;
   dryWeightLbs: number;
@@ -46,7 +47,7 @@ export interface UTVMachine {
 
 export const machines: UTVMachine[] = [
   // =========================================================================
-  // POLARIS (8)
+  // POLARIS (10)
   // =========================================================================
   {
     id: "polaris-rzr-xp-1000",
@@ -54,6 +55,7 @@ export const machines: UTVMachine[] = [
     model: "RZR XP 1000",
     trim: "Premium",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "2-seat-sport",
     seatingCapacity: 2,
     dryWeightLbs: 1482,
@@ -83,6 +85,7 @@ export const machines: UTVMachine[] = [
     model: "RZR XP Turbo R",
     trim: "Ultimate",
     year: 2024,
+    yearRange: [2022, 2026],
     bodyType: "2-seat-sport",
     seatingCapacity: 2,
     dryWeightLbs: 1850,
@@ -112,6 +115,7 @@ export const machines: UTVMachine[] = [
     model: "RZR Pro XP",
     trim: "Sport",
     year: 2024,
+    yearRange: [2020, 2024],
     bodyType: "2-seat-sport",
     seatingCapacity: 2,
     dryWeightLbs: 1767,
@@ -141,6 +145,7 @@ export const machines: UTVMachine[] = [
     model: "RZR Pro R",
     trim: "Ultimate",
     year: 2025,
+    yearRange: [2022, 2026],
     bodyType: "2-seat-sport",
     seatingCapacity: 2,
     dryWeightLbs: 1950,
@@ -170,6 +175,7 @@ export const machines: UTVMachine[] = [
     model: "Ranger XP 1000",
     trim: "Premium",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "2-seat-utility",
     seatingCapacity: 2,
     dryWeightLbs: 1655,
@@ -199,6 +205,7 @@ export const machines: UTVMachine[] = [
     model: "Ranger Crew XP 1000",
     trim: "Premium",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "crew-cab-utility",
     seatingCapacity: 6,
     dryWeightLbs: 1850,
@@ -228,6 +235,7 @@ export const machines: UTVMachine[] = [
     model: "General XP 1000",
     trim: "Deluxe",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "2-seat-utility",
     seatingCapacity: 2,
     dryWeightLbs: 1580,
@@ -257,6 +265,7 @@ export const machines: UTVMachine[] = [
     model: "General XP 4 1000",
     trim: "Deluxe",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "4-seat-utility",
     seatingCapacity: 4,
     dryWeightLbs: 1790,
@@ -281,6 +290,67 @@ export const machines: UTVMachine[] = [
     notes: "4-seat General with extended wheelbase. Family trail hauler.",
   },
 
+  {
+    id: "polaris-xpedition-xp",
+    make: "Polaris",
+    model: "XPEDITION XP",
+    trim: "NorthStar",
+    year: 2026,
+    yearRange: [2024, 2026],
+    bodyType: "2-seat-utility",
+    seatingCapacity: 2,
+    dryWeightLbs: 2323,
+    gvwrLbs: 3474,
+    payloadCapacityLbs: 1030,
+    towingCapacityLbs: 2000,
+    bedLengthIn: 30.3,
+    bedWidthIn: 47.25,
+    bedDepthIn: 13.4,
+    groundClearanceIn: 14,
+    wheelbaseIn: 87.5,
+    trackWidthFrontIn: 64,
+    trackWidthRearIn: 64,
+    overallWidthIn: 64,
+    overallHeightIn: 74.9,
+    turningRadiusFt: 16.6,
+    horsePower: 114,
+    torqueFtLbs: 65,
+    fuelCapacityGal: 12.5,
+    tireSize: "30x10R15",
+    engineType: "gas",
+    notes: "Fully enclosed NorthStar cab with HVAC. ProStar 1000 Gen 2, 14\" suspension travel, FOX 2.0 Podium QS3.",
+  },
+  {
+    id: "polaris-xpedition-xp-5",
+    make: "Polaris",
+    model: "XPEDITION XP 5",
+    trim: "NorthStar",
+    year: 2026,
+    yearRange: [2024, 2026],
+    bodyType: "4-seat-utility",
+    seatingCapacity: 4,
+    dryWeightLbs: 2736,
+    gvwrLbs: 3996,
+    payloadCapacityLbs: 1160,
+    towingCapacityLbs: 2000,
+    bedLengthIn: 30.3,
+    bedWidthIn: 47.25,
+    bedDepthIn: 13.4,
+    groundClearanceIn: 14,
+    wheelbaseIn: 117,
+    trackWidthFrontIn: 64,
+    trackWidthRearIn: 64,
+    overallWidthIn: 64,
+    overallHeightIn: 74.9,
+    turningRadiusFt: 20.4,
+    horsePower: 114,
+    torqueFtLbs: 65,
+    fuelCapacityGal: 12.5,
+    tireSize: "30x10R15",
+    engineType: "gas",
+    notes: "5-seat enclosed NorthStar cab with HVAC. 117\" wheelbase, 1,160 lb payload. Ultimate overland adventure UTV.",
+  },
+
   // =========================================================================
   // CAN-AM (5)
   // =========================================================================
@@ -290,6 +360,7 @@ export const machines: UTVMachine[] = [
     model: "Maverick X3 X RS Turbo RR",
     trim: "Turbo RR",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "2-seat-sport",
     seatingCapacity: 2,
     dryWeightLbs: 1726,
@@ -319,6 +390,7 @@ export const machines: UTVMachine[] = [
     model: "Maverick R",
     trim: "X RS",
     year: 2025,
+    yearRange: [2024, 2026],
     bodyType: "2-seat-sport",
     seatingCapacity: 2,
     dryWeightLbs: 1990,
@@ -348,6 +420,7 @@ export const machines: UTVMachine[] = [
     model: "Defender HD9",
     trim: "DPS",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "2-seat-utility",
     seatingCapacity: 2,
     dryWeightLbs: 1460,
@@ -377,6 +450,7 @@ export const machines: UTVMachine[] = [
     model: "Defender HD10",
     trim: "XT",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "2-seat-utility",
     seatingCapacity: 2,
     dryWeightLbs: 1520,
@@ -406,6 +480,7 @@ export const machines: UTVMachine[] = [
     model: "Defender MAX HD10",
     trim: "XT",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "4-seat-utility",
     seatingCapacity: 4,
     dryWeightLbs: 1690,
@@ -439,6 +514,7 @@ export const machines: UTVMachine[] = [
     model: "Pioneer 1000",
     trim: "EPS",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "2-seat-utility",
     seatingCapacity: 2,
     dryWeightLbs: 1504,
@@ -468,6 +544,7 @@ export const machines: UTVMachine[] = [
     model: "Pioneer 1000-5",
     trim: "Deluxe",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "4-seat-utility",
     seatingCapacity: 4,
     dryWeightLbs: 1616,
@@ -497,6 +574,7 @@ export const machines: UTVMachine[] = [
     model: "Talon 1000R",
     trim: "FOX Live Valve",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "2-seat-sport",
     seatingCapacity: 2,
     dryWeightLbs: 1483,
@@ -526,6 +604,7 @@ export const machines: UTVMachine[] = [
     model: "Talon 1000X",
     trim: "FOX Live Valve",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "2-seat-sport",
     seatingCapacity: 2,
     dryWeightLbs: 1461,
@@ -551,7 +630,7 @@ export const machines: UTVMachine[] = [
   },
 
   // =========================================================================
-  // KAWASAKI (3)
+  // KAWASAKI (4)
   // =========================================================================
   {
     id: "kawasaki-teryx-krx-1000",
@@ -559,6 +638,7 @@ export const machines: UTVMachine[] = [
     model: "Teryx KRX 1000",
     trim: "eS",
     year: 2024,
+    yearRange: [2020, 2024],
     bodyType: "2-seat-sport",
     seatingCapacity: 2,
     dryWeightLbs: 1715,
@@ -583,11 +663,42 @@ export const machines: UTVMachine[] = [
     notes: "999cc parallel twin. Fox 2.5 Podium LSC shocks. Built for rock crawling.",
   },
   {
+    id: "kawasaki-teryx-krx-1000-2026",
+    make: "Kawasaki",
+    model: "Teryx KRX 1000",
+    trim: "eS (2026+)",
+    year: 2026,
+    yearRange: [2025, 2026],
+    bodyType: "2-seat-sport",
+    seatingCapacity: 2,
+    dryWeightLbs: 1795,
+    gvwrLbs: 2576,
+    payloadCapacityLbs: 781,
+    towingCapacityLbs: 1500,
+    bedLengthIn: 14.6,
+    bedWidthIn: 33.1,
+    bedDepthIn: 9.1,
+    groundClearanceIn: 14.4,
+    wheelbaseIn: 98.8,
+    trackWidthFrontIn: 59,
+    trackWidthRearIn: 59,
+    overallWidthIn: 68.1,
+    overallHeightIn: 77,
+    turningRadiusFt: 20.3,
+    horsePower: 110,
+    torqueFtLbs: 75,
+    fuelCapacityGal: 10.6,
+    tireSize: "31x10R15",
+    engineType: "gas",
+    notes: "2025-2026 refresh: 110hp (+11), 781 lb payload, KECS FOX 2.5 Live Valve, sport roof.",
+  },
+  {
     id: "kawasaki-teryx-krx4-1000",
     make: "Kawasaki",
     model: "Teryx KRX4 1000",
     trim: "eS",
     year: 2024,
+    yearRange: [2024, 2026],
     bodyType: "4-seat-sport",
     seatingCapacity: 4,
     dryWeightLbs: 1890,
@@ -617,6 +728,7 @@ export const machines: UTVMachine[] = [
     model: "Mule PRO-FXT",
     trim: "EPS LE",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "crew-cab-utility",
     seatingCapacity: 6,
     dryWeightLbs: 1686,
@@ -650,6 +762,7 @@ export const machines: UTVMachine[] = [
     model: "YXZ1000R",
     trim: "SS SE",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "2-seat-sport",
     seatingCapacity: 2,
     dryWeightLbs: 1326,
@@ -679,6 +792,7 @@ export const machines: UTVMachine[] = [
     model: "Wolverine RMAX 1000",
     trim: "XT-R",
     year: 2024,
+    yearRange: [2021, 2026],
     bodyType: "2-seat-utility",
     seatingCapacity: 2,
     dryWeightLbs: 1530,
@@ -708,6 +822,7 @@ export const machines: UTVMachine[] = [
     model: "Wolverine RMAX4 1000",
     trim: "XT-R",
     year: 2024,
+    yearRange: [2021, 2026],
     bodyType: "4-seat-utility",
     seatingCapacity: 4,
     dryWeightLbs: 1700,
@@ -741,6 +856,7 @@ export const machines: UTVMachine[] = [
     model: "ZForce 950",
     trim: "Sport",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "2-seat-sport",
     seatingCapacity: 2,
     dryWeightLbs: 1280,
@@ -770,6 +886,7 @@ export const machines: UTVMachine[] = [
     model: "UForce 1000",
     trim: "EPS",
     year: 2024,
+    yearRange: [2020, 2026],
     bodyType: "2-seat-utility",
     seatingCapacity: 2,
     dryWeightLbs: 1425,
@@ -799,6 +916,7 @@ export const machines: UTVMachine[] = [
     model: "UForce 1000 XL",
     trim: "EPS",
     year: 2024,
+    yearRange: [2021, 2026],
     bodyType: "4-seat-utility",
     seatingCapacity: 4,
     dryWeightLbs: 1575,
@@ -836,6 +954,22 @@ export function getModelsForMake(make: string): string[] {
   return Array.from(new Set(machines.filter((m) => m.make === make).map((m) => m.model))).sort();
 }
 
+export function getYearsForModel(make: string, model: string): number[] {
+  const entries = machines.filter((m) => m.make === make && m.model === model);
+  const years = new Set<number>();
+  for (const m of entries) {
+    for (let y = m.yearRange[0]; y <= m.yearRange[1]; y++) years.add(y);
+  }
+  return Array.from(years).sort((a, b) => b - a); // newest first
+}
+
+export function getTrimsForModelYear(make: string, model: string, year: number): string[] {
+  return machines
+    .filter((m) => m.make === make && m.model === model && year >= m.yearRange[0] && year <= m.yearRange[1])
+    .map((m) => m.trim);
+}
+
+// Legacy — still used until configurator is fully updated
 export function getTrimsForModel(make: string, model: string): string[] {
   return machines
     .filter((m) => m.make === make && m.model === model)
@@ -843,6 +977,18 @@ export function getTrimsForModel(make: string, model: string): string[] {
     .sort();
 }
 
+export function findMachineByYearTrim(
+  make: string,
+  model: string,
+  year: number,
+  trim: string,
+): UTVMachine | undefined {
+  return machines.find(
+    (m) => m.make === make && m.model === model && m.trim === trim && year >= m.yearRange[0] && year <= m.yearRange[1],
+  );
+}
+
+// Legacy
 export function findMachine(
   make: string,
   model: string,

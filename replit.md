@@ -35,6 +35,8 @@ Preferred communication style: Simple, everyday language.
 - `/tools/food-storage-calculator` — Food storage calculator with calorie planning, shelf life tracking, family size support
 - `/tools/72-hour-kit-builder` — Guided questionnaire that generates a personalized 72-hour emergency kit checklist
 - `/tools/shtf-simulator` — Scenario-based survival simulator with branching decisions and scoring
+- `/tools/rigsafe-configurator` — RigSafe RTT Configurator: three-chain rooftop tent/rack load calculator with static, dynamic, off-road ratings, payload, garage clearance, vehicle request form
+- `/tools/rigrated-configurator` — RigRated UTV Overland Builder: 29 UTVs, 80+ accessories, 50-state legal heatmap, trail scoring, trip plan PDF, year selector, vehicle request form
 - `/tools/community` — Community gallery of shared builds (BOB, solar, water, food, kit) with submission form
 - `/tools/my-kits` — Local kit library dashboard (saved kits stored in localStorage)
 - `/quiz` — Preparedness quiz with scoring, results, social sharing (X, Facebook, Reddit, SMS, Email, Copy Link), and tool recommendations
@@ -57,6 +59,7 @@ Preferred communication style: Simple, everyday language.
 - `POST /api/newsletter` — Newsletter email signup (also sends to Kit API)
 - `POST /api/gear-requests` — Submit gear request with optional `source` field + Telegram notification
 - `POST /api/gear-tracking` — Anonymous usage tracking for calculators
+- `POST /api/vehicle-requests` — Vehicle request submissions with rate limiting, profanity filter, and Telegram notifications
 - `GET /api/community-builds` — List approved community builds (from JSON file)
 - `POST /api/community-builds` — Submit new community build with profanity filter + Telegram notification
 - `GET /api/wp/posts` — Proxy to WordPress REST API for blog posts (cached)
