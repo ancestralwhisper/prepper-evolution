@@ -6,6 +6,7 @@ import {
   AlertTriangle, BarChart3, Repeat,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
+import ChangelogTicker from "@/components/tools/ChangelogTicker";
 
 interface Tool {
   slug: string;
@@ -94,11 +95,11 @@ const opsDeckTools: Tool[] = [
     slug: "vehicle-profile",
     name: "Unified Vehicle Profile",
     description:
-      "Build your complete rig profile from 30+ real vehicles. Track every mod — lift, tires, bumpers, winch, armor, fuel, electrical — and see real-time impact on payload, MPG, stability, and trail readiness.",
+      "Build your complete rig profile from 40+ real vehicles — trucks, SUVs, crossovers, and vans. Track every mod and see real-time impact on payload, MPG, stability, and trail readiness.",
     icon: Truck,
     status: "live",
-    badge: "New",
-    version: "v1.0",
+    badge: "Updated",
+    version: "v1.1",
     cta: "Build Profile",
   },
   {
@@ -351,6 +352,8 @@ export default function ToolsIndex() {
           </p>
         </div>
       </div>
+
+      <ChangelogTicker />
     </div>
   );
 }

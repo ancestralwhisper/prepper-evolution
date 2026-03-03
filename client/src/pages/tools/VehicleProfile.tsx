@@ -1219,12 +1219,14 @@ export default function VehicleProfilePage() {
                 What Vehicles Are Supported?
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Our database includes 30+ of the most popular overlanding, off-road, and bug-out
-                vehicles: Toyota 4Runner, Tacoma, Tundra, Land Cruiser; Jeep Wrangler, Gladiator,
-                Grand Cherokee; Ford Bronco, F-150, Ranger, F-250; Chevrolet Colorado ZR2, Silverado,
-                Tahoe; Ram 1500 Rebel, Power Wagon; Land Rover Defender; Lexus GX; Subaru Outback
-                and Crosstrek Wilderness; Rivian R1T; and even van builds like the Mercedes Sprinter
-                and Ford Transit. If your vehicle is not listed, you can enter all specs manually.
+                Our database includes 40+ vehicles — from dedicated off-road rigs to everyday trucks
+                and crossovers. Toyota 4Runner, Tacoma, Tundra, Land Cruiser, RAV4 TRD; Jeep Wrangler,
+                Gladiator, Grand Cherokee; Ford Bronco, Bronco Sport, F-150, Ranger, F-250; Chevrolet
+                Colorado Z71 &amp; ZR2, Silverado LT &amp; Trail Boss, Tahoe, Suburban; GMC Canyon AT4,
+                Sierra SLE &amp; AT4; Ram 1500, Power Wagon; Honda Passport TrailSport; Subaru Outback,
+                Forester &amp; Crosstrek Wilderness; Land Rover Defender; Lexus GX; Rivian R1T; and
+                van builds like the Mercedes Sprinter and Ford Transit. If your vehicle is not listed,
+                you can enter all specs manually.
               </p>
             </section>
           </div>

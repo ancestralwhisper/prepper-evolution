@@ -82,6 +82,17 @@ export const vehicleDatabase: StockVehicle[] = [
     ssf: 1.14, frontWeightPct: 54, stockWadingDepthIn: 0,
     stockRatio: 3.73, alternatorAmps: 180,
   },
+  {
+    year: 2024, make: "Toyota", model: "RAV4", trim: "TRD Off-Road AWD",
+    curbWeightLbs: 3615, gvwrLbs: 4585, maxTowingLbs: 3500,
+    wheelbaseIn: 105.9, trackWidthIn: 63.2, groundClearanceIn: 8.6,
+    approachAngle: 19, departureAngle: 21, breakoverAngle: 17,
+    fuelTankGal: 14.5, stockTireSize: "225/60R18", stockTireDiameter: 28.6,
+    mpgCity: 25, mpgHighway: 32, mpgCombined: 28,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.24, frontWeightPct: 59, stockWadingDepthIn: 0,
+    stockRatio: 2.28, alternatorAmps: 150,
+  },
 
   // ─── JEEP ────────────────────────────────────────────────────────
 
@@ -144,6 +155,17 @@ export const vehicleDatabase: StockVehicle[] = [
     stockRatio: 4.70, alternatorAmps: 200,
   },
   {
+    year: 2024, make: "Ford", model: "Bronco Sport", trim: "Badlands AWD",
+    curbWeightLbs: 3721, gvwrLbs: 4560, maxTowingLbs: 2200,
+    wheelbaseIn: 105.1, trackWidthIn: 62.8, groundClearanceIn: 8.8,
+    approachAngle: 30.4, departureAngle: 33.1, breakoverAngle: 20.4,
+    fuelTankGal: 16.0, stockTireSize: "235/65R17", stockTireDiameter: 29.0,
+    mpgCity: 21, mpgHighway: 26, mpgCombined: 23,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.22, frontWeightPct: 58, stockWadingDepthIn: 23.6,
+    stockRatio: 4.44, alternatorAmps: 150,
+  },
+  {
     year: 2024, make: "Ford", model: "F-150", trim: "XLT 4x4 (SuperCrew)",
     curbWeightLbs: 4705, gvwrLbs: 7050, maxTowingLbs: 11300,
     wheelbaseIn: 145.4, trackWidthIn: 67.8, groundClearanceIn: 9.4,
@@ -202,6 +224,17 @@ export const vehicleDatabase: StockVehicle[] = [
   // ─── CHEVROLET / GMC ─────────────────────────────────────────────
 
   {
+    year: 2024, make: "Chevrolet", model: "Colorado", trim: "Z71 4WD",
+    curbWeightLbs: 4394, gvwrLbs: 5800, maxTowingLbs: 7700,
+    wheelbaseIn: 131.4, trackWidthIn: 64.1, groundClearanceIn: 8.4,
+    approachAngle: 25.3, departureAngle: 22.7, breakoverAngle: 21.2,
+    fuelTankGal: 21.3, stockTireSize: "265/65R17", stockTireDiameter: 30.6,
+    mpgCity: 19, mpgHighway: 25, mpgCombined: 21,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.14, frontWeightPct: 56, stockWadingDepthIn: 0,
+    stockRatio: 3.42, alternatorAmps: 170,
+  },
+  {
     year: 2024, make: "Chevrolet", model: "Colorado", trim: "ZR2 4WD",
     curbWeightLbs: 4742, gvwrLbs: 5900, maxTowingLbs: 6000,
     wheelbaseIn: 131.4, trackWidthIn: 65.7, groundClearanceIn: 10.7,
@@ -211,6 +244,17 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.10, frontWeightPct: 56, stockWadingDepthIn: 0,
     stockRatio: 3.42, alternatorAmps: 170,
+  },
+  {
+    year: 2024, make: "Chevrolet", model: "Silverado 1500", trim: "LT 4WD",
+    curbWeightLbs: 4900, gvwrLbs: 7100, maxTowingLbs: 11500,
+    wheelbaseIn: 147.4, trackWidthIn: 68.0, groundClearanceIn: 8.4,
+    approachAngle: 23, departureAngle: 21, breakoverAngle: 19,
+    fuelTankGal: 24.0, stockTireSize: "265/65R18", stockTireDiameter: 31.6,
+    mpgCity: 17, mpgHighway: 23, mpgCombined: 19,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.20, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 3.23, alternatorAmps: 170,
   },
   {
     year: 2024, make: "Chevrolet", model: "Silverado 1500", trim: "Trail Boss 4WD",
@@ -244,6 +288,28 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.13, frontWeightPct: 52, stockWadingDepthIn: 0,
     stockRatio: 3.23, alternatorAmps: 170,
+  },
+  {
+    year: 2024, make: "GMC", model: "Canyon", trim: "AT4 4WD",
+    curbWeightLbs: 4530, gvwrLbs: 6250, maxTowingLbs: 7700,
+    wheelbaseIn: 131.4, trackWidthIn: 66.1, groundClearanceIn: 9.6,
+    approachAngle: 30.4, departureAngle: 23.2, breakoverAngle: 21.5,
+    fuelTankGal: 21.4, stockTireSize: "265/65R18", stockTireDiameter: 31.6,
+    mpgCity: 18, mpgHighway: 22, mpgCombined: 19,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.13, frontWeightPct: 56, stockWadingDepthIn: 0,
+    stockRatio: 3.42, alternatorAmps: 170,
+  },
+  {
+    year: 2024, make: "GMC", model: "Sierra 1500", trim: "SLE 4WD",
+    curbWeightLbs: 4828, gvwrLbs: 7000, maxTowingLbs: 9500,
+    wheelbaseIn: 147.4, trackWidthIn: 68.0, groundClearanceIn: 8.1,
+    approachAngle: 22, departureAngle: 21, breakoverAngle: 18,
+    fuelTankGal: 24.0, stockTireSize: "255/70R17", stockTireDiameter: 31.1,
+    mpgCity: 18, mpgHighway: 20, mpgCombined: 19,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.18, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 3.42, alternatorAmps: 220,
   },
   {
     year: 2024, make: "GMC", model: "Sierra 1500", trim: "AT4 4WD",
@@ -338,6 +404,17 @@ export const vehicleDatabase: StockVehicle[] = [
   // ─── SUBARU ──────────────────────────────────────────────────────
 
   {
+    year: 2024, make: "Subaru", model: "Outback", trim: "Premium AWD",
+    curbWeightLbs: 3661, gvwrLbs: 4541, maxTowingLbs: 2700,
+    wheelbaseIn: 108.1, trackWidthIn: 60.6, groundClearanceIn: 8.7,
+    approachAngle: 18.6, departureAngle: 21.7, breakoverAngle: 19.4,
+    fuelTankGal: 18.5, stockTireSize: "225/65R17", stockTireDiameter: 28.5,
+    mpgCity: 26, mpgHighway: 32, mpgCombined: 28,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.21, frontWeightPct: 60, stockWadingDepthIn: 0,
+    stockRatio: 3.70, alternatorAmps: 110,
+  },
+  {
     year: 2024, make: "Subaru", model: "Outback", trim: "Wilderness AWD",
     curbWeightLbs: 3810, gvwrLbs: 4829, maxTowingLbs: 3500,
     wheelbaseIn: 108.1, trackWidthIn: 61.8, groundClearanceIn: 9.5,
@@ -346,6 +423,17 @@ export const vehicleDatabase: StockVehicle[] = [
     mpgCity: 24, mpgHighway: 28, mpgCombined: 26,
     engineType: "gas", drivetrain: "awd", transferCase: "none",
     ssf: 1.18, frontWeightPct: 60, stockWadingDepthIn: 0,
+    stockRatio: 4.11, alternatorAmps: 110,
+  },
+  {
+    year: 2025, make: "Subaru", model: "Forester", trim: "Wilderness AWD",
+    curbWeightLbs: 3620, gvwrLbs: 4640, maxTowingLbs: 3000,
+    wheelbaseIn: 105.1, trackWidthIn: 61.8, groundClearanceIn: 9.2,
+    approachAngle: 19, departureAngle: 24.6, breakoverAngle: 19.6,
+    fuelTankGal: 16.6, stockTireSize: "225/60R17", stockTireDiameter: 27.6,
+    mpgCity: 25, mpgHighway: 28, mpgCombined: 26,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.19, frontWeightPct: 60, stockWadingDepthIn: 0,
     stockRatio: 4.11, alternatorAmps: 110,
   },
   {
@@ -358,6 +446,20 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "awd", transferCase: "none",
     ssf: 1.21, frontWeightPct: 61, stockWadingDepthIn: 0,
     stockRatio: 4.11, alternatorAmps: 110,
+  },
+
+  // ─── HONDA ───────────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Honda", model: "Passport", trim: "TrailSport AWD",
+    curbWeightLbs: 4229, gvwrLbs: 5357, maxTowingLbs: 5000,
+    wheelbaseIn: 110.9, trackWidthIn: 67.1, groundClearanceIn: 8.1,
+    approachAngle: 21.1, departureAngle: 24.3, breakoverAngle: 17.5,
+    fuelTankGal: 19.5, stockTireSize: "245/60R18", stockTireDiameter: 29.6,
+    mpgCity: 19, mpgHighway: 24, mpgCombined: 21,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.20, frontWeightPct: 58, stockWadingDepthIn: 0,
+    stockRatio: 4.33, alternatorAmps: 180,
   },
 
   // ─── RIVIAN ──────────────────────────────────────────────────────
