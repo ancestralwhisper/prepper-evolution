@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import {
   Backpack, Droplets, UtensilsCrossed, Zap, ClipboardList, Map,
   ArrowRight, FolderOpen, Shield, Target, Crosshair,
-  Siren, Skull, Truck, Fuel, Weight, Brain,
+  Siren, Skull, Truck, Fuel, Weight, Brain, Wrench,
   AlertTriangle, BarChart3, Repeat,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
@@ -112,13 +112,26 @@ const opsDeckTools: Tool[] = [
     cta: "Plan Route",
   },
   {
-    slug: "vehicle-load-balancer",
-    name: "Overland Load Balancer",
+    slug: "rigsafe-configurator",
+    name: "RigSafe Overland Configurator",
     description:
-      "Drag-and-drop gear onto a vehicle diagram. See live front/rear weight split, center of gravity shift, rollover angle, and get warnings before you overload an axle.",
-    icon: Weight,
-    status: "coming-soon",
-    cta: "Balance Load",
+      "Design your rooftop tent and rack setup, then let the three-chain calculator tell you if it's safe. Validates static, on-road, and off-road dynamic ratings, vehicle payload, garage clearance, and sleeping capacity.",
+    icon: Shield,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Configure Rig",
+  },
+  {
+    slug: "rigrated-configurator",
+    name: "RigRated UTV Overland Builder",
+    description:
+      "Select from 26+ real UTVs, add 80+ accessories, and see how weight, fuel range, towing, and trail legality change in real time. Plan a trip and generate a leave-behind trip plan PDF.",
+    icon: Wrench,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Build UTV",
   },
   {
     slug: "skills-tracker",

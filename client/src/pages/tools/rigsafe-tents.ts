@@ -1,0 +1,513 @@
+// ─── RigSafe Rooftop Tent Database ──────────────────────────────────
+// Real manufacturer specs for rooftop tents (RTTs).
+//
+// Sources:
+//   Weight, dimensions, capacity: Manufacturer spec sheets & product pages
+//   Realistic sleeping: Calculated from floor dimensions
+//     (24" per adult + 6" gap, 20" per teen, 16" per child)
+
+export interface TentEntry {
+  id: string;
+  brand: string;
+  model: string;
+  type: "hardshell-wedge" | "hardshell-clamshell" | "softshell-foldout";
+  closedWeightLbs: number;
+  closedHeightIn: number;
+  closedLengthIn: number;
+  closedWidthIn: number;
+  openLengthIn: number;
+  openWidthIn: number;
+  openHeadroomIn: number;
+  mattressThicknessIn: number;
+  sleepsMarketing: number;       // what they claim
+  sleepsRealistic: number;       // what fits comfortably
+  staticRatingLbs: number;       // tent's own weight rating for occupants
+  hasAnnex: boolean;
+  annexWeightLbs?: number;
+  annexSleeps?: number;
+  affiliateUrl: string;
+  notes?: string;
+}
+
+export const tentDatabase: TentEntry[] = [
+  // ─── iKAMPER ────────────────────────────────────────────────────────
+
+  {
+    id: "ikamper-skycamp-3",
+    brand: "iKamper",
+    model: "Skycamp 3.0",
+    type: "hardshell-clamshell",
+    closedWeightLbs: 165,
+    closedHeightIn: 12,
+    closedLengthIn: 86,
+    closedWidthIn: 56,
+    openLengthIn: 86,
+    openWidthIn: 96,
+    openHeadroomIn: 52,
+    mattressThicknessIn: 3,
+    sleepsMarketing: 4,
+    sleepsRealistic: 2,
+    staticRatingLbs: 900,
+    hasAnnex: true,
+    annexWeightLbs: 18,
+    annexSleeps: 2,
+    affiliateUrl: "https://www.amazon.com/dp/B0BN3BN7YK?tag=prepperevo-20",
+    notes: "King-size mattress. Hard shell with poly-cotton canopy. Premium build quality.",
+  },
+  {
+    id: "ikamper-bdv",
+    brand: "iKamper",
+    model: "BDV",
+    type: "hardshell-clamshell",
+    closedWeightLbs: 185,
+    closedHeightIn: 13,
+    closedLengthIn: 86,
+    closedWidthIn: 58,
+    openLengthIn: 86,
+    openWidthIn: 112,
+    openHeadroomIn: 52,
+    mattressThicknessIn: 3,
+    sleepsMarketing: 4,
+    sleepsRealistic: 3,
+    staticRatingLbs: 900,
+    hasAnnex: true,
+    annexWeightLbs: 22,
+    annexSleeps: 2,
+    affiliateUrl: "https://www.amazon.com/dp/B0C94L3BGY?tag=prepperevo-20",
+    notes: "Wider than Skycamp when open. Dual-expanding design.",
+  },
+  {
+    id: "ikamper-xcover-2",
+    brand: "iKamper",
+    model: "X-Cover 2.0",
+    type: "softshell-foldout",
+    closedWeightLbs: 130,
+    closedHeightIn: 15,
+    closedLengthIn: 56,
+    closedWidthIn: 48,
+    openLengthIn: 96,
+    openWidthIn: 56,
+    openHeadroomIn: 48,
+    mattressThicknessIn: 2.5,
+    sleepsMarketing: 3,
+    sleepsRealistic: 2,
+    staticRatingLbs: 600,
+    hasAnnex: true,
+    annexWeightLbs: 15,
+    annexSleeps: 1,
+    affiliateUrl: "https://www.amazon.com/dp/B09LQXCTR4?tag=prepperevo-20",
+    notes: "Soft-shell fold-out. Lighter weight, lower profile when closed.",
+  },
+
+  // ─── ROOFNEST ───────────────────────────────────────────────────────
+
+  {
+    id: "roofnest-falcon-2",
+    brand: "Roofnest",
+    model: "Falcon 2",
+    type: "hardshell-wedge",
+    closedWeightLbs: 135,
+    closedHeightIn: 10,
+    closedLengthIn: 82,
+    closedWidthIn: 52,
+    openLengthIn: 82,
+    openWidthIn: 52,
+    openHeadroomIn: 42,
+    mattressThicknessIn: 3,
+    sleepsMarketing: 2,
+    sleepsRealistic: 2,
+    staticRatingLbs: 600,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/dp/B08T6JYC1D?tag=prepperevo-20",
+    notes: "Slim wedge profile. Low closed height is garage-friendly.",
+  },
+  {
+    id: "roofnest-condor-xl",
+    brand: "Roofnest",
+    model: "Condor XL",
+    type: "hardshell-clamshell",
+    closedWeightLbs: 180,
+    closedHeightIn: 13,
+    closedLengthIn: 96,
+    closedWidthIn: 58,
+    openLengthIn: 96,
+    openWidthIn: 58,
+    openHeadroomIn: 50,
+    mattressThicknessIn: 3,
+    sleepsMarketing: 3,
+    sleepsRealistic: 2,
+    staticRatingLbs: 800,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/dp/B09NRGXY7T?tag=prepperevo-20",
+    notes: "Extra-long platform. Great for tall people. Premium finish.",
+  },
+  {
+    id: "roofnest-sparrow-eye",
+    brand: "Roofnest",
+    model: "Sparrow EYE",
+    type: "hardshell-wedge",
+    closedWeightLbs: 125,
+    closedHeightIn: 9.5,
+    closedLengthIn: 78,
+    closedWidthIn: 48,
+    openLengthIn: 78,
+    openWidthIn: 48,
+    openHeadroomIn: 38,
+    mattressThicknessIn: 2.5,
+    sleepsMarketing: 2,
+    sleepsRealistic: 2,
+    staticRatingLbs: 500,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/dp/B0BZK7N8WR?tag=prepperevo-20",
+    notes: "Most compact hardshell wedge. Panoramic skylight window.",
+  },
+
+  // ─── 23ZERO ─────────────────────────────────────────────────────────
+
+  {
+    id: "23zero-breezeway-72",
+    brand: "23Zero",
+    model: "Breezeway 72",
+    type: "hardshell-clamshell",
+    closedWeightLbs: 170,
+    closedHeightIn: 12,
+    closedLengthIn: 72,
+    closedWidthIn: 56,
+    openLengthIn: 72,
+    openWidthIn: 56,
+    openHeadroomIn: 48,
+    mattressThicknessIn: 3,
+    sleepsMarketing: 3,
+    sleepsRealistic: 2,
+    staticRatingLbs: 750,
+    hasAnnex: true,
+    annexWeightLbs: 20,
+    annexSleeps: 2,
+    affiliateUrl: "https://www.amazon.com/dp/B0CG3L5K7Q?tag=prepperevo-20",
+    notes: "Australian brand. Excellent ventilation for hot climates.",
+  },
+  {
+    id: "23zero-walkabout-87",
+    brand: "23Zero",
+    model: "Walkabout 87",
+    type: "hardshell-clamshell",
+    closedWeightLbs: 190,
+    closedHeightIn: 13,
+    closedLengthIn: 87,
+    closedWidthIn: 58,
+    openLengthIn: 87,
+    openWidthIn: 58,
+    openHeadroomIn: 52,
+    mattressThicknessIn: 3,
+    sleepsMarketing: 4,
+    sleepsRealistic: 2,
+    staticRatingLbs: 900,
+    hasAnnex: true,
+    annexWeightLbs: 25,
+    annexSleeps: 2,
+    affiliateUrl: "https://www.amazon.com/dp/B0CG3KVR1L?tag=prepperevo-20",
+    notes: "Largest 23Zero tent. King-size platform.",
+  },
+
+  // ─── OVS (Overland Vehicle Systems) ─────────────────────────────────
+
+  {
+    id: "ovs-nomadic-2",
+    brand: "OVS",
+    model: "Nomadic 2",
+    type: "softshell-foldout",
+    closedWeightLbs: 120,
+    closedHeightIn: 14,
+    closedLengthIn: 56,
+    closedWidthIn: 48,
+    openLengthIn: 88,
+    openWidthIn: 56,
+    openHeadroomIn: 45,
+    mattressThicknessIn: 2.5,
+    sleepsMarketing: 2,
+    sleepsRealistic: 2,
+    staticRatingLbs: 500,
+    hasAnnex: true,
+    annexWeightLbs: 12,
+    annexSleeps: 1,
+    affiliateUrl: "https://www.amazon.com/dp/B07R1V7TN6?tag=prepperevo-20",
+    notes: "Best-selling budget soft-shell. Great entry-level RTT.",
+  },
+  {
+    id: "ovs-nomadic-3",
+    brand: "OVS",
+    model: "Nomadic 3",
+    type: "softshell-foldout",
+    closedWeightLbs: 140,
+    closedHeightIn: 15,
+    closedLengthIn: 62,
+    closedWidthIn: 56,
+    openLengthIn: 96,
+    openWidthIn: 62,
+    openHeadroomIn: 48,
+    mattressThicknessIn: 2.5,
+    sleepsMarketing: 3,
+    sleepsRealistic: 2,
+    staticRatingLbs: 600,
+    hasAnnex: true,
+    annexWeightLbs: 15,
+    annexSleeps: 1,
+    affiliateUrl: "https://www.amazon.com/dp/B07R1VGT9N?tag=prepperevo-20",
+    notes: "Mid-size OVS. Popular upgrade from Nomadic 2.",
+  },
+  {
+    id: "ovs-nomadic-4",
+    brand: "OVS",
+    model: "Nomadic 4",
+    type: "softshell-foldout",
+    closedWeightLbs: 165,
+    closedHeightIn: 16,
+    closedLengthIn: 72,
+    closedWidthIn: 62,
+    openLengthIn: 112,
+    openWidthIn: 72,
+    openHeadroomIn: 50,
+    mattressThicknessIn: 3,
+    sleepsMarketing: 4,
+    sleepsRealistic: 3,
+    staticRatingLbs: 750,
+    hasAnnex: true,
+    annexWeightLbs: 18,
+    annexSleeps: 2,
+    affiliateUrl: "https://www.amazon.com/dp/B09D3GN3S4?tag=prepperevo-20",
+    notes: "Largest OVS soft-shell. Extended model for families.",
+  },
+
+  // ─── SMITTYBILT ─────────────────────────────────────────────────────
+
+  {
+    id: "smittybilt-overlander-gen2-xl",
+    brand: "Smittybilt",
+    model: "Overlander Gen2 XL",
+    type: "softshell-foldout",
+    closedWeightLbs: 135,
+    closedHeightIn: 15,
+    closedLengthIn: 60,
+    closedWidthIn: 48,
+    openLengthIn: 95,
+    openWidthIn: 60,
+    openHeadroomIn: 46,
+    mattressThicknessIn: 2.5,
+    sleepsMarketing: 3,
+    sleepsRealistic: 2,
+    staticRatingLbs: 600,
+    hasAnnex: true,
+    annexWeightLbs: 14,
+    annexSleeps: 1,
+    affiliateUrl: "https://www.amazon.com/dp/B08JQDR9RR?tag=prepperevo-20",
+    notes: "Budget-friendly. Most affordable RTT with decent build quality.",
+  },
+
+  // ─── ARB ────────────────────────────────────────────────────────────
+
+  {
+    id: "arb-simpson-iii",
+    brand: "ARB",
+    model: "Simpson III",
+    type: "softshell-foldout",
+    closedWeightLbs: 130,
+    closedHeightIn: 14,
+    closedLengthIn: 55,
+    closedWidthIn: 47,
+    openLengthIn: 95,
+    openWidthIn: 55,
+    openHeadroomIn: 47,
+    mattressThicknessIn: 2.5,
+    sleepsMarketing: 2,
+    sleepsRealistic: 2,
+    staticRatingLbs: 550,
+    hasAnnex: true,
+    annexWeightLbs: 15,
+    annexSleeps: 2,
+    affiliateUrl: "https://www.amazon.com/dp/B001CWKLZE?tag=prepperevo-20",
+    notes: "Australian legend. Known for durability and build quality.",
+  },
+
+  // ─── TOPOAK ─────────────────────────────────────────────────────────
+
+  {
+    id: "topoak-galaxy-pro",
+    brand: "TOPOAK",
+    model: "Galaxy Pro",
+    type: "hardshell-wedge",
+    closedWeightLbs: 115,
+    closedHeightIn: 9,
+    closedLengthIn: 78,
+    closedWidthIn: 48,
+    openLengthIn: 78,
+    openWidthIn: 48,
+    openHeadroomIn: 36,
+    mattressThicknessIn: 2.5,
+    sleepsMarketing: 2,
+    sleepsRealistic: 2,
+    staticRatingLbs: 500,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/dp/B0B9SQT31Y?tag=prepperevo-20",
+    notes: "Budget hardshell wedge. Low profile. Light weight for the class.",
+  },
+
+  // ─── BODY ARMOR ─────────────────────────────────────────────────────
+
+  {
+    id: "bodyarmor-pike-2p",
+    brand: "Body Armor",
+    model: "Sky Ridge Pike 2-Person",
+    type: "hardshell-wedge",
+    closedWeightLbs: 120,
+    closedHeightIn: 10,
+    closedLengthIn: 78,
+    closedWidthIn: 48,
+    openLengthIn: 78,
+    openWidthIn: 48,
+    openHeadroomIn: 38,
+    mattressThicknessIn: 2.5,
+    sleepsMarketing: 2,
+    sleepsRealistic: 2,
+    staticRatingLbs: 500,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/dp/B0B4N7BJXT?tag=prepperevo-20",
+    notes: "Mid-range hardshell. Good value for the weight class.",
+  },
+  {
+    id: "bodyarmor-pike-3p",
+    brand: "Body Armor",
+    model: "Sky Ridge Pike 3-Person",
+    type: "hardshell-clamshell",
+    closedWeightLbs: 155,
+    closedHeightIn: 12,
+    closedLengthIn: 85,
+    closedWidthIn: 54,
+    openLengthIn: 85,
+    openWidthIn: 54,
+    openHeadroomIn: 48,
+    mattressThicknessIn: 3,
+    sleepsMarketing: 3,
+    sleepsRealistic: 2,
+    staticRatingLbs: 700,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/dp/B0B4N8J97G?tag=prepperevo-20",
+    notes: "Clamshell version. Full standing room for 6-foot person.",
+  },
+
+  // ─── TUFF STUFF ─────────────────────────────────────────────────────
+
+  {
+    id: "tuffstuff-alpha-ii",
+    brand: "Tuff Stuff",
+    model: "Alpha II",
+    type: "hardshell-clamshell",
+    closedWeightLbs: 145,
+    closedHeightIn: 11,
+    closedLengthIn: 82,
+    closedWidthIn: 54,
+    openLengthIn: 82,
+    openWidthIn: 54,
+    openHeadroomIn: 46,
+    mattressThicknessIn: 2.5,
+    sleepsMarketing: 2,
+    sleepsRealistic: 2,
+    staticRatingLbs: 600,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/dp/B07YQJHGGN?tag=prepperevo-20",
+    notes: "Gas strut assisted. Budget clamshell option.",
+  },
+  {
+    id: "tuffstuff-ranger-3",
+    brand: "Tuff Stuff",
+    model: "Ranger 3",
+    type: "softshell-foldout",
+    closedWeightLbs: 110,
+    closedHeightIn: 13,
+    closedLengthIn: 53,
+    closedWidthIn: 45,
+    openLengthIn: 86,
+    openWidthIn: 53,
+    openHeadroomIn: 44,
+    mattressThicknessIn: 2,
+    sleepsMarketing: 3,
+    sleepsRealistic: 2,
+    staticRatingLbs: 500,
+    hasAnnex: true,
+    annexWeightLbs: 12,
+    annexSleeps: 1,
+    affiliateUrl: "https://www.amazon.com/dp/B07BZQRN6K?tag=prepperevo-20",
+    notes: "Affordable entry-level soft-shell with annex.",
+  },
+
+  // ─── THULE ──────────────────────────────────────────────────────────
+
+  {
+    id: "thule-tepui-autana",
+    brand: "Thule",
+    model: "Tepui Explorer Autana",
+    type: "softshell-foldout",
+    closedWeightLbs: 125,
+    closedHeightIn: 14,
+    closedLengthIn: 56,
+    closedWidthIn: 48,
+    openLengthIn: 96,
+    openWidthIn: 56,
+    openHeadroomIn: 48,
+    mattressThicknessIn: 2.5,
+    sleepsMarketing: 3,
+    sleepsRealistic: 2,
+    staticRatingLbs: 600,
+    hasAnnex: true,
+    annexWeightLbs: 15,
+    annexSleeps: 1,
+    affiliateUrl: "https://www.amazon.com/dp/B076H5JGRM?tag=prepperevo-20",
+    notes: "Thule quality. Integrated annex room option. Good ventilation.",
+  },
+
+  // ─── ALU-CAB ────────────────────────────────────────────────────────
+
+  {
+    id: "alucab-gen3-expedition",
+    brand: "Alu-Cab",
+    model: "Gen 3.1 Expedition",
+    type: "hardshell-clamshell",
+    closedWeightLbs: 195,
+    closedHeightIn: 14,
+    closedLengthIn: 88,
+    closedWidthIn: 62,
+    openLengthIn: 88,
+    openWidthIn: 62,
+    openHeadroomIn: 54,
+    mattressThicknessIn: 3,
+    sleepsMarketing: 3,
+    sleepsRealistic: 2,
+    staticRatingLbs: 900,
+    hasAnnex: true,
+    annexWeightLbs: 30,
+    annexSleeps: 2,
+    affiliateUrl: "https://www.amazon.com/dp/B0CWV4PYQQ?tag=prepperevo-20",
+    notes: "South African engineering. All-aluminum construction. Premium expedition-grade.",
+  },
+];
+
+// ─── Helpers ──────────────────────────────────────────────────────────
+
+export function getTentBrands(): string[] {
+  return Array.from(new Set(tentDatabase.map((t) => t.brand))).sort();
+}
+
+export function getTentModels(brand: string): TentEntry[] {
+  return tentDatabase.filter((t) => t.brand === brand).sort((a, b) => a.model.localeCompare(b.model));
+}
+
+export function findTent(id: string): TentEntry | undefined {
+  return tentDatabase.find((t) => t.id === id);
+}
+
+export function calcRealisticSleeping(widthIn: number): { adults: number; tight: number } {
+  const adultWidth = 24;
+  const gap = 6;
+  const adults = Math.floor((widthIn + gap) / (adultWidth + gap));
+  const tight = Math.floor(widthIn / adultWidth);
+  return { adults: Math.max(1, adults), tight: Math.max(1, tight) };
+}

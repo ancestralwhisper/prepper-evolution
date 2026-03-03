@@ -10,6 +10,10 @@
 //   Axle ratios: Manufacturer build sheets
 //   Alternator: Manufacturer electrical specs
 //   Wading depth: Manufacturer off-road specs (0 = not rated)
+//   Overall height: Manufacturer spec sheets
+//   Bed dimensions: Manufacturer spec sheets (interior measurements)
+//   Roof ratings: Manufacturer spec / FMVSS 216 (static = 3x dynamic if unpublished)
+//   Body type: Classified for RigSafe SVG silhouette matching
 
 import type { StockVehicle } from "./vehicle-types";
 
@@ -26,6 +30,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.13, frontWeightPct: 55, stockWadingDepthIn: 0,
     stockRatio: 3.73, alternatorAmps: 130,
+    overallHeightIn: 72.0, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
   },
   {
     year: 2024, make: "Toyota", model: "Tacoma", trim: "TRD Off-Road 4WD",
@@ -37,6 +43,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.12, frontWeightPct: 57, stockWadingDepthIn: 0,
     stockRatio: 3.73, alternatorAmps: 150,
+    overallHeightIn: 71.6, bedLengthIn: 60.5, bedWidthIn: 41.5,
+    roofDynamicLbs: 120, roofStaticLbs: 360, bodyType: "mid-truck",
   },
   {
     year: 2023, make: "Toyota", model: "Tacoma", trim: "TRD Off-Road 4WD (3rd Gen)",
@@ -48,6 +56,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.12, frontWeightPct: 57, stockWadingDepthIn: 0,
     stockRatio: 3.73, alternatorAmps: 130,
+    overallHeightIn: 70.6, bedLengthIn: 60.5, bedWidthIn: 41.5,
+    roofDynamicLbs: 120, roofStaticLbs: 360, bodyType: "mid-truck",
   },
   {
     year: 2024, make: "Toyota", model: "Tundra", trim: "TRD Off-Road 4WD",
@@ -59,6 +69,21 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "hybrid", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.14, frontWeightPct: 54, stockWadingDepthIn: 0,
     stockRatio: 3.91, alternatorAmps: 180,
+    overallHeightIn: 78.0, bedLengthIn: 66.7, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
+  },
+  {
+    year: 2025, make: "Toyota", model: "Tundra", trim: "TRD Pro 4WD",
+    curbWeightLbs: 5750, gvwrLbs: 7050, maxTowingLbs: 10890,
+    wheelbaseIn: 145.7, trackWidthIn: 67.5, groundClearanceIn: 11.2,
+    approachAngle: 30, departureAngle: 23, breakoverAngle: 21,
+    fuelTankGal: 32.2, stockTireSize: "285/65R18", stockTireDiameter: 32.6,
+    mpgCity: 17, mpgHighway: 22, mpgCombined: 19,
+    engineType: "hybrid", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.13, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 4.30, alternatorAmps: 180,
+    overallHeightIn: 78.7, bedLengthIn: 66.7, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
   },
   {
     year: 2024, make: "Toyota", model: "Land Cruiser", trim: "4WD",
@@ -70,6 +95,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "hybrid", drivetrain: "4wd", transferCase: "full-time",
     ssf: 1.16, frontWeightPct: 53, stockWadingDepthIn: 27,
     stockRatio: 3.73, alternatorAmps: 180,
+    overallHeightIn: 73.4, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
   },
   {
     year: 2024, make: "Toyota", model: "Sequoia", trim: "TRD Off-Road 4WD",
@@ -81,6 +108,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "hybrid", drivetrain: "4wd", transferCase: "full-time",
     ssf: 1.14, frontWeightPct: 54, stockWadingDepthIn: 0,
     stockRatio: 3.73, alternatorAmps: 180,
+    overallHeightIn: 77.7, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
   },
   {
     year: 2024, make: "Toyota", model: "RAV4", trim: "TRD Off-Road AWD",
@@ -92,6 +121,21 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "awd", transferCase: "none",
     ssf: 1.24, frontWeightPct: 59, stockWadingDepthIn: 0,
     stockRatio: 2.28, alternatorAmps: 150,
+    overallHeightIn: 67.0, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "crossover",
+  },
+  {
+    year: 2025, make: "Toyota", model: "4Runner", trim: "TRD Pro 4WD",
+    curbWeightLbs: 4700, gvwrLbs: 6010, maxTowingLbs: 6000,
+    wheelbaseIn: 112.2, trackWidthIn: 66.5, groundClearanceIn: 9.9,
+    approachAngle: 34, departureAngle: 26, breakoverAngle: 24,
+    fuelTankGal: 22.5, stockTireSize: "265/70R18", stockTireDiameter: 32.6,
+    mpgCity: 17, mpgHighway: 22, mpgCombined: 19,
+    engineType: "hybrid", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.14, frontWeightPct: 54, stockWadingDepthIn: 0,
+    stockRatio: 3.73, alternatorAmps: 180,
+    overallHeightIn: 72.5, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
   },
 
   // ─── JEEP ────────────────────────────────────────────────────────
@@ -106,6 +150,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.04, frontWeightPct: 53, stockWadingDepthIn: 30,
     stockRatio: 4.10, alternatorAmps: 220,
+    overallHeightIn: 73.6, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-3door",
   },
   {
     year: 2024, make: "Jeep", model: "Wrangler", trim: "Sport 2-Door (JL)",
@@ -117,6 +163,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.02, frontWeightPct: 54, stockWadingDepthIn: 30,
     stockRatio: 3.73, alternatorAmps: 160,
+    overallHeightIn: 73.6, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-3door",
   },
   {
     year: 2024, make: "Jeep", model: "Gladiator", trim: "Rubicon 4WD",
@@ -128,6 +176,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.06, frontWeightPct: 56, stockWadingDepthIn: 30,
     stockRatio: 4.10, alternatorAmps: 220,
+    overallHeightIn: 75.0, bedLengthIn: 60.0, bedWidthIn: 44.8,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "mid-truck",
   },
   {
     year: 2024, make: "Jeep", model: "Grand Cherokee", trim: "Trailhawk 4WD",
@@ -139,6 +189,21 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "selectable",
     ssf: 1.15, frontWeightPct: 53, stockWadingDepthIn: 24,
     stockRatio: 3.45, alternatorAmps: 180,
+    overallHeightIn: 72.4, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
+  },
+  {
+    year: 2024, make: "Jeep", model: "Grand Cherokee L", trim: "Overland 4WD",
+    curbWeightLbs: 5060, gvwrLbs: 6500, maxTowingLbs: 6200,
+    wheelbaseIn: 121.7, trackWidthIn: 65.4, groundClearanceIn: 8.4,
+    approachAngle: 26.1, departureAngle: 24.1, breakoverAngle: 18.4,
+    fuelTankGal: 24.6, stockTireSize: "265/60R18", stockTireDiameter: 30.5,
+    mpgCity: 17, mpgHighway: 24, mpgCombined: 20,
+    engineType: "gas", drivetrain: "4wd", transferCase: "selectable",
+    ssf: 1.15, frontWeightPct: 54, stockWadingDepthIn: 24,
+    stockRatio: 3.45, alternatorAmps: 180,
+    overallHeightIn: 72.6, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
   },
 
   // ─── FORD ────────────────────────────────────────────────────────
@@ -153,6 +218,21 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "selectable",
     ssf: 1.07, frontWeightPct: 55, stockWadingDepthIn: 33.5,
     stockRatio: 4.70, alternatorAmps: 200,
+    overallHeightIn: 73.3, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-3door",
+  },
+  {
+    year: 2024, make: "Ford", model: "Bronco", trim: "Raptor 4-Door",
+    curbWeightLbs: 5733, gvwrLbs: 6700, maxTowingLbs: 4500,
+    wheelbaseIn: 116.1, trackWidthIn: 73.2, groundClearanceIn: 13.1,
+    approachAngle: 47.2, departureAngle: 40.5, breakoverAngle: 29.7,
+    fuelTankGal: 20.8, stockTireSize: "315/70R17", stockTireDiameter: 35.0,
+    mpgCity: 15, mpgHighway: 17, mpgCombined: 16,
+    engineType: "gas", drivetrain: "4wd", transferCase: "selectable",
+    ssf: 1.05, frontWeightPct: 54, stockWadingDepthIn: 33.5,
+    stockRatio: 4.70, alternatorAmps: 250,
+    overallHeightIn: 75.8, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-3door",
   },
   {
     year: 2024, make: "Ford", model: "Bronco Sport", trim: "Badlands AWD",
@@ -162,8 +242,10 @@ export const vehicleDatabase: StockVehicle[] = [
     fuelTankGal: 16.0, stockTireSize: "235/65R17", stockTireDiameter: 29.0,
     mpgCity: 21, mpgHighway: 26, mpgCombined: 23,
     engineType: "gas", drivetrain: "awd", transferCase: "none",
-    ssf: 1.22, frontWeightPct: 58, stockWadingDepthIn: 23.6,
-    stockRatio: 4.44, alternatorAmps: 150,
+    ssf: 1.16, frontWeightPct: 59, stockWadingDepthIn: 23.6,
+    stockRatio: 4.41, alternatorAmps: 150,
+    overallHeightIn: 66.3, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "crossover",
   },
   {
     year: 2024, make: "Ford", model: "F-150", trim: "XLT 4x4 (SuperCrew)",
@@ -175,6 +257,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.18, frontWeightPct: 54, stockWadingDepthIn: 0,
     stockRatio: 3.55, alternatorAmps: 175,
+    overallHeightIn: 77.2, bedLengthIn: 67.1, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
   },
   {
     year: 2024, make: "Ford", model: "F-150", trim: "Tremor 4x4",
@@ -186,6 +270,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.17, frontWeightPct: 55, stockWadingDepthIn: 0,
     stockRatio: 3.73, alternatorAmps: 175,
+    overallHeightIn: 79.0, bedLengthIn: 67.1, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
   },
   {
     year: 2024, make: "Ford", model: "Ranger", trim: "Tremor 4WD",
@@ -197,6 +283,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.13, frontWeightPct: 56, stockWadingDepthIn: 0,
     stockRatio: 3.73, alternatorAmps: 175,
+    overallHeightIn: 72.6, bedLengthIn: 61.0, bedWidthIn: 44.8,
+    roofDynamicLbs: 120, roofStaticLbs: 360, bodyType: "mid-truck",
   },
   {
     year: 2024, make: "Ford", model: "F-250", trim: "Lariat 4x4 (Super Duty)",
@@ -208,6 +296,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "diesel", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.22, frontWeightPct: 56, stockWadingDepthIn: 0,
     stockRatio: 3.55, alternatorAmps: 240,
+    overallHeightIn: 81.3, bedLengthIn: 81.9, bedWidthIn: 51.0,
+    roofDynamicLbs: 200, roofStaticLbs: 600, bodyType: "crew-cab-standard",
   },
   {
     year: 2024, make: "Ford", model: "Expedition", trim: "Timberline 4WD",
@@ -219,20 +309,37 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "selectable",
     ssf: 1.15, frontWeightPct: 53, stockWadingDepthIn: 0,
     stockRatio: 3.73, alternatorAmps: 175,
+    overallHeightIn: 77.5, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
+  },
+  {
+    year: 2024, make: "Ford", model: "Maverick", trim: "Tremor AWD",
+    curbWeightLbs: 3870, gvwrLbs: 4950, maxTowingLbs: 4000,
+    wheelbaseIn: 121.1, trackWidthIn: 64.7, groundClearanceIn: 8.6,
+    approachAngle: 21, departureAngle: 22, breakoverAngle: 18,
+    fuelTankGal: 16.0, stockTireSize: "235/65R17", stockTireDiameter: 29.0,
+    mpgCity: 22, mpgHighway: 29, mpgCombined: 25,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.17, frontWeightPct: 58, stockWadingDepthIn: 0,
+    stockRatio: 3.81, alternatorAmps: 150,
+    overallHeightIn: 68.7, bedLengthIn: 54.4, bedWidthIn: 42.0,
+    roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "mid-truck",
   },
 
   // ─── CHEVROLET / GMC ─────────────────────────────────────────────
 
   {
     year: 2024, make: "Chevrolet", model: "Colorado", trim: "Z71 4WD",
-    curbWeightLbs: 4394, gvwrLbs: 5800, maxTowingLbs: 7700,
-    wheelbaseIn: 131.4, trackWidthIn: 64.1, groundClearanceIn: 8.4,
-    approachAngle: 25.3, departureAngle: 22.7, breakoverAngle: 21.2,
-    fuelTankGal: 21.3, stockTireSize: "265/65R17", stockTireDiameter: 30.6,
-    mpgCity: 19, mpgHighway: 25, mpgCombined: 21,
+    curbWeightLbs: 4531, gvwrLbs: 6250, maxTowingLbs: 7700,
+    wheelbaseIn: 131.4, trackWidthIn: 64.1, groundClearanceIn: 8.9,
+    approachAngle: 25, departureAngle: 22, breakoverAngle: 20,
+    fuelTankGal: 21.4, stockTireSize: "265/65R18", stockTireDiameter: 31.6,
+    mpgCity: 18, mpgHighway: 23, mpgCombined: 20,
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
-    ssf: 1.14, frontWeightPct: 56, stockWadingDepthIn: 0,
+    ssf: 1.13, frontWeightPct: 56, stockWadingDepthIn: 0,
     stockRatio: 3.42, alternatorAmps: 170,
+    overallHeightIn: 71.3, bedLengthIn: 61.0, bedWidthIn: 44.5,
+    roofDynamicLbs: 120, roofStaticLbs: 360, bodyType: "mid-truck",
   },
   {
     year: 2024, make: "Chevrolet", model: "Colorado", trim: "ZR2 4WD",
@@ -244,17 +351,21 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.10, frontWeightPct: 56, stockWadingDepthIn: 0,
     stockRatio: 3.42, alternatorAmps: 170,
+    overallHeightIn: 73.5, bedLengthIn: 61.0, bedWidthIn: 44.5,
+    roofDynamicLbs: 120, roofStaticLbs: 360, bodyType: "mid-truck",
   },
   {
     year: 2024, make: "Chevrolet", model: "Silverado 1500", trim: "LT 4WD",
-    curbWeightLbs: 4900, gvwrLbs: 7100, maxTowingLbs: 11500,
-    wheelbaseIn: 147.4, trackWidthIn: 68.0, groundClearanceIn: 8.4,
-    approachAngle: 23, departureAngle: 21, breakoverAngle: 19,
-    fuelTankGal: 24.0, stockTireSize: "265/65R18", stockTireDiameter: 31.6,
-    mpgCity: 17, mpgHighway: 23, mpgCombined: 19,
+    curbWeightLbs: 4785, gvwrLbs: 7000, maxTowingLbs: 9500,
+    wheelbaseIn: 147.4, trackWidthIn: 68.0, groundClearanceIn: 8.1,
+    approachAngle: 22, departureAngle: 21, breakoverAngle: 18,
+    fuelTankGal: 24.0, stockTireSize: "255/70R17", stockTireDiameter: 31.1,
+    mpgCity: 18, mpgHighway: 21, mpgCombined: 19,
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
-    ssf: 1.20, frontWeightPct: 55, stockWadingDepthIn: 0,
-    stockRatio: 3.23, alternatorAmps: 170,
+    ssf: 1.18, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 3.42, alternatorAmps: 220,
+    overallHeightIn: 75.8, bedLengthIn: 69.9, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
   },
   {
     year: 2024, make: "Chevrolet", model: "Silverado 1500", trim: "Trail Boss 4WD",
@@ -266,6 +377,21 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.18, frontWeightPct: 55, stockWadingDepthIn: 0,
     stockRatio: 3.42, alternatorAmps: 170,
+    overallHeightIn: 78.0, bedLengthIn: 69.9, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
+  },
+  {
+    year: 2025, make: "Chevrolet", model: "Silverado 1500", trim: "ZR2 4WD",
+    curbWeightLbs: 5470, gvwrLbs: 7300, maxTowingLbs: 9100,
+    wheelbaseIn: 147.4, trackWidthIn: 68.5, groundClearanceIn: 11.2,
+    approachAngle: 31.8, departureAngle: 23.3, breakoverAngle: 23.4,
+    fuelTankGal: 24.0, stockTireSize: "275/65R18", stockTireDiameter: 32.6,
+    mpgCity: 15, mpgHighway: 20, mpgCombined: 17,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.15, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 3.42, alternatorAmps: 220,
+    overallHeightIn: 79.9, bedLengthIn: 69.9, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
   },
   {
     year: 2024, make: "Chevrolet", model: "Tahoe", trim: "Z71 4WD",
@@ -277,6 +403,21 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.13, frontWeightPct: 53, stockWadingDepthIn: 0,
     stockRatio: 3.23, alternatorAmps: 170,
+    overallHeightIn: 76.4, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
+  },
+  {
+    year: 2025, make: "Chevrolet", model: "Tahoe", trim: "RST 4WD",
+    curbWeightLbs: 5600, gvwrLbs: 7100, maxTowingLbs: 8200,
+    wheelbaseIn: 120.9, trackWidthIn: 67.0, groundClearanceIn: 8.0,
+    approachAngle: 25, departureAngle: 21, breakoverAngle: 17,
+    fuelTankGal: 24.0, stockTireSize: "275/55R22", stockTireDiameter: 33.0,
+    mpgCity: 16, mpgHighway: 20, mpgCombined: 17,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.13, frontWeightPct: 53, stockWadingDepthIn: 0,
+    stockRatio: 3.23, alternatorAmps: 170,
+    overallHeightIn: 76.0, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
   },
   {
     year: 2024, make: "Chevrolet", model: "Suburban", trim: "Z71 4WD",
@@ -288,6 +429,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.13, frontWeightPct: 52, stockWadingDepthIn: 0,
     stockRatio: 3.23, alternatorAmps: 170,
+    overallHeightIn: 76.7, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
   },
   {
     year: 2024, make: "GMC", model: "Canyon", trim: "AT4 4WD",
@@ -299,6 +442,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.13, frontWeightPct: 56, stockWadingDepthIn: 0,
     stockRatio: 3.42, alternatorAmps: 170,
+    overallHeightIn: 71.8, bedLengthIn: 61.0, bedWidthIn: 44.5,
+    roofDynamicLbs: 120, roofStaticLbs: 360, bodyType: "mid-truck",
   },
   {
     year: 2024, make: "GMC", model: "Sierra 1500", trim: "SLE 4WD",
@@ -310,6 +455,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.18, frontWeightPct: 55, stockWadingDepthIn: 0,
     stockRatio: 3.42, alternatorAmps: 220,
+    overallHeightIn: 75.8, bedLengthIn: 69.9, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
   },
   {
     year: 2024, make: "GMC", model: "Sierra 1500", trim: "AT4 4WD",
@@ -321,6 +468,47 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.17, frontWeightPct: 55, stockWadingDepthIn: 0,
     stockRatio: 3.42, alternatorAmps: 170,
+    overallHeightIn: 78.1, bedLengthIn: 69.9, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
+  },
+  {
+    year: 2025, make: "GMC", model: "Sierra 1500", trim: "Elevation Crew Cab 4WD",
+    curbWeightLbs: 4900, gvwrLbs: 7000, maxTowingLbs: 9500,
+    wheelbaseIn: 147.4, trackWidthIn: 68.0, groundClearanceIn: 8.4,
+    approachAngle: 23, departureAngle: 21, breakoverAngle: 18,
+    fuelTankGal: 24.0, stockTireSize: "275/60R20", stockTireDiameter: 33.0,
+    mpgCity: 17, mpgHighway: 22, mpgCombined: 19,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.18, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 3.42, alternatorAmps: 220,
+    overallHeightIn: 76.3, bedLengthIn: 69.9, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
+  },
+  {
+    year: 2025, make: "GMC", model: "Sierra 2500 HD", trim: "AT4X 4WD",
+    curbWeightLbs: 7600, gvwrLbs: 10750, maxTowingLbs: 18500,
+    wheelbaseIn: 149.0, trackWidthIn: 72.0, groundClearanceIn: 11.0,
+    approachAngle: 28, departureAngle: 23, breakoverAngle: 20,
+    fuelTankGal: 36.0, stockTireSize: "275/70R18", stockTireDiameter: 33.2,
+    mpgCity: 14, mpgHighway: 17, mpgCombined: 15,
+    engineType: "diesel", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.20, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 3.73, alternatorAmps: 250,
+    overallHeightIn: 81.8, bedLengthIn: 82.2, bedWidthIn: 51.0,
+    roofDynamicLbs: 200, roofStaticLbs: 600, bodyType: "crew-cab-standard",
+  },
+  {
+    year: 2025, make: "GMC", model: "Yukon", trim: "AT4 4WD",
+    curbWeightLbs: 5750, gvwrLbs: 7300, maxTowingLbs: 8400,
+    wheelbaseIn: 120.9, trackWidthIn: 67.5, groundClearanceIn: 10.0,
+    approachAngle: 28, departureAngle: 23, breakoverAngle: 18,
+    fuelTankGal: 24.0, stockTireSize: "275/60R20", stockTireDiameter: 33.0,
+    mpgCity: 15, mpgHighway: 20, mpgCombined: 17,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.13, frontWeightPct: 53, stockWadingDepthIn: 0,
+    stockRatio: 3.23, alternatorAmps: 170,
+    overallHeightIn: 76.8, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
   },
 
   // ─── RAM ─────────────────────────────────────────────────────────
@@ -335,6 +523,21 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.16, frontWeightPct: 54, stockWadingDepthIn: 0,
     stockRatio: 3.21, alternatorAmps: 180,
+    overallHeightIn: 77.6, bedLengthIn: 67.4, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
+  },
+  {
+    year: 2025, make: "Ram", model: "1500", trim: "Laramie 4x4",
+    curbWeightLbs: 5350, gvwrLbs: 7100, maxTowingLbs: 12750,
+    wheelbaseIn: 144.5, trackWidthIn: 67.4, groundClearanceIn: 8.7,
+    approachAngle: 24, departureAngle: 22, breakoverAngle: 19,
+    fuelTankGal: 26.0, stockTireSize: "275/55R20", stockTireDiameter: 31.9,
+    mpgCity: 17, mpgHighway: 25, mpgCombined: 20,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.17, frontWeightPct: 54, stockWadingDepthIn: 0,
+    stockRatio: 3.21, alternatorAmps: 180,
+    overallHeightIn: 77.0, bedLengthIn: 67.4, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
   },
   {
     year: 2024, make: "Ram", model: "2500", trim: "Power Wagon 4x4",
@@ -346,6 +549,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.20, frontWeightPct: 55, stockWadingDepthIn: 0,
     stockRatio: 4.10, alternatorAmps: 220,
+    overallHeightIn: 81.5, bedLengthIn: 76.3, bedWidthIn: 51.0,
+    roofDynamicLbs: 200, roofStaticLbs: 600, bodyType: "crew-cab-standard",
   },
 
   // ─── NISSAN ──────────────────────────────────────────────────────
@@ -360,6 +565,21 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
     ssf: 1.11, frontWeightPct: 57, stockWadingDepthIn: 0,
     stockRatio: 3.69, alternatorAmps: 150,
+    overallHeightIn: 72.4, bedLengthIn: 59.5, bedWidthIn: 42.2,
+    roofDynamicLbs: 120, roofStaticLbs: 360, bodyType: "mid-truck",
+  },
+  {
+    year: 2024, make: "Nissan", model: "Titan", trim: "PRO-4X 4WD",
+    curbWeightLbs: 5705, gvwrLbs: 7300, maxTowingLbs: 9310,
+    wheelbaseIn: 139.8, trackWidthIn: 67.0, groundClearanceIn: 10.8,
+    approachAngle: 26, departureAngle: 22, breakoverAngle: 19,
+    fuelTankGal: 26.0, stockTireSize: "275/60R20", stockTireDiameter: 33.0,
+    mpgCity: 15, mpgHighway: 21, mpgCombined: 17,
+    engineType: "gas", drivetrain: "4wd", transferCase: "part-time",
+    ssf: 1.15, frontWeightPct: 55, stockWadingDepthIn: 0,
+    stockRatio: 3.36, alternatorAmps: 180,
+    overallHeightIn: 77.8, bedLengthIn: 67.0, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
   },
 
   // ─── LAND ROVER ──────────────────────────────────────────────────
@@ -374,6 +594,21 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "awd", transferCase: "full-time",
     ssf: 1.09, frontWeightPct: 52, stockWadingDepthIn: 35.4,
     stockRatio: 3.73, alternatorAmps: 250,
+    overallHeightIn: 77.0, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 168, roofStaticLbs: 504, bodyType: "suv-5door",
+  },
+  {
+    year: 2024, make: "Land Rover", model: "Defender", trim: "90 P300 AWD",
+    curbWeightLbs: 4820, gvwrLbs: 6614, maxTowingLbs: 8201,
+    wheelbaseIn: 101.9, trackWidthIn: 65.7, groundClearanceIn: 11.5,
+    approachAngle: 38, departureAngle: 40, breakoverAngle: 31,
+    fuelTankGal: 22.7, stockTireSize: "255/65R19", stockTireDiameter: 30.4,
+    mpgCity: 18, mpgHighway: 23, mpgCombined: 20,
+    engineType: "gas", drivetrain: "awd", transferCase: "full-time",
+    ssf: 1.10, frontWeightPct: 53, stockWadingDepthIn: 35.4,
+    stockRatio: 3.73, alternatorAmps: 200,
+    overallHeightIn: 77.3, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 168, roofStaticLbs: 504, bodyType: "suv-3door",
   },
 
   // ─── LEXUS ───────────────────────────────────────────────────────
@@ -388,6 +623,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "full-time",
     ssf: 1.14, frontWeightPct: 53, stockWadingDepthIn: 27,
     stockRatio: 3.73, alternatorAmps: 180,
+    overallHeightIn: 73.4, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
   },
   {
     year: 2023, make: "Lexus", model: "GX", trim: "460 4WD",
@@ -399,6 +636,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "4wd", transferCase: "full-time",
     ssf: 1.13, frontWeightPct: 54, stockWadingDepthIn: 27,
     stockRatio: 3.73, alternatorAmps: 130,
+    overallHeightIn: 72.2, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
   },
 
   // ─── SUBARU ──────────────────────────────────────────────────────
@@ -413,6 +652,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "awd", transferCase: "none",
     ssf: 1.21, frontWeightPct: 60, stockWadingDepthIn: 0,
     stockRatio: 3.70, alternatorAmps: 110,
+    overallHeightIn: 66.1, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "crossover",
   },
   {
     year: 2024, make: "Subaru", model: "Outback", trim: "Wilderness AWD",
@@ -424,6 +665,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "awd", transferCase: "none",
     ssf: 1.18, frontWeightPct: 60, stockWadingDepthIn: 0,
     stockRatio: 4.11, alternatorAmps: 110,
+    overallHeightIn: 67.8, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "crossover",
   },
   {
     year: 2025, make: "Subaru", model: "Forester", trim: "Wilderness AWD",
@@ -435,6 +678,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "awd", transferCase: "none",
     ssf: 1.19, frontWeightPct: 60, stockWadingDepthIn: 0,
     stockRatio: 4.11, alternatorAmps: 110,
+    overallHeightIn: 67.3, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "crossover",
   },
   {
     year: 2024, make: "Subaru", model: "Crosstrek", trim: "Wilderness AWD",
@@ -446,6 +691,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "awd", transferCase: "none",
     ssf: 1.21, frontWeightPct: 61, stockWadingDepthIn: 0,
     stockRatio: 4.11, alternatorAmps: 110,
+    overallHeightIn: 63.6, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "crossover",
   },
 
   // ─── HONDA ───────────────────────────────────────────────────────
@@ -460,6 +707,37 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "awd", transferCase: "none",
     ssf: 1.20, frontWeightPct: 58, stockWadingDepthIn: 0,
     stockRatio: 4.33, alternatorAmps: 180,
+    overallHeightIn: 69.4, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "crossover",
+  },
+
+  // ─── HYUNDAI / KIA ───────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Hyundai", model: "Santa Cruz", trim: "SEL Premium AWD",
+    curbWeightLbs: 3865, gvwrLbs: 5071, maxTowingLbs: 5000,
+    wheelbaseIn: 118.3, trackWidthIn: 63.6, groundClearanceIn: 8.6,
+    approachAngle: 18, departureAngle: 26, breakoverAngle: 17,
+    fuelTankGal: 17.7, stockTireSize: "245/50R20", stockTireDiameter: 29.7,
+    mpgCity: 19, mpgHighway: 27, mpgCombined: 22,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.18, frontWeightPct: 58, stockWadingDepthIn: 0,
+    stockRatio: 3.51, alternatorAmps: 180,
+    overallHeightIn: 66.7, bedLengthIn: 52.1, bedWidthIn: 42.7,
+    roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "mid-truck",
+  },
+  {
+    year: 2025, make: "Kia", model: "Telluride", trim: "X-Pro AWD",
+    curbWeightLbs: 4480, gvwrLbs: 5710, maxTowingLbs: 5500,
+    wheelbaseIn: 114.2, trackWidthIn: 66.7, groundClearanceIn: 8.4,
+    approachAngle: 20, departureAngle: 22, breakoverAngle: 17,
+    fuelTankGal: 18.8, stockTireSize: "245/60R20", stockTireDiameter: 31.5,
+    mpgCity: 18, mpgHighway: 24, mpgCombined: 20,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.18, frontWeightPct: 56, stockWadingDepthIn: 0,
+    stockRatio: 3.51, alternatorAmps: 180,
+    overallHeightIn: 68.9, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "crossover",
   },
 
   // ─── RIVIAN ──────────────────────────────────────────────────────
@@ -474,6 +752,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "ev", drivetrain: "awd", transferCase: "none",
     ssf: 1.11, frontWeightPct: 50, stockWadingDepthIn: 42,
     stockRatio: 0, alternatorAmps: 0,
+    overallHeightIn: 73.1, bedLengthIn: 54.0, bedWidthIn: 51.0,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "mid-truck",
   },
 
   // ─── VAN BUILDS ──────────────────────────────────────────────────
@@ -488,6 +768,8 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "diesel", drivetrain: "4wd", transferCase: "selectable",
     ssf: 1.25, frontWeightPct: 52, stockWadingDepthIn: 0,
     stockRatio: 3.92, alternatorAmps: 220,
+    overallHeightIn: 107.0, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 330, roofStaticLbs: 990, bodyType: "van",
   },
   {
     year: 2024, make: "Ford", model: "Transit", trim: "AWD (148 WB)",
@@ -499,8 +781,12 @@ export const vehicleDatabase: StockVehicle[] = [
     engineType: "gas", drivetrain: "awd", transferCase: "none",
     ssf: 1.30, frontWeightPct: 54, stockWadingDepthIn: 0,
     stockRatio: 3.73, alternatorAmps: 175,
+    overallHeightIn: 107.7, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 330, roofStaticLbs: 990, bodyType: "van",
   },
 ];
+
+// ─── Helper: Get unique makes ──────────────────────────────────────
 
 export function getUniqueMakes(): string[] {
   return Array.from(new Set(vehicleDatabase.map((v) => v.make))).sort();

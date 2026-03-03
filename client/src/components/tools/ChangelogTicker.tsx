@@ -8,6 +8,18 @@ interface ChangelogEntry {
 const changelog: ChangelogEntry[] = [
   {
     date: "Mar 3, 2026",
+    tool: "RigSafe Configurator",
+    version: "v1.0",
+    summary: "Launched three-chain RTT/rack load calculator — validates static, dynamic, and off-road ratings, payload, garage clearance, and sleeping capacity",
+  },
+  {
+    date: "Mar 3, 2026",
+    tool: "RigRated UTV Builder",
+    version: "v1.0",
+    summary: "Launched UTV overland builder with 26+ machines, 80+ accessories, 50-state legal heatmap, trail scoring, and trip plan PDF export",
+  },
+  {
+    date: "Mar 3, 2026",
     tool: "Vehicle Profile",
     version: "v1.1",
     summary: "Added 9 everyday vehicles: GMC Canyon, Colorado Z71, Sierra SLE, Silverado LT, Forester Wilderness, Outback Premium, Bronco Sport, RAV4 TRD, Passport TrailSport — 41 vehicles total",

@@ -238,6 +238,18 @@ export interface VehicleComputed {
   warnings: string[];
 }
 
+// ─── Body Type (RigSafe) ──────────────────────────────────────────
+
+export type BodyType =
+  | "crew-cab-short"
+  | "crew-cab-standard"
+  | "crew-cab-long"
+  | "mid-truck"
+  | "suv-5door"
+  | "suv-3door"
+  | "crossover"
+  | "van";
+
 // ─── Stock Vehicle Database Entry ──────────────────────────────────
 
 export interface StockVehicle {
@@ -268,6 +280,13 @@ export interface StockVehicle {
   stockWadingDepthIn: number;
   stockRatio: number;      // axle ratio
   alternatorAmps: number;
+  // ─── RigSafe Fields ───
+  overallHeightIn: number;       // total vehicle height
+  bedLengthIn: number | null;    // truck bed interior length (null for SUVs)
+  bedWidthIn: number | null;     // truck bed width between wheel wells
+  roofDynamicLbs: number;        // manufacturer roof dynamic load rating
+  roofStaticLbs: number;         // static (3x dynamic if not published)
+  bodyType: BodyType;
 }
 
 // ─── Multiplier Constants ──────────────────────────────────────────
