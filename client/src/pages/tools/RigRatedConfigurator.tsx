@@ -24,6 +24,7 @@ import LegalHeatMap from "./LegalHeatMap";
 import TripPlan from "./TripPlan";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
+import SupportFooter from "@/components/tools/SupportFooter";
 import ToolSafetyDisclaimer from "@/components/tools/ToolSafetyDisclaimer";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import PrintQrCode from "@/components/tools/PrintQrCode";
@@ -467,6 +468,7 @@ export default function RigRatedConfigurator() {
       {/* SVG Visualization */}
       <RigRatedSvg
         bodyType={bodyType}
+        machineId={!config.useManual && config.machine ? config.machine.id : undefined}
         showRoof={hasCategory("roof")}
         showWindshield={hasCategory("windshield")}
         showDoors={hasCategory("doors")}
@@ -1068,6 +1070,7 @@ export default function RigRatedConfigurator() {
       {/* Footer */}
       <div className="space-y-4 no-print">
         <DataPrivacyNotice />
+        <SupportFooter />
 
         <div className="flex flex-wrap gap-3">
           <button

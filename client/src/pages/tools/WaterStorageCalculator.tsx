@@ -8,6 +8,7 @@ import {
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
+import SupportFooter from "@/components/tools/SupportFooter";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import ZipLookup from "@/components/tools/ZipLookup";
@@ -770,6 +771,7 @@ export default function WaterStorageCalculator() {
             </div>
 
             <DataPrivacyNotice />
+            <SupportFooter />
           </div>
 
           <div className="lg:col-span-1">

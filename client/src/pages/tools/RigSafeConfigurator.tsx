@@ -22,9 +22,10 @@ import {
   computeAll, defaultRigSafeConfig, RIGSAFE_KEY,
   type RigSafeConfig, type RigSafeResult, type RigSafeWarning, type CargoItem,
 } from "./rigsafe-compute";
-import RigSafeSvg from "./RigSafeSvg";
+import RigSafeSvg, { vehicleToSilhouetteId } from "./RigSafeSvg";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
+import SupportFooter from "@/components/tools/SupportFooter";
 import ToolSafetyDisclaimer from "@/components/tools/ToolSafetyDisclaimer";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import PrintQrCode from "@/components/tools/PrintQrCode";
@@ -1408,6 +1409,7 @@ export default function RigSafeConfigurator() {
             {/* SVG Visualization */}
             <RigSafeSvg
               bodyType={bodyType}
+              vehicleKey={!config.useManual && config.vehicle ? vehicleToSilhouetteId(config.vehicle.make, config.vehicle.model, config.vehicle.trim) : undefined}
               showTonneau={config.hasTonneau}
               showRack={true}
               showTent={config.hasTent}
@@ -1646,6 +1648,7 @@ export default function RigSafeConfigurator() {
 
       {/* Shared footer components */}
       <DataPrivacyNotice />
+      <SupportFooter />
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <ToolSocialShare
           url="https://prepperevolution.com/tools/rigsafe-configurator"

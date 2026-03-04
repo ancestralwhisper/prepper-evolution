@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
+import SupportFooter from "@/components/tools/SupportFooter";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import ZipLookup from "@/components/tools/ZipLookup";
@@ -1074,6 +1075,7 @@ export default function KitBuilder() {
               </p>
 
               <DataPrivacyNotice />
+              <SupportFooter />
             </div>
           </div>
         </div>

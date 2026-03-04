@@ -17,7 +17,10 @@ import type {
 import { VEHICLE_PROFILE_KEY } from "./vehicle-types";
 import { computeVehicle } from "./vehicle-compute";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
-import { useSEO } from "@/hooks/useSEO";
+import SupportFooter from "@/components/tools/SupportFooter";
+import ToolSocialShare from "@/components/tools/ToolSocialShare";
+import PrintQrCode from "@/components/tools/PrintQrCode";
+import InstallButton from "@/components/tools/InstallButton";
 
 // ─── SVG Gauge Component ─────────────────────────────────────────────
 
@@ -57,7 +60,7 @@ function GaugeArc({
         {/* Background arc */}
         <path
           d={`M ${bgStart.x} ${bgStart.y} A ${radius} ${radius} 0 ${bgLargeArc} 1 ${bgEnd.x} ${bgEnd.y}`}
-          fill="none" stroke="hsl(var(--border))" strokeWidth={8} strokeLinecap="round" opacity={0.3}
+          fill="none" stroke="var(--border)" strokeWidth={8} strokeLinecap="round" opacity={0.3}
         />
         {/* Value arc */}
         {pct > 0.005 && (
@@ -133,13 +136,13 @@ function StatCard({ icon: Icon, label, value, unit, accent, warning }: {
   accent?: boolean; warning?: boolean;
 }) {
   return (
-    <div className={`bg-card border rounded-lg p-3 ${warning ? "border-red-500/50" : "border-border"}`}>
+    <div className={`bg-card border rounded-lg p-3 ${warning ? "border-danger/50" : "border-border"}`}>
       <div className="flex items-center gap-2 mb-1">
-        <Icon className={`w-3.5 h-3.5 ${accent ? "text-primary" : warning ? "text-red-500" : "text-muted-foreground"}`} />
+        <Icon className={`w-3.5 h-3.5 ${accent ? "text-primary" : warning ? "text-danger" : "text-muted-foreground"}`} />
         <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
       </div>
       <div className="flex items-baseline gap-1">
-        <span className={`text-lg font-extrabold ${warning ? "text-red-500" : accent ? "text-primary" : ""}`}>{value}</span>
+        <span className={`text-lg font-extrabold ${warning ? "text-danger" : accent ? "text-primary" : ""}`}>{value}</span>
         {unit && <span className="text-xs text-muted-foreground">{unit}</span>}
       </div>
     </div>
@@ -187,7 +190,7 @@ function NumberInput({
         value={value || ""}
         onChange={(e) => onChange(Number(e.target.value))}
         min={min} max={max} step={step || 1}
-        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-accent outline-none transition-colors"
+        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
       />
       {hint && <p className="text-[10px] text-muted-foreground mt-0.5">{hint}</p>}
     </div>
@@ -206,7 +209,7 @@ function SelectInput<T extends string>({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
-        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-accent outline-none transition-colors"
+        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>{o.label}</option>
@@ -353,7 +356,7 @@ function WeightDonut({ segments, totalLbs }: { segments: { label: string; value:
   return (
     <div className="flex flex-col items-center">
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        <circle cx={center} cy={center} r={radius} fill="none" stroke="hsl(var(--border))" strokeWidth={strokeWidth} opacity={0.2} />
+        <circle cx={center} cy={center} r={radius} fill="none" stroke="var(--border)" strokeWidth={strokeWidth} opacity={0.2} />
         {arcs.map((arc) => (
           <circle
             key={arc.label}
@@ -395,7 +398,7 @@ function MpgBreakdownChart({ items }: { items: { label: string; penalty: number 
         <div key={item.label} className="space-y-0.5">
           <div className="flex justify-between">
             <span className="text-[10px] text-muted-foreground">{item.label}</span>
-            <span className={`text-[10px] font-bold ${item.penalty <= 0 ? "text-green-500" : "text-red-500"}`}>
+            <span className={`text-[10px] font-bold ${item.penalty <= 0 ? "text-success" : "text-danger"}`}>
               {item.penalty > 0 ? `-${item.penalty}%` : `+${Math.abs(item.penalty)}%`}
             </span>
           </div>
@@ -418,8 +421,7 @@ function MpgBreakdownChart({ items }: { items: { label: string; penalty: number 
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════
 
-function VehicleProfileEditor() {
-
+export default function VehicleProfileEditor() {
   const [profile, setProfile] = useState<VehicleProfile>(createDefaultProfile);
   const [initialized, setInitialized] = useState(false);
 
@@ -556,7 +558,7 @@ function VehicleProfileEditor() {
             value={profile.nickname}
             onChange={(e) => update("nickname", e.target.value)}
             placeholder='e.g. "The War Wagon" or "Daily Runner"'
-            className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-accent outline-none transition-colors"
+            className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
           />
         </div>
 
@@ -569,7 +571,7 @@ function VehicleProfileEditor() {
                 <select
                   value={selMake}
                   onChange={(e) => handleMakeChange(e.target.value)}
-                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-accent outline-none"
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none"
                 >
                   <option value="">Select Make</option>
                   {makes.map((m) => <option key={m} value={m}>{m}</option>)}
@@ -582,7 +584,7 @@ function VehicleProfileEditor() {
                   value={selModel}
                   onChange={(e) => handleModelChange(e.target.value)}
                   disabled={!selMake}
-                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-accent outline-none disabled:opacity-40"
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none disabled:opacity-40"
                 >
                   <option value="">Select Model</option>
                   {models.map((m) => <option key={m} value={m}>{m}</option>)}
@@ -595,7 +597,7 @@ function VehicleProfileEditor() {
                   value={selTrim}
                   onChange={(e) => handleTrimChange(e.target.value)}
                   disabled={!selModel}
-                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-accent outline-none disabled:opacity-40"
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none disabled:opacity-40"
                 >
                   <option value="">Select Trim</option>
                   {trims.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -616,17 +618,17 @@ function VehicleProfileEditor() {
               <div>
                 <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Make</label>
                 <input type="text" value={profile.make} onChange={(e) => update("make", e.target.value)} placeholder="Toyota"
-                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-accent outline-none" />
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none" />
               </div>
               <div>
                 <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                 <input type="text" value={profile.model} onChange={(e) => update("model", e.target.value)} placeholder="4Runner"
-                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-accent outline-none" />
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none" />
               </div>
               <div>
                 <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Trim</label>
                 <input type="text" value={profile.trim} onChange={(e) => update("trim", e.target.value)} placeholder="TRD Off-Road"
-                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-accent outline-none" />
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none" />
               </div>
             </div>
             <div className="grid sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
@@ -715,7 +717,7 @@ function VehicleProfileEditor() {
                 <div>
                   <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Tire Size</label>
                   <input type="text" value={profile.tires.size} onChange={(e) => updateNested("tires", { size: e.target.value })}
-                    placeholder="285/70R17" className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-accent outline-none" />
+                    placeholder="285/70R17" className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none" />
                 </div>
                 <NumberInput label="Total Diameter" value={profile.tires.diameter} onChange={(v) => updateNested("tires", { diameter: v })} unit="inches" step={0.1} hint={`Stock: ${profile.stockTireDiameter}"`} />
                 <SelectInput label="Tire Type" value={profile.tires.type} onChange={(v) => updateNested("tires", { type: v as TireType })}
@@ -922,7 +924,7 @@ function VehicleProfileEditor() {
                   onChange={(e) => update("otherModsNotes", e.target.value)}
                   rows={2}
                   placeholder="Custom drawer system, bed platform, comms antenna, etc."
-                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-accent outline-none resize-none"
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none resize-none"
                 />
               </div>
               <NumberInput label="Real-World Tested MPG" value={profile.testedMpg || 0}
@@ -935,15 +937,15 @@ function VehicleProfileEditor() {
 
             {/* Warnings */}
             {computed.warnings.length > 0 && (
-              <div className="bg-danger/5 border border-red-500/30 rounded-lg p-4">
+              <div className="bg-danger/5 border border-danger/30 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <TriangleAlert className="w-4 h-4 text-red-500" />
-                  <h3 className="text-sm font-extrabold text-red-500">Warnings ({computed.warnings.length})</h3>
+                  <TriangleAlert className="w-4 h-4 text-danger" />
+                  <h3 className="text-sm font-extrabold text-danger">Warnings ({computed.warnings.length})</h3>
                 </div>
                 <div className="space-y-2">
                   {computed.warnings.map((w, i) => (
-                    <p key={i} className="text-xs text-red-500/80 leading-relaxed flex gap-2">
-                      <span className="text-red-500 font-bold flex-shrink-0">{i + 1}.</span> {w}
+                    <p key={i} className="text-xs text-danger/80 leading-relaxed flex gap-2">
+                      <span className="text-danger font-bold flex-shrink-0">{i + 1}.</span> {w}
                     </p>
                   ))}
                 </div>
@@ -1035,7 +1037,7 @@ function VehicleProfileEditor() {
                   <span className="text-2xl font-extrabold text-primary">{computed.estimatedMpg}</span>
                   <span className="text-sm text-muted-foreground">MPG</span>
                   {computed.mpgPenaltyPct > 0 && (
-                    <span className="text-xs text-red-500 font-bold">(-{computed.mpgPenaltyPct}% from stock {profile.mpgCombined})</span>
+                    <span className="text-xs text-danger font-bold">(-{computed.mpgPenaltyPct}% from stock {profile.mpgCombined})</span>
                   )}
                 </div>
                 {computed.mpgBreakdown.length > 0 ? (
@@ -1106,7 +1108,7 @@ function VehicleProfileEditor() {
             <div className="flex items-center gap-3">
               <button
                 onClick={handleReset}
-                className="flex items-center gap-2 bg-muted border border-border rounded-lg px-4 py-3 text-sm font-bold uppercase tracking-wide hover:border-red-500/30 hover:text-red-500 transition-colors"
+                className="flex items-center gap-2 bg-muted border border-border rounded-lg px-4 py-3 text-sm font-bold uppercase tracking-wide hover:border-danger/30 hover:text-danger transition-colors"
               >
                 <RotateCcw className="w-4 h-4" /> Reset Profile
               </button>
@@ -1114,124 +1116,18 @@ function VehicleProfileEditor() {
 
             {/* Privacy Notice */}
             <DataPrivacyNotice />
+            <SupportFooter />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <ToolSocialShare
+                url="https://prepperevolution.com/tools/vehicle-profile"
+                toolName="Unified Vehicle Profile"
+              />
+              <PrintQrCode url="https://prepperevolution.com/tools/vehicle-profile" />
+              <InstallButton />
+            </div>
           </div>
         </>
       )}
     </div>
-  );
-}
-
-export default function VehicleProfilePage() {
-  useSEO({
-    title: "Unified Vehicle Profile | Ops Deck | Prepper Evolution",
-    description: "Build your complete vehicle profile with real manufacturer specs. Track modifications, calculate payload, estimate MPG impact, and assess trail readiness. The foundation of the Ops Deck — free, no sign-up.",
-  });
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: "Unified Vehicle Profile — Ops Deck",
-    description: "Build your complete vehicle profile with real manufacturer specs. Track modifications, calculate payload, estimate MPG impact, and assess trail readiness.",
-    url: "https://prepperevolution.com/tools/vehicle-profile",
-    applicationCategory: "UtilityApplication",
-    operatingSystem: "Any",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-    },
-    creator: {
-      "@type": "Organization",
-      name: "Prepper Evolution",
-      url: "https://prepperevolution.com",
-    },
-  };
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
-      <div className="py-16 sm:py-20 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <div className="max-w-3xl mb-10 animate-fade-in-up">
-            <p className="text-primary text-sm font-bold uppercase tracking-widest mb-3">
-              Ops Deck
-            </p>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4">
-              Unified Vehicle <span className="text-primary">Profile</span>
-            </h1>
-            <p className="text-muted-foreground text-lg leading-relaxed">
-              Select your vehicle, input every modification, and see the real-world impact
-              on payload capacity, fuel economy, off-road geometry, stability, and trail
-              readiness — all computed from verified manufacturer specs and physics-based
-              multipliers. This profile feeds every tool in the Ops Deck.
-            </p>
-          </div>
-
-          <div className="animate-fade-in-up-delay-1">
-            <VehicleProfileEditor />
-          </div>
-
-          <div className="max-w-3xl mt-16 space-y-8 no-print">
-            <section>
-              <h2 className="text-2xl font-extrabold mb-4">
-                Why a Unified Vehicle Profile?
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-3">
-                Every modification you bolt onto your rig has consequences. A 3-inch lift raises
-                your center of gravity. 35-inch mud-terrains cut your fuel economy. A steel bumper
-                and winch add 200+ pounds to your front axle. Most people guess at the impact. This
-                tool calculates it.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                The Vehicle Profile is the foundation of the entire Ops Deck. Once you build your
-                profile here, every other tool — Fuel &amp; Range Planner, Load Balancer, Threat
-                Dashboard — reads from it automatically. Change a tire size once, and your range,
-                payload, and stability numbers update across everything.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-extrabold mb-4">
-                How Accurate Is This?
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-3">
-                Every stock spec in our database comes from manufacturer spec sheets, NHTSA rollover
-                test data, and EPA fuel economy ratings. Modification penalties are derived from
-                published testing by Expedition Portal, Car and Driver, the National Academies, and
-                real-world controlled experiments — not forum opinions.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                The Static Stability Factor (SSF) comes directly from NHTSA NCAP rollover ratings.
-                Center of gravity height is derived mathematically: CG = track width / (2 x SSF).
-                MPG penalties use a multiplicative chain model that accounts for tire type, tire
-                diameter, lift height, weight, roof drag, and tire pressure — each validated against
-                published data.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-extrabold mb-4">
-                What Vehicles Are Supported?
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Our database includes 40+ vehicles — from dedicated off-road rigs to everyday trucks
-                and crossovers. Toyota 4Runner, Tacoma, Tundra, Land Cruiser, RAV4 TRD; Jeep Wrangler,
-                Gladiator, Grand Cherokee; Ford Bronco, Bronco Sport, F-150, Ranger, F-250; Chevrolet
-                Colorado Z71 &amp; ZR2, Silverado LT &amp; Trail Boss, Tahoe, Suburban; GMC Canyon AT4,
-                Sierra SLE &amp; AT4; Ram 1500, Power Wagon; Honda Passport TrailSport; Subaru Outback,
-                Forester &amp; Crosstrek Wilderness; Land Rover Defender; Lexus GX; Rivian R1T; and
-                van builds like the Mercedes Sprinter and Ford Transit. If your vehicle is not listed,
-                you can enter all specs manually.
-              </p>
-            </section>
-          </div>
-        </div>
-      </div>
-    </>
   );
 }
