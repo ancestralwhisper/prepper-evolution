@@ -1,7 +1,29 @@
 
+import { useEffect, useRef, useState } from "react";
 import { Heart, Beer, ExternalLink } from "lucide-react";
 
 export default function SupportFooter() {
+  const bmcRef = useRef<HTMLDivElement>(null);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!bmcRef.current) return;
+
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js";
+    script.setAttribute("data-name", "bmc-button");
+    script.setAttribute("data-slug", "prepperevolution");
+    script.setAttribute("data-color", "#e7a108");
+    script.setAttribute("data-emoji", "🍺");
+    script.setAttribute("data-font", "Inter");
+    script.setAttribute("data-text", "Buy me a beer");
+    script.setAttribute("data-outline-color", "#000000");
+    script.setAttribute("data-font-color", "#000000");
+    script.setAttribute("data-coffee-color", "#FFDD00");
+    script.onload = () => setScriptLoaded(true);
+    bmcRef.current.appendChild(script);
+  }, []);
+
   return (
     <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6 no-print">
       <div className="flex items-center gap-2 mb-3">
@@ -20,16 +42,24 @@ export default function SupportFooter() {
         them free is to <strong className="text-foreground">shop through the affiliate links</strong> in
         your report. Or if you just want to say thanks:
       </p>
-      <a
-        href="https://buymeacoffee.com/prepperevolution"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2.5 bg-[#FFDD00] hover:bg-[#FFD000] text-black font-extrabold text-sm uppercase tracking-wide rounded-lg px-5 py-3 transition-colors shadow-sm hover:shadow-md"
-      >
-        <Beer className="w-5 h-5" />
-        Buy Me a Beer
-        <ExternalLink className="w-3.5 h-3.5 opacity-60" />
-      </a>
+
+      {/* BMAC widget script container */}
+      <div ref={bmcRef} className="mb-3" />
+
+      {/* Direct link fallback (shows if BMAC script fails to load) */}
+      {!scriptLoaded && (
+        <a
+          href="https://buymeacoffee.com/prepperevolution"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2.5 bg-[#FFDD00] hover:bg-[#FFD000] text-black font-extrabold text-sm uppercase tracking-wide rounded-lg px-5 py-3 transition-colors shadow-sm hover:shadow-md mb-3"
+        >
+          <Beer className="w-5 h-5" />
+          Buy Me a Beer
+          <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+        </a>
+      )}
+
       <p className="text-xs text-muted-foreground mt-3">
         Thanks for helping keep it going <span className="text-red-500">&hearts;</span>
       </p>
