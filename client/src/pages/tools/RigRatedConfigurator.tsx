@@ -17,7 +17,9 @@ import { stateLegalData } from "./rigrated-legal";
 import { gearPresets, findPreset, getPresetOptions } from "./rigrated-gear-presets";
 import {
   computeAll, defaultRigRatedConfig, RIGRATED_KEY,
+  SUSPENSION_TIERS,
   type RigRatedConfig, type RigRatedResult, type RigRatedWarning, type TripPlanData, defaultTripPlan,
+  type SuspensionTier,
 } from "./rigrated-compute";
 import RigRatedSvg from "./RigRatedSvg";
 import LegalHeatMap from "./LegalHeatMap";
@@ -420,12 +422,6 @@ export default function RigRatedConfigurator() {
     ? ("id" in activeMachine ? `${activeMachine.year} ${activeMachine.make} ${activeMachine.model}` : `${activeMachine.year} ${activeMachine.make} ${activeMachine.model}`)
     : "Not selected";
 
-  // Determine which accessory layers to show on SVG
-  const hasCategory = (cat: string) => config.selectedAccessories.some((id) => {
-    const acc = accessories.find((a) => a.id === id);
-    return acc?.category === cat;
-  });
-
   const estimatedMpg = bodyType.includes("sport") ? 8 : 12;
   const machineObj = getMachineObj(config);
   const totalFuel = machineObj.fuelCapacityGal + (config.gearPreset?.spareFuelGal ?? 0);
@@ -469,15 +465,6 @@ export default function RigRatedConfigurator() {
       <RigRatedSvg
         bodyType={bodyType}
         machineId={!config.useManual && config.machine ? config.machine.id : undefined}
-        showRoof={hasCategory("roof")}
-        showWindshield={hasCategory("windshield")}
-        showDoors={hasCategory("doors")}
-        showFrontBumper={hasCategory("bumper-front")}
-        showRearBumper={hasCategory("bumper-rear")}
-        showWinch={hasCategory("winch")}
-        showRack={hasCategory("roof-rack") || hasCategory("cargo-rack")}
-        showLightBar={hasCategory("light-bar")}
-        showRtt={hasCategory("rtt-mount")}
         loadStatus={result.overallStatus}
       />
 
@@ -582,6 +569,33 @@ export default function RigRatedConfigurator() {
                 <div><span className="text-muted block text-[10px]">Tow Rating</span><span className="font-bold">{activeMachine.towingCapacityLbs.toLocaleString()} lbs</span></div>
               </div>
             )}
+
+            {/* Suspension Tier */}
+            <div className="border-t border-border pt-4">
+              <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Suspension Upgrade</label>
+              <select
+                value={config.suspensionTier}
+                onChange={(e) => update("suspensionTier", e.target.value as SuspensionTier)}
+                className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+              >
+                {(Object.keys(SUSPENSION_TIERS) as SuspensionTier[]).map((tier) => {
+                  const t = SUSPENSION_TIERS[tier];
+                  return (
+                    <option key={tier} value={tier}>
+                      {t.label} {t.multiplier > 0 ? `(+${Math.round(t.multiplier * 100)}%)` : ""} — {t.examples}
+                    </option>
+                  );
+                })}
+              </select>
+              <p className="text-[10px] text-muted-foreground mt-1">
+                Upgraded suspension improves weight handling but does not change manufacturer GVWR
+              </p>
+              {config.suspensionTier !== "stock" && (
+                <p className="text-[10px] text-primary font-bold mt-1">
+                  +{Math.round(SUSPENSION_TIERS[config.suspensionTier].multiplier * 100)}% effective capacity applied
+                </p>
+              )}
+            </div>
           </div>
         </Section>
 
@@ -853,11 +867,21 @@ export default function RigRatedConfigurator() {
               <GaugeArc
                 value={result.payload.payloadPct}
                 max={100}
-                label="Payload Used"
+                label="MFR Payload %"
                 unit="%"
                 warningThreshold={70}
                 dangerThreshold={90}
               />
+              {result.modifiedPayload && (
+                <GaugeArc
+                  value={result.modifiedPayload.payloadPct}
+                  max={100}
+                  label="Effective Payload %"
+                  unit="%"
+                  warningThreshold={70}
+                  dangerThreshold={90}
+                />
+              )}
               <GaugeArc
                 value={result.stabilityIndex}
                 max={10}
@@ -872,25 +896,53 @@ export default function RigRatedConfigurator() {
               />
             </div>
 
-            {/* Payload bar */}
-            <div className="bg-card border border-border rounded-lg p-3 space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Payload Budget</span>
-                <StatusBadge pct={result.payload.payloadPct} />
+            {/* Payload bars */}
+            <div className="bg-card border border-border rounded-lg p-3 space-y-3">
+              {/* Stock spec bar */}
+              <div className="space-y-1">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                    {result.modifiedPayload ? "MFR Spec Payload" : "Payload Budget"}
+                  </span>
+                  <StatusBadge pct={result.payload.payloadPct} />
+                </div>
+                <div className="h-3 bg-muted rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${Math.min(100, result.payload.payloadPct)}%`,
+                      backgroundColor: result.payload.payloadPct >= 100 ? "#EF4444" : result.payload.payloadPct >= 85 ? "#F97316" : result.payload.payloadPct >= 70 ? "#EAB308" : "#10B981",
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>{result.payload.payloadUsed} lbs used of {result.payload.payloadCapacity} lbs capacity</span>
+                  <span>{result.payload.remaining >= 0 ? `${result.payload.remaining} lbs remaining` : `${Math.abs(result.payload.remaining)} lbs OVER`}</span>
+                </div>
               </div>
-              <div className="h-3 bg-muted rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-500"
-                  style={{
-                    width: `${Math.min(100, result.payload.payloadPct)}%`,
-                    backgroundColor: result.payload.payloadPct >= 100 ? "#EF4444" : result.payload.payloadPct >= 85 ? "#F97316" : result.payload.payloadPct >= 70 ? "#EAB308" : "#10B981",
-                  }}
-                />
-              </div>
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>{result.payload.payloadUsed} lbs used of {result.payload.payloadCapacity} lbs capacity</span>
-                <span>{result.payload.remaining >= 0 ? `${result.payload.remaining} lbs remaining` : `${Math.abs(result.payload.remaining)} lbs OVER`}</span>
-              </div>
+
+              {/* Modified bar (only when suspension upgrade active) */}
+              {result.modifiedPayload && (
+                <div className="space-y-1 border-t border-border pt-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-bold uppercase tracking-wide text-primary">Effective Payload</span>
+                    <StatusBadge pct={result.modifiedPayload.payloadPct} />
+                  </div>
+                  <div className="h-3 bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{
+                        width: `${Math.min(100, result.modifiedPayload.payloadPct)}%`,
+                        backgroundColor: result.modifiedPayload.payloadPct >= 100 ? "#EF4444" : result.modifiedPayload.payloadPct >= 85 ? "#F97316" : result.modifiedPayload.payloadPct >= 70 ? "#EAB308" : "#10B981",
+                      }}
+                    />
+                  </div>
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>{result.modifiedPayload.payloadUsed} lbs used of {result.modifiedPayload.payloadCapacity} lbs capacity</span>
+                    <span>{result.modifiedPayload.remaining >= 0 ? `${result.modifiedPayload.remaining} lbs remaining` : `${Math.abs(result.modifiedPayload.remaining)} lbs OVER`}</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Axle distribution */}
@@ -910,16 +962,58 @@ export default function RigRatedConfigurator() {
               </div>
             </div>
 
-            {/* Weight breakdown donut */}
+            {/* Weight breakdown donut(s) */}
             {result.weightBreakdown.length > 0 && (
-              <div className="flex flex-col sm:flex-row items-center gap-4">
-                <DonutChart
-                  segments={result.weightBreakdown}
-                  totalLabel="Payload"
-                  totalValue={`${result.payload.payloadUsed} lbs`}
-                  size={180}
-                />
-                <ChartLegend segments={result.weightBreakdown} />
+              <div className="space-y-3">
+                <div className={`flex ${result.modifiedPayload ? "flex-row justify-center gap-6" : "flex-col sm:flex-row items-center gap-4"}`}>
+                  {/* Stock donut */}
+                  <div className="flex flex-col items-center">
+                    <DonutChart
+                      segments={result.weightBreakdown}
+                      totalLabel={result.modifiedPayload ? "MFR Spec" : "Payload"}
+                      totalValue={`${result.payload.payloadPct}%`}
+                      size={result.modifiedPayload ? 150 : 180}
+                    />
+                    {result.modifiedPayload && (
+                      <span className="text-[10px] font-bold text-muted-foreground mt-1">MFR Spec</span>
+                    )}
+                  </div>
+
+                  {/* Modified donut (only when active) */}
+                  {result.modifiedPayload && (
+                    <div className="flex flex-col items-center">
+                      <DonutChart
+                        segments={result.weightBreakdown}
+                        totalLabel="Effective"
+                        totalValue={`${result.modifiedPayload.payloadPct}%`}
+                        size={150}
+                      />
+                      <span className="text-[10px] font-bold text-primary mt-1">Effective</span>
+                    </div>
+                  )}
+
+                  {/* Legend only shows once (beside single donut, or below dual) */}
+                  {!result.modifiedPayload && (
+                    <ChartLegend segments={result.weightBreakdown} />
+                  )}
+                </div>
+                {result.modifiedPayload && (
+                  <div className="flex justify-center">
+                    <ChartLegend segments={result.weightBreakdown} />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Suspension disclaimer */}
+            {result.modifiedPayload && (
+              <div className="flex gap-2 p-3 rounded-lg bg-yellow-500/5 border border-yellow-500/30">
+                <AlertTriangle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  GVWR is set by {activeMachine ? ("id" in activeMachine ? activeMachine.make : activeMachine.make) : "the manufacturer"} based on frame, axles, hubs, and brakes.
+                  Suspension upgrades improve weight handling (damping, travel, spring rates) but do not change the manufacturer&apos;s rated payload capacity.
+                  Modified capacity reflects suspension capability — ride at your own discretion.
+                </p>
               </div>
             )}
 

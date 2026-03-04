@@ -1,3 +1,16 @@
+// ─── RigRated Calculation Engine ──────────────────────────────────────
+// Pure logic — no React. All functions are deterministic and testable.
+//
+// Computes: payload budget, axle distribution, stability index,
+// trail compatibility, legal status, drive-vs-trailer comparison,
+// 14-day certified badge, and warnings.
+//
+// Safety thresholds (same as RigSafe):
+//   Green:  0-70% used (plenty of margin)
+//   Yellow: 70-85% used (safety margin zone)
+//   Orange: 85-90% used (approaching limit)
+//   Red:    90-100%+ used (at or over limit)
+
 import type { UTVMachine, UTVBodyType } from "./rigrated-machines";
 import type { UTVAccessory } from "./rigrated-accessories";
 import type { TrailProfile } from "./rigrated-trails";
@@ -7,7 +20,25 @@ import { getLegalStatus } from "./rigrated-legal";
 import type { GearPreset } from "./rigrated-gear-presets";
 import { WATER_LBS_PER_GALLON, FUEL_LBS_PER_GALLON, DEFAULT_OCCUPANT_LBS } from "./rigrated-gear-presets";
 
+// ─── Suspension Tier ──────────────────────────────────────────────────
+
+export type SuspensionTier = "stock" | "entry" | "mid" | "race";
+
+export const SUSPENSION_TIERS: Record<SuspensionTier, {
+  label: string;
+  multiplier: number;
+  examples: string;
+}> = {
+  stock: { label: "Stock", multiplier: 0, examples: "Factory springs & shocks" },
+  entry: { label: "Entry Upgrade", multiplier: 0.15, examples: "Fox QS3, Elka Stage 1" },
+  mid: { label: "Mid Upgrade", multiplier: 0.22, examples: "Fox Live Valve, Elka Stage 3, Walker Evans" },
+  race: { label: "Race / King", multiplier: 0.30, examples: "King IBP, Fox 3.0 IBP, Elka Stage 5" },
+};
+
+// ─── Configuration Interfaces ─────────────────────────────────────────
+
 export interface RigRatedConfig {
+  // Machine
   machine: UTVMachine | null;
   manualMachine: {
     make: string;
@@ -33,14 +64,17 @@ export interface RigRatedConfig {
   };
   useManual: boolean;
 
-  selectedAccessories: string[];
+  // Accessories
+  selectedAccessories: string[]; // accessory IDs
   instagramMode: boolean;
 
+  // Occupants
   adults: number;
   children: number;
   avgAdultLbs: number;
   avgChildLbs: number;
 
+  // Gear
   durationDays: number;
   gearPreset: GearPreset | null;
   customFoodLbs: number;
@@ -53,12 +87,15 @@ export interface RigRatedConfig {
   customOtherLbs: number;
   useCustomGear: boolean;
 
-  selectedTrails: string[];
+  // Trail selection
+  selectedTrails: string[]; // trail IDs
 
+  // Legal
   legalView: LegalView;
-  selectedStates: string[];
+  selectedStates: string[]; // state codes
 
-  towVehicleWeight: number;
+  // Drive vs trailer
+  towVehicleWeight: number; // curb weight
   towVehicleMaxTow: number;
   towVehicleMpg: number;
   towVehicleFuelTankGal: number;
@@ -66,6 +103,10 @@ export interface RigRatedConfig {
   driveMiles: number;
   fuelCostPerGal: number;
 
+  // Suspension
+  suspensionTier: SuspensionTier;
+
+  // Trip plan
   tripPlan: TripPlanData;
 }
 
@@ -88,25 +129,37 @@ export interface TripPlanData {
   leaveBehindPhone: string;
 }
 
+// ─── Computed Results ─────────────────────────────────────────────────
+
 export interface RigRatedResult {
+  // Payload
   payload: PayloadBudget;
+  modifiedPayload: PayloadBudget | null;
   axleDistribution: { frontPct: number; rearPct: number };
 
-  stabilityIndex: number;
+  // Stability
+  stabilityIndex: number; // 1-10 (10 = most stable)
   stabilityNote: string;
 
+  // Trail compatibility
   trailScores: TrailScore[];
 
+  // Legal
   legalStatuses: { stateCode: string; status: "green" | "yellow" | "red" }[];
 
+  // Drive vs trailer
   driveVsTrailer: DriveVsTrailerResult | null;
 
+  // 14-day badge
   certifiedBadge: CertifiedBadge;
 
+  // Weight breakdown for donut chart
   weightBreakdown: { label: string; value: number; color: string }[];
 
+  // Warnings
   warnings: RigRatedWarning[];
 
+  // Overall status
   overallStatus: "green" | "yellow" | "orange" | "red";
 }
 
@@ -162,12 +215,16 @@ export interface RigRatedWarning {
   message: string;
 }
 
+// ─── Helper: Get effective machine data ───────────────────────────────
+
 function getMachine(config: RigRatedConfig) {
   if (config.useManual || !config.machine) {
     return config.manualMachine;
   }
   return config.machine;
 }
+
+// ─── Compute: Payload Budget ──────────────────────────────────────────
 
 export function computePayload(
   config: RigRatedConfig,
@@ -177,15 +234,18 @@ export function computePayload(
 
   const dryWeight = machine.dryWeightLbs;
 
+  // Accessories weight
   const accessoriesWeight = config.selectedAccessories.reduce((sum, id) => {
     const acc = accessoryDb.find((a) => a.id === id);
     return sum + (acc?.weightLbs ?? 0);
   }, 0);
 
+  // Occupant weight
   const occupantWeight =
     config.adults * config.avgAdultLbs +
     config.children * config.avgChildLbs;
 
+  // Gear weight
   let gearWeight = 0;
   if (config.useCustomGear) {
     gearWeight =
@@ -210,6 +270,7 @@ export function computePayload(
       p.campingGearLbs;
   }
 
+  // Full fuel tank weight
   const fuelWeight = Math.round(machine.fuelCapacityGal * FUEL_LBS_PER_GALLON);
 
   const totalLoaded = dryWeight + accessoriesWeight + occupantWeight + gearWeight + fuelWeight;
@@ -233,6 +294,28 @@ export function computePayload(
   };
 }
 
+// ─── Compute: Modified Payload (suspension upgrade) ──────────────────
+
+export function computeModifiedPayload(
+  stockPayload: PayloadBudget,
+  tier: SuspensionTier
+): PayloadBudget | null {
+  if (tier === "stock") return null;
+  const mult = SUSPENSION_TIERS[tier].multiplier;
+  const modifiedCapacity = Math.round(stockPayload.payloadCapacity * (1 + mult));
+  const payloadPct = modifiedCapacity > 0
+    ? Math.round((stockPayload.payloadUsed / modifiedCapacity) * 100)
+    : 0;
+  return {
+    ...stockPayload,
+    payloadCapacity: modifiedCapacity,
+    payloadPct,
+    remaining: modifiedCapacity - stockPayload.payloadUsed,
+  };
+}
+
+// ─── Compute: Axle Distribution ───────────────────────────────────────
+
 export function computeAxleDistribution(
   config: RigRatedConfig,
   accessoryDb: UTVAccessory[]
@@ -254,13 +337,16 @@ export function computeAxleDistribution(
     }
   }
 
+  // Gear goes in bed/rear
   const gearWeight = computeGearWeight(config);
   rearWeight += gearWeight;
 
+  // Occupants distributed roughly 50/50
   const occupantWeight = config.adults * config.avgAdultLbs + config.children * config.avgChildLbs;
   frontWeight += occupantWeight * 0.5;
   rearWeight += occupantWeight * 0.5;
 
+  // Distributed items split 50/50
   frontWeight += distributedWeight * 0.5;
   rearWeight += distributedWeight * 0.5;
 
@@ -302,20 +388,26 @@ function computeGearWeight(config: RigRatedConfig): number {
   return 0;
 }
 
+// ─── Compute: Stability Index ─────────────────────────────────────────
+
 export function computeStabilityIndex(
   config: RigRatedConfig,
   payload: PayloadBudget
 ): { index: number; note: string } {
   const machine = getMachine(config);
 
+  // Base stability from track width ratio (wider = more stable)
   const avgTrackWidth = (machine.trackWidthFrontIn + machine.trackWidthRearIn) / 2;
   const widthScore = Math.min(10, (avgTrackWidth / 72) * 10);
 
+  // CG penalty from load
   const loadPct = payload.payloadPct / 100;
   const cgPenalty = loadPct * 2;
 
+  // Height penalty (taller = less stable)
   const heightPenalty = Math.max(0, (machine.overallHeightIn - 70) / 10);
 
+  // Body type bonus (sport = wider stance, lower CG)
   const bodyBonus = machine.bodyType.includes("sport") ? 1.5 : 0;
 
   let index = Math.round((widthScore - cgPenalty - heightPenalty + bodyBonus) * 10) / 10;
@@ -330,6 +422,8 @@ export function computeStabilityIndex(
   return { index, note };
 }
 
+// ─── Compute: Trail Compatibility ─────────────────────────────────────
+
 export function computeTrailCompatibility(
   config: RigRatedConfig,
   trailDb: TrailProfile[]
@@ -337,24 +431,28 @@ export function computeTrailCompatibility(
   const machine = getMachine(config);
 
   return trailDb.map((trail) => {
-    const widthOk = machine.overallWidthIn <= trail.minWidthIn + 8;
+    const widthOk = machine.overallWidthIn <= trail.minWidthIn + 8; // 8" tolerance
     const clearanceOk = machine.groundClearanceIn >= trail.minClearanceIn;
 
+    // Tire size check
     const machineTireDia = parseTireDiameter(machine.tireSize);
     const trailTireDia = parseTireDiameter(trail.minTireSize);
     const tiresOk = machineTireDia >= trailTireDia;
 
+    // Fuel range check: can the machine complete the longest fuel leg?
     const estimatedMpg = machine.bodyType.includes("sport") ? 8 : 12;
     const totalFuel = machine.fuelCapacityGal + (config.gearPreset?.spareFuelGal ?? 0);
     const rangeMiles = totalFuel * estimatedMpg;
     const fuelRangeOk = rangeMiles >= trail.fuelDistanceMiles;
 
+    // Difficulty note
     let difficultyNote = "";
     if (trail.difficulty <= 4) difficultyNote = "Beginner-friendly. Most UTVs can handle this.";
     else if (trail.difficulty <= 6) difficultyNote = "Moderate. Recovery gear recommended.";
     else if (trail.difficulty <= 8) difficultyNote = "Advanced. Skid plates, rock sliders, and winch recommended.";
     else difficultyNote = "Expert only. Full armor, recovery gear, and experienced driver required.";
 
+    // Overall score
     const failCount = [widthOk, clearanceOk, tiresOk, fuelRangeOk].filter((v) => !v).length;
     let overall: "green" | "yellow" | "red" = "green";
     if (failCount >= 2) overall = "red";
@@ -373,6 +471,8 @@ export function computeTrailCompatibility(
   });
 }
 
+// ─── Compute: Legal Status ────────────────────────────────────────────
+
 export function computeLegalStatuses(
   config: RigRatedConfig,
   stateLegalDb: StateLegalInfo[]
@@ -383,19 +483,24 @@ export function computeLegalStatuses(
   }));
 }
 
+// ─── Compute: Drive vs Trailer ────────────────────────────────────────
+
 export function computeDriveVsTrailer(config: RigRatedConfig): DriveVsTrailerResult | null {
   if (config.driveMiles <= 0 || config.towVehicleMaxTow <= 0) return null;
 
   const machine = getMachine(config);
 
+  // Drive UTV directly
   const utvMpg = machine.bodyType.includes("sport") ? 8 : 12;
   const driveFuelGal = config.driveMiles / utvMpg;
   const driveFuelCost = Math.round(driveFuelGal * config.fuelCostPerGal * 100) / 100;
 
+  // Trailer: tow vehicle hauls UTV on trailer
   const utvWeight = machine.dryWeightLbs;
   const trailerTotalWeight = config.trailerWeightLbs + utvWeight;
-  const tongueWeight = Math.round(trailerTotalWeight * 0.12);
+  const tongueWeight = Math.round(trailerTotalWeight * 0.12); // 10-15% tongue weight
 
+  // MPG penalty from towing: ~1 MPG per 1000 lbs towed
   const towPenalty = trailerTotalWeight / 1000;
   const towMpg = Math.max(4, config.towVehicleMpg - towPenalty);
   const trailerFuelGal = config.driveMiles / towMpg;
@@ -425,6 +530,8 @@ export function computeDriveVsTrailer(config: RigRatedConfig): DriveVsTrailerRes
   };
 }
 
+// ─── Compute: 14-Day Certified Badge ─────────────────────────────────
+
 export function computeCertifiedBadge(
   config: RigRatedConfig,
   payload: PayloadBudget,
@@ -432,23 +539,28 @@ export function computeCertifiedBadge(
 ): CertifiedBadge {
   const machine = getMachine(config);
 
+  // Check 1: Payload under 80%
   const payloadUnder80 = payload.payloadPct < 80;
 
+  // Check 2: At least one selected state is green
   const selectedLegal = legalStatuses.filter((s) =>
     config.selectedStates.includes(s.stateCode)
   );
   const legalOk = selectedLegal.length === 0 || selectedLegal.some((s) => s.status === "green");
 
+  // Check 3: Fuel range covers the longest selected trail fuel distance
   const estimatedMpg = machine.bodyType.includes("sport") ? 8 : 12;
   const totalFuel = machine.fuelCapacityGal + (config.gearPreset?.spareFuelGal ?? 0);
   const rangeMiles = totalFuel * estimatedMpg;
-  const fuelRange = rangeMiles >= 60;
+  const fuelRange = rangeMiles >= 60; // at least 60 miles range
 
+  // Check 4: Recovery gear (must have recovery weight in gear)
   const recoveryWeight = config.useCustomGear
     ? config.customRecoveryLbs
     : config.gearPreset?.recoveryKitLbs ?? 0;
   const recoveryGear = recoveryWeight >= 10;
 
+  // Check 5: Adequate water supply (at least 1 gal per person per day for 3 days)
   const people = config.adults + config.children;
   const waterGal = config.useCustomGear
     ? config.customWaterGal
@@ -457,6 +569,7 @@ export function computeCertifiedBadge(
 
   const earned = payloadUnder80 && legalOk && fuelRange && recoveryGear && waterSupply;
 
+  // Calculate days capable based on water and food
   const daysCapable = config.durationDays || (config.gearPreset?.durationDays ?? 0);
 
   return {
@@ -466,36 +579,47 @@ export function computeCertifiedBadge(
   };
 }
 
+// ─── Compute: Warnings ────────────────────────────────────────────────
+
 export function computeWarnings(
   config: RigRatedConfig,
   payload: PayloadBudget,
+  modifiedPayload: PayloadBudget | null,
   stability: { index: number; note: string },
   trailScores: TrailScore[]
 ): RigRatedWarning[] {
   const w: RigRatedWarning[] = [];
 
+  // Payload warnings (based on stock spec)
   if (payload.payloadPct >= 100) {
+    const modNote = modifiedPayload && modifiedPayload.payloadPct < 100
+      ? ` (Effective capacity with suspension upgrade: ${modifiedPayload.payloadPct}%)`
+      : "";
     w.push({
       level: "danger",
-      message: `Payload EXCEEDED by ${Math.abs(payload.remaining)} lbs (${payload.payloadPct}%). Remove gear or accessories before riding.`,
+      message: `MFR payload EXCEEDED by ${Math.abs(payload.remaining)} lbs (${payload.payloadPct}%).${modNote} Remove gear or accessories before riding.`,
     });
   } else if (payload.payloadPct >= 90) {
+    const modNote = modifiedPayload
+      ? ` Effective with suspension upgrade: ${modifiedPayload.payloadPct}%.`
+      : "";
     w.push({
       level: "warning",
-      message: `Payload at ${payload.payloadPct}%. Very limited margin. Any additional weight risks exceeding GVWR.`,
+      message: `MFR payload at ${payload.payloadPct}%. Very limited margin.${modNote}`,
     });
   } else if (payload.payloadPct >= 85) {
     w.push({
       level: "warning",
-      message: `Payload at ${payload.payloadPct}%. Within safety margin zone. Leave 10-20% buffer.`,
+      message: `MFR payload at ${payload.payloadPct}%. Within safety margin zone. Leave 10-20% buffer.`,
     });
   } else if (payload.payloadPct >= 70) {
     w.push({
       level: "info",
-      message: `Payload at ${payload.payloadPct}%. Approaching recommended 10-20% safety margin.`,
+      message: `MFR payload at ${payload.payloadPct}%. Approaching recommended 10-20% safety margin.`,
     });
   }
 
+  // Stability warnings
   if (stability.index < 4) {
     w.push({
       level: "warning",
@@ -508,6 +632,7 @@ export function computeWarnings(
     });
   }
 
+  // Trail red flags
   const redTrails = trailScores.filter((t) => t.overall === "red");
   if (redTrails.length > 0) {
     w.push({
@@ -516,6 +641,7 @@ export function computeWarnings(
     });
   }
 
+  // No recovery gear warning
   const recoveryWeight = config.useCustomGear
     ? config.customRecoveryLbs
     : config.gearPreset?.recoveryKitLbs ?? 0;
@@ -526,6 +652,7 @@ export function computeWarnings(
     });
   }
 
+  // Low water warning
   const people = config.adults + config.children;
   const waterGal = config.useCustomGear
     ? config.customWaterGal
@@ -539,6 +666,8 @@ export function computeWarnings(
 
   return w;
 }
+
+// ─── Compute: Weight Breakdown ────────────────────────────────────────
 
 export function computeWeightBreakdown(payload: PayloadBudget): {
   label: string;
@@ -559,6 +688,8 @@ export function computeWeightBreakdown(payload: PayloadBudget): {
   return items.sort((a, b) => b.value - a.value);
 }
 
+// ─── Master Compute ───────────────────────────────────────────────────
+
 export function computeAll(
   config: RigRatedConfig,
   accessoryDb: UTVAccessory[],
@@ -566,6 +697,7 @@ export function computeAll(
   stateLegalDb: StateLegalInfo[]
 ): RigRatedResult {
   const payload = computePayload(config, accessoryDb);
+  const modifiedPayload = computeModifiedPayload(payload, config.suspensionTier);
   const axleDistribution = computeAxleDistribution(config, accessoryDb);
   const stability = computeStabilityIndex(config, payload);
   const trailScores = computeTrailCompatibility(config, trailDb);
@@ -573,15 +705,18 @@ export function computeAll(
   const driveVsTrailer = computeDriveVsTrailer(config);
   const certifiedBadge = computeCertifiedBadge(config, payload, legalStatuses);
   const weightBreakdown = computeWeightBreakdown(payload);
-  const warnings = computeWarnings(config, payload, stability, trailScores);
+  const warnings = computeWarnings(config, payload, modifiedPayload, stability, trailScores);
 
+  // Overall status — use effective (modified if active) payload for color thresholds
+  const effectivePct = modifiedPayload ? modifiedPayload.payloadPct : payload.payloadPct;
   let overallStatus: "green" | "yellow" | "orange" | "red" = "green";
-  if (payload.payloadPct >= 100) overallStatus = "red";
-  else if (payload.payloadPct >= 90) overallStatus = "orange";
-  else if (payload.payloadPct >= 70) overallStatus = "yellow";
+  if (effectivePct >= 100) overallStatus = "red";
+  else if (effectivePct >= 90) overallStatus = "orange";
+  else if (effectivePct >= 70) overallStatus = "yellow";
 
   return {
     payload,
+    modifiedPayload,
     axleDistribution,
     stabilityIndex: stability.index,
     stabilityNote: stability.note,
@@ -594,6 +729,8 @@ export function computeAll(
     overallStatus,
   };
 }
+
+// ─── Default Config ───────────────────────────────────────────────────
 
 export const defaultTripPlan: TripPlanData = {
   tripName: "",
@@ -663,6 +800,8 @@ export const defaultRigRatedConfig: RigRatedConfig = {
   selectedTrails: [],
   legalView: "unregistered",
   selectedStates: [],
+
+  suspensionTier: "stock",
 
   towVehicleWeight: 5000,
   towVehicleMaxTow: 7500,

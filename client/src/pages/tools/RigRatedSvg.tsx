@@ -5,15 +5,6 @@ import { RZR_XP1000_PATH } from "./silhouettes/rzr-xp1000";
 interface RigRatedSvgProps {
   bodyType: UTVBodyType;
   machineId?: string;
-  showRoof: boolean;
-  showWindshield: boolean;
-  showDoors: boolean;
-  showFrontBumper: boolean;
-  showRearBumper: boolean;
-  showWinch: boolean;
-  showRack: boolean;
-  showLightBar: boolean;
-  showRtt: boolean;
   loadStatus: "green" | "yellow" | "orange" | "red";
 }
 
@@ -124,137 +115,9 @@ function getSilhouette(machineId: string | undefined, bodyType: UTVBodyType): Si
   return GENERIC_SILHOUETTES[bodyType] || GENERIC_SILHOUETTES["2-seat-utility"];
 }
 
-// ─── Structural detail lines (window glass, pillars, bed rail) ───────────
-
-function CabStructure({ sil, statusColor }: { sil: SilhouetteData; statusColor: string }) {
-  const { roofY, roofStartX, roofEndX, hoodY, bedY } = sil.cabRef;
-  const isUtility = !!bedY;
-  const wsBottomX = roofStartX - 14;
-
-  return (
-    <g>
-      {/* Window glass fill */}
-      <polygon
-        points={`${wsBottomX},${hoodY} ${roofStartX},${roofY + 2} ${roofEndX - 8},${roofY + 2} ${roofEndX - 4},${isUtility ? bedY! - 6 : hoodY}`}
-        fill="#88CCEE"
-        opacity={0.08}
-      />
-      {/* Windshield line */}
-      <line x1={wsBottomX} y1={hoodY} x2={roofStartX} y2={roofY + 2} stroke={statusColor} strokeWidth={1} opacity={0.5} />
-      {/* Roof line */}
-      <line x1={roofStartX} y1={roofY + 1} x2={roofEndX} y2={roofY + 1} stroke={statusColor} strokeWidth={1} opacity={0.4} />
-      {/* B-pillar + bed rail (utility only) */}
-      {isUtility && bedY && (
-        <>
-          <line x1={roofEndX + 4} y1={roofY + 4} x2={roofEndX + 8} y2={bedY} stroke={statusColor} strokeWidth={1.5} opacity={0.5} />
-          <line x1={roofEndX + 8} y1={bedY + 1} x2={sil.bodyRight - 8} y2={bedY + 2} stroke={statusColor} strokeWidth={0.8} opacity={0.3} />
-        </>
-      )}
-    </g>
-  );
-}
-
-// ─── Accessory layers (positioned from silhouette geometry) ──────────────
-
-function RoofLayer({ sil }: { sil: SilhouetteData }) {
-  const { roofY, roofStartX, roofEndX } = sil.cabRef;
-  return (
-    <rect x={roofStartX} y={roofY - 3} width={roofEndX - roofStartX} height={4} rx={2} fill="#777" opacity={0.7}>
-      <title>Roof</title>
-    </rect>
-  );
-}
-
-function WindshieldLayer({ sil }: { sil: SilhouetteData }) {
-  const { roofY, roofStartX, hoodY } = sil.cabRef;
-  return (
-    <line x1={roofStartX - 14} y1={hoodY} x2={roofStartX} y2={roofY + 2} stroke="#88CCEE" strokeWidth={2.5} opacity={0.6}>
-      <title>Windshield</title>
-    </line>
-  );
-}
-
-function DoorsLayer({ sil }: { sil: SilhouetteData }) {
-  const { roofY, roofStartX, roofEndX, hoodY, bedY } = sil.cabRef;
-  const x = roofStartX - 14;
-  const endX = bedY ? roofEndX + 6 : roofEndX + 12;
-  return (
-    <rect x={x} y={roofY + 6} width={endX - x} height={hoodY - roofY + 28} rx={3} fill="none" stroke="#888" strokeWidth={1.5} opacity={0.5}>
-      <title>Doors</title>
-    </rect>
-  );
-}
-
-function FrontBumperLayer({ sil }: { sil: SilhouetteData }) {
-  return (
-    <rect x={sil.bodyLeft - 8} y={148} width={14} height={24} rx={3} fill="#555" opacity={0.7}>
-      <title>Front Bumper</title>
-    </rect>
-  );
-}
-
-function RearBumperLayer({ sil }: { sil: SilhouetteData }) {
-  return (
-    <rect x={sil.bodyRight - 4} y={148} width={14} height={24} rx={3} fill="#555" opacity={0.7}>
-      <title>Rear Bumper</title>
-    </rect>
-  );
-}
-
-function WinchLayer({ sil }: { sil: SilhouetteData }) {
-  const x = sil.bodyLeft - 6;
-  return (
-    <g>
-      <rect x={x} y={138} width={12} height={10} rx={2} fill="#C45D2C" opacity={0.8}><title>Winch</title></rect>
-      <line x1={x} y1={143} x2={x - 8} y2={143} stroke="#C45D2C" strokeWidth={1.5} />
-    </g>
-  );
-}
-
-function RackLayer({ sil }: { sil: SilhouetteData }) {
-  const { bedY, roofEndX } = sil.cabRef;
-  if (!bedY) return null;
-  const x = roofEndX + 12;
-  const w = sil.bodyRight - x - 10;
-  return (
-    <g>
-      <rect x={x} y={bedY - 4} width={w} height={3} rx={1} fill="#555" opacity={0.8}><title>Cargo Rack</title></rect>
-      <rect x={x + 4} y={bedY - 1} width={3} height={5} fill="#555" opacity={0.6} />
-      <rect x={x + w - 7} y={bedY - 1} width={3} height={5} fill="#555" opacity={0.6} />
-    </g>
-  );
-}
-
-function LightBarLayer({ sil }: { sil: SilhouetteData }) {
-  const { roofY, roofStartX, roofEndX } = sil.cabRef;
-  const x = roofStartX + 10;
-  const w = roofEndX - roofStartX - 20;
-  return (
-    <rect x={x} y={roofY - 5} width={w} height={3} rx={1.5} fill="#FFD700" opacity={0.7}>
-      <title>Light Bar</title>
-    </rect>
-  );
-}
-
-function RttLayer({ sil }: { sil: SilhouetteData }) {
-  const { bedY, roofEndX } = sil.cabRef;
-  if (!bedY) return null;
-  const x = roofEndX + 10;
-  const w = sil.bodyRight - x - 8;
-  return (
-    <rect x={x} y={bedY - 14} width={w} height={12} rx={3} fill="#C45D2C" opacity={0.8}>
-      <title>Rooftop Tent</title>
-    </rect>
-  );
-}
-
 // ─── Main Component ──────────────────────────────────────────────────────
 
-export default function RigRatedSvg({
-  bodyType, machineId, showRoof, showWindshield, showDoors,
-  showFrontBumper, showRearBumper, showWinch,
-  showRack, showLightBar, showRtt, loadStatus,
-}: RigRatedSvgProps) {
+export default function RigRatedSvg({ bodyType, machineId, loadStatus }: RigRatedSvgProps) {
   const sil = getSilhouette(machineId, bodyType);
   const tracedPath = machineId ? TRACED_SILHOUETTES[machineId] : undefined;
 
@@ -280,7 +143,7 @@ export default function RigRatedSvg({
         </div>
       </div>
 
-      <svg viewBox="0 0 420 200" className="w-full max-w-lg mx-auto" role="img" aria-label={`${bodyType} UTV with accessories`}>
+      <svg viewBox="0 0 420 200" className="w-full max-w-lg mx-auto" role="img" aria-label={`${bodyType} UTV silhouette`}>
         {/* Ground line */}
         <line x1={10} y1={178} x2={410} y2={178} stroke="var(--border)" strokeWidth={1} />
 
@@ -317,22 +180,8 @@ export default function RigRatedSvg({
               strokeLinejoin="round"
               className="transition-colors duration-500"
             />
-
-            {/* Structural details (window glass, pillars, bed rail) */}
-            <CabStructure sil={sil} statusColor={statusColor} />
           </>
         )}
-
-        {/* Accessory layers */}
-        {showDoors && <DoorsLayer sil={sil} />}
-        {showFrontBumper && <FrontBumperLayer sil={sil} />}
-        {showRearBumper && <RearBumperLayer sil={sil} />}
-        {showWinch && <WinchLayer sil={sil} />}
-        {showWindshield && <WindshieldLayer sil={sil} />}
-        {showRoof && <RoofLayer sil={sil} />}
-        {showRack && <RackLayer sil={sil} />}
-        {showLightBar && <LightBarLayer sil={sil} />}
-        {showRtt && <RttLayer sil={sil} />}
       </svg>
     </div>
   );
