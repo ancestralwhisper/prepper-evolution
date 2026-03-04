@@ -1070,7 +1070,6 @@ export default function RigRatedConfigurator() {
       {/* Footer */}
       <div className="space-y-4 no-print">
         <DataPrivacyNotice />
-        <SupportFooter />
 
         <div className="flex flex-wrap gap-3">
           <button
@@ -1087,6 +1086,7 @@ export default function RigRatedConfigurator() {
         />
         <PrintQrCode url={typeof window !== "undefined" ? window.location.href : ""} />
         <InstallButton />
+        <SupportFooter />
       </div>
     </div>
   );

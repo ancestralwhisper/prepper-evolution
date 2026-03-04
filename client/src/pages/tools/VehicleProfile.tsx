@@ -1116,7 +1116,6 @@ export default function VehicleProfileEditor() {
 
             {/* Privacy Notice */}
             <DataPrivacyNotice />
-            <SupportFooter />
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <ToolSocialShare
                 url="https://prepperevolution.com/tools/vehicle-profile"
@@ -1125,6 +1124,7 @@ export default function VehicleProfileEditor() {
               <PrintQrCode url="https://prepperevolution.com/tools/vehicle-profile" />
               <InstallButton />
             </div>
+            <SupportFooter />
           </div>
         </>
       )}

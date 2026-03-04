@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import ChangelogTicker from "@/components/tools/ChangelogTicker";
+import SupportFooter from "@/components/tools/SupportFooter";
 
 interface Tool {
   slug: string;
@@ -364,6 +365,10 @@ export default function ToolsIndex() {
             Share your results with a link or print them as a checklist.
           </p>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <SupportFooter />
       </div>
 
       <ChangelogTicker />

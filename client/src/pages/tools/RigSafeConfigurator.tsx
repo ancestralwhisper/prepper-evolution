@@ -1648,7 +1648,6 @@ export default function RigSafeConfigurator() {
 
       {/* Shared footer components */}
       <DataPrivacyNotice />
-      <SupportFooter />
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <ToolSocialShare
           url="https://prepperevolution.com/tools/rigsafe-configurator"
@@ -1657,6 +1656,7 @@ export default function RigSafeConfigurator() {
         <PrintQrCode url="https://prepperevolution.com/tools/rigsafe-configurator" />
         <InstallButton />
       </div>
+      <SupportFooter />
     </div>
   );
 }
