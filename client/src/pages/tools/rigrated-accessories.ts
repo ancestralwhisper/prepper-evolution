@@ -6,6 +6,7 @@ export type AccessoryCategory =
   | "winch" | "skid-plate" | "rock-slider" | "roof-rack" | "cargo-rack"
   | "light-bar" | "sound-system" | "mirrors" | "fridge-mount" | "dual-battery"
   | "solar-panel" | "rtt-mount" | "spare-tire-carrier" | "fuel-can-rack"
+  | "fuel-cell"
   | "led-whip" | "underglow" | "sound-bar";
 
 export type AccessoryMountPosition = "front" | "rear" | "roof" | "bed" | "sides" | "distributed";
@@ -20,6 +21,7 @@ export interface UTVAccessory {
   isCosmetic: boolean;
   affiliateUrl: string;
   compatibleMachines: string[] | "all";
+  fuelCapacityGal?: number; // For fuel cells — dry weight in weightLbs, full = weightLbs + (fuelCapacityGal * 6.3)
   notes?: string;
 }
 
@@ -976,6 +978,73 @@ export const accessories: UTVAccessory[] = [
     compatibleMachines: "all",
     notes: "All-weather, cage clamp mount",
   },
+
+  // ── Fuel Cells (5) ──────────────────────────────────────────────────────
+  {
+    id: "fuel-safe-10gal",
+    brand: "Fuel Safe",
+    model: "10-Gallon UTV Fuel Cell",
+    category: "fuel-cell",
+    weightLbs: 25,
+    mountPosition: "bed",
+    isCosmetic: false,
+    affiliateUrl: "https://www.amazon.com/dp/B07BNKH8WY?tag=prepperevo-20",
+    compatibleMachines: "all",
+    fuelCapacityGal: 10,
+    notes: "25 lbs dry, 88 lbs full. Aircraft-grade aluminum.",
+  },
+  {
+    id: "fuel-safe-15gal",
+    brand: "Fuel Safe",
+    model: "15-Gallon UTV Fuel Cell",
+    category: "fuel-cell",
+    weightLbs: 30,
+    mountPosition: "bed",
+    isCosmetic: false,
+    affiliateUrl: "https://www.amazon.com/dp/B07BNKH8WY?tag=prepperevo-20",
+    compatibleMachines: "all",
+    fuelCapacityGal: 15,
+    notes: "30 lbs dry, 124 lbs full. Aircraft-grade aluminum.",
+  },
+  {
+    id: "jaz-10gal",
+    brand: "Jaz Products",
+    model: "10-Gallon Pro Sport Cell",
+    category: "fuel-cell",
+    weightLbs: 22,
+    mountPosition: "bed",
+    isCosmetic: false,
+    affiliateUrl: "https://www.amazon.com/dp/B004P2QQJ2?tag=prepperevo-20",
+    compatibleMachines: "all",
+    fuelCapacityGal: 10,
+    notes: "22 lbs dry, 85 lbs full. Polyethylene with foam baffles.",
+  },
+  {
+    id: "rci-12gal",
+    brand: "RCI",
+    model: "12-Gallon Fuel Cell",
+    category: "fuel-cell",
+    weightLbs: 28,
+    mountPosition: "bed",
+    isCosmetic: false,
+    affiliateUrl: "https://www.amazon.com/dp/B001O4ARRY?tag=prepperevo-20",
+    compatibleMachines: "all",
+    fuelCapacityGal: 12,
+    notes: "28 lbs dry, 103 lbs full. Steel container.",
+  },
+  {
+    id: "rjs-8gal",
+    brand: "RJS Racing",
+    model: "8-Gallon Drag Cell",
+    category: "fuel-cell",
+    weightLbs: 20,
+    mountPosition: "bed",
+    isCosmetic: false,
+    affiliateUrl: "https://www.amazon.com/dp/B001LF3R1S?tag=prepperevo-20",
+    compatibleMachines: "all",
+    fuelCapacityGal: 8,
+    notes: "20 lbs dry, 70 lbs full. Compact design for smaller beds.",
+  },
 ];
 
 // ── Helper Functions ──────────────────────────────────────────────────────
@@ -989,7 +1058,7 @@ export function getAccessoryCategories(instagramMode: boolean): AccessoryCategor
     "windshield", "doors", "roof", "bumper-front", "bumper-rear",
     "winch", "skid-plate", "rock-slider", "roof-rack", "cargo-rack",
     "light-bar", "mirrors", "fridge-mount", "dual-battery",
-    "solar-panel", "rtt-mount", "spare-tire-carrier", "fuel-can-rack",
+    "solar-panel", "rtt-mount", "spare-tire-carrier", "fuel-can-rack", "fuel-cell",
   ];
   const cosmetic: AccessoryCategory[] = ["sound-system", "led-whip", "underglow", "sound-bar"];
   return instagramMode ? [...all, ...cosmetic] : all;
@@ -1035,6 +1104,7 @@ export const CATEGORY_LABELS: Record<AccessoryCategory, string> = {
   "rtt-mount": "RTT Mount",
   "spare-tire-carrier": "Spare Tire Carrier",
   "fuel-can-rack": "Fuel Can Rack",
+  "fuel-cell": "Fuel Cell",
   "led-whip": "LED Whip",
   underglow: "Underglow",
   "sound-bar": "Sound Bar",

@@ -4,7 +4,7 @@ import {
   ChevronDown, ChevronRight, AlertTriangle, Info,
   ShieldAlert, Truck, Package, Users, MapPin,
   Scale, Shield, Route, FileText, Award,
-  Sparkles, RotateCcw, Download, Fuel, Settings2, Send,
+  Sparkles, RotateCcw, Download, Fuel, Settings2, Send, Wrench, CircleDot,
 } from "lucide-react";
 import {
   getUniqueMakes, getModelsForMake, getYearsForModel, getTrimsForModelYear, findMachineByYearTrim,
@@ -17,18 +17,18 @@ import { stateLegalData } from "./rigrated-legal";
 import { gearPresets, findPreset, getPresetOptions } from "./rigrated-gear-presets";
 import {
   computeAll, defaultRigRatedConfig, RIGRATED_KEY,
-  SUSPENSION_TIERS,
   type RigRatedConfig, type RigRatedResult, type RigRatedWarning, type TripPlanData, defaultTripPlan,
-  type SuspensionTier,
 } from "./rigrated-compute";
-import RigRatedSvg from "./RigRatedSvg";
+import { suspensionProducts, getSuspensionBrands, getSuspensionByBrand } from "./rigrated-suspension-products";
+import { tires, wheels, getTireBrands, getTiresByBrand, getWheelBrands, getWheelsByBrand } from "./rigrated-tires-wheels";
+import { FUEL_LBS_PER_GALLON } from "./rigrated-gear-presets";
 import LegalHeatMap from "./LegalHeatMap";
 import TripPlan from "./TripPlan";
+import RigRatedShare from "./RigRatedShare";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
 import ToolSafetyDisclaimer from "@/components/tools/ToolSafetyDisclaimer";
-import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import InstallButton from "@/components/tools/InstallButton";
 import { VEHICLE_PROFILE_KEY } from "./vehicle-types";
@@ -461,12 +461,21 @@ export default function RigRatedConfigurator() {
         </div>
       )}
 
-      {/* SVG Visualization */}
-      <RigRatedSvg
-        bodyType={bodyType}
-        machineId={!config.useManual && config.machine ? config.machine.id : undefined}
-        loadStatus={result.overallStatus}
-      />
+      {/* Book Value vs Real World Explainer */}
+      <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
+        <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+        <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+          <p>
+            <strong className="text-foreground">GVWR is the boss</strong> &mdash; the unbreakable factory line that says &ldquo;don&apos;t exceed this or you&apos;re toast.&rdquo; It never budges, no matter how many upgrades you bolt on. Payload? That&apos;s the leftover cash after the UTV&apos;s already eaten its own weight &mdash; room for you, your buddies, beer, tools, and that light bar you couldn&apos;t resist.
+          </p>
+          <p>
+            Add-ons pile on fast like a bad ex: winch, roof, skid plates &mdash; bam, you&apos;re down to scraps quick. Fancy shocks or coilovers? They don&apos;t rewrite the rules or raise GVWR, but they sure make the ride way less like a jackhammer on your spine. They let you actually use more of that payload without bottoming out or turning the rig into a wobbly mess &mdash; so you can smugly say &ldquo;told you it&apos;d handle it&rdquo; while secretly hoping the axles hold.
+          </p>
+          <p>
+            <strong className="text-foreground">Bottom line:</strong> accessories don&apos;t cheat physics, they just let you flirt with the limit more comfortably. Calculate your payload, knock off ten percent for safety, keep it light, keep it fun, and don&apos;t be that guy who turns his toy into a lawsuit on wheels.
+          </p>
+        </div>
+      </div>
 
       {/* Main config card */}
       <div className="bg-card border border-border rounded-lg overflow-hidden">
@@ -570,30 +579,67 @@ export default function RigRatedConfigurator() {
               </div>
             )}
 
-            {/* Suspension Tier */}
-            <div className="border-t border-border pt-4">
-              <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Suspension Upgrade</label>
-              <select
-                value={config.suspensionTier}
-                onChange={(e) => update("suspensionTier", e.target.value as SuspensionTier)}
-                className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
-              >
-                {(Object.keys(SUSPENSION_TIERS) as SuspensionTier[]).map((tier) => {
-                  const t = SUSPENSION_TIERS[tier];
-                  return (
-                    <option key={tier} value={tier}>
-                      {t.label} {t.multiplier > 0 ? `(+${Math.round(t.multiplier * 100)}%)` : ""} — {t.examples}
-                    </option>
-                  );
-                })}
-              </select>
-              <p className="text-[10px] text-muted-foreground mt-1">
-                Upgraded suspension improves weight handling but does not change manufacturer GVWR
-              </p>
-              {config.suspensionTier !== "stock" && (
-                <p className="text-[10px] text-primary font-bold mt-1">
-                  +{Math.round(SUSPENSION_TIERS[config.suspensionTier].multiplier * 100)}% effective capacity applied
-                </p>
+            {/* Suspension Product Selector */}
+            <div className="border-t border-border pt-4 space-y-3">
+              <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Suspension Upgrade</label>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                  <select
+                    value={config.selectedSuspension ? (suspensionProducts.find(p => p.id === config.selectedSuspension)?.brand ?? "") : ""}
+                    onChange={(e) => {
+                      if (!e.target.value) { update("selectedSuspension", null); return; }
+                      // Select first product of brand
+                      const products = getSuspensionByBrand(e.target.value);
+                      update("selectedSuspension", products.length > 0 ? products[0].id : null);
+                    }}
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                  >
+                    <option value="">Stock (No Upgrade)</option>
+                    {getSuspensionBrands().map((b) => <option key={b} value={b}>{b}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                  <select
+                    value={config.selectedSuspension ?? ""}
+                    onChange={(e) => update("selectedSuspension", e.target.value || null)}
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                    disabled={!config.selectedSuspension}
+                  >
+                    <option value="">Select model...</option>
+                    {config.selectedSuspension && getSuspensionByBrand(
+                      suspensionProducts.find(p => p.id === config.selectedSuspension)?.brand ?? ""
+                    ).map((p) => (
+                      <option key={p.id} value={p.id}>{p.model} ({p.tier}) — {p.priceRange}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Suspension gain info */}
+              {result.suspensionGain && (
+                <div className="bg-muted border border-border rounded-lg p-3 space-y-1.5">
+                  <p className="text-xs">
+                    <strong className="text-foreground">{result.suspensionGain.product.brand}</strong> claims{" "}
+                    <strong className="text-foreground">+{result.suspensionGain.product.claimedGainPct}%</strong> capacity
+                    &rarr; <strong className="text-primary">Realistic: +{result.suspensionGain.product.realisticGainPct}%</strong>
+                    <span className="text-muted-foreground"> (we cut marketing fluff in half)</span>
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Kit weight: <strong>{result.suspensionGain.kitWeightLbs} lbs</strong> |
+                    Capacity boost: <strong>+{result.suspensionGain.realisticBoostLbs} lbs</strong> |
+                    Net gain: <strong className={result.suspensionGain.netGainLbs >= 0 ? "text-green-500" : "text-red-500"}>
+                      {result.suspensionGain.netGainLbs >= 0 ? "+" : ""}{result.suspensionGain.netGainLbs} lbs
+                    </strong>
+                  </p>
+                  {result.suspensionGain.product.notes && (
+                    <p className="text-[10px] text-muted-foreground">{result.suspensionGain.product.notes}</p>
+                  )}
+                  <p className="text-[10px] text-muted-foreground italic">
+                    Manufacturer claims are cut 50% to reflect real-world conditions. This ain&apos;t lab-tested &mdash; just ballpark trail math.
+                  </p>
+                </div>
               )}
             </div>
           </div>
@@ -669,11 +715,73 @@ export default function RigRatedConfigurator() {
               })}
             </div>
 
+            {/* Fuel cell toggle */}
+            {config.selectedAccessories.some(id => {
+              const acc = accessories.find(a => a.id === id);
+              return acc?.category === "fuel-cell" && acc?.fuelCapacityGal;
+            }) && (
+              <div className="bg-muted border border-border rounded-lg p-3">
+                <Toggle
+                  label="Fuel Cell Loaded (Full)"
+                  checked={config.fuelCellFull}
+                  onChange={(v) => update("fuelCellFull", v)}
+                  hint={(() => {
+                    const fc = config.selectedAccessories
+                      .map(id => accessories.find(a => a.id === id))
+                      .find(a => a?.category === "fuel-cell" && a?.fuelCapacityGal);
+                    if (!fc || !fc.fuelCapacityGal) return "";
+                    const fullWeight = fc.weightLbs + Math.round(fc.fuelCapacityGal * FUEL_LBS_PER_GALLON);
+                    return `Dry: ${fc.weightLbs} lbs | Full: ${fullWeight} lbs`;
+                  })()}
+                />
+              </div>
+            )}
+
             {config.selectedAccessories.length > 0 && (
               <p className="text-[10px] text-muted-foreground">
                 Total accessory weight: <strong>{result.payload.accessoriesWeight} lbs</strong>
               </p>
             )}
+
+            {/* Tires & Wheels Upgrade */}
+            <div className="border-t border-border pt-4 space-y-3">
+              <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground flex items-center gap-1.5">
+                <CircleDot className="w-3.5 h-3.5" /> Tires & Wheels
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Tire</label>
+                  <select
+                    value={config.selectedTires ?? ""}
+                    onChange={(e) => update("selectedTires", e.target.value || null)}
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                  >
+                    <option value="">Stock Tires</option>
+                    {tires.map((t) => (
+                      <option key={t.id} value={t.id}>{t.brand} {t.model} {t.size} ({t.weightLbs} lbs ea)</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Wheel</label>
+                  <select
+                    value={config.selectedWheels ?? ""}
+                    onChange={(e) => update("selectedWheels", e.target.value || null)}
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                  >
+                    <option value="">Stock Wheels</option>
+                    {wheels.map((w) => (
+                      <option key={w.id} value={w.id}>{w.brand} {w.model} {w.size} ({w.weightLbs} lbs ea, {w.material})</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {result.tireWheelDelta > 0 && (
+                <p className="text-[10px] text-muted-foreground">
+                  Tire/wheel upgrade adds <strong className="text-foreground">+{result.tireWheelDelta} lbs</strong> over stock
+                </p>
+              )}
+            </div>
           </div>
         </Section>
 
@@ -962,60 +1070,75 @@ export default function RigRatedConfigurator() {
               </div>
             </div>
 
-            {/* Weight breakdown donut(s) */}
-            {result.weightBreakdown.length > 0 && (
-              <div className="space-y-3">
-                <div className={`flex ${result.modifiedPayload ? "flex-row justify-center gap-6" : "flex-col sm:flex-row items-center gap-4"}`}>
-                  {/* Stock donut */}
-                  <div className="flex flex-col items-center">
-                    <DonutChart
-                      segments={result.weightBreakdown}
-                      totalLabel={result.modifiedPayload ? "MFR Spec" : "Payload"}
-                      totalValue={`${result.payload.payloadPct}%`}
-                      size={result.modifiedPayload ? 150 : 180}
-                    />
-                    {result.modifiedPayload && (
-                      <span className="text-[10px] font-bold text-muted-foreground mt-1">MFR Spec</span>
-                    )}
-                  </div>
-
-                  {/* Modified donut (only when active) */}
+            {/* GVWR Breakdown Donuts */}
+            <div className="space-y-3">
+              <div className={`flex ${result.modifiedPayload ? "flex-row justify-center gap-6 flex-wrap" : "flex-col sm:flex-row items-center gap-4"}`}>
+                {/* Stock GVWR donut */}
+                <div className="flex flex-col items-center">
+                  <DonutChart
+                    segments={result.stockGVWR.segments}
+                    totalLabel={result.modifiedPayload ? "Book Value" : "GVWR Load"}
+                    totalValue={`${result.stockGVWR.usedPct}%`}
+                    size={result.modifiedPayload ? 150 : 180}
+                    overCapacity={result.stockGVWR.isOverCapacity}
+                  />
                   {result.modifiedPayload && (
-                    <div className="flex flex-col items-center">
-                      <DonutChart
-                        segments={result.weightBreakdown}
-                        totalLabel="Effective"
-                        totalValue={`${result.modifiedPayload.payloadPct}%`}
-                        size={150}
-                      />
-                      <span className="text-[10px] font-bold text-primary mt-1">Effective</span>
-                    </div>
-                  )}
-
-                  {/* Legend only shows once (beside single donut, or below dual) */}
-                  {!result.modifiedPayload && (
-                    <ChartLegend segments={result.weightBreakdown} />
+                    <span className="text-[10px] font-bold text-muted-foreground mt-1">Book Value</span>
                   )}
                 </div>
+
+                {/* Effective GVWR donut (only when suspension active) */}
                 {result.modifiedPayload && (
-                  <div className="flex justify-center">
-                    <ChartLegend segments={result.weightBreakdown} />
+                  <div className="flex flex-col items-center">
+                    <DonutChart
+                      segments={result.effectiveGVWR.segments}
+                      totalLabel="Real World"
+                      totalValue={`${result.effectiveGVWR.usedPct}%`}
+                      size={150}
+                      overCapacity={result.effectiveGVWR.isOverCapacity}
+                    />
+                    <span className="text-[10px] font-bold text-primary mt-1">Real World</span>
                   </div>
                 )}
+
+                {/* Legend beside single donut */}
+                {!result.modifiedPayload && (
+                  <ChartLegend segments={result.stockGVWR.segments} />
+                )}
+              </div>
+              {result.modifiedPayload && (
+                <div className="flex justify-center">
+                  <ChartLegend segments={result.stockGVWR.segments} />
+                </div>
+              )}
+            </div>
+
+            {/* Fun Message */}
+            {result.funMessage && (
+              <div className="flex gap-2 p-3 rounded-lg bg-primary/5 border border-primary/30">
+                <Sparkles className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                <p className="text-xs font-bold text-foreground">{result.funMessage}</p>
               </div>
             )}
 
-            {/* Suspension disclaimer */}
-            {result.modifiedPayload && (
-              <div className="flex gap-2 p-3 rounded-lg bg-yellow-500/5 border border-yellow-500/30">
-                <AlertTriangle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
-                <p className="text-xs leading-relaxed text-muted-foreground">
-                  GVWR is set by {activeMachine ? ("id" in activeMachine ? activeMachine.make : activeMachine.make) : "the manufacturer"} based on frame, axles, hubs, and brakes.
-                  Suspension upgrades improve weight handling (damping, travel, spring rates) but do not change the manufacturer&apos;s rated payload capacity.
-                  Modified capacity reflects suspension capability — ride at your own discretion.
+            {/* Disclaimer */}
+            <div className="flex gap-2 p-3 rounded-lg bg-yellow-500/5 border border-yellow-500/30">
+              <AlertTriangle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+              <div className="text-xs leading-relaxed text-muted-foreground space-y-1">
+                <p>
+                  <strong className="text-foreground">Ballpark trail math &mdash; not lab-certified.</strong> Weigh your rig, know your limits.
+                  GVWR is set by the manufacturer based on frame, axles, hubs, and brakes &mdash; it never changes regardless of upgrades.
                 </p>
+                {result.modifiedPayload && (
+                  <p>
+                    Suspension upgrades improve weight handling but do not raise GVWR. &ldquo;Real World&rdquo; capacity reflects
+                    how the suspension lets you use more of your payload without bottoming out. Manufacturer claims are cut 50%
+                    for real-world conditions (trail abuse, heat soak, mud).
+                  </p>
+                )}
+                <p>Community-sourced weights coming soon.</p>
               </div>
-            )}
+            </div>
 
             {/* 14-Day Certified Badge */}
             <div className={`border rounded-lg p-4 ${
@@ -1174,9 +1297,14 @@ export default function RigRatedConfigurator() {
           </button>
         </div>
 
-        <ToolSocialShare
+        <RigRatedShare
           url={typeof window !== "undefined" ? window.location.href : ""}
-          toolName="RigRated UTV/Quad Overland Builder"
+          machineName={machineLabel}
+          stockPayloadLbs={result.payload.payloadCapacity}
+          effectivePayloadLbs={result.modifiedPayload?.payloadCapacity ?? result.payload.payloadCapacity}
+          gainLbs={result.suspensionGain?.netGainLbs ?? 0}
+          suspensionBrand={result.suspensionGain?.product.brand}
+          topMod={result.suspensionGain ? `${result.suspensionGain.product.brand} ${result.suspensionGain.product.model}` : undefined}
         />
         <PrintQrCode url={typeof window !== "undefined" ? window.location.href : ""} />
         <InstallButton />

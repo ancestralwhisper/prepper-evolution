@@ -19,21 +19,8 @@ import type { StateLegalInfo, LegalView } from "./rigrated-legal";
 import { getLegalStatus } from "./rigrated-legal";
 import type { GearPreset } from "./rigrated-gear-presets";
 import { WATER_LBS_PER_GALLON, FUEL_LBS_PER_GALLON, DEFAULT_OCCUPANT_LBS } from "./rigrated-gear-presets";
-
-// ─── Suspension Tier ──────────────────────────────────────────────────
-
-export type SuspensionTier = "stock" | "entry" | "mid" | "race";
-
-export const SUSPENSION_TIERS: Record<SuspensionTier, {
-  label: string;
-  multiplier: number;
-  examples: string;
-}> = {
-  stock: { label: "Stock", multiplier: 0, examples: "Factory springs & shocks" },
-  entry: { label: "Entry Upgrade", multiplier: 0.15, examples: "Fox QS3, Elka Stage 1" },
-  mid: { label: "Mid Upgrade", multiplier: 0.22, examples: "Fox Live Valve, Elka Stage 3, Walker Evans" },
-  race: { label: "Race / King", multiplier: 0.30, examples: "King IBP, Fox 3.0 IBP, Elka Stage 5" },
-};
+import { findSuspensionProduct, type SuspensionProduct } from "./rigrated-suspension-products";
+import { findTire, findWheel, type UTVTire, type UTVWheel } from "./rigrated-tires-wheels";
 
 // ─── Configuration Interfaces ─────────────────────────────────────────
 
@@ -103,8 +90,11 @@ export interface RigRatedConfig {
   driveMiles: number;
   fuelCostPerGal: number;
 
-  // Suspension
-  suspensionTier: SuspensionTier;
+  // Suspension & Upgrades
+  selectedSuspension: string | null;  // suspension product ID
+  selectedTires: string | null;       // tire ID
+  selectedWheels: string | null;      // wheel ID
+  fuelCellFull: boolean;              // fuel cell loaded toggle
 
   // Trip plan
   tripPlan: TripPlanData;
@@ -153,8 +143,21 @@ export interface RigRatedResult {
   // 14-day badge
   certifiedBadge: CertifiedBadge;
 
-  // Weight breakdown for donut chart
+  // Weight breakdown for donut chart (legacy — payload items only)
   weightBreakdown: { label: string; value: number; color: string }[];
+
+  // GVWR breakdown for dual donut charts
+  stockGVWR: GVWRBreakdown;
+  effectiveGVWR: GVWRBreakdown;
+
+  // Suspension gain details
+  suspensionGain: SuspensionGainInfo | null;
+
+  // Fun message
+  funMessage: string | null;
+
+  // Tire/wheel delta
+  tireWheelDelta: number;
 
   // Warnings
   warnings: RigRatedWarning[];
@@ -234,11 +237,28 @@ export function computePayload(
 
   const dryWeight = machine.dryWeightLbs;
 
-  // Accessories weight
-  const accessoriesWeight = config.selectedAccessories.reduce((sum, id) => {
+  // Accessories weight (includes fuel cell dry/full logic)
+  let accessoriesWeight = 0;
+  for (const id of config.selectedAccessories) {
     const acc = accessoryDb.find((a) => a.id === id);
-    return sum + (acc?.weightLbs ?? 0);
-  }, 0);
+    if (!acc) continue;
+    if (acc.category === "fuel-cell" && acc.fuelCapacityGal && config.fuelCellFull) {
+      // Full fuel cell: dry weight + fuel weight
+      accessoriesWeight += acc.weightLbs + Math.round(acc.fuelCapacityGal * FUEL_LBS_PER_GALLON);
+    } else {
+      accessoriesWeight += acc.weightLbs;
+    }
+  }
+
+  // Tire/wheel weight delta
+  const tireWheelDelta = computeTireWheelDelta(config, machine);
+  accessoriesWeight += tireWheelDelta;
+
+  // Suspension kit weight (the kit itself adds weight)
+  const suspProduct = config.selectedSuspension ? findSuspensionProduct(config.selectedSuspension) : null;
+  if (suspProduct) {
+    accessoriesWeight += suspProduct.weightLbs;
+  }
 
   // Occupant weight
   const occupantWeight =
@@ -294,24 +314,196 @@ export function computePayload(
   };
 }
 
-// ─── Compute: Modified Payload (suspension upgrade) ──────────────────
+// ─── Tire/Wheel Weight Delta ─────────────────────────────────────────
+// Returns additional weight from upgrading tires/wheels over stock
+
+function computeTireWheelDelta(
+  config: RigRatedConfig,
+  machine: ReturnType<typeof getMachine>
+): number {
+  let delta = 0;
+
+  if (config.selectedTires) {
+    const tire = findTire(config.selectedTires);
+    if (tire && "stockTireWeightLbs" in machine) {
+      const stockTotal = (machine as UTVMachine).stockTireWeightLbs * 4;
+      const newTotal = tire.weightLbs * 4;
+      delta += newTotal - stockTotal;
+    }
+  }
+
+  if (config.selectedWheels) {
+    const wheel = findWheel(config.selectedWheels);
+    if (wheel && "stockWheelWeightLbs" in machine) {
+      const stockTotal = (machine as UTVMachine).stockWheelWeightLbs * 4;
+      const newTotal = wheel.weightLbs * 4;
+      delta += newTotal - stockTotal;
+    }
+  }
+
+  return Math.max(0, delta); // Only count added weight, never subtract
+}
+
+// ─── Compute: Modified Payload (suspension product) ──────────────────
+// Formula: New effective payload = (stock payload × (1 + realisticGainPct/100)) − suspension kit weight
+// If brand provides hardRatedCapacityLbs, use that as flat bonus instead of percentage.
+// Kit weight is already included in accessoriesWeight in the stock payload calculation,
+// so we only boost the capacity here — no double-counting.
 
 export function computeModifiedPayload(
   stockPayload: PayloadBudget,
-  tier: SuspensionTier
+  suspensionId: string | null
 ): PayloadBudget | null {
-  if (tier === "stock") return null;
-  const mult = SUSPENSION_TIERS[tier].multiplier;
-  const modifiedCapacity = Math.round(stockPayload.payloadCapacity * (1 + mult));
+  if (!suspensionId) return null;
+  const product = findSuspensionProduct(suspensionId);
+  if (!product) return null;
+
+  let modifiedCapacity: number;
+  if (product.hardRatedCapacityLbs) {
+    // Brand gives a hard number — use it as flat boost over stock capacity
+    modifiedCapacity = stockPayload.payloadCapacity + product.hardRatedCapacityLbs;
+  } else {
+    // Percentage-based: use realistic gain (already 50% of claimed)
+    modifiedCapacity = Math.round(
+      stockPayload.payloadCapacity * (1 + product.realisticGainPct / 100)
+    );
+  }
+
   const payloadPct = modifiedCapacity > 0
     ? Math.round((stockPayload.payloadUsed / modifiedCapacity) * 100)
     : 0;
+
   return {
     ...stockPayload,
     payloadCapacity: modifiedCapacity,
     payloadPct,
     remaining: modifiedCapacity - stockPayload.payloadUsed,
   };
+}
+
+// ─── Compute: Suspension Gain Details ────────────────────────────────
+// Returns info for the UI to display "Fox claims +30% → Realistic: +15%"
+
+export interface SuspensionGainInfo {
+  product: SuspensionProduct;
+  claimedBoostLbs: number;
+  realisticBoostLbs: number;
+  kitWeightLbs: number;
+  netGainLbs: number;
+}
+
+export function computeSuspensionGain(
+  stockPayloadCapacity: number,
+  suspensionId: string | null
+): SuspensionGainInfo | null {
+  if (!suspensionId) return null;
+  const product = findSuspensionProduct(suspensionId);
+  if (!product) return null;
+
+  let claimedBoostLbs: number;
+  let realisticBoostLbs: number;
+
+  if (product.hardRatedCapacityLbs) {
+    claimedBoostLbs = product.hardRatedCapacityLbs;
+    realisticBoostLbs = product.hardRatedCapacityLbs;
+  } else {
+    claimedBoostLbs = Math.round(stockPayloadCapacity * (product.claimedGainPct / 100));
+    realisticBoostLbs = Math.round(stockPayloadCapacity * (product.realisticGainPct / 100));
+  }
+
+  return {
+    product,
+    claimedBoostLbs,
+    realisticBoostLbs,
+    kitWeightLbs: product.weightLbs,
+    netGainLbs: realisticBoostLbs - product.weightLbs,
+  };
+}
+
+// ─── Compute: GVWR Breakdown (for donut charts) ─────────────────────
+// Returns segments that sum to GVWR for proper donut visualization
+
+export interface GVWRBreakdown {
+  segments: { label: string; value: number; color: string }[];
+  isOverCapacity: boolean;
+  usedPct: number;
+}
+
+export function computeGVWRBreakdown(payload: PayloadBudget): GVWRBreakdown {
+  const segments: { label: string; value: number; color: string }[] = [];
+
+  // Curb weight is always the biggest chunk
+  segments.push({ label: "Curb Weight", value: payload.dryWeight, color: "#4B5563" });
+
+  if (payload.accessoriesWeight > 0)
+    segments.push({ label: "Accessories", value: payload.accessoriesWeight, color: "#8B5CF6" });
+  if (payload.occupantWeight > 0)
+    segments.push({ label: "Occupants", value: payload.occupantWeight, color: "#6366F1" });
+  if (payload.gearWeight > 0)
+    segments.push({ label: "Gear & Supplies", value: payload.gearWeight, color: "#10B981" });
+  if (payload.fuelWeight > 0)
+    segments.push({ label: "Fuel", value: payload.fuelWeight, color: "#F59E0B" });
+
+  const remaining = payload.gvwr - payload.totalLoaded;
+  const isOverCapacity = remaining < 0;
+
+  if (remaining > 0) {
+    segments.push({ label: "Remaining", value: remaining, color: "#34D399" });
+  }
+
+  const usedPct = payload.gvwr > 0
+    ? Math.round((payload.totalLoaded / payload.gvwr) * 100)
+    : 0;
+
+  return { segments, isOverCapacity, usedPct };
+}
+
+// ─── Fun Messages ────────────────────────────────────────────────────
+// Contextual messages based on build state. One per render.
+
+export function generateFunMessage(
+  payload: PayloadBudget,
+  suspGain: SuspensionGainInfo | null,
+  accessoryDb: UTVAccessory[],
+  selectedAccessories: string[]
+): string | null {
+  const messages: string[] = [];
+
+  // Net gain messages
+  if (suspGain) {
+    if (suspGain.netGainLbs < 0) {
+      messages.push("You're heavier, not better. Time to rethink that build.");
+    } else if (suspGain.netGainLbs > 50) {
+      messages.push(`You gained ${suspGain.netGainLbs} lbs of beer-hauling power!`);
+    } else if (suspGain.netGainLbs > 30) {
+      messages.push(`Hey, you gained ${suspGain.netGainLbs} lbs — enough for the dog to tag along!`);
+    } else if (suspGain.netGainLbs > 0) {
+      messages.push(`+${suspGain.netGainLbs} lbs. Every pound counts when you're packing for the weekend.`);
+    }
+  }
+
+  // Winch weight
+  const winch = selectedAccessories
+    .map(id => accessoryDb.find(a => a.id === id))
+    .find(a => a?.category === "winch");
+  if (winch && winch.weightLbs > 25) {
+    messages.push(`Whoa, that winch weighs more than your mom's purse.`);
+  }
+
+  // Payload stress
+  if (payload.payloadPct > 95) {
+    messages.push("Your rig is sweating. Maybe leave the kitchen sink at home.");
+  } else if (payload.payloadPct > 85) {
+    messages.push("Getting chunky. You sure you need ALL that gear?");
+  }
+
+  // Light load
+  if (payload.payloadPct < 30 && payload.accessoriesWeight > 0) {
+    messages.push("Plenty of room left. Time to add a cooler... or three.");
+  }
+
+  if (messages.length === 0) return null;
+  return messages[Math.floor(Math.random() * messages.length)];
 }
 
 // ─── Compute: Axle Distribution ───────────────────────────────────────
@@ -652,6 +844,15 @@ export function computeWarnings(
     });
   }
 
+  // Brake fade warning at 80%+ load
+  const effectivePct = modifiedPayload ? modifiedPayload.payloadPct : payload.payloadPct;
+  if (effectivePct >= 80) {
+    w.push({
+      level: "warning",
+      message: "Brakes overheat faster at 80%+ load. Consider upgraded brake pads for sustained downhill braking.",
+    });
+  }
+
   // Low water warning
   const people = config.adults + config.children;
   const waterGal = config.useCustomGear
@@ -697,7 +898,7 @@ export function computeAll(
   stateLegalDb: StateLegalInfo[]
 ): RigRatedResult {
   const payload = computePayload(config, accessoryDb);
-  const modifiedPayload = computeModifiedPayload(payload, config.suspensionTier);
+  const modifiedPayload = computeModifiedPayload(payload, config.selectedSuspension);
   const axleDistribution = computeAxleDistribution(config, accessoryDb);
   const stability = computeStabilityIndex(config, payload);
   const trailScores = computeTrailCompatibility(config, trailDb);
@@ -706,6 +907,30 @@ export function computeAll(
   const certifiedBadge = computeCertifiedBadge(config, payload, legalStatuses);
   const weightBreakdown = computeWeightBreakdown(payload);
   const warnings = computeWarnings(config, payload, modifiedPayload, stability, trailScores);
+
+  // GVWR breakdowns for dual donuts
+  const stockGVWR = computeGVWRBreakdown(payload);
+  const effectiveGVWR = modifiedPayload
+    ? computeGVWRBreakdown(modifiedPayload)
+    : stockGVWR;
+
+  // Suspension gain details for UI
+  const suspensionGain = computeSuspensionGain(
+    payload.payloadCapacity,
+    config.selectedSuspension
+  );
+
+  // Fun message
+  const funMessage = generateFunMessage(
+    payload,
+    suspensionGain,
+    accessoryDb,
+    config.selectedAccessories
+  );
+
+  // Tire/wheel delta for display
+  const machine = getMachine(config);
+  const tireWheelDelta = computeTireWheelDelta(config, machine);
 
   // Overall status — use effective (modified if active) payload for color thresholds
   const effectivePct = modifiedPayload ? modifiedPayload.payloadPct : payload.payloadPct;
@@ -725,6 +950,11 @@ export function computeAll(
     driveVsTrailer,
     certifiedBadge,
     weightBreakdown,
+    stockGVWR,
+    effectiveGVWR,
+    suspensionGain,
+    funMessage,
+    tireWheelDelta,
     warnings,
     overallStatus,
   };
@@ -801,7 +1031,10 @@ export const defaultRigRatedConfig: RigRatedConfig = {
   legalView: "unregistered",
   selectedStates: [],
 
-  suspensionTier: "stock",
+  selectedSuspension: null,
+  selectedTires: null,
+  selectedWheels: null,
+  fuelCellFull: false,
 
   towVehicleWeight: 5000,
   towVehicleMaxTow: 7500,

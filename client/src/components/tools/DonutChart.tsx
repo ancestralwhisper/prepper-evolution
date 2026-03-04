@@ -1,3 +1,4 @@
+
 interface Segment {
   label: string;
   value: number;
@@ -9,14 +10,15 @@ interface DonutChartProps {
   totalLabel: string;
   totalValue: string;
   size?: number;
+  overCapacity?: boolean;
 }
 
-export default function DonutChart({ segments, totalLabel, totalValue, size = 200 }: DonutChartProps) {
+export default function DonutChart({ segments, totalLabel, totalValue, size = 200, overCapacity = false }: DonutChartProps) {
   const total = segments.reduce((sum, s) => sum + s.value, 0);
   if (total === 0) {
     return (
       <div className="flex items-center justify-center" style={{ width: size, height: size }}>
-        <p className="text-muted-foreground text-sm">Add gear to see breakdown</p>
+        <p className="text-muted text-sm">Add gear to see breakdown</p>
       </div>
     );
   }
@@ -52,16 +54,17 @@ export default function DonutChart({ segments, totalLabel, totalValue, size = 20
         role="img"
         aria-label={`Weight breakdown chart: ${totalValue}`}
       >
+        {/* Background circle */}
         <circle
           cx={center}
           cy={center}
           r={radius}
           fill="none"
-          stroke="currentColor"
+          stroke="var(--border)"
           strokeWidth={strokeWidth}
-          className="text-border"
           opacity={0.3}
         />
+        {/* Segments */}
         {arcs.map((arc) => (
           <circle
             key={arc.label}
@@ -80,9 +83,23 @@ export default function DonutChart({ segments, totalLabel, totalValue, size = 20
             <title>{`${arc.label}: ${arc.value.toFixed(1)} oz (${(arc.pct * 100).toFixed(0)}%)`}</title>
           </circle>
         ))}
+        {/* Over-capacity red ring */}
+        {overCapacity && (
+          <circle
+            cx={center}
+            cy={center}
+            r={radius + strokeWidth / 2 + 4}
+            fill="none"
+            stroke="#EF4444"
+            strokeWidth={3}
+            strokeDasharray="8 4"
+            opacity={0.9}
+          />
+        )}
       </svg>
+      {/* Center text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl font-display font-bold text-foreground">{totalValue}</span>
+        <span className="text-2xl font-extrabold text-foreground">{totalValue}</span>
         <span className="text-xs text-muted-foreground uppercase tracking-wide">{totalLabel}</span>
       </div>
     </div>
@@ -104,7 +121,7 @@ export function ChartLegend({ segments }: { segments: Segment[] }) {
             style={{ backgroundColor: s.color }}
             aria-hidden="true"
           />
-          <span className="text-muted-foreground truncate">{s.label}</span>
+          <span className="text-muted truncate">{s.label}</span>
           <span className="text-foreground font-medium ml-auto">
             {total > 0 ? `${((s.value / total) * 100).toFixed(0)}%` : "0%"}
           </span>
