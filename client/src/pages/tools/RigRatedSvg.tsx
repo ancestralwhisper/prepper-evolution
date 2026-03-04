@@ -1,5 +1,6 @@
 
 import type { UTVBodyType } from "./rigrated-machines";
+import { RZR_XP1000_PATH } from "./silhouettes/rzr-xp1000";
 
 interface RigRatedSvgProps {
   bodyType: UTVBodyType;
@@ -58,6 +59,12 @@ const UTILITY_CREW: SilhouetteData = {
   frontWheel: 105, rearWheel: 345,
   bodyLeft: 30, bodyRight: 410,
   cabRef: { roofY: 45, roofStartX: 110, roofEndX: 320, hoodY: 95, bedY: 90 },
+};
+
+// ─── Traced silhouettes (photorealistic SVG from Illustrator) ────────────
+// These are full filled silhouettes (include wheels). Map machineId → path string.
+const TRACED_SILHOUETTES: Record<string, string> = {
+  "polaris-rzr-xp-1000": RZR_XP1000_PATH,
 };
 
 // ─── Machine-to-silhouette mapping (29 machines) ─────────────────────────
@@ -249,6 +256,7 @@ export default function RigRatedSvg({
   showRack, showLightBar, showRtt, loadStatus,
 }: RigRatedSvgProps) {
   const sil = getSilhouette(machineId, bodyType);
+  const tracedPath = machineId ? TRACED_SILHOUETTES[machineId] : undefined;
 
   const statusColor =
     loadStatus === "red" ? "#EF4444" :
@@ -276,27 +284,44 @@ export default function RigRatedSvg({
         {/* Ground line */}
         <line x1={10} y1={178} x2={410} y2={178} stroke="var(--border)" strokeWidth={1} />
 
-        {/* Wheels (behind body — visible through arch cutouts) */}
-        {[sil.frontWheel, sil.rearWheel].map((cx, i) => (
-          <g key={i}>
-            <circle cx={cx} cy={152} r={26} fill="#222" stroke="#444" strokeWidth={2.5} />
-            <circle cx={cx} cy={152} r={20} fill="none" stroke="#333" strokeWidth={1} />
-            <circle cx={cx} cy={152} r={9} fill="#555" stroke="#666" strokeWidth={1} />
+        {tracedPath ? (
+          /* Traced photorealistic silhouette (includes wheels in the path) */
+          <g transform="translate(0,-2)">
+            <path
+              d={tracedPath}
+              fill="#1a1a1a"
+              fillRule="evenodd"
+              stroke={statusColor}
+              strokeWidth={1}
+              strokeLinejoin="round"
+              className="transition-colors duration-500"
+            />
           </g>
-        ))}
+        ) : (
+          <>
+            {/* Wheels (behind body — visible through arch cutouts) */}
+            {[sil.frontWheel, sil.rearWheel].map((cx, i) => (
+              <g key={i}>
+                <circle cx={cx} cy={152} r={26} fill="#222" stroke="#444" strokeWidth={2.5} />
+                <circle cx={cx} cy={152} r={20} fill="none" stroke="#333" strokeWidth={1} />
+                <circle cx={cx} cy={152} r={9} fill="#555" stroke="#666" strokeWidth={1} />
+              </g>
+            ))}
 
-        {/* Vehicle body (A35,35 arcs create wheel well openings) */}
-        <path
-          d={sil.path}
-          fill="var(--card)"
-          stroke={statusColor}
-          strokeWidth={2.5}
-          strokeLinejoin="round"
-          className="transition-colors duration-500"
-        />
+            {/* Vehicle body (A35,35 arcs create wheel well openings) */}
+            <path
+              d={sil.path}
+              fill="var(--card)"
+              stroke={statusColor}
+              strokeWidth={2.5}
+              strokeLinejoin="round"
+              className="transition-colors duration-500"
+            />
 
-        {/* Structural details (window glass, pillars, bed rail) */}
-        <CabStructure sil={sil} statusColor={statusColor} />
+            {/* Structural details (window glass, pillars, bed rail) */}
+            <CabStructure sil={sil} statusColor={statusColor} />
+          </>
+        )}
 
         {/* Accessory layers */}
         {showDoors && <DoorsLayer sil={sil} />}
