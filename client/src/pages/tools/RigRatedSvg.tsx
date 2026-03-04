@@ -18,7 +18,7 @@ interface RigRatedSvgProps {
 
 // ─── Per-model silhouette paths (29 UTVs) ────────────────────────────────
 // ViewBox: 0 0 420 200. Ground at y=178. Wheel cutouts via evenodd at y=152, r=26.
-// Silhouettes are type-accurate proportions (sport/utility/crew/expedition).
+// Silhouettes have proper tall UTV proportions — roofs at y=48-68.
 
 interface SilhouetteData {
   path: string;
@@ -29,157 +29,142 @@ interface SilhouetteData {
 const MODEL_SILHOUETTES: Record<string, SilhouetteData> = {
   // ── Polaris (10) ─────────────────────────────────────────────────
   "polaris-rzr-xp-1000": {
-    path: "M 50 178 L 75 170 L 95 150 L 120 132 L 150 120 L 190 112 L 230 112 L 255 120 L 280 128 L 302 128 L 322 132 L 345 148 L 360 165 L 372 176 L 392 178 L 392 186 L 50 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 298 152 m 26 0 A 26 26 0 1 0 272 152 A 26 26 0 1 0 324 152 Z",
+    path: "M 50 178 L 62 170 L 78 148 L 96 120 L 110 96 L 128 78 L 148 66 L 180 62 L 220 62 L 250 64 L 272 72 L 288 86 L 302 104 L 318 126 L 338 148 L 356 166 L 370 176 L 392 178 L 392 186 L 50 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 298 152 m 26 0 A 26 26 0 1 0 272 152 A 26 26 0 1 0 324 152 Z",
     frontWheel: 118, rearWheel: 298,
   },
-  "polaris-rzr-turbo": {
-    path: "M 46 178 L 72 169 L 92 145 L 120 126 L 158 112 L 210 106 L 248 108 L 274 118 L 295 122 L 312 122 L 336 130 L 360 150 L 378 172 L 396 178 L 396 186 L 46 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 304 152 m 26 0 A 26 26 0 1 0 278 152 A 26 26 0 1 0 330 152 Z",
+  "polaris-rzr-xp-turbo-r": {
+    path: "M 46 178 L 60 170 L 78 148 L 98 120 L 114 94 L 134 76 L 156 64 L 190 60 L 230 60 L 258 62 L 282 70 L 300 86 L 314 104 L 330 126 L 348 148 L 364 166 L 378 176 L 398 178 L 398 186 L 46 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 304 152 m 26 0 A 26 26 0 1 0 278 152 A 26 26 0 1 0 330 152 Z",
     frontWheel: 118, rearWheel: 304,
   },
   "polaris-rzr-pro-xp": {
-    path: "M 48 178 L 76 170 L 100 148 L 132 126 L 172 112 L 222 108 L 256 110 L 284 120 L 306 124 L 330 130 L 352 146 L 372 168 L 390 178 L 390 186 L 48 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 300 152 m 26 0 A 26 26 0 1 0 274 152 A 26 26 0 1 0 326 152 Z",
+    path: "M 48 178 L 62 170 L 82 148 L 102 120 L 118 94 L 140 74 L 164 62 L 198 60 L 238 60 L 266 62 L 290 70 L 308 86 L 324 108 L 340 130 L 356 150 L 372 168 L 386 176 L 392 178 L 392 186 L 48 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 300 152 m 26 0 A 26 26 0 1 0 274 152 A 26 26 0 1 0 326 152 Z",
     frontWheel: 120, rearWheel: 300,
   },
   "polaris-rzr-pro-r": {
-    path: "M 44 178 L 72 168 L 98 142 L 136 120 L 186 106 L 238 104 L 272 110 L 302 122 L 330 128 L 354 144 L 378 170 L 398 178 L 398 186 L 44 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
+    path: "M 44 178 L 58 170 L 80 146 L 104 116 L 122 90 L 146 70 L 174 60 L 210 58 L 250 58 L 280 60 L 306 70 L 326 88 L 340 110 L 354 132 L 368 152 L 384 170 L 396 178 L 396 186 L 44 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
     frontWheel: 120, rearWheel: 306,
   },
   "polaris-ranger-xp-1000": {
-    path: "M 38 178 L 60 168 L 82 142 L 110 126 L 160 120 L 210 120 L 240 126 L 260 126 L 300 124 L 350 132 L 386 146 L 404 170 L 412 178 L 412 186 L 38 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 302 152 m 26 0 A 26 26 0 1 0 276 152 A 26 26 0 1 0 328 152 Z",
+    path: "M 38 178 L 52 168 L 68 142 L 86 118 L 100 96 L 118 78 L 148 60 L 190 56 L 220 56 L 238 58 L 248 64 L 252 78 L 252 90 L 300 90 L 340 90 L 370 92 L 390 102 L 404 126 L 412 154 L 416 172 L 420 178 L 420 186 L 38 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 302 152 m 26 0 A 26 26 0 1 0 276 152 A 26 26 0 1 0 328 152 Z",
     frontWheel: 118, rearWheel: 302,
   },
   "polaris-ranger-crew-xp-1000": {
-    path: "M 26 178 L 50 168 L 76 140 L 110 124 L 190 118 L 250 118 L 290 124 L 320 124 L 360 130 L 396 144 L 414 168 L 420 178 L 420 186 L 26 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 308 152 m 26 0 A 26 26 0 1 0 282 152 A 26 26 0 1 0 334 152 Z",
+    path: "M 22 178 L 38 168 L 58 142 L 80 118 L 98 94 L 120 74 L 150 56 L 210 52 L 262 52 L 292 54 L 308 60 L 316 74 L 316 90 L 346 90 L 374 90 L 396 94 L 408 104 L 416 126 L 420 150 L 420 178 L 420 186 L 22 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 308 152 m 26 0 A 26 26 0 1 0 282 152 A 26 26 0 1 0 334 152 Z",
     frontWheel: 112, rearWheel: 308,
   },
   "polaris-general-xp-1000": {
-    path: "M 44 178 L 70 169 L 96 146 L 126 126 L 170 116 L 228 116 L 258 122 L 284 122 L 316 126 L 346 142 L 372 166 L 392 178 L 392 186 L 44 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 300 152 m 26 0 A 26 26 0 1 0 274 152 A 26 26 0 1 0 326 152 Z",
+    path: "M 40 178 L 54 168 L 72 144 L 92 120 L 108 98 L 128 78 L 156 60 L 198 56 L 232 56 L 252 58 L 264 64 L 270 76 L 272 90 L 286 94 L 294 98 L 304 102 L 320 110 L 338 124 L 356 146 L 372 166 L 388 176 L 392 178 L 392 186 L 40 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 300 152 m 26 0 A 26 26 0 1 0 274 152 A 26 26 0 1 0 326 152 Z",
     frontWheel: 120, rearWheel: 300,
   },
   "polaris-general-xp-4-1000": {
-    path: "M 30 178 L 56 168 L 84 142 L 120 124 L 210 116 L 270 116 L 308 122 L 340 124 L 370 136 L 398 158 L 416 176 L 420 178 L 420 186 L 30 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 312 152 m 26 0 A 26 26 0 1 0 286 152 A 26 26 0 1 0 338 152 Z",
+    path: "M 24 178 L 40 168 L 60 142 L 84 118 L 104 94 L 128 72 L 160 54 L 232 50 L 286 50 L 318 52 L 336 58 L 346 72 L 346 90 L 358 92 L 370 94 L 386 100 L 402 114 L 414 136 L 420 162 L 420 178 L 420 186 L 24 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 312 152 m 26 0 A 26 26 0 1 0 286 152 A 26 26 0 1 0 338 152 Z",
     frontWheel: 112, rearWheel: 312,
   },
   "polaris-xpedition-xp": {
-    path: "M 34 178 L 58 168 L 80 142 L 112 124 L 182 116 L 236 116 L 268 124 L 298 128 L 338 128 L 374 140 L 402 162 L 416 178 L 416 186 L 34 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
+    path: "M 28 178 L 44 168 L 64 142 L 86 116 L 104 92 L 128 72 L 162 56 L 214 54 L 252 54 L 276 56 L 292 62 L 302 76 L 304 92 L 304 104 L 332 104 L 356 104 L 382 106 L 402 114 L 414 132 L 420 156 L 420 178 L 420 186 L 28 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
     frontWheel: 118, rearWheel: 306,
   },
   "polaris-xpedition-xp-5": {
-    path: "M 22 178 L 48 168 L 74 140 L 110 122 L 210 114 L 270 114 L 308 122 L 340 128 L 376 132 L 404 150 L 418 170 L 420 178 L 420 186 L 22 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 314 152 m 26 0 A 26 26 0 1 0 288 152 A 26 26 0 1 0 340 152 Z",
+    path: "M 14 178 L 32 168 L 54 142 L 78 116 L 100 92 L 128 70 L 166 52 L 248 48 L 308 48 L 344 50 L 364 56 L 376 70 L 378 90 L 378 110 L 396 110 L 410 114 L 418 126 L 420 146 L 420 178 L 420 186 L 14 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 314 152 m 26 0 A 26 26 0 1 0 288 152 A 26 26 0 1 0 340 152 Z",
     frontWheel: 112, rearWheel: 314,
   },
 
   // ── Can-Am (5) ───────────────────────────────────────────────────
-  "can-am-maverick-x3": {
-    path: "M 46 178 L 74 170 L 98 146 L 130 124 L 176 112 L 232 110 L 266 116 L 292 126 L 314 128 L 342 136 L 366 156 L 386 176 L 396 178 L 396 186 L 46 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
+  "canam-maverick-x3-xrs-turbo-rr": {
+    path: "M 48 178 L 62 170 L 82 148 L 104 120 L 120 94 L 142 74 L 166 62 L 200 60 L 238 60 L 266 62 L 292 70 L 314 86 L 332 110 L 346 132 L 360 152 L 374 170 L 390 178 L 390 186 L 48 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
     frontWheel: 120, rearWheel: 306,
   },
-  "can-am-maverick-r": {
-    path: "M 44 178 L 72 168 L 98 140 L 140 118 L 196 106 L 252 106 L 290 116 L 320 126 L 350 140 L 376 164 L 396 178 L 396 186 L 44 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 310 152 m 26 0 A 26 26 0 1 0 284 152 A 26 26 0 1 0 336 152 Z",
+  "canam-maverick-r": {
+    path: "M 46 178 L 60 170 L 84 146 L 110 116 L 130 88 L 156 66 L 186 58 L 222 56 L 260 56 L 292 58 L 320 68 L 342 88 L 356 112 L 368 134 L 380 154 L 394 172 L 404 178 L 404 186 L 46 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 310 152 m 26 0 A 26 26 0 1 0 284 152 A 26 26 0 1 0 336 152 Z",
     frontWheel: 120, rearWheel: 310,
   },
-  "can-am-defender-hd9": {
-    path: "M 36 178 L 58 168 L 82 140 L 112 124 L 176 120 L 236 120 L 272 126 L 308 126 L 354 132 L 390 146 L 408 170 L 416 178 L 416 186 L 36 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 302 152 m 26 0 A 26 26 0 1 0 276 152 A 26 26 0 1 0 328 152 Z",
+  "canam-defender-hd9": {
+    path: "M 30 178 L 46 168 L 66 142 L 86 118 L 102 96 L 122 76 L 150 58 L 196 54 L 232 54 L 258 56 L 276 62 L 288 76 L 290 92 L 290 104 L 312 104 L 338 104 L 364 106 L 386 114 L 404 132 L 414 156 L 420 178 L 420 186 L 30 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 302 152 m 26 0 A 26 26 0 1 0 276 152 A 26 26 0 1 0 328 152 Z",
     frontWheel: 118, rearWheel: 302,
   },
-  "can-am-defender-hd10": {
-    path: "M 34 178 L 58 168 L 84 140 L 116 124 L 184 118 L 244 118 L 284 124 L 316 124 L 360 132 L 396 148 L 414 170 L 420 178 L 420 186 L 34 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
+  "canam-defender-hd10": {
+    path: "M 28 178 L 44 168 L 64 142 L 86 118 L 104 94 L 126 74 L 156 56 L 204 54 L 242 54 L 270 56 L 290 62 L 304 76 L 306 94 L 306 106 L 332 106 L 356 106 L 382 108 L 402 116 L 414 136 L 420 160 L 420 178 L 420 186 L 28 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
     frontWheel: 118, rearWheel: 306,
   },
-  "can-am-defender-max": {
-    path: "M 22 178 L 48 168 L 76 140 L 114 122 L 210 116 L 276 116 L 318 124 L 350 128 L 382 134 L 408 152 L 418 170 L 420 178 L 420 186 L 22 186 Z M 110 152 m 26 0 A 26 26 0 1 0 84 152 A 26 26 0 1 0 136 152 Z M 314 152 m 26 0 A 26 26 0 1 0 288 152 A 26 26 0 1 0 340 152 Z",
+  "canam-defender-max-hd10": {
+    path: "M 14 178 L 32 168 L 54 142 L 78 116 L 100 92 L 128 70 L 166 52 L 240 50 L 294 50 L 328 52 L 350 58 L 364 72 L 366 92 L 366 108 L 378 108 L 394 110 L 408 118 L 416 134 L 420 154 L 420 178 L 420 186 L 14 186 Z M 110 152 m 26 0 A 26 26 0 1 0 84 152 A 26 26 0 1 0 136 152 Z M 314 152 m 26 0 A 26 26 0 1 0 288 152 A 26 26 0 1 0 340 152 Z",
     frontWheel: 110, rearWheel: 314,
   },
 
   // ── Honda (4) ────────────────────────────────────────────────────
   "honda-pioneer-1000": {
-    path: "M 40 178 L 62 168 L 86 142 L 118 126 L 178 122 L 234 122 L 270 128 L 308 128 L 356 134 L 392 148 L 410 172 L 418 178 L 418 186 L 40 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 300 152 m 26 0 A 26 26 0 1 0 274 152 A 26 26 0 1 0 326 152 Z",
+    path: "M 34 178 L 50 168 L 70 142 L 90 118 L 106 96 L 126 76 L 154 58 L 198 54 L 232 54 L 256 56 L 272 62 L 282 76 L 284 92 L 284 104 L 304 104 L 332 104 L 358 106 L 384 114 L 404 132 L 414 156 L 420 178 L 420 186 L 34 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 300 152 m 26 0 A 26 26 0 1 0 274 152 A 26 26 0 1 0 326 152 Z",
     frontWheel: 120, rearWheel: 300,
   },
   "honda-pioneer-1000-5": {
-    path: "M 28 178 L 52 168 L 80 142 L 116 126 L 210 120 L 270 120 L 310 128 L 346 130 L 382 138 L 408 154 L 418 172 L 420 178 L 420 186 L 28 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 312 152 m 26 0 A 26 26 0 1 0 286 152 A 26 26 0 1 0 338 152 Z",
+    path: "M 18 178 L 36 168 L 58 142 L 82 118 L 104 94 L 130 72 L 164 54 L 236 50 L 290 50 L 322 52 L 342 58 L 354 72 L 356 92 L 356 108 L 372 108 L 388 110 L 404 118 L 414 136 L 420 160 L 420 178 L 420 186 L 18 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 312 152 m 26 0 A 26 26 0 1 0 286 152 A 26 26 0 1 0 338 152 Z",
     frontWheel: 112, rearWheel: 312,
   },
   "honda-talon-1000r": {
-    path: "M 52 178 L 78 170 L 102 148 L 130 128 L 172 114 L 224 112 L 256 118 L 286 126 L 314 128 L 342 138 L 366 156 L 386 176 L 396 178 L 396 186 L 52 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 304 152 m 26 0 A 26 26 0 1 0 278 152 A 26 26 0 1 0 330 152 Z",
+    path: "M 52 178 L 64 170 L 84 148 L 104 120 L 120 96 L 140 78 L 162 66 L 194 62 L 230 62 L 258 64 L 282 72 L 300 86 L 316 108 L 332 130 L 348 150 L 366 170 L 386 178 L 386 186 L 52 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 304 152 m 26 0 A 26 26 0 1 0 278 152 A 26 26 0 1 0 330 152 Z",
     frontWheel: 120, rearWheel: 304,
   },
   "honda-talon-1000x": {
-    path: "M 50 178 L 76 170 L 102 148 L 134 126 L 180 114 L 232 112 L 264 118 L 292 126 L 318 130 L 346 142 L 370 162 L 388 176 L 398 178 L 398 186 L 50 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
+    path: "M 50 178 L 62 170 L 84 148 L 108 120 L 126 94 L 148 76 L 172 64 L 206 60 L 244 60 L 272 62 L 296 70 L 316 86 L 334 110 L 348 132 L 362 152 L 380 172 L 398 178 L 398 186 L 50 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
     frontWheel: 120, rearWheel: 306,
   },
 
   // ── Kawasaki (4) ─────────────────────────────────────────────────
   "kawasaki-teryx-krx-1000": {
-    path: "M 44 178 L 70 168 L 96 142 L 134 122 L 188 110 L 242 110 L 276 116 L 306 126 L 332 130 L 356 144 L 378 166 L 396 178 L 396 186 L 44 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
+    path: "M 44 178 L 58 170 L 80 146 L 104 118 L 124 90 L 150 68 L 180 60 L 216 58 L 252 58 L 282 60 L 308 70 L 330 90 L 346 114 L 360 136 L 372 156 L 386 172 L 398 178 L 398 186 L 44 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
     frontWheel: 120, rearWheel: 306,
   },
   "kawasaki-teryx-krx-1000-2026": {
-    path: "M 42 178 L 68 168 L 96 140 L 138 118 L 198 106 L 254 106 L 292 116 L 322 128 L 350 142 L 372 164 L 392 178 L 392 186 L 42 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 310 152 m 26 0 A 26 26 0 1 0 284 152 A 26 26 0 1 0 336 152 Z",
+    path: "M 42 178 L 56 170 L 80 146 L 108 116 L 130 88 L 158 66 L 190 58 L 228 56 L 266 56 L 298 58 L 326 68 L 348 88 L 362 112 L 374 134 L 386 154 L 398 172 L 408 178 L 408 186 L 42 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 310 152 m 26 0 A 26 26 0 1 0 284 152 A 26 26 0 1 0 336 152 Z",
     frontWheel: 120, rearWheel: 310,
   },
   "kawasaki-teryx-krx4-1000": {
-    path: "M 28 178 L 54 168 L 82 142 L 122 122 L 220 112 L 282 112 L 322 120 L 352 128 L 380 142 L 404 162 L 418 176 L 420 178 L 420 186 L 28 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 316 152 m 26 0 A 26 26 0 1 0 290 152 A 26 26 0 1 0 342 152 Z",
+    path: "M 16 178 L 34 168 L 56 142 L 82 118 L 106 94 L 136 70 L 176 54 L 252 50 L 308 50 L 344 52 L 366 58 L 378 72 L 380 92 L 380 110 L 396 110 L 410 114 L 418 126 L 420 146 L 420 178 L 420 186 L 16 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 316 152 m 26 0 A 26 26 0 1 0 290 152 A 26 26 0 1 0 342 152 Z",
     frontWheel: 112, rearWheel: 316,
   },
   "kawasaki-mule-pro-fxt": {
-    path: "M 30 178 L 52 168 L 76 140 L 106 124 L 186 120 L 252 120 L 294 126 L 330 126 L 372 134 L 404 150 L 418 172 L 420 178 L 420 186 L 30 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 310 152 m 26 0 A 26 26 0 1 0 284 152 A 26 26 0 1 0 336 152 Z",
+    path: "M 10 178 L 28 168 L 50 142 L 74 116 L 98 92 L 128 70 L 170 52 L 258 48 L 320 48 L 356 50 L 378 56 L 392 70 L 394 92 L 394 112 L 404 112 L 414 116 L 418 128 L 420 148 L 420 178 L 420 186 L 10 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 310 152 m 26 0 A 26 26 0 1 0 284 152 A 26 26 0 1 0 336 152 Z",
     frontWheel: 112, rearWheel: 310,
   },
 
   // ── Yamaha (3) ───────────────────────────────────────────────────
   "yamaha-yxz1000r": {
-    path: "M 54 178 L 80 170 L 104 148 L 134 128 L 178 114 L 230 112 L 262 118 L 292 126 L 318 128 L 346 138 L 370 156 L 390 176 L 398 178 L 398 186 L 54 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 304 152 m 26 0 A 26 26 0 1 0 278 152 A 26 26 0 1 0 330 152 Z",
+    path: "M 54 178 L 66 170 L 86 148 L 108 120 L 124 96 L 144 78 L 166 66 L 198 62 L 234 62 L 262 64 L 286 72 L 306 88 L 322 110 L 338 132 L 354 152 L 372 172 L 392 178 L 392 186 L 54 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 304 152 m 26 0 A 26 26 0 1 0 278 152 A 26 26 0 1 0 330 152 Z",
     frontWheel: 120, rearWheel: 304,
   },
   "yamaha-wolverine-rmax-1000": {
-    path: "M 46 178 L 72 169 L 98 146 L 130 126 L 176 116 L 234 116 L 266 122 L 292 126 L 320 132 L 346 146 L 372 168 L 392 178 L 392 186 L 46 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 304 152 m 26 0 A 26 26 0 1 0 278 152 A 26 26 0 1 0 330 152 Z",
+    path: "M 40 178 L 54 168 L 74 144 L 96 120 L 114 96 L 136 76 L 166 58 L 212 54 L 246 54 L 270 56 L 286 62 L 296 74 L 298 90 L 300 104 L 322 104 L 348 104 L 374 106 L 396 114 L 412 132 L 420 156 L 420 178 L 420 186 L 40 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 304 152 m 26 0 A 26 26 0 1 0 278 152 A 26 26 0 1 0 330 152 Z",
     frontWheel: 120, rearWheel: 304,
   },
   "yamaha-wolverine-rmax4-1000": {
-    path: "M 30 178 L 56 168 L 84 144 L 120 126 L 212 118 L 276 118 L 316 124 L 346 130 L 374 140 L 398 156 L 414 172 L 420 178 L 420 186 L 30 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 316 152 m 26 0 A 26 26 0 1 0 290 152 A 26 26 0 1 0 342 152 Z",
+    path: "M 18 178 L 36 168 L 58 142 L 82 118 L 104 94 L 132 72 L 168 54 L 244 50 L 300 50 L 334 52 L 356 58 L 370 72 L 372 92 L 372 108 L 386 108 L 402 110 L 414 118 L 418 134 L 420 154 L 420 178 L 420 186 L 18 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 316 152 m 26 0 A 26 26 0 1 0 290 152 A 26 26 0 1 0 342 152 Z",
     frontWheel: 112, rearWheel: 316,
   },
 
   // ── CFMoto (3) ───────────────────────────────────────────────────
   "cfmoto-zforce-950": {
-    path: "M 50 178 L 76 170 L 102 148 L 134 126 L 182 114 L 236 112 L 270 118 L 300 128 L 326 132 L 350 146 L 372 166 L 392 178 L 392 186 L 50 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 304 152 m 26 0 A 26 26 0 1 0 278 152 A 26 26 0 1 0 330 152 Z",
+    path: "M 50 178 L 62 170 L 84 148 L 108 120 L 126 94 L 148 74 L 172 62 L 206 60 L 244 60 L 272 62 L 296 70 L 316 86 L 332 108 L 346 130 L 360 150 L 378 170 L 396 178 L 396 186 L 50 186 Z M 120 152 m 26 0 A 26 26 0 1 0 94 152 A 26 26 0 1 0 146 152 Z M 304 152 m 26 0 A 26 26 0 1 0 278 152 A 26 26 0 1 0 330 152 Z",
     frontWheel: 120, rearWheel: 304,
   },
   "cfmoto-uforce-1000": {
-    path: "M 36 178 L 58 168 L 84 140 L 116 124 L 190 120 L 250 120 L 288 126 L 322 126 L 366 132 L 398 146 L 414 168 L 420 178 L 420 186 L 36 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
+    path: "M 32 178 L 48 168 L 68 142 L 90 118 L 108 94 L 130 74 L 160 56 L 208 54 L 244 54 L 270 56 L 288 62 L 300 76 L 302 94 L 302 106 L 328 106 L 354 106 L 380 108 L 402 116 L 414 136 L 420 160 L 420 178 L 420 186 L 32 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 306 152 m 26 0 A 26 26 0 1 0 280 152 A 26 26 0 1 0 332 152 Z",
     frontWheel: 118, rearWheel: 306,
   },
   "cfmoto-uforce-1000-xl": {
-    path: "M 22 178 L 48 168 L 76 140 L 114 122 L 214 118 L 282 118 L 324 124 L 356 128 L 386 134 L 410 150 L 418 168 L 420 178 L 420 186 L 22 186 Z M 110 152 m 26 0 A 26 26 0 1 0 84 152 A 26 26 0 1 0 136 152 Z M 316 152 m 26 0 A 26 26 0 1 0 290 152 A 26 26 0 1 0 342 152 Z",
+    path: "M 12 178 L 30 168 L 52 142 L 78 118 L 102 94 L 132 70 L 172 52 L 246 50 L 304 50 L 338 52 L 360 58 L 374 72 L 376 92 L 376 110 L 392 110 L 408 114 L 418 128 L 420 148 L 420 178 L 420 186 L 12 186 Z M 110 152 m 26 0 A 26 26 0 1 0 84 152 A 26 26 0 1 0 136 152 Z M 316 152 m 26 0 A 26 26 0 1 0 290 152 A 26 26 0 1 0 342 152 Z",
     frontWheel: 110, rearWheel: 316,
   },
 };
 
 // ─── Fallback generic body-type paths (for manual entry) ─────────────────
-// Same evenodd format with wheel cutouts so rendering is consistent.
+// Reuses representative per-model silhouettes for each body type.
 
 const GENERIC_SILHOUETTES: Record<UTVBodyType, SilhouetteData> = {
-  "2-seat-sport": {
-    path: "M 50 178 L 75 170 L 95 150 L 120 132 L 150 120 L 190 112 L 230 112 L 255 120 L 280 128 L 302 128 L 322 132 L 345 148 L 360 165 L 372 176 L 392 178 L 392 186 L 50 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 298 152 m 26 0 A 26 26 0 1 0 272 152 A 26 26 0 1 0 324 152 Z",
-    frontWheel: 118, rearWheel: 298,
-  },
-  "4-seat-sport": {
-    path: "M 30 178 L 56 168 L 84 142 L 120 124 L 210 116 L 270 116 L 308 122 L 340 124 L 370 136 L 398 158 L 416 176 L 420 178 L 420 186 L 30 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 312 152 m 26 0 A 26 26 0 1 0 286 152 A 26 26 0 1 0 338 152 Z",
-    frontWheel: 112, rearWheel: 312,
-  },
-  "2-seat-utility": {
-    path: "M 38 178 L 60 168 L 82 142 L 110 126 L 160 120 L 210 120 L 240 126 L 260 126 L 300 124 L 350 132 L 386 146 L 404 170 L 412 178 L 412 186 L 38 186 Z M 118 152 m 26 0 A 26 26 0 1 0 92 152 A 26 26 0 1 0 144 152 Z M 302 152 m 26 0 A 26 26 0 1 0 276 152 A 26 26 0 1 0 328 152 Z",
-    frontWheel: 118, rearWheel: 302,
-  },
-  "4-seat-utility": {
-    path: "M 26 178 L 50 168 L 76 140 L 110 124 L 190 118 L 250 118 L 290 124 L 320 124 L 360 130 L 396 144 L 414 168 L 420 178 L 420 186 L 26 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 308 152 m 26 0 A 26 26 0 1 0 282 152 A 26 26 0 1 0 334 152 Z",
-    frontWheel: 112, rearWheel: 308,
-  },
-  "crew-cab-utility": {
-    path: "M 30 178 L 52 168 L 76 140 L 106 124 L 186 120 L 252 120 L 294 126 L 330 126 L 372 134 L 404 150 L 418 172 L 420 178 L 420 186 L 30 186 Z M 112 152 m 26 0 A 26 26 0 1 0 86 152 A 26 26 0 1 0 138 152 Z M 310 152 m 26 0 A 26 26 0 1 0 284 152 A 26 26 0 1 0 336 152 Z",
-    frontWheel: 112, rearWheel: 310,
-  },
+  "2-seat-sport":    MODEL_SILHOUETTES["polaris-rzr-xp-1000"],
+  "4-seat-sport":    MODEL_SILHOUETTES["polaris-general-xp-4-1000"],
+  "2-seat-utility":  MODEL_SILHOUETTES["polaris-ranger-xp-1000"],
+  "4-seat-utility":  MODEL_SILHOUETTES["polaris-ranger-crew-xp-1000"],
+  "crew-cab-utility": MODEL_SILHOUETTES["kawasaki-mule-pro-fxt"],
 };
 
 // ─── Resolve silhouette: per-model > generic body type ───────────────────
@@ -189,25 +174,29 @@ function getSilhouette(machineId: string | undefined, bodyType: UTVBodyType): Si
   return GENERIC_SILHOUETTES[bodyType] || GENERIC_SILHOUETTES["2-seat-utility"];
 }
 
-// ─── Accessory layer positioning (still driven by body type) ─────────────
+// ─── Accessory layer positioning (adjusted for tall silhouettes) ─────────
+// Sport roofs at y=58-66, utility roofs at y=48-56, beds at y=90-112.
 
 function RoofLayer({ bodyType }: { bodyType: UTVBodyType }) {
   const isSport = bodyType.includes("sport");
   const is4 = bodyType.includes("4-seat");
   const isCrew = bodyType === "crew-cab-utility";
-  const x = isSport ? (is4 ? 140 : 160) : isCrew ? 130 : is4 ? 140 : 150;
-  const w = isSport ? (is4 ? 140 : 100) : isCrew ? 140 : is4 ? 120 : 100;
-  return <rect x={x} y={100} width={w} height={4} rx={2} fill="#777" opacity={0.7}><title>Roof</title></rect>;
+  const x = isSport ? (is4 ? 160 : 170) : isCrew ? 170 : is4 ? 150 : 160;
+  const w = isSport ? (is4 ? 120 : 80) : isCrew ? 160 : is4 ? 130 : 90;
+  const y = isSport ? (is4 ? 48 : 58) : isCrew ? 44 : is4 ? 48 : 52;
+  return <rect x={x} y={y} width={w} height={4} rx={2} fill="#777" opacity={0.7}><title>Roof</title></rect>;
 }
 
 function WindshieldLayer({ bodyType }: { bodyType: UTVBodyType }) {
   const isSport = bodyType.includes("sport");
   const is4 = bodyType.includes("4-seat");
   const isCrew = bodyType === "crew-cab-utility";
-  const x1 = isSport ? (is4 ? 100 : 120) : isCrew ? 80 : is4 ? 86 : 100;
-  const x2 = isSport ? (is4 ? 120 : 140) : isCrew ? 100 : is4 ? 106 : 120;
+  const x1 = isSport ? (is4 ? 100 : 110) : isCrew ? 90 : is4 ? 92 : 100;
+  const y1 = isSport ? 100 : isCrew ? 88 : 92;
+  const x2 = isSport ? (is4 ? 130 : 140) : isCrew ? 120 : is4 ? 122 : 130;
+  const y2 = isSport ? (is4 ? 54 : 62) : isCrew ? 50 : is4 ? 54 : 56;
   return (
-    <line x1={x1} y1={130} x2={x2} y2={102} stroke="#88CCEE" strokeWidth={2.5} opacity={0.6}>
+    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#88CCEE" strokeWidth={2.5} opacity={0.6}>
       <title>Windshield</title>
     </line>
   );
@@ -217,10 +206,12 @@ function DoorsLayer({ bodyType }: { bodyType: UTVBodyType }) {
   const isSport = bodyType.includes("sport");
   const is4 = bodyType.includes("4-seat");
   const isCrew = bodyType === "crew-cab-utility";
-  const x = isSport ? (is4 ? 130 : 148) : isCrew ? 110 : is4 ? 118 : 130;
-  const w = isSport ? (is4 ? 90 : 60) : isCrew ? 130 : is4 ? 100 : 60;
+  const x = isSport ? (is4 ? 130 : 145) : isCrew ? 120 : is4 ? 125 : 135;
+  const w = isSport ? (is4 ? 100 : 70) : isCrew ? 150 : is4 ? 120 : 80;
+  const y = isSport ? (is4 ? 56 : 66) : isCrew ? 52 : is4 ? 56 : 60;
+  const h = isSport ? 70 : isCrew ? 80 : is4 ? 75 : 70;
   return (
-    <rect x={x} y={108} width={w} height={isSport ? 42 : 40} rx={3} fill="none" stroke="#888" strokeWidth={1.5} opacity={0.5}>
+    <rect x={x} y={y} width={w} height={h} rx={3} fill="none" stroke="#888" strokeWidth={1.5} opacity={0.5}>
       <title>Doors</title>
     </rect>
   );
@@ -230,7 +221,7 @@ function FrontBumperLayer({ bodyType }: { bodyType: UTVBodyType }) {
   const isSport = bodyType.includes("sport");
   const is4 = bodyType.includes("4-seat");
   const isCrew = bodyType === "crew-cab-utility";
-  const x = isSport ? (is4 ? 26 : 44) : isCrew ? 24 : is4 ? 22 : 32;
+  const x = isSport ? (is4 ? 20 : 42) : isCrew ? 6 : is4 ? 18 : 30;
   return <rect x={x} y={148} width={14} height={24} rx={3} fill="#555" opacity={0.7}><title>Front Bumper</title></rect>;
 }
 
@@ -238,7 +229,7 @@ function RearBumperLayer({ bodyType }: { bodyType: UTVBodyType }) {
   const isSport = bodyType.includes("sport");
   const is4 = bodyType.includes("4-seat");
   const isCrew = bodyType === "crew-cab-utility";
-  const x = isSport ? (is4 ? 392 : 380) : isCrew ? 408 : is4 ? 406 : 398;
+  const x = isSport ? (is4 ? 400 : 380) : isCrew ? 408 : is4 ? 406 : 400;
   return <rect x={x} y={148} width={14} height={24} rx={3} fill="#555" opacity={0.7}><title>Rear Bumper</title></rect>;
 }
 
@@ -246,7 +237,7 @@ function WinchLayer({ bodyType }: { bodyType: UTVBodyType }) {
   const isSport = bodyType.includes("sport");
   const is4 = bodyType.includes("4-seat");
   const isCrew = bodyType === "crew-cab-utility";
-  const x = isSport ? (is4 ? 26 : 44) : isCrew ? 24 : is4 ? 22 : 32;
+  const x = isSport ? (is4 ? 20 : 42) : isCrew ? 6 : is4 ? 18 : 30;
   return (
     <g>
       <rect x={x} y={138} width={12} height={10} rx={2} fill="#C45D2C" opacity={0.8}><title>Winch</title></rect>
@@ -259,13 +250,14 @@ function RackLayer({ bodyType }: { bodyType: UTVBodyType }) {
   if (!bodyType.includes("utility")) return null;
   const isCrew = bodyType === "crew-cab-utility";
   const is4 = bodyType === "4-seat-utility";
-  const x = isCrew ? 270 : is4 ? 260 : 230;
-  const w = isCrew ? 98 : is4 ? 100 : 110;
+  const x = isCrew ? 370 : is4 ? 330 : 270;
+  const w = isCrew ? 30 : is4 ? 50 : 80;
+  const y = isCrew ? 104 : is4 ? 84 : 84;
   return (
     <g>
-      <rect x={x} y={114} width={w} height={3} rx={1} fill="#555" opacity={0.8}><title>Cargo Rack</title></rect>
-      <rect x={x + 5} y={117} width={3} height={5} fill="#555" opacity={0.6} />
-      <rect x={x + w - 8} y={117} width={3} height={5} fill="#555" opacity={0.6} />
+      <rect x={x} y={y} width={w} height={3} rx={1} fill="#555" opacity={0.8}><title>Cargo Rack</title></rect>
+      <rect x={x + 4} y={y + 3} width={3} height={5} fill="#555" opacity={0.6} />
+      <rect x={x + w - 7} y={y + 3} width={3} height={5} fill="#555" opacity={0.6} />
     </g>
   );
 }
@@ -274,18 +266,20 @@ function LightBarLayer({ bodyType }: { bodyType: UTVBodyType }) {
   const isSport = bodyType.includes("sport");
   const is4 = bodyType.includes("4-seat");
   const isCrew = bodyType === "crew-cab-utility";
-  const x = isSport ? (is4 ? 170 : 180) : isCrew ? 160 : is4 ? 165 : 170;
-  const w = isSport ? (is4 ? 80 : 60) : isCrew ? 80 : is4 ? 70 : 60;
-  return <rect x={x} y={98} width={w} height={3} rx={1.5} fill="#FFD700" opacity={0.7}><title>Light Bar</title></rect>;
+  const x = isSport ? (is4 ? 180 : 180) : isCrew ? 200 : is4 ? 180 : 180;
+  const w = isSport ? (is4 ? 80 : 60) : isCrew ? 100 : is4 ? 80 : 60;
+  const y = isSport ? (is4 ? 46 : 56) : isCrew ? 42 : is4 ? 46 : 50;
+  return <rect x={x} y={y} width={w} height={3} rx={1.5} fill="#FFD700" opacity={0.7}><title>Light Bar</title></rect>;
 }
 
 function RttLayer({ bodyType }: { bodyType: UTVBodyType }) {
   if (!bodyType.includes("utility")) return null;
   const isCrew = bodyType === "crew-cab-utility";
   const is4 = bodyType === "4-seat-utility";
-  const x = isCrew ? 272 : is4 ? 264 : 234;
-  const w = isCrew ? 90 : is4 ? 92 : 100;
-  return <rect x={x} y={96} width={w} height={12} rx={3} fill="#C45D2C" opacity={0.8}><title>Rooftop Tent</title></rect>;
+  const x = isCrew ? 366 : is4 ? 326 : 266;
+  const w = isCrew ? 38 : is4 ? 58 : 86;
+  const y = isCrew ? 92 : is4 ? 72 : 72;
+  return <rect x={x} y={y} width={w} height={12} rx={3} fill="#C45D2C" opacity={0.8}><title>Rooftop Tent</title></rect>;
 }
 
 // ─── Main Component ─────────────────────────────────────────────────────
