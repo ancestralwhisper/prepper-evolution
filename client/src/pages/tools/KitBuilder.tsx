@@ -1077,6 +1077,19 @@ export default function KitBuilder() {
                 Prices are estimated and may vary. Always verify current pricing before purchasing.
               </p>
 
+              {/* How This Tool Works */}
+              <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
+                <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+                <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+                  <p>
+                    Drop your ZIP code and we&apos;ll auto-detect your region, climate, and local hazards &mdash; then walk you through building a 72-hour kit step by step. Answer a few quick questions about your household and we&apos;ll customize everything: family size, pets, medical needs, the works. Every recommended item links to Amazon with real pricing.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Bottom line:</strong> a 72-hour kit is the bare minimum everyone should have ready to grab. This tool makes sure yours is actually dialed in for where you live, not some generic checklist off the internet.
+                  </p>
+                </div>
+              </div>
+
               <DataPrivacyNotice />
               <SupportFooter />
             </div>

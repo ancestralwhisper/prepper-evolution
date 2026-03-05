@@ -1215,6 +1215,19 @@ export default function PowerSystemBuilder() {
         </button>
       )}
 
+      {/* How This Tool Works */}
+      <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
+        <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+        <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+          <p>
+            Map out your full off-grid power setup step by step &mdash; pick your devices, set your location, and we&apos;ll spec the panels, batteries, charge controller, and inverter you actually need. The wiring diagram updates live as you build so you can see exactly how everything connects before you buy a single component.
+          </p>
+          <p>
+            <strong className="text-foreground">Bottom line:</strong> wiring a power system wrong is expensive at best and dangerous at worst. This builder walks you through the entire chain from panel to plug so nothing gets missed and nothing gets fried.
+          </p>
+        </div>
+      </div>
+
       {/* Data Privacy + Support */}
       <DataPrivacyNotice />
       <SupportFooter />

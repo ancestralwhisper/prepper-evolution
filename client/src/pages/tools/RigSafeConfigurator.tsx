@@ -2336,6 +2336,19 @@ export default function RigSafeConfigurator() {
         )}
       </div>
 
+      {/* How This Tool Works */}
+      <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
+        <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+        <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+          <p>
+            Start with your rig&apos;s factory specs, then pile on your gear &mdash; roof rack, bumpers, winch, skid plates, the whole build list. We calculate your real remaining payload, center of gravity shift, and safety margins in real time. Every pound counts and this tool makes sure you see where you stand before the suspension tells you the hard way.
+          </p>
+          <p>
+            <strong className="text-foreground">Bottom line:</strong> overloading your rig isn&apos;t just hard on parts &mdash; it&apos;s a safety issue. This configurator keeps your build honest so you can load up with confidence and hit the trail knowing the numbers check out.
+          </p>
+        </div>
+      </div>
+
       {/* Shared footer components */}
       <DataPrivacyNotice />
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

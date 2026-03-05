@@ -14,6 +14,19 @@ export default function TrailIntelPage() {
       {/* Main component */}
       <TrailIntel showZipInput defaultCollapsed={false} />
 
+      {/* How This Tool Works */}
+      <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
+        <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+        <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+          <p>
+            Punch in any ZIP code and we&apos;ll pull real-time intel from FEMA, the National Weather Service, and NIFC fire data &mdash; active alerts, fire perimeters, weather warnings, and local hazard history all in one place. No accounts, no apps, just the data you need before you head out or hunker down.
+          </p>
+          <p>
+            <strong className="text-foreground">Bottom line:</strong> situational awareness is step one of any plan. This tool gives you a quick threat picture for any location so you&apos;re never caught off guard by something you could have seen coming.
+          </p>
+        </div>
+      </div>
+
       {/* Footer stack */}
       <div className="space-y-4 no-print">
         {/* Modified privacy notice */}

@@ -510,6 +510,18 @@ export default function MyKits() {
             })()}
           </div>
         )}
+        {/* How This Tool Works */}
+        <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6 mt-8">
+          <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+          <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+            <p>
+              This is your command center for everything you&apos;ve built across all the PE calculators. Bug out bag, solar setup, food storage, 72-hour kit &mdash; they all feed into this dashboard so you can see your total prep status at a glance. No more bouncing between tools wondering what you already configured.
+            </p>
+            <p>
+              <strong className="text-foreground">Bottom line:</strong> prepping isn&apos;t one tool, it&apos;s all of them working together. This dashboard ties everything into one view so you know exactly where you stand and what still needs work.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

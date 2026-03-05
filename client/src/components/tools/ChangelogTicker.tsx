@@ -13,6 +13,12 @@ interface ChangelogEntry {
 const changelog: ChangelogEntry[] = [
   {
     date: "Mar 5, 2026",
+    tool: "All Tools",
+    version: "v1.1",
+    summary: "Added 'How This Tool Works' explainer card to all 12 tool pages — straight-talk descriptions of what each tool does and why it matters",
+  },
+  {
+    date: "Mar 5, 2026",
     tool: "Power System Builder",
     version: "v1.0",
     summary: "New Ops Deck tool — design a complete 12V aux electrical system with wire gauge calculator, fuse sizing, LiFePO4 battery bank design, DC-DC charger selection, and safety-verified wiring diagram",

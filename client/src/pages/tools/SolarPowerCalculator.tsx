@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Plus, Minus, Sun, Zap, Battery, ChevronDown, ChevronUp,
   ExternalLink, Printer, Share2, MapPin, Users, Clock, AlertTriangle,
-  CheckCircle, Info, X, Download, Home, MessageSquarePlus, Send,
+  CheckCircle, X, Download, Home, MessageSquarePlus, Send,
 } from "lucide-react";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import { generateSolarPdf, type SolarPdfData } from "@/components/tools/PdfExport";
@@ -58,7 +58,7 @@ export default function SolarPowerCalculator() {
   const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set(["lighting", "communication"]));
   const [showShareToast, setShowShareToast] = useState(false);
   const [initialized, setInitialized] = useState(false);
-  const [showTip, setShowTip] = useState(true);
+
   const [livingSituation, setLivingSituation] = useState<LivingSituation>("house");
 
   const [showRequestForm, setShowRequestForm] = useState(false);
@@ -518,21 +518,18 @@ export default function SolarPowerCalculator() {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
 
-              {showTip && (
-                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 flex items-start gap-3">
-                  <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      <strong className="text-foreground">How it works:</strong> Select the devices you need to power,
-                      adjust the hours per day, and we&apos;ll calculate the right battery and solar panel setup for your
-                      location. All recommendations link directly to trusted gear on Amazon.
-                    </p>
-                  </div>
-                  <button onClick={() => setShowTip(false)} className="text-muted-foreground hover:text-foreground shrink-0" data-testid="button-close-tip">
-                    <X className="w-4 h-4" />
-                  </button>
+              {/* How This Tool Works */}
+              <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
+                <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+                <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+                  <p>
+                    Pick the devices you need running when the grid goes down &mdash; lights, phone charger, fridge, whatever &mdash; adjust the hours per day, and we&apos;ll calculate exactly how much battery and solar you need for your location. Drop in your ZIP code and we factor in your region&apos;s actual sun hours, not some national average.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Bottom line:</strong> solar setups get expensive fast when you guess wrong. This tool sizes your system to your actual usage so you&apos;re not overspending on panels you don&apos;t need or undersizing a battery that dies by midnight.
+                  </p>
                 </div>
-              )}
+              </div>
 
               <div className="bg-card border border-border rounded-lg p-5 space-y-5">
                 <h3 className="text-sm font-bold uppercase tracking-wide">Your Setup</h3>

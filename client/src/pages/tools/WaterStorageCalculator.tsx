@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Plus, Minus, Droplets, Users, Clock, Printer, Share2,
-  AlertTriangle, CheckCircle, Info, X, ExternalLink,
+  AlertTriangle, CheckCircle, X, ExternalLink,
   Thermometer, Activity, Baby, Dog, Cat, Heart, Home,
   MessageSquarePlus, Send,
 } from "lucide-react";
@@ -65,7 +65,7 @@ export default function WaterStorageCalculator() {
   const [state, setState] = useState<State>(DEFAULT_STATE);
   const [showShareToast, setShowShareToast] = useState(false);
   const [initialized, setInitialized] = useState(false);
-  const [showTip, setShowTip] = useState(true);
+
 
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestName, setRequestName] = useState("");
@@ -424,21 +424,18 @@ export default function WaterStorageCalculator() {
         <div className="grid lg:grid-cols-3 gap-8 no-print">
           <div className="lg:col-span-2 space-y-6">
 
-            {showTip && (
-              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 flex items-start gap-3">
-                <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    <strong className="text-foreground">How it works:</strong> Enter your group size, climate,
-                    and activity level. We calculate total water needed using FEMA guidelines, then recommend
-                    containers and purification methods. All product links go to Amazon.
-                  </p>
-                </div>
-                <button onClick={() => setShowTip(false)} className="text-muted-foreground hover:text-foreground shrink-0" data-testid="button-close-tip">
-                  <X className="w-4 h-4" />
-                </button>
+            {/* How This Tool Works */}
+            <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
+              <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+              <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+                <p>
+                  Plug in your group size, climate, and how active everyone is &mdash; we&apos;ll do the math using FEMA and Red Cross guidelines so you don&apos;t have to. The calculator figures out exactly how many gallons you need per day, then recommends containers and purification gear that actually fit your living situation. Apartment with no garage? We&apos;ll skip the 55-gallon drums and suggest stackable options instead.
+                </p>
+                <p>
+                  <strong className="text-foreground">Bottom line:</strong> water is the one thing you absolutely cannot wing. This tool takes the guesswork out so you can store with confidence and stop second-guessing whether you have enough.
+                </p>
               </div>
-            )}
+            </div>
 
             <div className="bg-card border border-border rounded-lg p-5 space-y-5">
               <h3 className="text-sm font-bold uppercase tracking-wide">Your Group</h3>

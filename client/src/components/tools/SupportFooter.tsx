@@ -51,7 +51,7 @@ export default function SupportFooter() {
           <img
             src="/bmac-qr.png"
             alt="Scan to Buy Me a Beer"
-            className="w-20 h-20 rounded-lg border border-border"
+            className="w-28 h-28 rounded-lg border border-border"
           />
         </a>
       </div>

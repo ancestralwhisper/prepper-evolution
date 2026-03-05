@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Plus, Minus, Printer, Share2, ChevronDown, ChevronUp,
-  ExternalLink, Info, X, Users, Clock, AlertTriangle,
+  ExternalLink, X, Users, Clock, AlertTriangle,
   CheckCircle, ShieldAlert, Package, Home, MessageSquarePlus, Send,
 } from "lucide-react";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
@@ -43,7 +43,7 @@ export default function FoodStorageCalculator() {
   const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set(["grains"]));
   const [showShareToast, setShowShareToast] = useState(false);
   const [initialized, setInitialized] = useState(false);
-  const [showTip, setShowTip] = useState(true);
+
   const [activePreset, setActivePreset] = useState<string | null>("1m");
   const [livingSituation, setLivingSituation] = useState<LivingSituation>("house");
 
@@ -338,22 +338,18 @@ export default function FoodStorageCalculator() {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
 
-              {showTip && (
-                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 flex items-start gap-3">
-                  <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      <strong className="text-foreground">How it works:</strong> Set your family size, duration,
-                      and activity level. We calculate your total calorie needs and generate a complete food storage
-                      shopping list with quantities, costs, and shelf life estimates. Based on USDA dietary guidelines
-                      and military nutrition standards.
-                    </p>
-                  </div>
-                  <button onClick={() => setShowTip(false)} className="text-muted-foreground hover:text-foreground shrink-0" data-testid="button-close-tip">
-                    <X className="w-4 h-4" />
-                  </button>
+              {/* How This Tool Works */}
+              <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
+                <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+                <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+                  <p>
+                    Tell us how many mouths you&apos;re feeding, how long you&apos;re planning for, and how hard everyone&apos;s working &mdash; we&apos;ll build you a complete shopping list with quantities, costs, and shelf life for every category. The math is based on USDA dietary guidelines and real calorie needs, not some generic &ldquo;just buy rice and beans&rdquo; advice.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Bottom line:</strong> a 30-day food supply sounds overwhelming until you break it down category by category. This tool does that for you so you can shop smart, rotate stock, and never wonder if you actually have enough.
+                  </p>
                 </div>
-              )}
+              </div>
 
               <div className="bg-card border border-border rounded-lg p-5 space-y-5">
                 <h3 className="text-sm font-bold uppercase tracking-wide">Your Household</h3>

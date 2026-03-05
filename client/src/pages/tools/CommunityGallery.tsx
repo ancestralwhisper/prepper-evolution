@@ -723,6 +723,19 @@ export default function CommunityGallery() {
         {showForm && (
           <SubmitForm onClose={() => setShowForm(false)} onSuccess={handleSubmitSuccess} />
         )}
+
+        {/* How This Tool Works */}
+        <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
+          <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+          <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+            <p>
+              Browse real builds from the PE community &mdash; bug out bags, solar setups, vehicle configs, and everything in between. Filter by tool type, sort by newest or most popular, and see exactly what gear people are running. Got a build worth sharing? Hit the submit button and show the community what you&apos;ve put together.
+            </p>
+            <p>
+              <strong className="text-foreground">Bottom line:</strong> the best prep ideas come from seeing what other people actually built, not what some influencer got paid to promote. Real builds, real gear, real feedback.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

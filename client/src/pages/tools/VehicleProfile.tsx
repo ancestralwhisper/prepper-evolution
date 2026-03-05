@@ -1117,6 +1117,19 @@ export default function VehicleProfileEditor() {
               </button>
             </div>
 
+            {/* How This Tool Works */}
+            <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
+              <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+              <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+                <p>
+                  Pick your rig from the database or punch in custom specs &mdash; we&apos;ll crunch the numbers on payload capacity, center of gravity, fuel economy penalties, trail readiness, and recovery scores. The physics engine accounts for tire size, lift height, gear weight, and seven different MPG penalty factors so you get real numbers, not marketing fluff.
+                </p>
+                <p>
+                  <strong className="text-foreground">Bottom line:</strong> knowing your rig&apos;s actual limits beats guessing every time. Build your profile once and every Ops Deck tool reads from it automatically &mdash; no re-entering specs on every page.
+                </p>
+              </div>
+            </div>
+
             {/* Privacy Notice */}
             <DataPrivacyNotice />
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

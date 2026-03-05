@@ -187,6 +187,19 @@ export default function SHTFSimulator() {
           </div>
 
           <div className="space-y-6 animate-fade-in-up">
+            {/* How This Tool Works */}
+            <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
+              <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+              <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+                <p>
+                  Pick a scenario &mdash; grid down, pandemic, wildfire, whatever keeps you up at night &mdash; and make real decisions at every fork in the road. Each choice affects your outcome based on actual survival principles, not Hollywood nonsense. You&apos;ll see where your instincts are solid and where your plan has holes.
+                </p>
+                <p>
+                  <strong className="text-foreground">Bottom line:</strong> you can&apos;t practice a real emergency, but you can stress-test your thinking. This simulator shows you what you&apos;d actually do under pressure &mdash; and whether that&apos;s enough.
+                </p>
+              </div>
+            </div>
+
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {scenarios.map((scenario) => {
                 const Icon = scenarioIcons[scenario.icon] || Shield;
