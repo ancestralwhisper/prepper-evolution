@@ -1,11 +1,18 @@
+/**
+ * Prepper Evolution — Branded PDF Export Utility
+ * Generates downloadable PDFs for the BOB and Solar calculators.
+ * Uses jsPDF with PE brand colors, logo, and affiliate links.
+ */
 import jsPDF from "jspdf";
 
+// ─── PE Brand Colors ───
 const ACCENT = "#C45D2C";
 const DARK = "#2C2C2C";
 const MUTED = "#6B6B6B";
 const LIGHT_BG = "#F5F5F0";
 const TABLE_BORDER = "#D4D4D4";
 
+// ─── Helpers ───
 function hexToRgb(hex: string): [number, number, number] {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
@@ -13,6 +20,7 @@ function hexToRgb(hex: string): [number, number, number] {
   return [r, g, b];
 }
 
+/** Load the PE badge from /pe-badge.png and return as base64 data URL */
 async function loadLogoBase64(): Promise<string | null> {
   try {
     const res = await fetch("/pe-badge.png");
@@ -28,12 +36,14 @@ async function loadLogoBase64(): Promise<string | null> {
   }
 }
 
+/** Draw rounded rect fill */
 function roundedRect(doc: jsPDF, x: number, y: number, w: number, h: number, r: number, color: string) {
   const [cr, cg, cb] = hexToRgb(color);
   doc.setFillColor(cr, cg, cb);
   doc.roundedRect(x, y, w, h, r, r, "F");
 }
 
+/** Add page footer */
 function addFooter(doc: jsPDF, pageW: number) {
   const y = 282;
   doc.setDrawColor(...hexToRgb(TABLE_BORDER));
@@ -45,6 +55,7 @@ function addFooter(doc: jsPDF, pageW: number) {
   doc.text(`Page ${doc.getNumberOfPages()}`, pageW - 15, y + 4, { align: "right" });
 }
 
+/** Check if we need a new page, and if so add footer to current + new page */
 function checkPage(doc: jsPDF, y: number, needed: number, pageW: number): number {
   if (y + needed > 275) {
     addFooter(doc, pageW);
@@ -54,6 +65,7 @@ function checkPage(doc: jsPDF, y: number, needed: number, pageW: number): number
   return y;
 }
 
+// ─── BOB PDF Data Interface ───
 export interface BobPdfData {
   bodyWeight: number;
   totalLbs: number;
@@ -71,6 +83,7 @@ export interface BobPdfData {
   recommendations: { name: string; url: string }[];
 }
 
+// ─── Solar PDF Data Interface ───
 export interface SolarPdfData {
   people: number;
   days: number;
@@ -92,9 +105,11 @@ export interface SolarPdfData {
   panelRecs: { name: string; watts: number; price: string; url: string; note: string }[];
 }
 
+// ─── Shared Header ───
 async function drawHeader(doc: jsPDF, title: string, pageW: number): Promise<number> {
   const logo = await loadLogoBase64();
 
+  // Top accent bar
   roundedRect(doc, 0, 0, pageW, 4, 0, ACCENT);
 
   let y = 14;
@@ -102,6 +117,7 @@ async function drawHeader(doc: jsPDF, title: string, pageW: number): Promise<num
     try {
       doc.addImage(logo, "PNG", 15, y - 4, 22, 22);
     } catch {
+      // Logo failed — skip it
     }
   }
 
@@ -121,6 +137,7 @@ async function drawHeader(doc: jsPDF, title: string, pageW: number): Promise<num
   const dateStr = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
   doc.text(dateStr, pageW - 15, y + 4, { align: "right" });
 
+  // Divider line under header
   y = 40;
   doc.setDrawColor(...hexToRgb(ACCENT));
   doc.setLineWidth(0.5);
@@ -129,6 +146,7 @@ async function drawHeader(doc: jsPDF, title: string, pageW: number): Promise<num
   return y + 6;
 }
 
+// ─── Summary Stats Box ───
 function drawSummaryBox(
   doc: jsPDF,
   y: number,
@@ -160,6 +178,7 @@ function drawSummaryBox(
       doc.text(stat.sub, cx, y + 22, { align: "center" });
     }
 
+    // Column divider
     if (i < stats.length - 1) {
       doc.setDrawColor(...hexToRgb(TABLE_BORDER));
       doc.setLineWidth(0.2);
@@ -170,6 +189,7 @@ function drawSummaryBox(
   return y + boxH + 6;
 }
 
+// ─── Table Drawing Helpers ───
 function drawTableHeader(doc: jsPDF, y: number, columns: { label: string; x: number; align?: "left" | "center" | "right" }[]): number {
   doc.setFontSize(7);
   doc.setFont("helvetica", "bold");
@@ -184,6 +204,7 @@ function drawTableHeader(doc: jsPDF, y: number, columns: { label: string; x: num
 }
 
 function drawCategoryRow(doc: jsPDF, y: number, catName: string, catColor: string, pageW: number): number {
+  // Category dot
   const [cr, cg, cb] = hexToRgb(catColor);
   doc.setFillColor(cr, cg, cb);
   doc.circle(18, y - 1.2, 1.5, "F");
@@ -200,12 +221,16 @@ function drawCategoryRow(doc: jsPDF, y: number, catName: string, catColor: strin
   return y + 5;
 }
 
+// ════════════════════════════════════════════════════════
+// BOB PDF GENERATOR
+// ════════════════════════════════════════════════════════
 export async function generateBobPdf(data: BobPdfData): Promise<void> {
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
 
   let y = await drawHeader(doc, "Bug Out Bag Calculator Results", pageW);
 
+  // Summary stats
   y = drawSummaryBox(doc, y, [
     { label: "Total Weight", value: `${data.totalLbs.toFixed(1)} lbs`, sub: `${data.totalOz.toFixed(0)} oz` },
     { label: "% Body Weight", value: `${data.pctBodyWeight.toFixed(1)}%`, sub: `of ${data.bodyWeight} lbs` },
@@ -213,6 +238,7 @@ export async function generateBobPdf(data: BobPdfData): Promise<void> {
     { label: "Status", value: data.statusLabel, sub: `Max: ${(data.bodyWeight * 0.25).toFixed(0)} lbs (25%)` },
   ], pageW);
 
+  // ─── Gear Table ───
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...hexToRgb(DARK));
@@ -226,6 +252,7 @@ export async function generateBobPdf(data: BobPdfData): Promise<void> {
     { label: "TOTAL", x: 190, align: "right" },
   ]);
 
+  // Group items by category
   const categoryMap = new Map<string, { catColor: string; items: BobPdfData["items"] }>();
   for (const item of data.items) {
     if (!categoryMap.has(item.category)) {
@@ -259,6 +286,7 @@ export async function generateBobPdf(data: BobPdfData): Promise<void> {
     }
   }
 
+  // Total row
   y = checkPage(doc, y, 8, pageW);
   doc.setDrawColor(...hexToRgb(ACCENT));
   doc.setLineWidth(0.5);
@@ -272,6 +300,7 @@ export async function generateBobPdf(data: BobPdfData): Promise<void> {
   doc.text(`${data.totalOz.toFixed(0)} oz (${data.totalLbs.toFixed(1)} lbs)`, 190, y + 3, { align: "right" });
   y += 10;
 
+  // ─── Missing Essentials ───
   if (data.missingEssentials.length > 0) {
     y = checkPage(doc, y, 12 + data.missingEssentials.length * 4, pageW);
 
@@ -294,6 +323,7 @@ export async function generateBobPdf(data: BobPdfData): Promise<void> {
     y += 4;
   }
 
+  // ─── Recommendations ───
   if (data.recommendations.length > 0) {
     y = checkPage(doc, y, 12 + data.recommendations.length * 8, pageW);
 
@@ -319,10 +349,15 @@ export async function generateBobPdf(data: BobPdfData): Promise<void> {
     y += 2;
   }
 
+  // Footer on last page
   addFooter(doc, pageW);
 
   doc.save("prepper-evolution-bug-out-bag.pdf");
 }
+
+// ════════════════════════════════════════════════════════
+// SOLAR PDF GENERATOR
+// ════════════════════════════════════════════════════════
 
 function fmtWh(wh: number): string {
   if (wh >= 1000) return `${(wh / 1000).toFixed(1)} kWh`;
@@ -340,6 +375,7 @@ export async function generateSolarPdf(data: SolarPdfData): Promise<void> {
 
   let y = await drawHeader(doc, "Solar & Power Calculator Results", pageW);
 
+  // Summary stats
   y = drawSummaryBox(doc, y, [
     { label: "Daily Power Need", value: fmtWh(data.totalDailyWh), sub: "per day" },
     { label: "Battery Needed", value: fmtWh(data.batteryNeeded), sub: "min capacity" },
@@ -347,6 +383,7 @@ export async function generateSolarPdf(data: SolarPdfData): Promise<void> {
     { label: "Duration", value: `${data.days} day${data.days !== 1 ? "s" : ""}`, sub: `${data.people} ${data.people === 1 ? "person" : "people"}` },
   ], pageW);
 
+  // ─── Device Table ───
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...hexToRgb(DARK));
@@ -361,6 +398,7 @@ export async function generateSolarPdf(data: SolarPdfData): Promise<void> {
     { label: "WH/DAY", x: 190, align: "right" },
   ]);
 
+  // Group devices by category
   const categoryMap = new Map<string, { catColor: string; devices: SolarPdfData["devices"] }>();
   for (const device of data.devices) {
     if (!categoryMap.has(device.category)) {
@@ -394,6 +432,7 @@ export async function generateSolarPdf(data: SolarPdfData): Promise<void> {
     }
   }
 
+  // Total row
   y = checkPage(doc, y, 8, pageW);
   doc.setDrawColor(...hexToRgb(ACCENT));
   doc.setLineWidth(0.5);
@@ -407,6 +446,7 @@ export async function generateSolarPdf(data: SolarPdfData): Promise<void> {
   doc.text(fmtWh(data.totalDailyWh), 190, y + 3, { align: "right" });
   y += 10;
 
+  // ─── Power Station Recommendations ───
   if (data.stationRecs.length > 0) {
     y = checkPage(doc, y, 12 + data.stationRecs.length * 12, pageW);
 
@@ -439,6 +479,7 @@ export async function generateSolarPdf(data: SolarPdfData): Promise<void> {
     }
   }
 
+  // ─── Solar Panel Recommendations ───
   if (data.panelRecs.length > 0) {
     y = checkPage(doc, y, 12 + data.panelRecs.length * 12, pageW);
 
@@ -471,11 +512,13 @@ export async function generateSolarPdf(data: SolarPdfData): Promise<void> {
     }
   }
 
+  // Footer on last page
   addFooter(doc, pageW);
 
   doc.save("prepper-evolution-solar-power.pdf");
 }
 
+// ─── RigSafe PDF Data Interface ───
 export interface RigSafePdfData {
   vehicleName: string;
   rackName: string;
@@ -502,12 +545,14 @@ export interface RigSafePdfData {
   productLinks: { name: string; url: string }[];
 }
 
+// ─── RigSafe PDF Generator ───
 export async function generateRigSafePdf(data: RigSafePdfData) {
   const doc = new jsPDF({ unit: "mm", format: "letter" });
   const pageW = doc.internal.pageSize.getWidth();
 
   let y = await drawHeader(doc, "RigSafe Overland Configurator — Build Sheet", pageW);
 
+  // ─── Safety Disclaimer ───
   roundedRect(doc, 15, y, pageW - 30, 18, 3, "#FEF2F2");
   doc.setFontSize(7);
   doc.setFont("helvetica", "bold");
@@ -520,6 +565,7 @@ export async function generateRigSafePdf(data: RigSafePdfData) {
   doc.text(disclaimer, 19, y + 9, { maxWidth: pageW - 38 });
   y += 22;
 
+  // ─── Vehicle & Setup Summary ───
   const summaryStats = [
     { label: "Vehicle", value: data.vehicleName || "Manual Entry" },
     { label: "Rack", value: data.rackName || "Manual Entry" },
@@ -528,6 +574,7 @@ export async function generateRigSafePdf(data: RigSafePdfData) {
   y = drawSummaryBox(doc, y, summaryStats, pageW);
   y += 4;
 
+  // ─── Rack Load Budgets ───
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...hexToRgb(DARK));
@@ -558,10 +605,13 @@ export async function generateRigSafePdf(data: RigSafePdfData) {
     doc.setTextColor(...hexToRgb(MUTED));
     doc.text(`${b.used} / ${b.rating} lbs (${b.pct}%) — ${remaining >= 0 ? remaining + " lbs remaining" : Math.abs(remaining) + " lbs OVER"}`, 19, y + 4);
 
+    // Draw bar background
     roundedRect(doc, 19, y + 6, barW, 3, 1, "#E5E5E5");
+    // Draw bar fill
     const fillW = Math.min(barW, barW * (b.pct / 100));
     if (fillW > 0) roundedRect(doc, 19, y + 6, fillW, 3, 1, statusColor);
 
+    // Status label
     doc.setFontSize(6);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...hexToRgb(statusColor));
@@ -570,6 +620,7 @@ export async function generateRigSafePdf(data: RigSafePdfData) {
     y += 13;
   }
 
+  // ─── Weakest Link ───
   y = checkPage(doc, y, 22, pageW);
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
@@ -601,6 +652,7 @@ export async function generateRigSafePdf(data: RigSafePdfData) {
   });
   y += 22;
 
+  // ─── Clearance & Capacity ───
   y = checkPage(doc, y, 20, pageW);
   const infoStats = [
     { label: "Total Height", value: `${data.totalHeightIn}"`, sub: data.garageFits ? `Fits ${data.garageHeightIn}" garage` : `WON'T FIT ${data.garageHeightIn}" garage` },
@@ -610,6 +662,7 @@ export async function generateRigSafePdf(data: RigSafePdfData) {
   y = drawSummaryBox(doc, y, infoStats, pageW);
   y += 4;
 
+  // ─── Weight Breakdown ───
   if (data.weightBreakdown.length > 0) {
     y = checkPage(doc, y, 10 + data.weightBreakdown.length * 5, pageW);
     doc.setFontSize(10);
@@ -632,6 +685,7 @@ export async function generateRigSafePdf(data: RigSafePdfData) {
     y += 3;
   }
 
+  // ─── Warnings ───
   if (data.warnings.length > 0) {
     y = checkPage(doc, y, 10 + data.warnings.length * 7, pageW);
     doc.setFontSize(10);
@@ -655,6 +709,7 @@ export async function generateRigSafePdf(data: RigSafePdfData) {
     }
   }
 
+  // ─── Product Links ───
   if (data.productLinks.length > 0) {
     y = checkPage(doc, y, 10 + data.productLinks.length * 7, pageW);
     doc.setFontSize(10);
@@ -677,11 +732,13 @@ export async function generateRigSafePdf(data: RigSafePdfData) {
     }
   }
 
+  // Footer
   addFooter(doc, pageW);
 
   doc.save("prepper-evolution-rigsafe-build-sheet.pdf");
 }
 
+// ─── RigRated PDF Data Interface ───
 export interface RigRatedPdfData {
   machineLabel: string;
   dryWeight: number;
@@ -711,6 +768,7 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
   const logo = await loadLogoBase64();
   let y = 15;
 
+  // Header
   if (logo) {
     doc.addImage(logo, "PNG", 15, y - 5, 15, 15);
   }
@@ -723,6 +781,7 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
   doc.text(`Generated ${new Date().toLocaleDateString()} at prepperevolution.com`, 35, y + 8);
   y += 20;
 
+  // Disclaimer
   roundedRect(doc, 15, y, pageW - 30, 12, 2, "#FEF2F2");
   doc.setFontSize(6);
   doc.setFont("helvetica", "bold");
@@ -736,6 +795,7 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
   );
   y += 16;
 
+  // Machine summary
   roundedRect(doc, 15, y, pageW - 30, 22, 2, LIGHT_BG);
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
@@ -754,6 +814,7 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
   ];
   doc.text(specs.join("  |  "), 19, y + 12);
 
+  // Payload bar
   const barY = y + 16;
   const barW = pageW - 42;
   const barH = 3;
@@ -768,6 +829,7 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
   doc.text(`${data.payloadUsed} / ${data.payloadCapacity} lbs (${data.payloadPct}%)`, 19 + barW + 2, barY + 2.5);
   y += 26;
 
+  // Weight breakdown
   y = checkPage(doc, y, 30, pageW);
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
@@ -804,6 +866,7 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
   doc.text(`${data.remaining >= 0 ? data.remaining : `OVER by ${Math.abs(data.remaining)}`} lbs`, pageW - 19, y, { align: "right" });
   y += 8;
 
+  // Trail compatibility
   if (data.trailScores.length > 0) {
     y = checkPage(doc, y, 10 + data.trailScores.length * 6, pageW);
     doc.setFontSize(10);
@@ -825,6 +888,7 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
     y += 3;
   }
 
+  // 14-Day Badge
   if (data.certifiedBadge) {
     y = checkPage(doc, y, 12, pageW);
     roundedRect(doc, 15, y, pageW - 30, 10, 2, "#ECFDF5");
@@ -835,6 +899,7 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
     y += 14;
   }
 
+  // Warnings
   if (data.warnings.length > 0) {
     y = checkPage(doc, y, 10 + data.warnings.length * 7, pageW);
     doc.setFontSize(10);
@@ -857,6 +922,7 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
     }
   }
 
+  // Accessories list
   if (data.selectedAccessories.length > 0) {
     y = checkPage(doc, y, 10 + data.selectedAccessories.length * 4, pageW);
     doc.setFontSize(10);
@@ -879,6 +945,166 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
   doc.save("prepper-evolution-rigrated-build-sheet.pdf");
 }
 
+// ─── Power System PDF Data Interface ───
+export interface PowerSystemPdfData {
+  totalDailyAh: number;
+  totalChargeAhPerDay: number;
+  surplusAh: number;
+  daysAutonomy: number;
+  bankLabel: string;
+  recommendedBankAh: number;
+  bankAssessment: string;
+  circuits: {
+    label: string;
+    distanceFt: number;
+    maxAmps: number;
+    awg: string;
+    dropPct: number;
+    fuseAmps: number;
+    fuseType: string;
+    status: string;
+  }[];
+  shoppingList: { category: string; name: string; spec: string }[];
+  warnings: { level: string; message: string }[];
+  safetyChecklist: { text: string; critical: boolean }[];
+}
+
+export async function generatePowerSystemPdf(data: PowerSystemPdfData): Promise<void> {
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  const pageW = doc.internal.pageSize.getWidth();
+
+  let y = await drawHeader(doc, "Power System Builder — 12V Aux Electrical Design", pageW);
+
+  // Summary stats
+  y = drawSummaryBox(doc, y, [
+    { label: "Daily Load", value: `${data.totalDailyAh.toFixed(1)} Ah` },
+    { label: "Daily Charge", value: `${data.totalChargeAhPerDay.toFixed(1)} Ah` },
+    { label: data.surplusAh >= 0 ? "Surplus" : "Deficit", value: `${Math.abs(data.surplusAh).toFixed(1)} Ah` },
+    { label: "Autonomy", value: `${data.daysAutonomy.toFixed(1)} days` },
+  ], pageW);
+
+  // Battery Assessment
+  y = checkPage(doc, y, 16, pageW);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...hexToRgb(DARK));
+  doc.text("BATTERY ASSESSMENT", 15, y);
+  y += 5;
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(...hexToRgb(MUTED));
+  doc.text(`Bank: ${data.bankLabel} | Recommended: ${data.recommendedBankAh}Ah | ${data.bankAssessment}`, 19, y);
+  y += 8;
+
+  // Warnings
+  if (data.warnings.length > 0) {
+    y = checkPage(doc, y, 8 + data.warnings.length * 7, pageW);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...hexToRgb("#EF4444"));
+    doc.text("WARNINGS", 15, y);
+    y += 5;
+    for (const w of data.warnings) {
+      y = checkPage(doc, y, 7, pageW);
+      const color = w.level === "critical" ? "#EF4444" : w.level === "warning" ? "#EAB308" : "#3B82F6";
+      doc.setFontSize(6);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(...hexToRgb(color));
+      doc.text(w.level === "critical" ? "!!" : "!", 19, y);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(...hexToRgb(MUTED));
+      doc.text(w.message, 25, y, { maxWidth: pageW - 44 });
+      y += 7;
+    }
+    y += 3;
+  }
+
+  // Wire Schedule
+  y = checkPage(doc, y, 10 + data.circuits.length * 5, pageW);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...hexToRgb(DARK));
+  doc.text("WIRE GAUGE SCHEDULE", 15, y);
+  y += 5;
+
+  y = drawTableHeader(doc, y, [
+    { label: "CIRCUIT", x: 19 },
+    { label: "DIST", x: 100, align: "center" },
+    { label: "AMPS", x: 118, align: "center" },
+    { label: "AWG", x: 135, align: "center" },
+    { label: "DROP%", x: 155, align: "center" },
+    { label: "FUSE", x: 175, align: "center" },
+    { label: "STATUS", x: 192, align: "center" },
+  ]);
+
+  for (const c of data.circuits) {
+    y = checkPage(doc, y, 5, pageW);
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...hexToRgb(DARK));
+    doc.text(c.label.slice(0, 40), 19, y);
+    doc.setTextColor(...hexToRgb(MUTED));
+    doc.text(`${c.distanceFt}ft`, 100, y, { align: "center" });
+    doc.text(`${c.maxAmps}A`, 118, y, { align: "center" });
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...hexToRgb(DARK));
+    doc.text(c.awg, 135, y, { align: "center" });
+    const dropColor = c.status === "pass" ? "#10B981" : c.status === "warn" ? "#EAB308" : "#EF4444";
+    doc.setTextColor(...hexToRgb(dropColor));
+    doc.text(`${c.dropPct.toFixed(1)}%`, 155, y, { align: "center" });
+    doc.setTextColor(...hexToRgb(MUTED));
+    doc.text(`${c.fuseAmps}A ${c.fuseType}`, 175, y, { align: "center" });
+    doc.setTextColor(...hexToRgb(dropColor));
+    doc.text(c.status.toUpperCase(), 192, y, { align: "center" });
+    y += 4.5;
+  }
+  y += 4;
+
+  // Shopping List
+  y = checkPage(doc, y, 10 + data.shoppingList.length * 5, pageW);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...hexToRgb(DARK));
+  doc.text("SHOPPING LIST", 15, y);
+  y += 5;
+
+  for (const item of data.shoppingList) {
+    y = checkPage(doc, y, 5, pageW);
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...hexToRgb(DARK));
+    doc.text(item.name, 19, y);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...hexToRgb(MUTED));
+    doc.text(item.spec, 100, y);
+    y += 4.5;
+  }
+  y += 4;
+
+  // Safety Checklist
+  y = checkPage(doc, y, 10 + data.safetyChecklist.length * 5, pageW);
+  roundedRect(doc, 15, y - 3, pageW - 30, 6, 2, "#FEF2F2");
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...hexToRgb("#EF4444"));
+  doc.text("SAFETY CHECKLIST", 19, y + 1);
+  y += 8;
+
+  for (const item of data.safetyChecklist) {
+    y = checkPage(doc, y, 5, pageW);
+    doc.setFontSize(7);
+    doc.setFont("helvetica", item.critical ? "bold" : "normal");
+    doc.setTextColor(...hexToRgb(item.critical ? "#EF4444" : MUTED));
+    doc.rect(19, y - 2.5, 3, 3);
+    doc.text(item.text, 25, y, { maxWidth: pageW - 44 });
+    y += 5;
+  }
+
+  addFooter(doc, pageW);
+  doc.save("prepper-evolution-power-system.pdf");
+}
+
+// ─── Trip Plan PDF Data Interface ───
 export interface TripPlanPdfData {
   tripName: string;
   startDate: string;
@@ -908,6 +1134,7 @@ export async function generateTripPlanPdf(data: TripPlanPdfData) {
   const logo = await loadLogoBase64();
   let y = 15;
 
+  // Header
   if (logo) {
     doc.addImage(logo, "PNG", 15, y - 5, 12, 12);
   }
@@ -920,6 +1147,7 @@ export async function generateTripPlanPdf(data: TripPlanPdfData) {
   doc.text("Leave this document with a trusted contact before departure", 32, y + 7);
   y += 16;
 
+  // Trip Info
   roundedRect(doc, 15, y, pageW - 30, 20, 2, LIGHT_BG);
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
@@ -933,6 +1161,7 @@ export async function generateTripPlanPdf(data: TripPlanPdfData) {
   doc.text(`Vehicle: ${data.machineLabel} | Loaded: ${data.loadedWeight} lbs (${data.payloadPct}%) | Range: ~${data.fuelRange} mi`, 19, y + 18);
   y += 24;
 
+  // Group Roster
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...hexToRgb(DARK));
@@ -954,6 +1183,7 @@ export async function generateTripPlanPdf(data: TripPlanPdfData) {
   }
   y += 2;
 
+  // Communications
   y = checkPage(doc, y, 18, pageW);
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
@@ -968,6 +1198,7 @@ export async function generateTripPlanPdf(data: TripPlanPdfData) {
   if (data.satelliteDevice) { doc.text(`Satellite: ${data.satelliteDevice}`, 19, y); y += 4; }
   y += 2;
 
+  // Waypoints
   if (data.waypoints.some((w) => w.name)) {
     y = checkPage(doc, y, 10 + data.waypoints.length * 5, pageW);
     doc.setFontSize(10);
@@ -993,6 +1224,7 @@ export async function generateTripPlanPdf(data: TripPlanPdfData) {
     y += 2;
   }
 
+  // Emergency Services
   y = checkPage(doc, y, 18, pageW);
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
@@ -1009,6 +1241,7 @@ export async function generateTripPlanPdf(data: TripPlanPdfData) {
   if (data.backupPlan) { doc.text(`Backup Plan: ${data.backupPlan}`, 19, y); y += 4; }
   y += 4;
 
+  // Leave-Behind Contact (highlighted)
   y = checkPage(doc, y, 16, pageW);
   roundedRect(doc, 15, y, pageW - 30, 14, 2, "#FEF2F2");
   doc.setFontSize(9);

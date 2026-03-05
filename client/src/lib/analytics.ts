@@ -34,6 +34,12 @@ type PEEvent =
   | { name: "pe_destination_zip_set"; params: { zip3: string; tool: string } }
   | { name: "pe_trail_system_selected"; params: { trailId: string; tool: string } }
 
+  // Power System Builder
+  | { name: "pe_power_system_started"; params: { tool: string } }
+  | { name: "pe_power_system_load_added"; params: { tool: string; device: string } }
+  | { name: "pe_power_system_report_generated"; params: { tool: string } }
+  | { name: "pe_power_system_pdf_exported"; params: { tool: string } }
+
   // Results / outcomes
   | { name: "pe_scenario_completed"; params: { scenario: string; outcome: string; score: number } }
   | { name: "pe_payload_warning"; params: { machine: string; pct: number; warning: string } }

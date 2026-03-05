@@ -13,6 +13,12 @@ interface ChangelogEntry {
 const changelog: ChangelogEntry[] = [
   {
     date: "Mar 5, 2026",
+    tool: "Power System Builder",
+    version: "v1.0",
+    summary: "New Ops Deck tool — design a complete 12V aux electrical system with wire gauge calculator, fuse sizing, LiFePO4 battery bank design, DC-DC charger selection, and safety-verified wiring diagram",
+  },
+  {
+    date: "Mar 5, 2026",
     tool: "Trail Intel",
     version: "v2.0",
     summary: "Trail System layer — NPS park closure alerts, BLM route status (open/closed/limited), USFS seasonal access by vehicle type for 7 trail systems including Moab, Bighorn, Paiute, Glamis, and more",

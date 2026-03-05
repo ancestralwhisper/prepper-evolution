@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import {
   Backpack, Droplets, UtensilsCrossed, Zap, ClipboardList, Map,
   ArrowRight, FolderOpen, Shield, Target, Crosshair,
-  Siren, Skull, Truck, Fuel, Weight, Brain, Wrench, Radar,
+  Siren, Skull, Truck, Fuel, Weight, Brain, Wrench, Radar, BatteryCharging,
   AlertTriangle, BarChart3, Repeat,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
@@ -144,6 +144,17 @@ const opsDeckTools: Tool[] = [
     badge: "Updated",
     version: "v2.0",
     cta: "Check Intel",
+  },
+  {
+    slug: "power-system-builder",
+    name: "Power System Builder",
+    description:
+      "Design a complete 12V auxiliary electrical system. Wire gauge calculator, fuse sizing, LiFePO4 battery bank design, DC-DC charger selection, solar integration, and a safety-verified wiring diagram.",
+    icon: BatteryCharging,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Build System",
   },
   {
     slug: "skills-tracker",

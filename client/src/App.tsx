@@ -31,6 +31,7 @@ import VehicleProfile from "@/pages/tools/VehicleProfile";
 import RigSafeConfiguratorPage from "@/pages/tools/RigSafeConfiguratorPage";
 import RigRatedConfiguratorPage from "@/pages/tools/RigRatedConfiguratorPage";
 import TrailIntelPage from "@/pages/tools/TrailIntelPage";
+import PowerSystemBuilderPage from "@/pages/tools/PowerSystemBuilderPage";
 import Quiz from "@/pages/Quiz";
 import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
@@ -82,6 +83,7 @@ function Router() {
             <Route path="/tools/rigsafe-configurator" component={RigSafeConfiguratorPage} />
             <Route path="/tools/rigrated-configurator" component={RigRatedConfiguratorPage} />
             <Route path="/tools/trail-intel" component={TrailIntelPage} />
+            <Route path="/tools/power-system-builder" component={PowerSystemBuilderPage} />
             <Route path="/quiz" component={Quiz} />
             <Route path="/contact" component={Contact} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />
