@@ -1,36 +1,19 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { Search, X, FileText, Package } from "lucide-react";
+import { Search, X, FileText } from "lucide-react";
 import { motion } from "framer-motion";
 import { searchPosts, decodeHtmlEntities, WPPost } from "@/lib/wp";
-import type { Product } from "@shared/schema";
 
 export function SiteSearch({ onClose }: { onClose: () => void }) {
   const [query, setQuery] = useState("");
   const [articleResults, setArticleResults] = useState<WPPost[]>([]);
-  const [productResults, setProductResults] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const allProductsRef = useRef<Product[]>([]);
-
-  useEffect(() => {
-    fetch("/api/products")
-      .then(r => r.json())
-      .then(data => { allProductsRef.current = data; })
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     if (query.length < 2) {
       setArticleResults([]);
-      setProductResults([]);
       return;
     }
-
-    const q = query.toLowerCase();
-    const filtered = allProductsRef.current.filter(
-      (p: Product) => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
-    ).slice(0, 4);
-    setProductResults(filtered);
 
     const timer = setTimeout(async () => {
       setIsSearching(true);
@@ -54,7 +37,7 @@ export function SiteSearch({ onClose }: { onClose: () => void }) {
     return () => window.removeEventListener("keydown", handleKey);
   }, [onClose]);
 
-  const hasResults = articleResults.length > 0 || productResults.length > 0;
+  const hasResults = articleResults.length > 0;
   const hasQuery = query.length >= 2;
 
   return (
@@ -77,7 +60,7 @@ export function SiteSearch({ onClose }: { onClose: () => void }) {
           <input
             autoFocus
             type="text"
-            placeholder="Search articles, products, topics..."
+            placeholder="Search articles and topics..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full h-14 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none text-base"
@@ -90,33 +73,6 @@ export function SiteSearch({ onClose }: { onClose: () => void }) {
 
         {hasQuery && (
           <div className="max-h-[60vh] overflow-y-auto p-2">
-            {productResults.length > 0 && (
-              <div className="mb-2">
-                <div className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Products</div>
-                {productResults.map(p => (
-                  <Link
-                    key={p.slug}
-                    href={`/products/${p.slug}`}
-                    onClick={onClose}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted transition-colors"
-                    data-testid={`search-result-product-${p.slug}`}
-                  >
-                    <Package className="w-4 h-4 text-primary shrink-0" />
-                    <div className="min-w-0">
-                      <div className="font-medium text-sm text-foreground truncate">{p.name}</div>
-                      <div className="text-xs text-muted-foreground truncate">
-                        {p.category} — {p.onSale && p.salePrice ? (
-                          <><span className="text-red-600 font-semibold">${parseFloat(String(p.salePrice)).toFixed(2)}</span> <span className="line-through">${parseFloat(String(p.price)).toFixed(2)}</span></>
-                        ) : (
-                          <>${parseFloat(String(p.price)).toFixed(2)}</>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-
             {articleResults.length > 0 && (
               <div className="mb-2">
                 <div className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Articles</div>
@@ -156,7 +112,7 @@ export function SiteSearch({ onClose }: { onClose: () => void }) {
 
         {!hasQuery && (
           <div className="px-3 py-6 text-center text-muted-foreground text-sm">
-            Start typing to search across articles and gear...
+            Start typing to search across articles...
           </div>
         )}
       </motion.div>
