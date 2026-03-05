@@ -37,6 +37,7 @@ Preferred communication style: Simple, everyday language.
 - `/tools/shtf-simulator` — Scenario-based survival simulator with branching decisions and scoring
 - `/tools/rigsafe-configurator` — RigSafe RTT Configurator: three-chain rooftop tent/rack load calculator with static, dynamic, off-road ratings, payload, garage clearance, vehicle request form
 - `/tools/rigrated-configurator` — RigRated UTV Overland Builder: 29 UTVs, 80+ accessories, 50-state legal heatmap, trail scoring, trip plan PDF, year selector, vehicle request form
+- `/tools/trail-intel` — Trail Intel: real-time conditions checker (weather alerts, FEMA disasters, wildfires) + trail system layer (NPS park closures, BLM route status, USFS seasonal access) for 7 trail systems
 - `/tools/community` — Community gallery of shared builds (BOB, solar, water, food, kit) with submission form
 - `/tools/my-kits` — Local kit library dashboard (saved kits stored in localStorage)
 - `/quiz` — Preparedness quiz with scoring, results, social sharing (X, Facebook, Reddit, SMS, Email, Copy Link), and tool recommendations
@@ -64,6 +65,7 @@ Preferred communication style: Simple, everyday language.
 - `POST /api/community-builds` — Submit new community build with profanity filter + Telegram notification
 - `GET /api/wp/posts` — Proxy to WordPress REST API for blog posts (cached)
 - `GET /api/wp/categories` — Proxy to WordPress categories
+- `GET /api/trail-intel` — Trail Intel: real-time weather, disaster, wildfire, and trail system data by ZIP code (rate limited, 15-min cache)
 - `GET /api/link-health` — Link health check results
 - WordPress proxy endpoints pass through to `https://wp.prepperevolution.com/wp-json/wp/v2`
 

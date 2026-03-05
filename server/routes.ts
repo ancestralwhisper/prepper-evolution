@@ -6,6 +6,7 @@ import { z } from "zod";
 import { db } from "./db";
 import { desc, eq } from "drizzle-orm";
 import { runFullLinkCheck, checkProductLink, getLatestHealthForProduct } from "./linkChecker";
+import { handleTrailIntel } from "./trail-intel";
 
 const WP_API_URL = "https://wp.prepperevolution.com/wp-json/wp/v2";
 
@@ -528,6 +529,15 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error checking product link:", error);
       res.status(500).json({ message: "Failed to check link" });
+    }
+  });
+
+  app.get("/api/trail-intel", async (req, res) => {
+    try {
+      await handleTrailIntel(req, res);
+    } catch (error) {
+      console.error("Trail Intel error:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
   });
 

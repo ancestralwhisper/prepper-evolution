@@ -29,17 +29,32 @@ export default function SupportFooter() {
         </p>
       </div>
 
-      <a
-        href="https://buymeacoffee.com/prepperevolution"
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => trackEvent("pe_bmac_click", {})}
-        className="inline-flex items-center gap-2.5 bg-[#FFDD00] hover:bg-[#FFD000] text-black font-extrabold text-sm uppercase tracking-wide rounded-lg px-5 py-3 transition-colors shadow-sm hover:shadow-md mb-3"
-      >
-        <Beer className="w-5 h-5" />
-        Buy Me a Beer
-        <ExternalLink className="w-3.5 h-3.5 opacity-60" />
-      </a>
+      <div className="flex items-center gap-4 mb-3">
+        <a
+          href="https://buymeacoffee.com/prepperevolution"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackEvent("pe_bmac_click", {})}
+          className="inline-flex items-center gap-2.5 bg-[#FFDD00] hover:bg-[#FFD000] text-black font-extrabold text-sm uppercase tracking-wide rounded-lg px-5 py-3 transition-colors shadow-sm hover:shadow-md"
+        >
+          <Beer className="w-5 h-5" />
+          Buy Me a Beer
+          <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+        </a>
+        <a
+          href="https://buymeacoffee.com/prepperevolution"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackEvent("pe_bmac_click", {})}
+          className="flex-shrink-0"
+        >
+          <img
+            src="/bmac-qr.png"
+            alt="Scan to Buy Me a Beer"
+            className="w-20 h-20 rounded-lg border border-border"
+          />
+        </a>
+      </div>
 
       <p className="text-sm text-muted-foreground mt-4 leading-relaxed">
         Thanks for using the tools. Stay sharp out there.

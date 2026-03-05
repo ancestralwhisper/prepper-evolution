@@ -1,22 +1,21 @@
+
+// ─── Changelog Ticker ────────────────────────────────────────────
+// A scrolling news-ticker-style bar showing recent tool updates.
+// Runs a CSS animation loop; pauses on hover.
+
 interface ChangelogEntry {
-  date: string;
-  tool: string;
-  version: string;
-  summary: string;
+  date: string;      // e.g. "Mar 3, 2026"
+  tool: string;      // e.g. "Vehicle Profile"
+  version: string;   // e.g. "v1.1"
+  summary: string;   // e.g. "Added 9 everyday vehicles"
 }
 
 const changelog: ChangelogEntry[] = [
   {
-    date: "Mar 3, 2026",
-    tool: "RigSafe Configurator",
-    version: "v1.0",
-    summary: "Launched three-chain RTT/rack load calculator — validates static, dynamic, and off-road ratings, payload, garage clearance, and sleeping capacity",
-  },
-  {
-    date: "Mar 3, 2026",
-    tool: "RigRated UTV Builder",
-    version: "v1.0",
-    summary: "Launched UTV overland builder with 26+ machines, 80+ accessories, 50-state legal heatmap, trail scoring, and trip plan PDF export",
+    date: "Mar 5, 2026",
+    tool: "Trail Intel",
+    version: "v2.0",
+    summary: "Trail System layer — NPS park closure alerts, BLM route status (open/closed/limited), USFS seasonal access by vehicle type for 7 trail systems including Moab, Bighorn, Paiute, Glamis, and more",
   },
   {
     date: "Mar 3, 2026",
@@ -75,6 +74,7 @@ const changelog: ChangelogEntry[] = [
 ];
 
 export default function ChangelogTicker() {
+  // Duplicate entries for seamless infinite scroll
   const items = [...changelog, ...changelog];
 
   return (
@@ -91,13 +91,13 @@ export default function ChangelogTicker() {
         >
           {items.map((entry, i) => (
             <span key={i} className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="text-muted-foreground/40 font-mono">{entry.date}</span>
+              <span className="text-muted/40 font-mono">{entry.date}</span>
               <span className="text-primary/60 font-bold">{entry.tool}</span>
               {entry.version && (
-                <span className="text-[10px] font-mono text-muted-foreground/30">{entry.version}</span>
+                <span className="text-[10px] font-mono text-muted/30">{entry.version}</span>
               )}
-              <span className="text-muted-foreground/70">{entry.summary}</span>
-              <span className="text-muted-foreground/20 mx-2">●</span>
+              <span className="text-muted/70">{entry.summary}</span>
+              <span className="text-card-border mx-2">|</span>
             </span>
           ))}
         </div>

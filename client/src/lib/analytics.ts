@@ -28,6 +28,12 @@ type PEEvent =
   | { name: "pe_zip_lookup"; params: { zip3: string; tool: string } }
   | { name: "pe_bmac_click"; params: Record<string, never> }
 
+  // Trail Intel
+  | { name: "pe_trail_intel_fetch"; params: { zip3: string; tool: string; threatLevel: string } }
+  | { name: "pe_trail_intel_refresh"; params: { zip3: string; tool: string } }
+  | { name: "pe_destination_zip_set"; params: { zip3: string; tool: string } }
+  | { name: "pe_trail_system_selected"; params: { trailId: string; tool: string } }
+
   // Results / outcomes
   | { name: "pe_scenario_completed"; params: { scenario: string; outcome: string; score: number } }
   | { name: "pe_payload_warning"; params: { machine: string; pct: number; warning: string } }

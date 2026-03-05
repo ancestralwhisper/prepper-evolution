@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import {
   Backpack, Droplets, UtensilsCrossed, Zap, ClipboardList, Map,
   ArrowRight, FolderOpen, Shield, Target, Crosshair,
-  Siren, Skull, Truck, Fuel, Weight, Brain, Wrench,
+  Siren, Skull, Truck, Fuel, Weight, Brain, Wrench, Radar,
   AlertTriangle, BarChart3, Repeat,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
@@ -133,6 +133,17 @@ const opsDeckTools: Tool[] = [
     badge: "New",
     version: "v1.0",
     cta: "Build UTV",
+  },
+  {
+    slug: "trail-intel",
+    name: "Trail Intel — Know Before You Go",
+    description:
+      "Real-time conditions at your destination. Weather alerts, FEMA disasters, wildfires, plus NPS park closures, BLM route status, and USFS seasonal access for 7 trail systems.",
+    icon: Radar,
+    status: "live",
+    badge: "Updated",
+    version: "v2.0",
+    cta: "Check Intel",
   },
   {
     slug: "skills-tracker",
