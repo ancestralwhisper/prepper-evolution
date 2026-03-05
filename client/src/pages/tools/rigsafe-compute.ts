@@ -28,6 +28,7 @@ import type { SolarPanelEntry } from "./rigsafe-solar";
 import type { LightBarEntry } from "./rigsafe-lightbars";
 import type { SlideKitchenEntry } from "./rigsafe-kitchens";
 import type { RecoveryGearEntry } from "./rigsafe-recovery";
+import type { CargoBoxEntry } from "./rigsafe-cargo-boxes";
 import type { StockVehicle, BodyType } from "./vehicle-types";
 
 export const WATER_LBS_PER_GALLON = 8.34;
@@ -186,6 +187,16 @@ export interface RigSafeConfig {
 
   // Cargo on rack
   cargoItems: CargoItem[];
+
+  // Cargo box (mounted on rack)
+  cargoBox: CargoBoxEntry | null;
+  manualCargoBoxWeightLbs: number;
+  useManualCargoBox: boolean;
+  hasCargoBox: boolean;
+  cargoBoxContentsLbs: number; // slider 0-100 lbs for stuff inside the box
+
+  // Quick-add rack cargo presets
+  rackPresets: string[]; // array of preset IDs that are toggled on
 
   // Occupants
   occupants: OccupantConfig;
@@ -463,6 +474,26 @@ function computeRoofMountedModWeight(config: RigSafeConfig): number {
   return total;
 }
 
+// ─── Rack Cargo Presets ─────────────────────────────────────────────
+
+export const RACK_CARGO_PRESETS = [
+  { id: "recovery-boards", name: "Recovery Boards (pair)", weightLbs: 8 },
+  { id: "shovel", name: "Folding Shovel", weightLbs: 5 },
+  { id: "axe-hatchet", name: "Axe / Hatchet", weightLbs: 4 },
+  { id: "hi-lift-mount", name: "Hi-Lift Jack (rack mounted)", weightLbs: 30 },
+  { id: "jerry-can-fuel", name: "Fuel Jerry Can (full, 5 gal)", weightLbs: 40 },
+  { id: "jerry-can-water", name: "Water Jerry Can (full, 5 gal)", weightLbs: 44 },
+  { id: "rotopax-2gal", name: "RotoPax 2-Gal Fuel (full)", weightLbs: 15 },
+  { id: "fire-extinguisher", name: "Fire Extinguisher", weightLbs: 6 },
+  { id: "camp-chairs-2", name: "Camp Chairs (x2)", weightLbs: 14 },
+  { id: "camp-table", name: "Camp Table", weightLbs: 12 },
+  { id: "portable-compressor", name: "Portable Air Compressor", weightLbs: 10 },
+  { id: "traction-mats", name: "Traction Mats (pair)", weightLbs: 6 },
+  { id: "dry-bag-large", name: "Large Dry Bag (loaded)", weightLbs: 20 },
+  { id: "propane-tank", name: "Propane Tank (5 lb)", weightLbs: 10 },
+  { id: "camp-shower", name: "Camp Shower Bag (full)", weightLbs: 22 },
+] as const;
+
 // ─── Compute: Rack Load Budget ──────────────────────────────────────
 
 export function computeRackLoad(config: RigSafeConfig): {
@@ -477,8 +508,23 @@ export function computeRackLoad(config: RigSafeConfig): {
   const tentWeight = tent?.weightLbs ?? 0;
   const awningBracketWeight = awning?.mountedBracketWeightLbs ?? 0;
 
-  // Cargo on rack
+  // Cargo on rack (custom items)
   const cargoWeight = config.cargoItems.reduce((sum, item) => sum + item.weightLbs * item.qty, 0);
+
+  // Cargo box on rack
+  let cargoBoxWeight = 0;
+  if (config.hasCargoBox) {
+    cargoBoxWeight += config.useManualCargoBox
+      ? config.manualCargoBoxWeightLbs
+      : (config.cargoBox?.weightLbs ?? 0);
+    cargoBoxWeight += config.cargoBoxContentsLbs;
+  }
+
+  // Rack preset items
+  const presetWeight = config.rackPresets.reduce((sum, id) => {
+    const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
+    return sum + (preset?.weightLbs ?? 0);
+  }, 0);
 
   // Occupant weight (only for static — sleeping in tent)
   const totalOccupantWeight =
@@ -497,7 +543,7 @@ export function computeRackLoad(config: RigSafeConfig): {
   const roofModWeight = computeRoofMountedModWeight(config);
 
   // Dynamic loads (driving — no people or bedding on rack)
-  const dynamicLoad = tentWeight + awningBracketWeight + cargoWeight + roofModWeight;
+  const dynamicLoad = tentWeight + awningBracketWeight + cargoWeight + cargoBoxWeight + presetWeight + roofModWeight;
 
   // Static loads (camping — people and bedding on rack)
   const staticLoad = dynamicLoad + totalOccupantWeight + beddingWeight;
@@ -550,8 +596,22 @@ export function computePayload(config: RigSafeConfig): RackBudget {
   // Vehicle mods (bumpers, winch, drawers, fridge, water tank, skids, spare, solar, lights, kitchen, recovery)
   used += computeVehicleModsWeight(config);
 
-  // All cargo
+  // All cargo (custom items)
   used += config.cargoItems.reduce((sum, item) => sum + item.weightLbs * item.qty, 0);
+
+  // Cargo box on rack
+  if (config.hasCargoBox) {
+    used += config.useManualCargoBox
+      ? config.manualCargoBoxWeightLbs
+      : (config.cargoBox?.weightLbs ?? 0);
+    used += config.cargoBoxContentsLbs;
+  }
+
+  // Rack preset items
+  used += config.rackPresets.reduce((sum, id) => {
+    const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
+    return sum + (preset?.weightLbs ?? 0);
+  }, 0);
 
   // All occupants
   used +=
@@ -775,7 +835,19 @@ export function computeWeightBreakdown(config: RigSafeConfig): {
   const modsWeight = computeVehicleModsWeight(config);
   if (modsWeight > 0) items.push({ label: "Vehicle Mods", value: modsWeight, color: "#B45309" });
 
-  const cargoWeight = config.cargoItems.reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
+  let cargoWeight = config.cargoItems.reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
+  // Add cargo box weight
+  if (config.hasCargoBox) {
+    cargoWeight += config.useManualCargoBox
+      ? config.manualCargoBoxWeightLbs
+      : (config.cargoBox?.weightLbs ?? 0);
+    cargoWeight += config.cargoBoxContentsLbs;
+  }
+  // Add rack preset weights
+  cargoWeight += config.rackPresets.reduce((sum, id) => {
+    const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
+    return sum + (preset?.weightLbs ?? 0);
+  }, 0);
   if (cargoWeight > 0) items.push({ label: "Cargo", value: cargoWeight, color: "#EF4444" });
 
   const occupantWeight =
@@ -1071,6 +1143,13 @@ export const defaultRigSafeConfig: RigSafeConfig = {
   hasRecoveryGear: false,
 
   cargoItems: [],
+
+  cargoBox: null,
+  manualCargoBoxWeightLbs: 25,
+  useManualCargoBox: false,
+  hasCargoBox: false,
+  cargoBoxContentsLbs: 0,
+  rackPresets: [],
 
   occupants: {
     adults: 2,

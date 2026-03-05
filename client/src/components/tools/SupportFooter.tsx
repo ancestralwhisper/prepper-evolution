@@ -25,7 +25,7 @@ export default function SupportFooter() {
           If any calculator, builder, or report helped you pack right, ditch dead weight, or just feel more squared away&hellip; and you&apos;re buying anything from the list anyway &mdash; <strong className="text-foreground">use the affiliate links in your report.</strong> You pay the same price (sometimes less). I get a small cut that keeps this alive. That&apos;s the deal.
         </p>
         <p>
-          Not shopping right now? No sweat. If it helped and you wanna buy me a brew or throw a few bucks my way, it&apos;s appreciated. If not, we&apos;re still good.
+          Not shopping right now? No sweat. If it helped and you wanna buy me a beer or throw a few bucks my way, it&apos;s appreciated. If not, we&apos;re still good.
         </p>
       </div>
 
@@ -42,10 +42,10 @@ export default function SupportFooter() {
       </a>
 
       <p className="text-sm text-muted-foreground mt-4 leading-relaxed">
-        Thanks for using it, man. Stay sharp.
+        Thanks for using the tools. Stay sharp out there.
       </p>
       <p className="text-sm font-bold text-foreground mt-1">
-        &mdash; Mike &amp; the crew
+        &mdash; Mike &amp; The Crew
       </p>
     </div>
   );

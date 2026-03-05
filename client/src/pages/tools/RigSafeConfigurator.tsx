@@ -29,8 +29,10 @@ import { getSolarBrands, getSolarModels, findSolar } from "./rigsafe-solar";
 import { getLightBarBrands, getLightBarModels, findLightBar } from "./rigsafe-lightbars";
 import { getKitchenBrands, getKitchenModels, findKitchen } from "./rigsafe-kitchens";
 import { getRecoveryBrands, getRecoveryModels, findRecovery, recoveryDatabase } from "./rigsafe-recovery";
+import { getCargoBoxBrands, getCargoBoxModels, findCargoBox } from "./rigsafe-cargo-boxes";
 import {
   computeAll, computeVehicleModsWeight, defaultRigSafeConfig, RIGSAFE_KEY,
+  RACK_CARGO_PRESETS,
   type RigSafeConfig, type RigSafeResult, type RigSafeWarning, type CargoItem,
 } from "./rigsafe-compute";
 // import RigSafeSvg, { vehicleToSilhouetteId } from "./RigSafeSvg";
@@ -324,6 +326,9 @@ export default function RigSafeConfigurator() {
   const [selLightBarBrand, setSelLightBarBrand] = useState("");
   const [selKitchenBrand, setSelKitchenBrand] = useState("");
 
+  // Cargo box selector state
+  const [selCargoBoxBrand, setSelCargoBoxBrand] = useState("");
+
   // Profile import banner
   const [profileAvailable, setProfileAvailable] = useState(false);
   const [profileImported, setProfileImported] = useState(false);
@@ -541,6 +546,7 @@ export default function RigSafeConfigurator() {
     setSelSolarBrand("");
     setSelLightBarBrand("");
     setSelKitchenBrand("");
+    setSelCargoBoxBrand("");
     setProfileImported(false);
     try { localStorage.removeItem(RIGSAFE_KEY); } catch { /* ignore */ }
   }, []);
@@ -749,19 +755,7 @@ export default function RigSafeConfigurator() {
           badge={config.rack ? `${config.rack.brand} ${config.rack.model}` : undefined}
         >
           <div className="px-4 space-y-4">
-            {/* Mount type */}
-            <SelectInput
-              label="Mount Type"
-              value={config.mountType}
-              onChange={(v) => update("mountType", v)}
-              options={[
-                { value: "bed-rack", label: "Bed Rack (Trucks)" },
-                { value: "roof-rack", label: "Roof Rack (SUVs, Crossovers)" },
-                { value: "cab-rack", label: "Cab-Over Rack" },
-              ]}
-            />
-
-            {/* Tonneau (trucks only) */}
+            {/* Tonneau (trucks only — shown first so rack details stay grouped) */}
             {isTruck && (
               <div className="space-y-3">
                 <Toggle
@@ -819,6 +813,18 @@ export default function RigSafeConfigurator() {
               </div>
             )}
 
+            {/* Mount type */}
+            <SelectInput
+              label="Mount Type"
+              value={config.mountType}
+              onChange={(v) => update("mountType", v)}
+              options={[
+                { value: "bed-rack", label: "Bed Rack (Trucks)" },
+                { value: "roof-rack", label: "Roof Rack (SUVs, Crossovers)" },
+                { value: "cab-rack", label: "Cab-Over Rack" },
+              ]}
+            />
+
             {/* Rack selector */}
             <div className="space-y-3">
               <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Rack</h4>
@@ -873,21 +879,21 @@ export default function RigSafeConfigurator() {
               {config.rack && !config.useManualRack && (
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                    <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-[10px] uppercase">Static</span>
-                      <span className="font-bold">{config.rack.staticLbs} lbs</span>
+                    <div className="bg-muted rounded-lg p-2.5">
+                      <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Static Rating</span>
+                      <span className="font-extrabold text-sm">{config.rack.staticLbs} lbs</span>
                     </div>
-                    <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-[10px] uppercase">On-Road</span>
-                      <span className="font-bold">{config.rack.onRoadDynamicLbs} lbs</span>
+                    <div className="bg-muted rounded-lg p-2.5">
+                      <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">On-Road Dynamic</span>
+                      <span className="font-extrabold text-sm">{config.rack.onRoadDynamicLbs} lbs</span>
                     </div>
-                    <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-[10px] uppercase">Off-Road</span>
-                      <span className="font-bold">{config.rack.offRoadDynamicLbs} lbs</span>
+                    <div className="bg-muted rounded-lg p-2.5">
+                      <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Off-Road Dynamic</span>
+                      <span className="font-extrabold text-sm">{config.rack.offRoadDynamicLbs} lbs</span>
                     </div>
-                    <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-[10px] uppercase">Weight</span>
-                      <span className="font-bold">{config.rack.weightLbs} lbs</span>
+                    <div className="bg-muted rounded-lg p-2.5">
+                      <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Product Weight</span>
+                      <span className="font-extrabold text-sm">{config.rack.weightLbs} lbs</span>
                     </div>
                   </div>
 
@@ -978,31 +984,31 @@ export default function RigSafeConfigurator() {
                     {config.tent && (
                       <div className="space-y-3">
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                          <div className="bg-muted rounded-lg p-2">
-                            <span className="text-muted block text-[10px] uppercase">Weight</span>
-                            <span className="font-bold">{config.tent.closedWeightLbs} lbs</span>
+                          <div className="bg-muted rounded-lg p-2.5">
+                            <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Tent Weight</span>
+                            <span className="font-extrabold text-sm">{config.tent.closedWeightLbs} lbs</span>
                           </div>
-                          <div className="bg-muted rounded-lg p-2">
-                            <span className="text-muted block text-[10px] uppercase">Closed Height</span>
-                            <span className="font-bold">{config.tent.closedHeightIn}&quot;</span>
+                          <div className="bg-muted rounded-lg p-2.5">
+                            <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Closed Height</span>
+                            <span className="font-extrabold text-sm">{config.tent.closedHeightIn}&quot;</span>
                           </div>
-                          <div className="bg-muted rounded-lg p-2">
-                            <span className="text-muted block text-[10px] uppercase">Marketing Sleeps</span>
-                            <span className="font-bold">{config.tent.sleepsMarketing}</span>
+                          <div className="bg-muted rounded-lg p-2.5">
+                            <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Marketing Sleeps</span>
+                            <span className="font-extrabold text-sm">{config.tent.sleepsMarketing}</span>
                           </div>
-                          <div className="bg-muted rounded-lg p-2">
-                            <span className="text-muted block text-[10px] uppercase">Realistic Sleeps</span>
-                            <span className="font-bold text-primary">{config.tent.sleepsRealistic}</span>
+                          <div className="bg-muted rounded-lg p-2.5">
+                            <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Realistic Sleeps</span>
+                            <span className="font-extrabold text-sm text-primary">{config.tent.sleepsRealistic}</span>
                           </div>
                         </div>
 
                         <div className="bg-muted rounded-lg p-3">
                           <p className="text-xs">
-                            <span className="font-bold">Footprint:</span> {config.tent.closedLengthIn}&quot; x {config.tent.closedWidthIn}&quot; (closed)
+                            <span className="text-primary font-bold">Footprint:</span> {config.tent.closedLengthIn}&quot; x {config.tent.closedWidthIn}&quot; (closed)
                             {" / "}{config.tent.openLengthIn}&quot; x {config.tent.openWidthIn}&quot; (open)
                           </p>
                           <p className="text-xs mt-1">
-                            <span className="font-bold">Headroom:</span> {config.tent.openHeadroomIn}&quot; | <span className="font-bold">Mattress:</span> {config.tent.mattressThicknessIn}&quot;
+                            <span className="text-primary font-bold">Headroom:</span> {config.tent.openHeadroomIn}&quot; | <span className="text-primary font-bold">Mattress:</span> {config.tent.mattressThicknessIn}&quot;
                           </p>
                         </div>
 
@@ -1023,19 +1029,50 @@ export default function RigSafeConfigurator() {
                   </div>
                 )}
 
-                {/* Annex */}
+                {/* Tent Annex */}
                 {config.hasTent && (config.tent?.hasAnnex || config.useManualTent) && (
                   <div className="border-t border-border pt-4 space-y-3">
+                    <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Tent Annex</h4>
                     <Toggle
-                      label="Add Annex"
+                      label={config.tent?.annexName ? `Add ${config.tent.annexName}` : "Add Tent Annex"}
                       checked={config.hasAnnex}
                       onChange={(v) => update("hasAnnex", v)}
-                      hint="Annex weight does NOT count against rack load (ground-supported)"
+                      hint="Annex weight does NOT count against rack load (ground-supported) but counts toward vehicle payload"
                     />
                     {config.hasAnnex && (
-                      <div className="pl-6 grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        <NumberInput label="Annex Weight" value={config.annexWeightLbs} onChange={(v) => update("annexWeightLbs", v)} unit="lbs" />
-                        <NumberInput label="Annex Sleeps" value={config.annexSleeps} onChange={(v) => update("annexSleeps", v)} />
+                      <div className="pl-6 space-y-3">
+                        {/* Show matched annex details when tent is from DB */}
+                        {config.tent?.hasAnnex && !config.useManualTent && (
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                            <div className="bg-muted rounded-lg p-2.5">
+                              <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Annex Weight</span>
+                              <span className="font-extrabold text-sm">{config.annexWeightLbs} lbs</span>
+                            </div>
+                            <div className="bg-muted rounded-lg p-2.5">
+                              <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Sleeps</span>
+                              <span className="font-extrabold text-sm">{config.annexSleeps}</span>
+                            </div>
+                            {config.tent.annexAffiliateUrl && (
+                              <div className="flex items-center">
+                                <a
+                                  href={config.tent.annexAffiliateUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-1.5 text-xs text-primary hover:underline"
+                                >
+                                  <ExternalLink className="w-3 h-3" /> View on Amazon
+                                </a>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        {/* Manual entry for custom tents */}
+                        {config.useManualTent && (
+                          <div className="grid grid-cols-2 gap-3">
+                            <NumberInput label="Annex Weight" value={config.annexWeightLbs} onChange={(v) => update("annexWeightLbs", v)} unit="lbs" />
+                            <NumberInput label="Annex Sleeps" value={config.annexSleeps} onChange={(v) => update("annexSleeps", v)} />
+                          </div>
+                        )}
                         <SelectInput
                           label="Annex Side"
                           value={config.annexSide}
@@ -1113,17 +1150,17 @@ export default function RigSafeConfigurator() {
 
                     {config.awning && (
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-                        <div className="bg-muted rounded-lg p-2">
-                          <span className="text-muted block text-[10px] uppercase">Total Weight</span>
-                          <span className="font-bold">{config.awning.totalWeightLbs} lbs</span>
+                        <div className="bg-muted rounded-lg p-2.5">
+                          <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Total Weight</span>
+                          <span className="font-extrabold text-sm">{config.awning.totalWeightLbs} lbs</span>
                         </div>
-                        <div className="bg-muted rounded-lg p-2">
-                          <span className="text-muted block text-[10px] uppercase">Bracket Weight</span>
-                          <span className="font-bold">{config.awning.mountedBracketWeightLbs} lbs</span>
+                        <div className="bg-muted rounded-lg p-2.5">
+                          <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Bracket Weight</span>
+                          <span className="font-extrabold text-sm">{config.awning.mountedBracketWeightLbs} lbs</span>
                         </div>
-                        <div className="bg-muted rounded-lg p-2">
-                          <span className="text-muted block text-[10px] uppercase">Coverage</span>
-                          <span className="font-bold">{config.awning.deployedCoverageSqFt} sq ft</span>
+                        <div className="bg-muted rounded-lg p-2.5">
+                          <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Coverage</span>
+                          <span className="font-extrabold text-sm">{config.awning.deployedCoverageSqFt} sq ft</span>
                         </div>
                       </div>
                     )}
@@ -1148,11 +1185,12 @@ export default function RigSafeConfigurator() {
 
                 <p className="text-[10px] text-muted-foreground italic">Most awning weight transfers to ground poles when deployed. Only bracket weight (~10-15 lbs) stays on rack.</p>
 
-                {/* Wall Kit */}
+                {/* Awning Annex (Wall Kit) */}
                 {config.awning?.hasWallKit !== false && (
                   <div className="border-t border-border pt-4 space-y-3">
+                    <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Awning Annex</h4>
                     <Toggle
-                      label="Add Wall Kit"
+                      label="Add Awning Wall Kit"
                       checked={config.hasWallKit}
                       onChange={(v) => update("hasWallKit", v)}
                       hint="Walls create enclosed ground shelter for additional sleeping"
@@ -1593,10 +1631,170 @@ export default function RigSafeConfigurator() {
           onToggle={() => toggleSection("cargo")}
         >
           <div className="px-4 space-y-6">
-            {/* Cargo Items */}
+            {/* Rack Cargo Header with total */}
+            <div className="space-y-1">
+              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Rack Cargo</h4>
+              <p className="text-xs text-muted-foreground">
+                Total rack cargo:{" "}
+                <span className="font-bold text-foreground">
+                  {(() => {
+                    const presetW = config.rackPresets.reduce((sum, id) => {
+                      const p = RACK_CARGO_PRESETS.find(pr => pr.id === id);
+                      return sum + (p?.weightLbs ?? 0);
+                    }, 0);
+                    let boxW = 0;
+                    if (config.hasCargoBox) {
+                      boxW += config.useManualCargoBox ? config.manualCargoBoxWeightLbs : (config.cargoBox?.weightLbs ?? 0);
+                      boxW += config.cargoBoxContentsLbs;
+                    }
+                    const customW = config.cargoItems.reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
+                    return presetW + boxW + customW;
+                  })()}{" "}
+                  lbs
+                </span>
+              </p>
+            </div>
+
+            {/* ─── a) Quick-Add Rack Items (presets) ─────────── */}
             <div className="space-y-3">
+              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Quick-Add Rack Items</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                {RACK_CARGO_PRESETS.map((preset) => {
+                  const checked = config.rackPresets.includes(preset.id);
+                  return (
+                    <label key={preset.id} className="flex items-center gap-2 text-xs cursor-pointer hover:bg-muted/50 rounded px-2 py-1.5 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => {
+                          setConfig((prev) => ({
+                            ...prev,
+                            rackPresets: checked
+                              ? prev.rackPresets.filter((id) => id !== preset.id)
+                              : [...prev.rackPresets, preset.id],
+                          }));
+                        }}
+                        className="accent-accent w-3.5 h-3.5"
+                      />
+                      <span className="flex-1 text-foreground">{preset.name}</span>
+                      <span className="text-muted font-mono text-[10px]">{preset.weightLbs} lbs</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* ─── b) Cargo Box ────────────────────────────────── */}
+            <div className="border-t border-border pt-4 space-y-3">
+              <div className="flex items-center gap-3">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={config.hasCargoBox}
+                    onChange={(e) => update("hasCargoBox", e.target.checked)}
+                    className="accent-accent w-3.5 h-3.5"
+                  />
+                  <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Cargo Box</span>
+                </label>
+              </div>
+
+              {config.hasCargoBox && (
+                <div className="space-y-3 pl-1">
+                  {/* Manual toggle */}
+                  <label className="flex items-center gap-2 text-xs cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={config.useManualCargoBox}
+                      onChange={(e) => update("useManualCargoBox", e.target.checked)}
+                      className="accent-accent w-3.5 h-3.5"
+                    />
+                    <span className="text-muted-foreground">Enter weight manually</span>
+                  </label>
+
+                  {config.useManualCargoBox ? (
+                    <NumberInput
+                      label="Box Weight"
+                      value={config.manualCargoBoxWeightLbs}
+                      onChange={(v) => update("manualCargoBoxWeightLbs", v)}
+                      unit="lbs"
+                    />
+                  ) : (
+                    <div className="grid grid-cols-2 gap-3">
+                      <SelectInput
+                        label="Brand"
+                        value={selCargoBoxBrand}
+                        onChange={(v) => {
+                          setSelCargoBoxBrand(v);
+                          update("cargoBox", null);
+                        }}
+                        options={[
+                          { value: "", label: "Select brand..." },
+                          ...getCargoBoxBrands().map((b) => ({ value: b, label: b })),
+                        ]}
+                      />
+                      <SelectInput
+                        label="Model"
+                        value={config.cargoBox?.id ?? ""}
+                        onChange={(v) => {
+                          const box = findCargoBox(v);
+                          update("cargoBox", box ?? null);
+                        }}
+                        options={
+                          selCargoBoxBrand
+                            ? [
+                                { value: "", label: "Select model..." },
+                                ...getCargoBoxModels(selCargoBoxBrand).map((m) => ({
+                                  value: m.id,
+                                  label: `${m.model} (${m.weightLbs} lbs)`,
+                                })),
+                              ]
+                            : [{ value: "", label: "Select brand first..." }]
+                        }
+                      />
+                    </div>
+                  )}
+
+                  {/* Contents slider */}
+                  <div className="space-y-1">
+                    <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                      Contents Inside Box: {config.cargoBoxContentsLbs} lbs
+                    </label>
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      step={5}
+                      value={config.cargoBoxContentsLbs}
+                      onChange={(e) => update("cargoBoxContentsLbs", Number(e.target.value))}
+                      className="w-full accent-accent"
+                    />
+                    <div className="flex justify-between text-[9px] text-muted-foreground">
+                      <span>0 lbs</span>
+                      <span>100 lbs</span>
+                    </div>
+                  </div>
+
+                  {/* Show selected box info */}
+                  {!config.useManualCargoBox && config.cargoBox && (
+                    <div className="bg-muted/50 rounded-lg p-2 text-[10px] text-muted-foreground space-y-0.5">
+                      <p><span className="font-bold text-foreground">{config.cargoBox.brand} {config.cargoBox.model}</span></p>
+                      <p>{config.cargoBox.capacityCuFt} cu ft &middot; {config.cargoBox.lengthIn}&quot;L &times; {config.cargoBox.widthIn}&quot;W &times; {config.cargoBox.heightIn}&quot;H &middot; {config.cargoBox.material}</p>
+                      {config.cargoBox.notes && <p>{config.cargoBox.notes}</p>}
+                      {config.cargoBox.affiliateUrl !== "#" && (
+                        <a href={config.cargoBox.affiliateUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
+                          View on Amazon <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* ─── c) Custom Items ─────────────────────────────── */}
+            <div className="border-t border-border pt-4 space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Rack Cargo</h4>
+                <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Custom Items</h4>
                 <button
                   onClick={addCargoItem}
                   className="flex items-center gap-1 text-[10px] font-bold uppercase text-primary hover:text-primary/80 transition-colors"
@@ -1606,7 +1804,7 @@ export default function RigSafeConfigurator() {
               </div>
 
               {config.cargoItems.length === 0 && (
-                <p className="text-xs text-muted-foreground">No cargo items added. Recovery boards, roof box, solar panels, etc.</p>
+                <p className="text-xs text-muted-foreground">Add custom cargo items not covered above.</p>
               )}
 
               {config.cargoItems.map((item) => (
@@ -1614,7 +1812,7 @@ export default function RigSafeConfigurator() {
                   <div className="flex-1">
                     <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Item</label>
                     <input
-                      type="text" value={item.name} placeholder="e.g. Recovery boards"
+                      type="text" value={item.name} placeholder="e.g. Pelican case"
                       onChange={(e) => updateCargoItem(item.id, "name", e.target.value)}
                       className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
                     />

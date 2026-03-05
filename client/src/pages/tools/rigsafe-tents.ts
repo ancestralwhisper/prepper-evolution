@@ -23,8 +23,10 @@ export interface TentEntry {
   sleepsRealistic: number;       // what fits comfortably
   staticRatingLbs: number;       // tent's own weight rating for occupants
   hasAnnex: boolean;
+  annexName?: string;
   annexWeightLbs?: number;
   annexSleeps?: number;
+  annexAffiliateUrl?: string;
   affiliateUrl: string;
   notes?: string;
 }
@@ -49,8 +51,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 2,
     staticRatingLbs: 900,
     hasAnnex: true,
+    annexName: "iKamper Skycamp 3.0 Annex",
     annexWeightLbs: 18,
     annexSleeps: 2,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B0BN3CGFQJ?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B0BN3BN7YK?tag=prepperevo-20",
     notes: "King-size mattress. Hard shell with poly-cotton canopy. Premium build quality.",
   },
@@ -71,8 +75,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 3,
     staticRatingLbs: 900,
     hasAnnex: true,
+    annexName: "iKamper BDV Annex",
     annexWeightLbs: 22,
     annexSleeps: 2,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B0C94KZXHT?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B0C94L3BGY?tag=prepperevo-20",
     notes: "Wider than Skycamp when open. Dual-expanding design.",
   },
@@ -93,8 +99,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 2,
     staticRatingLbs: 600,
     hasAnnex: true,
+    annexName: "iKamper X-Cover 2.0 Annex",
     annexWeightLbs: 15,
     annexSleeps: 1,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B09LQWXR7M?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B09LQXCTR4?tag=prepperevo-20",
     notes: "Soft-shell fold-out. Lighter weight, lower profile when closed.",
   },
@@ -181,8 +189,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 2,
     staticRatingLbs: 750,
     hasAnnex: true,
+    annexName: "23Zero Breezeway 72 Annex",
     annexWeightLbs: 20,
     annexSleeps: 2,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B0CG3LBWGN?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B0CG3L5K7Q?tag=prepperevo-20",
     notes: "Australian brand. Excellent ventilation for hot climates.",
   },
@@ -203,8 +213,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 2,
     staticRatingLbs: 900,
     hasAnnex: true,
+    annexName: "23Zero Walkabout 87 Annex",
     annexWeightLbs: 25,
     annexSleeps: 2,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B0CG3M1RTK?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B0CG3KVR1L?tag=prepperevo-20",
     notes: "Largest 23Zero tent. King-size platform.",
   },
@@ -228,8 +240,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 2,
     staticRatingLbs: 500,
     hasAnnex: true,
+    annexName: "OVS Nomadic 2 Annex",
     annexWeightLbs: 12,
     annexSleeps: 1,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B07R1V8RKQ?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B07R1V7TN6?tag=prepperevo-20",
     notes: "Best-selling budget soft-shell. Great entry-level RTT.",
   },
@@ -250,8 +264,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 2,
     staticRatingLbs: 600,
     hasAnnex: true,
+    annexName: "OVS Nomadic 3 Annex",
     annexWeightLbs: 15,
     annexSleeps: 1,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B07R1VH3TG?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B07R1VGT9N?tag=prepperevo-20",
     notes: "Mid-size OVS. Popular upgrade from Nomadic 2.",
   },
@@ -272,8 +288,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 3,
     staticRatingLbs: 750,
     hasAnnex: true,
+    annexName: "OVS Nomadic 4 Annex",
     annexWeightLbs: 18,
     annexSleeps: 2,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B09D3GNVR8?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B09D3GN3S4?tag=prepperevo-20",
     notes: "Largest OVS soft-shell. Extended model for families.",
   },
@@ -297,8 +315,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 2,
     staticRatingLbs: 600,
     hasAnnex: true,
+    annexName: "Smittybilt Overlander Gen2 Annex",
     annexWeightLbs: 14,
     annexSleeps: 1,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B08JQDP7FX?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B08JQDR9RR?tag=prepperevo-20",
     notes: "Budget-friendly. Most affordable RTT with decent build quality.",
   },
@@ -322,8 +342,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 2,
     staticRatingLbs: 550,
     hasAnnex: true,
+    annexName: "ARB Simpson III Annex",
     annexWeightLbs: 15,
     annexSleeps: 2,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B001CWKLZ4?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B001CWKLZE?tag=prepperevo-20",
     notes: "Australian legend. Known for durability and build quality.",
   },
@@ -433,8 +455,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 2,
     staticRatingLbs: 500,
     hasAnnex: true,
+    annexName: "Tuff Stuff Ranger 3 Annex",
     annexWeightLbs: 12,
     annexSleeps: 1,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B07BZQRP4K?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B07BZQRN6K?tag=prepperevo-20",
     notes: "Affordable entry-level soft-shell with annex.",
   },
@@ -458,8 +482,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 2,
     staticRatingLbs: 600,
     hasAnnex: true,
+    annexName: "Thule Tepui Autana Annex",
     annexWeightLbs: 15,
     annexSleeps: 1,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B076H5K8RN?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B076H5JGRM?tag=prepperevo-20",
     notes: "Thule quality. Integrated annex room option. Good ventilation.",
   },
@@ -483,8 +509,10 @@ export const tentDatabase: TentEntry[] = [
     sleepsRealistic: 2,
     staticRatingLbs: 900,
     hasAnnex: true,
+    annexName: "Alu-Cab Gen 3.1 Annex",
     annexWeightLbs: 30,
     annexSleeps: 2,
+    annexAffiliateUrl: "https://www.amazon.com/dp/B0CWV4R2QX?tag=prepperevo-20",
     affiliateUrl: "https://www.amazon.com/dp/B0CWV4PYQQ?tag=prepperevo-20",
     notes: "South African engineering. All-aluminum construction. Premium expedition-grade.",
   },
@@ -493,7 +521,7 @@ export const tentDatabase: TentEntry[] = [
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 export function getTentBrands(): string[] {
-  return Array.from(new Set(tentDatabase.map((t) => t.brand))).sort();
+  return [...new Set(tentDatabase.map((t) => t.brand))].sort();
 }
 
 export function getTentModels(brand: string): TentEntry[] {
@@ -504,6 +532,10 @@ export function findTent(id: string): TentEntry | undefined {
   return tentDatabase.find((t) => t.id === id);
 }
 
+/**
+ * Calculate realistic sleeping capacity from floor dimensions.
+ * 24" per adult (shoulder width) + 6" gap between each person.
+ */
 export function calcRealisticSleeping(widthIn: number): { adults: number; tight: number } {
   const adultWidth = 24;
   const gap = 6;
