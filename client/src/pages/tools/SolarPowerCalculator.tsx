@@ -9,6 +9,7 @@ import { generateSolarPdf, type SolarPdfData } from "@/components/tools/PdfExpor
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
+import { trackEvent } from "@/lib/analytics";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import ZipLookup from "@/components/tools/ZipLookup";
@@ -69,6 +70,7 @@ export default function SolarPowerCalculator() {
   const [requestStatus, setRequestStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   useEffect(() => {
+    trackEvent("pe_tool_view", { tool: "solar-power" });
     const params = new URLSearchParams(window.location.search);
     const p = params.get("p");
     const d = params.get("d");
@@ -306,6 +308,7 @@ export default function SolarPowerCalculator() {
       }
     }
 
+    trackEvent("pe_pdf_exported", { tool: "solar-power" });
     await generateSolarPdf({
       people,
       days,

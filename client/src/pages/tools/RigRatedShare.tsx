@@ -1,6 +1,7 @@
 
 import { useState, useMemo } from "react";
 import { Mail, MessageCircle, Check, Link2 } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 interface RigRatedShareProps {
   url: string;
@@ -44,6 +45,10 @@ export default function RigRatedShare(props: RigRatedShareProps) {
 
   const genericShare = `My ${props.machineName} payload breakdown — stock vs. modded. Free UTV calculator, no sign-up: ${props.url}`;
 
+  const handleShareClick = (platform: string) => {
+    trackEvent("pe_share_clicked", { tool: "rigrated", platform });
+  };
+
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(props.url);
@@ -55,6 +60,7 @@ export default function RigRatedShare(props: RigRatedShareProps) {
       document.execCommand("copy");
       document.body.removeChild(input);
     }
+    handleShareClick("copy_link");
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
@@ -69,6 +75,7 @@ export default function RigRatedShare(props: RigRatedShareProps) {
           href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => handleShareClick("x")}
           className="flex flex-col items-center gap-1.5 p-2 rounded-lg border border-border hover:border-[#000000] hover:bg-[#000000]/5 transition-all group"
           aria-label="Share on X"
         >
@@ -83,6 +90,7 @@ export default function RigRatedShare(props: RigRatedShareProps) {
           href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(props.url)}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => handleShareClick("facebook")}
           className="flex flex-col items-center gap-1.5 p-2 rounded-lg border border-border hover:border-[#1877F2] hover:bg-[#1877F2]/5 transition-all group"
           aria-label="Share on Facebook"
         >
@@ -97,6 +105,7 @@ export default function RigRatedShare(props: RigRatedShareProps) {
           href={`https://www.reddit.com/submit?url=${encodeURIComponent(props.url)}&title=${encodeURIComponent(genericShare)}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => handleShareClick("reddit")}
           className="flex flex-col items-center gap-1.5 p-2 rounded-lg border border-border hover:border-[#FF4500] hover:bg-[#FF4500]/5 transition-all group"
           aria-label="Share on Reddit"
         >
@@ -109,6 +118,7 @@ export default function RigRatedShare(props: RigRatedShareProps) {
         {/* SMS */}
         <a
           href={`sms:?body=${encodeURIComponent(genericShare)}`}
+          onClick={() => handleShareClick("sms")}
           className="flex flex-col items-center gap-1.5 p-2 rounded-lg border border-border hover:border-[#25D366] hover:bg-[#25D366]/5 transition-all group"
           aria-label="Share via SMS"
         >
@@ -121,6 +131,7 @@ export default function RigRatedShare(props: RigRatedShareProps) {
         {/* Email */}
         <a
           href={`mailto:?subject=${encodeURIComponent(`My ${props.machineName} Payload Breakdown — RigRated`)}&body=${encodeURIComponent(genericShare)}`}
+          onClick={() => handleShareClick("email")}
           className="flex flex-col items-center gap-1.5 p-2 rounded-lg border border-border hover:border-[#6366F1] hover:bg-[#6366F1]/5 transition-all group"
           aria-label="Share via Email"
         >

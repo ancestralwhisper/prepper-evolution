@@ -1,5 +1,6 @@
 
 import { Heart, Beer, ExternalLink } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 export default function SupportFooter() {
   return (
@@ -24,7 +25,7 @@ export default function SupportFooter() {
           If any calculator, builder, or report helped you pack right, ditch dead weight, or just feel more squared away&hellip; and you&apos;re buying anything from the list anyway &mdash; <strong className="text-foreground">use the affiliate links in your report.</strong> You pay the same price (sometimes less). I get a small cut that keeps this alive. That&apos;s the deal.
         </p>
         <p>
-          Not shopping right now? No sweat. If it helped and you wanna throw a coffee or a few bucks my way, it&apos;s appreciated. If not, we&apos;re still good.
+          Not shopping right now? No sweat. If it helped and you wanna buy me a brew or throw a few bucks my way, it&apos;s appreciated. If not, we&apos;re still good.
         </p>
       </div>
 
@@ -32,6 +33,7 @@ export default function SupportFooter() {
         href="https://buymeacoffee.com/prepperevolution"
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackEvent("pe_bmac_click", {})}
         className="inline-flex items-center gap-2.5 bg-[#FFDD00] hover:bg-[#FFD000] text-black font-extrabold text-sm uppercase tracking-wide rounded-lg px-5 py-3 transition-colors shadow-sm hover:shadow-md mb-3"
       >
         <Beer className="w-5 h-5" />

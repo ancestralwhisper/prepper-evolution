@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Truck, ChevronDown, ChevronRight, AlertTriangle, Info,
-  ShieldAlert, Tent, Wind, Package, Users, Bed, Ruler,
+  ShieldAlert, Tent, Wind, Package, Users, Bed, Ruler, Wrench,
   Plus, Trash2, Save, RotateCcw, ExternalLink, Download, Send,
 } from "lucide-react";
 import {
@@ -18,11 +18,22 @@ import { awningDatabase, getAwningBrands, getAwningModels, findAwning } from "./
 import type { AwningEntry } from "./rigsafe-awnings";
 import { tonneauDatabase, getTonneauBrands, getTonneauModels, findTonneau } from "./rigsafe-tonneaus";
 import type { TonneauEntry } from "./rigsafe-tonneaus";
+import { getBumperBrands, getBumperModels, findBumper } from "./rigsafe-bumpers";
+import { getWinchBrands, getWinchModels, findWinch } from "./rigsafe-winches";
+import { getDrawerBrands, getDrawerModels, findDrawer } from "./rigsafe-drawers";
+import { getFridgeBrands, getFridgeModels, findFridge } from "./rigsafe-fridges";
+import { getWaterTankBrands, getWaterTankModels, findWaterTank } from "./rigsafe-water-tanks";
+import { getSkidPlateBrands, getSkidPlateModels, findSkidPlate } from "./rigsafe-skidplates";
+import { getSpareCarrierBrands, getSpareCarrierModels, findSpareCarrier } from "./rigsafe-spare-carriers";
+import { getSolarBrands, getSolarModels, findSolar } from "./rigsafe-solar";
+import { getLightBarBrands, getLightBarModels, findLightBar } from "./rigsafe-lightbars";
+import { getKitchenBrands, getKitchenModels, findKitchen } from "./rigsafe-kitchens";
+import { getRecoveryBrands, getRecoveryModels, findRecovery, recoveryDatabase } from "./rigsafe-recovery";
 import {
-  computeAll, defaultRigSafeConfig, RIGSAFE_KEY,
+  computeAll, computeVehicleModsWeight, defaultRigSafeConfig, RIGSAFE_KEY,
   type RigSafeConfig, type RigSafeResult, type RigSafeWarning, type CargoItem,
 } from "./rigsafe-compute";
-import RigSafeSvg, { vehicleToSilhouetteId } from "./RigSafeSvg";
+// import RigSafeSvg, { vehicleToSilhouetteId } from "./RigSafeSvg";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
@@ -31,6 +42,7 @@ import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import InstallButton from "@/components/tools/InstallButton";
 import { generateRigSafePdf, type RigSafePdfData } from "@/components/tools/PdfExport";
+import { trackEvent } from "@/lib/analytics";
 
 // ─── SVG Gauge Component ─────────────────────────────────────────────
 
@@ -277,6 +289,7 @@ export default function RigSafeConfigurator() {
     mounting: false,
     tent: false,
     awning: false,
+    vehicleMods: false,
     cargo: false,
     occupants: false,
     results: true,
@@ -299,6 +312,18 @@ export default function RigSafeConfigurator() {
   // Tonneau selector state
   const [selTonneauBrand, setSelTonneauBrand] = useState("");
 
+  // Vehicle mod selector states
+  const [selBumperBrand, setSelBumperBrand] = useState("");
+  const [selWinchBrand, setSelWinchBrand] = useState("");
+  const [selDrawerBrand, setSelDrawerBrand] = useState("");
+  const [selFridgeBrand, setSelFridgeBrand] = useState("");
+  const [selWaterTankBrand, setSelWaterTankBrand] = useState("");
+  const [selSkidPlateBrand, setSelSkidPlateBrand] = useState("");
+  const [selSpareCarrierBrand, setSelSpareCarrierBrand] = useState("");
+  const [selSolarBrand, setSelSolarBrand] = useState("");
+  const [selLightBarBrand, setSelLightBarBrand] = useState("");
+  const [selKitchenBrand, setSelKitchenBrand] = useState("");
+
   // Profile import banner
   const [profileAvailable, setProfileAvailable] = useState(false);
   const [profileImported, setProfileImported] = useState(false);
@@ -309,6 +334,7 @@ export default function RigSafeConfigurator() {
 
   // ─── Load from localStorage ──────────────────────────────────────
   useEffect(() => {
+    trackEvent("pe_tool_view", { tool: "rigsafe" });
     try {
       const saved = localStorage.getItem(RIGSAFE_KEY);
       if (saved) {
@@ -467,6 +493,7 @@ export default function RigSafeConfigurator() {
     if (!selMake || !selModel || !trim) return;
     const stock = findVehicle(selMake, selModel, trim);
     if (stock) {
+      trackEvent("pe_vehicle_selected", { tool: "rigsafe", vehicle: [selMake, selModel, trim].join(" ") });
       update("vehicle", stock);
       update("useManual", false);
       // Default mount type based on body type
@@ -504,6 +531,16 @@ export default function RigSafeConfigurator() {
     setSelTentBrand("");
     setSelAwningBrand("");
     setSelTonneauBrand("");
+    setSelBumperBrand("");
+    setSelWinchBrand("");
+    setSelDrawerBrand("");
+    setSelFridgeBrand("");
+    setSelWaterTankBrand("");
+    setSelSkidPlateBrand("");
+    setSelSpareCarrierBrand("");
+    setSelSolarBrand("");
+    setSelLightBarBrand("");
+    setSelKitchenBrand("");
     setProfileImported(false);
     try { localStorage.removeItem(RIGSAFE_KEY); } catch { /* ignore */ }
   }, []);
@@ -1133,7 +1170,422 @@ export default function RigSafeConfigurator() {
           </div>
         </Section>
 
-        {/* ─── Section 5: Additional Load ─────────────────────── */}
+        {/* ─── Section 5: Vehicle Mods ──────────────────────── */}
+        <Section
+          title="Vehicle Mods"
+          icon={Wrench}
+          open={sections.vehicleMods}
+          onToggle={() => toggleSection("vehicleMods")}
+          badge={result.vehicleModsWeightLbs > 0 ? `${result.vehicleModsWeightLbs} lbs` : undefined}
+        >
+          <div className="px-4 space-y-6">
+            <p className="text-[10px] text-muted-foreground">
+              Heavy bolt-ons that eat payload before you load the roof. These deduct from your vehicle payload budget.
+            </p>
+
+            {/* ── Group 1: Armor & Recovery ─── */}
+            <div className="space-y-4">
+              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground border-b border-border pb-1">Armor & Recovery</h4>
+
+              {/* Front Bumper */}
+              <Toggle label="Front Bumper" checked={config.hasFrontBumper} onChange={(v) => update("hasFrontBumper", v)} />
+              {config.hasFrontBumper && (
+                <div className="pl-4 space-y-3">
+                  <Toggle label="Manual Entry" checked={config.useManualBumpers} onChange={(v) => update("useManualBumpers", v)} hint="Enter weight manually" />
+                  {!config.useManualBumpers ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <select value={selBumperBrand} onChange={(e) => { setSelBumperBrand(e.target.value); update("frontBumper", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
+                          <option value="">Select Brand</option>
+                          {getBumperBrands("front").map((b) => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <select value={config.frontBumper?.id ?? ""} onChange={(e) => { const b = findBumper(e.target.value); if (b) update("frontBumper", b); }} disabled={!selBumperBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
+                          <option value="">Select Model</option>
+                          {getBumperModels(selBumperBrand, "front").map((b) => <option key={b.id} value={b.id}>{b.model} ({b.weightLbs} lbs)</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <NumberInput label="Front Bumper Weight" value={config.manualBumperWeightLbs.front} onChange={(v) => update("manualBumperWeightLbs", { ...config.manualBumperWeightLbs, front: v })} unit="lbs" />
+                  )}
+                </div>
+              )}
+
+              {/* Rear Bumper */}
+              <Toggle label="Rear Bumper" checked={config.hasRearBumper} onChange={(v) => update("hasRearBumper", v)} />
+              {config.hasRearBumper && (
+                <div className="pl-4 space-y-3">
+                  <Toggle label="Manual Entry" checked={config.useManualBumpers} onChange={(v) => update("useManualBumpers", v)} hint="Enter weight manually" />
+                  {!config.useManualBumpers ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <select value={selBumperBrand} onChange={(e) => { setSelBumperBrand(e.target.value); update("rearBumper", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
+                          <option value="">Select Brand</option>
+                          {getBumperBrands("rear").map((b) => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <select value={config.rearBumper?.id ?? ""} onChange={(e) => { const b = findBumper(e.target.value); if (b) update("rearBumper", b); }} disabled={!selBumperBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
+                          <option value="">Select Model</option>
+                          {getBumperModels(selBumperBrand, "rear").map((b) => <option key={b.id} value={b.id}>{b.model} ({b.weightLbs} lbs)</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <NumberInput label="Rear Bumper Weight" value={config.manualBumperWeightLbs.rear} onChange={(v) => update("manualBumperWeightLbs", { ...config.manualBumperWeightLbs, rear: v })} unit="lbs" />
+                  )}
+                </div>
+              )}
+
+              {/* Winch */}
+              <Toggle label="Winch" checked={config.hasWinch} onChange={(v) => update("hasWinch", v)} />
+              {config.hasWinch && (
+                <div className="pl-4 space-y-3">
+                  <Toggle label="Manual Entry" checked={config.useManualWinch} onChange={(v) => update("useManualWinch", v)} hint="Enter weight manually" />
+                  {!config.useManualWinch ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <select value={selWinchBrand} onChange={(e) => { setSelWinchBrand(e.target.value); update("winch", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
+                          <option value="">Select Brand</option>
+                          {getWinchBrands().map((b) => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <select value={config.winch?.id ?? ""} onChange={(e) => { const w = findWinch(e.target.value); if (w) update("winch", w); }} disabled={!selWinchBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
+                          <option value="">Select Model</option>
+                          {getWinchModels(selWinchBrand).map((w) => <option key={w.id} value={w.id}>{w.model} ({w.weightLbs} lbs, {w.pullCapacityLbs.toLocaleString()} lb pull)</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <NumberInput label="Winch Weight" value={config.manualWinchWeightLbs} onChange={(v) => update("manualWinchWeightLbs", v)} unit="lbs" />
+                  )}
+                </div>
+              )}
+
+              {/* Skid Plates */}
+              <Toggle label="Skid Plates" checked={config.hasSkidPlates} onChange={(v) => update("hasSkidPlates", v)} />
+              {config.hasSkidPlates && (
+                <div className="pl-4 space-y-3">
+                  <Toggle label="Manual Entry" checked={config.useManualSkidPlates} onChange={(v) => update("useManualSkidPlates", v)} hint="Enter weight manually" />
+                  {!config.useManualSkidPlates ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <select value={selSkidPlateBrand} onChange={(e) => { setSelSkidPlateBrand(e.target.value); update("skidPlates", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
+                          <option value="">Select Brand</option>
+                          {getSkidPlateBrands().map((b) => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <select value={config.skidPlates?.id ?? ""} onChange={(e) => { const s = findSkidPlate(e.target.value); if (s) update("skidPlates", s); }} disabled={!selSkidPlateBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
+                          <option value="">Select Model</option>
+                          {getSkidPlateModels(selSkidPlateBrand).map((s) => <option key={s.id} value={s.id}>{s.model} ({s.weightLbs} lbs, {s.coverage})</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <NumberInput label="Skid Plates Weight" value={config.manualSkidPlateWeightLbs} onChange={(v) => update("manualSkidPlateWeightLbs", v)} unit="lbs" />
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* ── Group 2: Storage & Camp ─── */}
+            <div className="space-y-4">
+              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground border-b border-border pb-1">Storage & Camp</h4>
+
+              {/* Drawer System */}
+              <Toggle label="Drawer System" checked={config.hasDrawers} onChange={(v) => update("hasDrawers", v)} />
+              {config.hasDrawers && (
+                <div className="pl-4 space-y-3">
+                  <Toggle label="Manual Entry" checked={config.useManualDrawers} onChange={(v) => update("useManualDrawers", v)} hint="Enter weight manually" />
+                  {!config.useManualDrawers ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <select value={selDrawerBrand} onChange={(e) => { setSelDrawerBrand(e.target.value); update("drawers", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
+                          <option value="">Select Brand</option>
+                          {getDrawerBrands().map((b) => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <select value={config.drawers?.id ?? ""} onChange={(e) => { const d = findDrawer(e.target.value); if (d) update("drawers", d); }} disabled={!selDrawerBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
+                          <option value="">Select Model</option>
+                          {getDrawerModels(selDrawerBrand).map((d) => <option key={d.id} value={d.id}>{d.model} ({d.weightLbs} lbs)</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <NumberInput label="Drawer Weight" value={config.manualDrawerWeightLbs} onChange={(v) => update("manualDrawerWeightLbs", v)} unit="lbs" />
+                  )}
+                </div>
+              )}
+
+              {/* Fridge/Freezer */}
+              <Toggle label="Fridge / Freezer" checked={config.hasFridge} onChange={(v) => update("hasFridge", v)} />
+              {config.hasFridge && (
+                <div className="pl-4 space-y-3">
+                  <Toggle label="Manual Entry" checked={config.useManualFridge} onChange={(v) => update("useManualFridge", v)} hint="Enter weight manually" />
+                  {!config.useManualFridge ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <select value={selFridgeBrand} onChange={(e) => { setSelFridgeBrand(e.target.value); update("fridge", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
+                          <option value="">Select Brand</option>
+                          {getFridgeBrands().map((b) => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <select value={config.fridge?.id ?? ""} onChange={(e) => { const f = findFridge(e.target.value); if (f) update("fridge", f); }} disabled={!selFridgeBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
+                          <option value="">Select Model</option>
+                          {getFridgeModels(selFridgeBrand).map((f) => <option key={f.id} value={f.id}>{f.model} ({f.weightLbs} lbs, {f.capacityQts} qt)</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <NumberInput label="Fridge Weight" value={config.manualFridgeWeightLbs} onChange={(v) => update("manualFridgeWeightLbs", v)} unit="lbs" />
+                  )}
+                </div>
+              )}
+
+              {/* Slide-Out Kitchen */}
+              <Toggle label="Slide-Out Kitchen" checked={config.hasSlideKitchen} onChange={(v) => update("hasSlideKitchen", v)} />
+              {config.hasSlideKitchen && (
+                <div className="pl-4 space-y-3">
+                  <Toggle label="Manual Entry" checked={config.useManualKitchen} onChange={(v) => update("useManualKitchen", v)} hint="Enter weight manually" />
+                  {!config.useManualKitchen ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <select value={selKitchenBrand} onChange={(e) => { setSelKitchenBrand(e.target.value); update("slideKitchen", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
+                          <option value="">Select Brand</option>
+                          {getKitchenBrands().map((b) => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <select value={config.slideKitchen?.id ?? ""} onChange={(e) => { const k = findKitchen(e.target.value); if (k) update("slideKitchen", k); }} disabled={!selKitchenBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
+                          <option value="">Select Model</option>
+                          {getKitchenModels(selKitchenBrand).map((k) => <option key={k.id} value={k.id}>{k.model} ({k.weightLbs} lbs)</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <NumberInput label="Kitchen Weight" value={config.manualKitchenWeightLbs} onChange={(v) => update("manualKitchenWeightLbs", v)} unit="lbs" />
+                  )}
+                </div>
+              )}
+
+              {/* Water Tank */}
+              <Toggle label="Water Tank" checked={config.hasWaterTank} onChange={(v) => update("hasWaterTank", v)} />
+              {config.hasWaterTank && (
+                <div className="pl-4 space-y-3">
+                  <Toggle label="Manual Entry" checked={config.useManualWaterTank} onChange={(v) => update("useManualWaterTank", v)} hint="Enter weight manually" />
+                  {!config.useManualWaterTank ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <select value={selWaterTankBrand} onChange={(e) => { setSelWaterTankBrand(e.target.value); update("waterTank", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
+                          <option value="">Select Brand</option>
+                          {getWaterTankBrands().map((b) => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <select value={config.waterTank?.id ?? ""} onChange={(e) => { const t = findWaterTank(e.target.value); if (t) update("waterTank", t); }} disabled={!selWaterTankBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
+                          <option value="">Select Model</option>
+                          {getWaterTankModels(selWaterTankBrand).map((t) => <option key={t.id} value={t.id}>{t.model} ({t.capacityGal} gal, {t.emptyWeightLbs} lbs empty)</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-3">
+                      <NumberInput label="Empty Weight" value={config.manualWaterTank.emptyWeightLbs} onChange={(v) => update("manualWaterTank", { ...config.manualWaterTank, emptyWeightLbs: v })} unit="lbs" />
+                      <NumberInput label="Capacity" value={config.manualWaterTank.capacityGal} onChange={(v) => update("manualWaterTank", { ...config.manualWaterTank, capacityGal: v })} unit="gal" />
+                    </div>
+                  )}
+                  {/* Fill % slider */}
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">
+                      Fill Level: {config.waterTankFillPct}%
+                    </label>
+                    <input
+                      type="range" min={0} max={100} step={5}
+                      value={config.waterTankFillPct}
+                      onChange={(e) => update("waterTankFillPct", Number(e.target.value))}
+                      className="w-full accent-accent"
+                    />
+                    <div className="flex justify-between text-[10px] text-muted-foreground">
+                      <span>Empty</span>
+                      <span>Full</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* ── Group 3: Electrical & Lighting ─── */}
+            <div className="space-y-4">
+              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground border-b border-border pb-1">Electrical & Lighting</h4>
+
+              {/* Solar Panels */}
+              <Toggle label="Solar Panels" checked={config.hasSolar} onChange={(v) => update("hasSolar", v)} hint="Roof-rack or bed-rack mounted panels also count against rack load" />
+              {config.hasSolar && (
+                <div className="pl-4 space-y-3">
+                  <Toggle label="Manual Entry" checked={config.useManualSolar} onChange={(v) => update("useManualSolar", v)} hint="Enter weight manually" />
+                  {!config.useManualSolar ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <select value={selSolarBrand} onChange={(e) => { setSelSolarBrand(e.target.value); update("solarPanels", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
+                          <option value="">Select Brand</option>
+                          {getSolarBrands().map((b) => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <select value={config.solarPanels?.id ?? ""} onChange={(e) => { const s = findSolar(e.target.value); if (s) update("solarPanels", s); }} disabled={!selSolarBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
+                          <option value="">Select Model</option>
+                          {getSolarModels(selSolarBrand).map((s) => <option key={s.id} value={s.id}>{s.model} ({s.watts}W, {s.weightLbs} lbs)</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <NumberInput label="Solar Panel Weight" value={config.manualSolarWeightLbs} onChange={(v) => update("manualSolarWeightLbs", v)} unit="lbs" />
+                  )}
+                </div>
+              )}
+
+              {/* Light Bar */}
+              <Toggle label="Light Bar" checked={config.hasLightBar} onChange={(v) => update("hasLightBar", v)} hint="Roof-rack mounted bars also count against rack load" />
+              {config.hasLightBar && (
+                <div className="pl-4 space-y-3">
+                  <Toggle label="Manual Entry" checked={config.useManualLightBar} onChange={(v) => update("useManualLightBar", v)} hint="Enter weight manually" />
+                  {!config.useManualLightBar ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <select value={selLightBarBrand} onChange={(e) => { setSelLightBarBrand(e.target.value); update("lightBar", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
+                          <option value="">Select Brand</option>
+                          {getLightBarBrands().map((b) => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <select value={config.lightBar?.id ?? ""} onChange={(e) => { const l = findLightBar(e.target.value); if (l) update("lightBar", l); }} disabled={!selLightBarBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
+                          <option value="">Select Model</option>
+                          {getLightBarModels(selLightBarBrand).map((l) => <option key={l.id} value={l.id}>{l.model} ({l.lengthIn}", {l.weightLbs} lbs)</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <NumberInput label="Light Bar Weight" value={config.manualLightBarWeightLbs} onChange={(v) => update("manualLightBarWeightLbs", v)} unit="lbs" />
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* ── Group 4: Carry ─── */}
+            <div className="space-y-4">
+              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground border-b border-border pb-1">Carry</h4>
+
+              {/* Spare Tire Carrier */}
+              <Toggle label="Spare Tire Carrier" checked={config.hasSpareCarrier} onChange={(v) => update("hasSpareCarrier", v)} />
+              {config.hasSpareCarrier && (
+                <div className="pl-4 space-y-3">
+                  <Toggle label="Manual Entry" checked={config.useManualSpareCarrier} onChange={(v) => update("useManualSpareCarrier", v)} hint="Enter weight manually" />
+                  {!config.useManualSpareCarrier ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <select value={selSpareCarrierBrand} onChange={(e) => { setSelSpareCarrierBrand(e.target.value); update("spareCarrier", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
+                          <option value="">Select Brand</option>
+                          {getSpareCarrierBrands().map((b) => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <select value={config.spareCarrier?.id ?? ""} onChange={(e) => { const c = findSpareCarrier(e.target.value); if (c) update("spareCarrier", c); }} disabled={!selSpareCarrierBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
+                          <option value="">Select Model</option>
+                          {getSpareCarrierModels(selSpareCarrierBrand).map((c) => <option key={c.id} value={c.id}>{c.model} ({c.carrierWeightLbs} lbs)</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <NumberInput label="Carrier Weight" value={config.manualSpareCarrierWeightLbs} onChange={(v) => update("manualSpareCarrierWeightLbs", v)} unit="lbs" />
+                  )}
+                  <NumberInput label="Spare Tire Weight" value={config.spareTireWeightLbs} onChange={(v) => update("spareTireWeightLbs", v)} unit="lbs" hint="Weight of the spare tire itself" />
+                </div>
+              )}
+
+              {/* Recovery Gear */}
+              <Toggle label="Recovery Gear" checked={config.hasRecoveryGear} onChange={(v) => update("hasRecoveryGear", v)} />
+              {config.hasRecoveryGear && (
+                <div className="pl-4 space-y-3">
+                  <Toggle label="Manual Entry" checked={config.useManualRecovery} onChange={(v) => update("useManualRecovery", v)} hint="Enter total weight manually instead of selecting items" />
+                  {!config.useManualRecovery ? (
+                    <div className="space-y-2">
+                      <p className="text-[10px] text-muted-foreground">Select recovery items you carry:</p>
+                      {recoveryDatabase.map((item) => {
+                        const isSelected = config.recoveryGear.some((g) => g.id === item.id);
+                        return (
+                          <label key={item.id} className="flex items-center gap-2 cursor-pointer group">
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  update("recoveryGear", [...config.recoveryGear, item]);
+                                } else {
+                                  update("recoveryGear", config.recoveryGear.filter((g) => g.id !== item.id));
+                                }
+                              }}
+                              className="accent-accent"
+                            />
+                            <span className="text-xs group-hover:text-primary transition-colors">
+                              {item.brand} {item.model} ({item.weightLbs} lbs)
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <NumberInput label="Total Recovery Gear Weight" value={config.manualRecoveryWeightLbs} onChange={(v) => update("manualRecoveryWeightLbs", v)} unit="lbs" />
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* ── Running Total ─── */}
+            {result.vehicleModsWeightLbs > 0 && (
+              <div className="bg-amber-500/5 border border-amber-500/30 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wide">Vehicle Mods Total</span>
+                  <span className="text-lg font-extrabold">{result.vehicleModsWeightLbs} lbs</span>
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  {result.vehiclePayload.rating > 0
+                    ? `${Math.round((result.vehicleModsWeightLbs / result.vehiclePayload.rating) * 100)}% of payload used before roof load`
+                    : "Select a vehicle to see payload impact"}
+                </p>
+              </div>
+            )}
+          </div>
+        </Section>
+
+        {/* ─── Section 6: Additional Load ─────────────────────── */}
         <Section
           title="Cargo & Occupants"
           icon={Users}
@@ -1234,7 +1686,7 @@ export default function RigSafeConfigurator() {
           </div>
         </Section>
 
-        {/* ─── Section 6: Results Dashboard ───────────────────── */}
+        {/* ─── Section 7: Results Dashboard ───────────────────── */}
         <Section
           title="Results Dashboard"
           icon={Ruler}
@@ -1406,22 +1858,6 @@ export default function RigSafeConfigurator() {
               </div>
             )}
 
-            {/* SVG Visualization */}
-            <RigSafeSvg
-              bodyType={bodyType}
-              vehicleKey={!config.useManual && config.vehicle ? vehicleToSilhouetteId(config.vehicle.make, config.vehicle.model, config.vehicle.trim) : undefined}
-              showTonneau={config.hasTonneau}
-              showRack={true}
-              showTent={config.hasTent}
-              showAnnex={config.hasAnnex}
-              showAwning={config.hasAwning}
-              awningSide={config.awningSide}
-              annexSide={config.annexSide}
-              loadStatus={overallLoadStatus}
-              totalHeightIn={result.totalHeightIn}
-              vehicleHeightIn={activeVehicle?.overallHeightIn ?? 76}
-            />
-
             {/* Warnings */}
             {result.warnings.length > 0 && (
               <div>
@@ -1431,7 +1867,7 @@ export default function RigSafeConfigurator() {
             )}
 
             {/* Product Recommendations */}
-            {(config.rack || config.tent || config.awning) && (
+            {(config.rack || config.tent || config.awning || config.frontBumper || config.rearBumper || config.winch || config.drawers || config.fridge || config.waterTank || config.skidPlates || config.spareCarrier || config.solarPanels || config.lightBar || config.slideKitchen) && (
               <div className="bg-card border border-border rounded-lg p-4 space-y-3">
                 <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Product Links</h4>
                 <div className="space-y-2">
@@ -1475,6 +1911,61 @@ export default function RigSafeConfigurator() {
                       <ExternalLink className="w-3 h-3" /> {config.tonneau.brand} {config.tonneau.model}
                     </a>
                   )}
+                  {config.frontBumper && (
+                    <a href={config.frontBumper.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                      <ExternalLink className="w-3 h-3" /> {config.frontBumper.brand} {config.frontBumper.model}
+                    </a>
+                  )}
+                  {config.rearBumper && (
+                    <a href={config.rearBumper.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                      <ExternalLink className="w-3 h-3" /> {config.rearBumper.brand} {config.rearBumper.model}
+                    </a>
+                  )}
+                  {config.winch && (
+                    <a href={config.winch.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                      <ExternalLink className="w-3 h-3" /> {config.winch.brand} {config.winch.model}
+                    </a>
+                  )}
+                  {config.drawers && (
+                    <a href={config.drawers.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                      <ExternalLink className="w-3 h-3" /> {config.drawers.brand} {config.drawers.model}
+                    </a>
+                  )}
+                  {config.fridge && (
+                    <a href={config.fridge.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                      <ExternalLink className="w-3 h-3" /> {config.fridge.brand} {config.fridge.model}
+                    </a>
+                  )}
+                  {config.slideKitchen && (
+                    <a href={config.slideKitchen.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                      <ExternalLink className="w-3 h-3" /> {config.slideKitchen.brand} {config.slideKitchen.model}
+                    </a>
+                  )}
+                  {config.waterTank && (
+                    <a href={config.waterTank.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                      <ExternalLink className="w-3 h-3" /> {config.waterTank.brand} {config.waterTank.model}
+                    </a>
+                  )}
+                  {config.skidPlates && (
+                    <a href={config.skidPlates.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                      <ExternalLink className="w-3 h-3" /> {config.skidPlates.brand} {config.skidPlates.model}
+                    </a>
+                  )}
+                  {config.spareCarrier && (
+                    <a href={config.spareCarrier.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                      <ExternalLink className="w-3 h-3" /> {config.spareCarrier.brand} {config.spareCarrier.model}
+                    </a>
+                  )}
+                  {config.solarPanels && (
+                    <a href={config.solarPanels.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                      <ExternalLink className="w-3 h-3" /> {config.solarPanels.brand} {config.solarPanels.model}
+                    </a>
+                  )}
+                  {config.lightBar && (
+                    <a href={config.lightBar.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                      <ExternalLink className="w-3 h-3" /> {config.lightBar.brand} {config.lightBar.model}
+                    </a>
+                  )}
                 </div>
               </div>
             )}
@@ -1513,6 +2004,7 @@ export default function RigSafeConfigurator() {
               weightBreakdown: result.weightBreakdown,
               productLinks,
             };
+            trackEvent("pe_pdf_exported", { tool: "rigsafe" });
             generateRigSafePdf(pdfData);
           }}
           className="flex items-center gap-2 text-xs font-bold uppercase text-primary hover:text-primary/80 transition-colors"

@@ -7,6 +7,7 @@ import {
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
+import { trackEvent } from "@/lib/analytics";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import ZipLookup from "@/components/tools/ZipLookup";
@@ -144,6 +145,7 @@ export default function KitBuilder() {
       }
     } catch {
     }
+    trackEvent("pe_tool_view", { tool: "72hr-kit" });
     setInitialized(true);
   }, []);
 
@@ -205,6 +207,7 @@ export default function KitBuilder() {
     } else {
       setShowResults(true);
       setStep(totalSteps);
+      trackEvent("pe_report_generated", { tool: "72hr-kit" });
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 100);

@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
+import { trackEvent } from "@/lib/analytics";
 import {
   Shield, Zap, CloudLightning, AlertTriangle, Snowflake, Flame,
   ArrowRight, RotateCcw, ChevronLeft, ExternalLink, Share2,
@@ -84,6 +85,7 @@ export default function SHTFSimulator() {
     setHistory([]);
     setFadeKey((k) => k + 1);
     setPhase("play");
+    trackEvent("pe_scenario_selected", { scenario: scenario.id });
   }, []);
 
   const makeChoice = useCallback(
@@ -105,6 +107,10 @@ export default function SHTFSimulator() {
 
       if (choice.nextNodeId === "end") {
         setPhase("result");
+        if (selectedScenario) {
+          const endResult = getEndResult(selectedScenario, newScore);
+          trackEvent("pe_scenario_completed", { scenario: selectedScenario.id, outcome: endResult.rating, score: newScore });
+        }
       } else {
         setCurrentNodeId(choice.nextNodeId);
       }

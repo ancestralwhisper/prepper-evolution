@@ -21,6 +21,7 @@ import SupportFooter from "@/components/tools/SupportFooter";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import InstallButton from "@/components/tools/InstallButton";
+import { trackEvent } from "@/lib/analytics";
 
 // ─── SVG Gauge Component ─────────────────────────────────────────────
 
@@ -447,6 +448,7 @@ export default function VehicleProfileEditor() {
 
   // ─── Load from localStorage ─────────────────────────────────────
   useEffect(() => {
+    trackEvent("pe_tool_view", { tool: "vehicle-profile" });
     try {
       const saved = localStorage.getItem(VEHICLE_PROFILE_KEY);
       if (saved) {
@@ -503,6 +505,7 @@ export default function VehicleProfileEditor() {
     if (!yearTrim) return;
     const stock = findVehicle(selMake, selModel, yearTrim);
     if (stock) {
+      trackEvent("pe_vehicle_selected", { tool: "vehicle-profile", vehicle: [selMake, selModel, yearTrim].join(" ") });
       setProfile((prev) => applyStockVehicle(stock, prev));
     }
   };

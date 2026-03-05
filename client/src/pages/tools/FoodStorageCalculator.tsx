@@ -8,6 +8,7 @@ import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
+import { trackEvent } from "@/lib/analytics";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import {
@@ -59,6 +60,7 @@ export default function FoodStorageCalculator() {
   });
 
   useEffect(() => {
+    trackEvent("pe_tool_view", { tool: "food-storage" });
     const params = new URLSearchParams(window.location.search);
     const m = params.get("m");
     const f = params.get("f");

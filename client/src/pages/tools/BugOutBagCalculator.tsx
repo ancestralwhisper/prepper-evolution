@@ -7,6 +7,7 @@ import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
+import { trackEvent } from "@/lib/analytics";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import {
@@ -67,6 +68,7 @@ export default function BugOutBagCalculator() {
       });
       setSelected(gear);
     }
+    trackEvent("pe_tool_view", { tool: "bug-out-bag" });
     setInitialized(true);
   }, []);
 
@@ -117,6 +119,7 @@ export default function BugOutBagCalculator() {
     const id = `custom-${Date.now()}`;
     setCustomItems((prev) => [...prev, { id, name, weightOz: weight, category: customCat }]);
     setSelected((prev) => ({ ...prev, [id]: 1 }));
+    trackEvent("pe_gear_added", { tool: "bug-out-bag", item: customName, category: customCat });
     setCustomName("");
     setCustomWeightVal("");
   };

@@ -28,6 +28,7 @@ import RigRatedShare from "./RigRatedShare";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
+import { trackEvent } from "@/lib/analytics";
 import ToolSafetyDisclaimer from "@/components/tools/ToolSafetyDisclaimer";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import InstallButton from "@/components/tools/InstallButton";
@@ -302,6 +303,8 @@ export default function RigRatedConfigurator() {
 
   // ─── Load from localStorage ────────────────────────────────────
   useEffect(() => {
+    trackEvent("pe_tool_view", { tool: "rigrated" });
+
     try {
       const saved = localStorage.getItem(RIGRATED_KEY);
       if (saved) {
@@ -367,6 +370,7 @@ export default function RigRatedConfigurator() {
     if (machine) {
       update("machine", { ...machine, year: selYear as number });
       update("useManual", false);
+      trackEvent("pe_machine_selected", { tool: "rigrated", machine: `${selYear} ${selMake} ${selModel} ${trim}` });
     }
   }, [selMake, selModel, selYear, update]);
 
@@ -603,7 +607,14 @@ export default function RigRatedConfigurator() {
                   <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                   <select
                     value={config.selectedSuspension ?? ""}
-                    onChange={(e) => update("selectedSuspension", e.target.value || null)}
+                    onChange={(e) => {
+                      const id = e.target.value || null;
+                      update("selectedSuspension", id);
+                      if (id) {
+                        const p = suspensionProducts.find((sp) => sp.id === id);
+                        if (p) trackEvent("pe_suspension_selected", { brand: p.brand, model: p.model });
+                      }
+                    }}
                     className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
                     disabled={!config.selectedSuspension}
                   >
