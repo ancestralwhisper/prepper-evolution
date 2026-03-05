@@ -7,19 +7,26 @@ export default function SupportFooter() {
       <div className="flex items-center gap-2 mb-3">
         <Heart className="w-5 h-5 text-primary flex-shrink-0" />
         <h4 className="text-sm font-extrabold uppercase tracking-wide">
-          Keep These Tools Free
+          Look, No Bullshit:
         </h4>
       </div>
-      <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-        Every tool on Prepper Evolution is <strong className="text-foreground">free forever</strong> &mdash;
-        no ads, no forced emails, no upsells. The site runs on affiliate commissions from gear
-        links and direct support from people who get real value out of it.
-      </p>
-      <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-        If these tools helped you prep smarter or dial in your setup, the easiest way to keep
-        them free is to <strong className="text-foreground">shop through the affiliate links</strong> in
-        your report. Or if you just want to say thanks:
-      </p>
+      <div className="text-sm text-muted-foreground leading-relaxed space-y-3 mb-4">
+        <p>
+          Prepper Evolution tools are <strong className="text-foreground">free. Always will be.</strong> No ads, no email hustle, no paywall games.
+        </p>
+        <p>
+          They stay running because when people buy gear they were getting anyway, they click our affiliate links. A few guys also drop a couple bucks straight-up when the site actually saves their ass or makes shit easier.
+        </p>
+        <p>
+          It costs real money to keep this going &mdash; servers, updating trails/permits/FEMA crap, field testing, new features, making sure it loads when you&apos;re two bars deep in the sticks.
+        </p>
+        <p>
+          If any calculator, builder, or report helped you pack right, ditch dead weight, or just feel more squared away&hellip; and you&apos;re buying anything from the list anyway &mdash; <strong className="text-foreground">use the affiliate links in your report.</strong> You pay the same price (sometimes less). I get a small cut that keeps this alive. That&apos;s the deal.
+        </p>
+        <p>
+          Not shopping right now? No sweat. If it helped and you wanna throw a coffee or a few bucks my way, it&apos;s appreciated. If not, we&apos;re still good.
+        </p>
+      </div>
 
       <a
         href="https://buymeacoffee.com/prepperevolution"
@@ -32,8 +39,11 @@ export default function SupportFooter() {
         <ExternalLink className="w-3.5 h-3.5 opacity-60" />
       </a>
 
-      <p className="text-xs text-muted-foreground mt-3">
-        Thanks for helping keep it going <span className="text-red-500">&hearts;</span>
+      <p className="text-sm text-muted-foreground mt-4 leading-relaxed">
+        Thanks for using it, man. Stay sharp.
+      </p>
+      <p className="text-sm font-bold text-foreground mt-1">
+        &mdash; Mike &amp; the crew
       </p>
     </div>
   );
