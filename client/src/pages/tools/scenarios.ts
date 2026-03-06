@@ -69,6 +69,10 @@ const GEAR = {
     name: "Jackery Explorer 1000 Plus",
     url: "https://www.amazon.com/dp/B0CFVBGWBT?tag=prepperevo-20",
   },
+  ecoflowDelta3: {
+    name: "EcoFlow DELTA 3 Plus",
+    url: "https://www.amazon.com/dp/B0GQBJ2SCT?tag=prepperevo-20",
+  },
   ecoflowDelta2: {
     name: "EcoFlow DELTA 2",
     url: "https://www.amazon.com/dp/B0B9XB57XM?tag=prepperevo-20",
@@ -371,10 +375,10 @@ const powerGridFailure: Scenario = {
       ],
       gearRecommendations: [
         {
-          name: GEAR.ecoflowDelta2.name,
+          name: GEAR.ecoflowDelta3.name,
           reason:
             "1,024Wh of power in a portable package. Run a furnace blower, charge phones, and power a radio for days. This is your first buy.",
-          url: GEAR.ecoflowDelta2.url,
+          url: GEAR.ecoflowDelta3.url,
         },
         {
           name: GEAR.sawyerSqueeze.name,
@@ -1561,10 +1565,10 @@ const winterStorm: Scenario = {
       ],
       gearRecommendations: [
         {
-          name: GEAR.ecoflowDelta2.name,
+          name: GEAR.ecoflowDelta3.name,
           reason:
             "1,024Wh of portable power. Run a space heater, electric kettle, and charge devices. This single item changes everything in a winter power outage.",
-          url: GEAR.ecoflowDelta2.url,
+          url: GEAR.ecoflowDelta3.url,
         },
         {
           name: GEAR.renogy200w.name,

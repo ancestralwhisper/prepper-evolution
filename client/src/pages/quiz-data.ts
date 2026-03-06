@@ -193,7 +193,7 @@ export const scoreRanges: ScoreRange[] = [
       {
         name: "Anker 737 Power Bank (24,000mAh)",
         url: "https://www.amazon.com/dp/B09VPHVT2Z?tag=prepperevo-20",
-        reason: "Portable phone charger that keeps your devices alive for days. Charge your phone 5+ times on a single battery.",
+        reason: "140W 3-port power bank that keeps your devices alive for days. Charge your phone 5+ times on a single battery.",
       },
       {
         name: "LifeStraw Peak Series",
@@ -292,9 +292,9 @@ export const scoreRanges: ScoreRange[] = [
         reason: "Pairs with any power station. 200W recharges a 1000Wh station in about 5-6 hours.",
       },
       {
-        name: "EcoFlow DELTA 2",
-        url: "https://www.amazon.com/dp/B0B9XB57XM?tag=prepperevo-20",
-        reason: "1024Wh with 1800W output. Charges from solar, car, or wall. Expandable to 3kWh.",
+        name: "EcoFlow DELTA 3 Plus",
+        url: "https://www.amazon.com/dp/B0GQBJ2SCT?tag=prepperevo-20",
+        reason: "1024Wh LFP with 1800W output. UPS mode, 140W USB-C, expandable to 5kWh. 4000+ cycle lifespan.",
       },
       {
         name: "Garmin inReach Mini 3 Plus",
@@ -340,9 +340,9 @@ export const scoreRanges: ScoreRange[] = [
         reason: "Add or upgrade your solar capability. Pair with a high-capacity power station.",
       },
       {
-        name: "EcoFlow DELTA 2",
-        url: "https://www.amazon.com/dp/B0B9XB57XM?tag=prepperevo-20",
-        reason: "Expandable power for long-term off-grid capability. 1800W pure sine wave output.",
+        name: "EcoFlow DELTA 3 Plus",
+        url: "https://www.amazon.com/dp/B0GQBJ2SCT?tag=prepperevo-20",
+        reason: "Expandable LFP power for long-term off-grid capability. 1800W output, UPS mode, 4000+ cycles.",
       },
       {
         name: "5.11 RUSH72 Backpack",
