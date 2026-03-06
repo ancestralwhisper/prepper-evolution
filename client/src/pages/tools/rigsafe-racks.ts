@@ -49,7 +49,7 @@ export const rackDatabase: RackEntry[] = [
     model: "Elevate FS",
     type: "bed-rack",
     weightLbs: 85,
-    staticLbs: 800,
+    staticLbs: 750,
     onRoadDynamicLbs: 500,
     offRoadDynamicLbs: 250,
     heightSettings: [18, 23, 28],
@@ -325,7 +325,7 @@ export function getRacksByType(type: RackEntry["type"]): RackEntry[] {
 
 export function getRackBrands(type?: RackEntry["type"]): string[] {
   const filtered = type ? rackDatabase.filter((r) => r.type === type) : rackDatabase;
-  return Array.from(new Set(filtered.map((r) => r.brand))).sort();
+  return [...new Set(filtered.map((r) => r.brand))].sort();
 }
 
 export function getRackModels(brand: string, type?: RackEntry["type"]): RackEntry[] {

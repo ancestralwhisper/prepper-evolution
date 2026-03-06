@@ -179,6 +179,42 @@ export const fridgeDatabase: FridgeEntry[] = [
     notes: "48Qt dual-zone option. App control. Best value in the 45L class.",
   },
 
+  // ─── ECOFLOW GLACIER ─────────────────────────────────────────────────────
+
+  {
+    id: "ecoflow-glacier-35",
+    brand: "EcoFlow",
+    model: "GLACIER Classic 35L",
+    type: "fridge-freezer",
+    weightLbs: 39.7,
+    capacityQts: 37,    // 35L
+    drawAmps: 5.0,      // ~60W / 12V
+    affiliateUrl: "https://www.amazon.com/dp/B0F4DP9BKH?tag=prepperevo-20",
+    notes: "Dual-zone (fridge + freezer). Detachable battery option. Ice-making mode. App control via WiFi/BT.",
+  },
+  {
+    id: "ecoflow-glacier-45",
+    brand: "EcoFlow",
+    model: "GLACIER Classic 45L",
+    type: "fridge-freezer",
+    weightLbs: 46.3,
+    capacityQts: 48,    // 45L
+    drawAmps: 5.5,      // ~66W / 12V
+    affiliateUrl: "https://www.amazon.com/dp/B0FS6T2539?tag=prepperevo-20",
+    notes: "Dual-zone. Same feature set as 35L in a larger package. Good for 2-4 person trips.",
+  },
+  {
+    id: "ecoflow-glacier-55",
+    brand: "EcoFlow",
+    model: "GLACIER Classic 55L",
+    type: "fridge-freezer",
+    weightLbs: 52.9,
+    capacityQts: 58,    // 55L
+    drawAmps: 6.0,      // ~72W / 12V
+    affiliateUrl: "https://www.amazon.com/dp/B0FS68S9V6?tag=prepperevo-20",
+    notes: "Largest GLACIER. Dual-zone. Pairs perfectly with DELTA 3 series for extended off-grid use.",
+  },
+
   // ─── ALPICOOL ────────────────────────────────────────────────────────────
 
   {

@@ -913,12 +913,34 @@ export function computeWarnings(config: RigSafeConfig, result: Omit<RigSafeResul
     w.push({ level: "warning", message: `Tonneau fold clearance only ${result.tonneauClearanceIn}". May interfere with rack. Need 2"+ gap.` });
   }
 
+  // Tent open-side awareness
+  if (config.hasTent && config.tent && config.tent.openSide !== "either") {
+    const side = config.tent.openSide;
+    const capSide = side.charAt(0).toUpperCase() + side.slice(1);
+    w.push({ level: "info", message: `${config.tent.brand} ${config.tent.model} opens ${capSide}-side ONLY. Entry and ladder must be on the ${side} side of the vehicle.` });
+
+    // Annex must match tent open side (annex hangs from tent entry)
+    if (config.hasAnnex && config.annexSide !== side) {
+      w.push({ level: "danger", message: `Annex set to ${config.annexSide} side but tent only opens ${side} side. Annex attaches below tent entry — move annex to ${side} side.` });
+    }
+  }
+
   // Awning/annex conflict
   if (config.hasAwning && config.hasAnnex) {
     if (config.awningSide === config.annexSide) {
       w.push({ level: "danger", message: `${config.awningSide.charAt(0).toUpperCase() + config.awningSide.slice(1)}-side awning + ${config.annexSide}-side annex = CONFLICT. Both deploy to the same side.` });
     } else {
       w.push({ level: "info", message: `${config.awningSide.charAt(0).toUpperCase() + config.awningSide.slice(1)}-side awning + ${config.annexSide}-side annex = compatible layout.` });
+    }
+  }
+
+  // Awning/tent side info (not a conflict — many people want shade at tent entry)
+  if (config.hasAwning && config.hasTent && config.tent && config.tent.openSide !== "either") {
+    const tentSide = config.tent.openSide;
+    if (config.awningSide === tentSide) {
+      w.push({ level: "info", message: `Awning and tent entry both on ${tentSide} side — awning provides shade at tent ladder. Good combo.` });
+    } else {
+      w.push({ level: "info", message: `Awning on ${config.awningSide} side, tent opens ${tentSide} side — shade and entry are on opposite sides.` });
     }
   }
 

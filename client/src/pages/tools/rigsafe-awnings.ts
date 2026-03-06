@@ -11,6 +11,7 @@ export interface AwningEntry {
   brand: string;
   model: string;
   type: "270" | "180" | "360" | "batwing";
+  mountSide: "driver" | "passenger" | "either";  // which side the awning mounts / deploys from
   totalWeightLbs: number;
   mountedBracketWeightLbs: number;  // weight on rack when deployed
   deployedCoverageSqFt: number;
@@ -30,6 +31,7 @@ export const awningDatabase: AwningEntry[] = [
     brand: "OVS",
     model: "Nomadic 270 HD",
     type: "270",
+    mountSide: "either",
     totalWeightLbs: 75,
     mountedBracketWeightLbs: 15,
     deployedCoverageSqFt: 129,
@@ -45,6 +47,7 @@ export const awningDatabase: AwningEntry[] = [
     brand: "OVS",
     model: "Nomadic 270 LT",
     type: "270",
+    mountSide: "either",
     totalWeightLbs: 55,
     mountedBracketWeightLbs: 12,
     deployedCoverageSqFt: 100,
@@ -60,6 +63,7 @@ export const awningDatabase: AwningEntry[] = [
     brand: "OVS",
     model: "Nomadic 180",
     type: "180",
+    mountSide: "either",
     totalWeightLbs: 35,
     mountedBracketWeightLbs: 10,
     deployedCoverageSqFt: 56,
@@ -76,6 +80,7 @@ export const awningDatabase: AwningEntry[] = [
     brand: "23Zero",
     model: "Peregrine 270",
     type: "270",
+    mountSide: "either",
     totalWeightLbs: 68,
     mountedBracketWeightLbs: 14,
     deployedCoverageSqFt: 120,
@@ -91,6 +96,7 @@ export const awningDatabase: AwningEntry[] = [
     brand: "23Zero",
     model: "Peregrine 180",
     type: "180",
+    mountSide: "either",
     totalWeightLbs: 32,
     mountedBracketWeightLbs: 10,
     deployedCoverageSqFt: 50,
@@ -107,6 +113,7 @@ export const awningDatabase: AwningEntry[] = [
     brand: "ARB",
     model: "2500 Touring Awning",
     type: "180",
+    mountSide: "either",
     totalWeightLbs: 28,
     mountedBracketWeightLbs: 10,
     deployedCoverageSqFt: 48,
@@ -124,6 +131,7 @@ export const awningDatabase: AwningEntry[] = [
     brand: "Ironman",
     model: "270 Instant Awning",
     type: "270",
+    mountSide: "either",
     totalWeightLbs: 62,
     mountedBracketWeightLbs: 13,
     deployedCoverageSqFt: 110,
@@ -142,6 +150,7 @@ export const awningDatabase: AwningEntry[] = [
     brand: "Rhino Rack",
     model: "Batwing Awning",
     type: "batwing",
+    mountSide: "either",
     totalWeightLbs: 58,
     mountedBracketWeightLbs: 12,
     deployedCoverageSqFt: 118,
@@ -158,6 +167,7 @@ export const awningDatabase: AwningEntry[] = [
     brand: "Front Runner",
     model: "Easy-Out Awning",
     type: "180",
+    mountSide: "either",
     totalWeightLbs: 25,
     mountedBracketWeightLbs: 10,
     deployedCoverageSqFt: 45,
@@ -174,6 +184,7 @@ export const awningDatabase: AwningEntry[] = [
     brand: "Darche",
     model: "Eclipse 270",
     type: "270",
+    mountSide: "either",
     totalWeightLbs: 65,
     mountedBracketWeightLbs: 14,
     deployedCoverageSqFt: 115,
@@ -192,6 +203,7 @@ export const awningDatabase: AwningEntry[] = [
     brand: "Tuff Stuff",
     model: "270 Awning",
     type: "270",
+    mountSide: "either",
     totalWeightLbs: 58,
     mountedBracketWeightLbs: 12,
     deployedCoverageSqFt: 105,
@@ -208,6 +220,7 @@ export const awningDatabase: AwningEntry[] = [
     brand: "Clevershade",
     model: "270",
     type: "270",
+    mountSide: "either",
     totalWeightLbs: 45,
     mountedBracketWeightLbs: 10,
     deployedCoverageSqFt: 95,
@@ -221,7 +234,7 @@ export const awningDatabase: AwningEntry[] = [
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 export function getAwningBrands(): string[] {
-  return Array.from(new Set(awningDatabase.map((a) => a.brand))).sort();
+  return [...new Set(awningDatabase.map((a) => a.brand))].sort();
 }
 
 export function getAwningModels(brand: string): AwningEntry[] {
