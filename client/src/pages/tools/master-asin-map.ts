@@ -245,7 +245,7 @@ export const MASTER_ASIN_MAP: Record<CategoryKey, ProductEntry[]> = {
   "12v-fridges": [
     p("B083G3NBNZ", "Dometic CFX3 55IM Powered Cooler", "12V Fridges"),
     p("B085MM9B2D", "Dometic CFX3 35 Powered Cooler", "12V Fridges"),
-    p("B07DVBJPGB", "ARB Classic Series II Fridge Freezer", "12V Fridges"),
+    p("B07Q75PB68", "ARB Classic Series II Fridge Freezer", "12V Fridges"),
     p("B07TXG7G1Y", "ICECO VL60 Portable Fridge Freezer", "12V Fridges"),
     p(
       "B0BPM7C8RT",
@@ -285,7 +285,7 @@ export const MASTER_ASIN_MAP: Record<CategoryKey, ProductEntry[]> = {
   "camp-cooking": [
     p("B0C31B18Y2", "BioLite CampStove 2+ Wood Burning Stove", "Camp Cooking"),
     p("B0006VORDY", "Camp Chef Explorer 2X Two-Burner Stove", "Camp Cooking"),
-    p("B0CH7YYXZC", "Solo Stove Ranger 2.0 Fire Pit", "Camp Cooking"),
+    p("B0B7BG9YPW", "Solo Stove Ranger 2.0 Fire Pit", "Camp Cooking"),
     p("B0DXQC9B14", "Jetboil Flash Cooking System", "Camp Cooking"),
   ],
 
