@@ -44,7 +44,7 @@ export const fridgeDatabase: FridgeEntry[] = [
     type: "fridge-freezer",
     weightLbs: 41,
     capacityQts: 49,    // 46L
-    drawAmps: 8.0,
+    drawAmps: 8.2,      // rated DC input current per Dometic spec
     affiliateUrl: "https://www.amazon.com/dp/B0F9LFBJHF?tag=prepperevo-20",
     notes: "46L / 67-can capacity. Most popular mid-size Dometic for overland builds.",
   },
@@ -80,7 +80,7 @@ export const fridgeDatabase: FridgeEntry[] = [
     type: "fridge-freezer",
     weightLbs: 53,
     capacityQts: 50,
-    drawAmps: 4.5,      // ~0.87 Ah average cycling; peak ~4.5A running
+    drawAmps: 4.5,      // estimated compressor running draw; ARB publishes 0.87 Ah/h cycling avg
     affiliateUrl: "https://www.amazon.com/dp/B07Q75PB68?tag=prepperevo-20",
     notes: "The gold standard for expedition use. Dual-zone compartment lid. Rock-solid build quality.",
   },
@@ -186,9 +186,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     brand: "EcoFlow",
     model: "GLACIER Classic 35L",
     type: "fridge-freezer",
-    weightLbs: 39.7,
+    weightLbs: 45,
     capacityQts: 37,    // 35L
-    drawAmps: 5.0,      // ~60W / 12V
+    drawAmps: 4.6,      // 55W rated compressor / 12V; 0.57 Ah/h cycling avg
     affiliateUrl: "https://www.amazon.com/dp/B0F4DP9BKH?tag=prepperevo-20",
     notes: "Dual-zone (fridge + freezer). Detachable battery option. Ice-making mode. App control via WiFi/BT.",
   },
@@ -197,9 +197,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     brand: "EcoFlow",
     model: "GLACIER Classic 45L",
     type: "fridge-freezer",
-    weightLbs: 46.3,
+    weightLbs: 51,
     capacityQts: 48,    // 45L
-    drawAmps: 5.5,      // ~66W / 12V
+    drawAmps: 4.6,      // 55W rated compressor / 12V; same compressor as 35L
     affiliateUrl: "https://www.amazon.com/dp/B0FS6T2539?tag=prepperevo-20",
     notes: "Dual-zone. Same feature set as 35L in a larger package. Good for 2-4 person trips.",
   },
@@ -208,9 +208,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     brand: "EcoFlow",
     model: "GLACIER Classic 55L",
     type: "fridge-freezer",
-    weightLbs: 52.9,
+    weightLbs: 55.6,
     capacityQts: 58,    // 55L
-    drawAmps: 6.0,      // ~72W / 12V
+    drawAmps: 4.6,      // 55W rated compressor / 12V; same compressor as 35L/45L
     affiliateUrl: "https://www.amazon.com/dp/B0FS68S9V6?tag=prepperevo-20",
     notes: "Largest GLACIER. Dual-zone. Pairs perfectly with DELTA 3 series for extended off-grid use.",
   },
