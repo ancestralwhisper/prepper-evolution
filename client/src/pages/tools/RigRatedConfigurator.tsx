@@ -29,6 +29,8 @@ import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
 import { trackEvent } from "@/lib/analytics";
+import TrailIntel from "@/components/tools/TrailIntel";
+import { Radar } from "lucide-react";
 import ToolSafetyDisclaimer from "@/components/tools/ToolSafetyDisclaimer";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import InstallButton from "@/components/tools/InstallButton";
@@ -276,6 +278,7 @@ export default function RigRatedConfigurator() {
   // Section open state
   const [sections, setSections] = useState({
     machine: true,
+    trailIntel: false,
     accessories: false,
     gear: false,
     trails: false,
@@ -284,6 +287,7 @@ export default function RigRatedConfigurator() {
     tripPlan: false,
     results: true,
   });
+  const [trailThreatLevel, setTrailThreatLevel] = useState<string | null>(null);
 
   // Machine selector state
   const [selMake, setSelMake] = useState("");
@@ -948,6 +952,24 @@ export default function RigRatedConfigurator() {
                 </p>
               </div>
             )}
+          </div>
+        </Section>
+
+        {/* ─── Trail Intel ────────────────────────────────────────── */}
+        <Section
+          title="Trail Intel"
+          icon={Radar}
+          open={sections.trailIntel}
+          onToggle={() => toggleSection("trailIntel")}
+          iconColor="text-orange-400"
+          badge={trailThreatLevel && trailThreatLevel !== "clear" ? trailThreatLevel.toUpperCase() : undefined}
+        >
+          <div className="px-4">
+            <TrailIntel
+              compact
+              showZipInput
+              onDataLoaded={(d) => setTrailThreatLevel(d.overallThreatLevel)}
+            />
           </div>
         </Section>
 
