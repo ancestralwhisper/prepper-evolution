@@ -1,0 +1,26 @@
+# Prepper Evolution
+> Adapt. Prepare. Evolve. Expert gear reviews and field-tested guides for preppers and overlanders.
+
+## About
+Prepper Evolution is a practical preparedness and overlanding resource built by real people who have lived through power outages, supply chain disruptions, and severe weather. We focus on gear that works, not tactical fantasies.
+
+## Content
+- Emergency preparedness guides for beginners and experienced preppers
+- Bug-out bag building guides with real gear recommendations
+- Water filtration and storage systems
+- Overlanding gear reviews (rooftop tents, fridges, solar, racks)
+- Interactive tools: calculators for bug-out bags, water storage, food storage, solar power, 72-hour kits
+- Vehicle profile configurator for overlanding setups
+- Product reviews with hands-on testing
+
+## Key Pages
+- Homepage: https://prepperevolution.com/
+- Articles: https://prepperevolution.com/articles/beginners-guide-to-prepping
+- Bug Out Bags: https://prepperevolution.com/articles/building-your-first-bug-out-bag
+- Water Systems: https://prepperevolution.com/articles/best-off-grid-water-filtration-systems
+- Overlanding Guide: https://prepperevolution.com/articles/overlanding-preparedness-guide
+- Tools: https://prepperevolution.com/tools
+
+## Contact
+- Website: https://prepperevolution.com
+- Email: info@prepperevolution.com
