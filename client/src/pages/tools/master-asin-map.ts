@@ -59,7 +59,8 @@ export type CategoryKey =
   | "overlanding-gear"
   | "lighting"
   | "camping"
-  | "emergency-medical";
+  | "emergency-medical"
+  | "vehicle-protection";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -346,6 +347,12 @@ export const MASTER_ASIN_MAP: Record<CategoryKey, ProductEntry[]> = {
       "Emergency / Medical",
       "Same ASIN as Coleman Classic Recharge 800 Lantern in lighting — verify listing"
     ),
+  ],
+  // =========================================================================
+  // VEHICLE PROTECTION (EMP / LIGHTNING / SURGE)
+  // =========================================================================
+  "vehicle-protection": [
+    p("B0BLCYSB3G", "EMP Shield Micro DC-12V", "Vehicle Protection", "On Mike's 2025 Sierra 1500"),
   ],
 };
 

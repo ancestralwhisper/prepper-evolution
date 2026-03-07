@@ -76,7 +76,7 @@ export const productArticleMap: Record<string, string> = {
   "lifestraw-personal-water-filter": "lifestraw-personal-water-filter-review",
   "berkey-water-filter": "best-water-filters-preppers-2026",
   "jackery-explorer-1000-plus": "jackery-explorer-1000-v2-review",
-  "bluetti-ac200max": "bluetti-ac200max-review",
+  "bluetti-ac200pl": "bluetti-ac200max-review",
   "ikamper-skycamp-3-0": "ikamper-skycamp-3-review",
   "roofnest-falcon-2": "roofnest-falcon-2-review-clamshell-hardshell-for-3495",
   "arb-simpson-iii": "arb-simpson-iii-review-budget-soft-shell-rtt-for-1795",

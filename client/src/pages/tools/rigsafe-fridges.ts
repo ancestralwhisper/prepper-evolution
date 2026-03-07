@@ -8,8 +8,9 @@
 //   Capacity converted from liters: 1L ≈ 1.057 qt (rounded to nearest whole qt)
 //   Amp draw: rated DC draw at 12V; compressor cycling average where noted
 //
-// NOTE: Dometic does NOT make a CFX3 65 — lineup is 35, 45, 55, 75DZ.
-//   The CFX3 75DZ is dual-zone and uses the "fridge-freezer" type accordingly.
+// NOTE: Dometic CFX3 lineup: 35, 45, 55, 75DZ (being phased out).
+//   Dometic CFX5 lineup: 25, 35, 45, 55IM, 75DZ, 95DZ (current generation).
+//   Both series included — many users already own CFX3 units.
 
 export interface FridgeEntry {
   id: string;
@@ -69,6 +70,75 @@ export const fridgeDatabase: FridgeEntry[] = [
     drawAmps: 9.6,      // rated DC draw, dual zone running
     affiliateUrl: "https://www.amazon.com/dp/B0CHXMT21Z?tag=prepperevo-20",
     notes: "75L dual-zone — independent fridge and freezer compartments. WiFi/BT app control.",
+  },
+
+  // ─── DOMETIC CFX5 ────────────────────────────────────────────────────────
+
+  {
+    id: "dometic-cfx5-25",
+    brand: "Dometic",
+    model: "CFX5 25",
+    type: "fridge-freezer",
+    weightLbs: 30,
+    capacityQts: 26,    // 25L
+    drawAmps: 9.2,      // rated 12V DC input current per Dometic spec
+    affiliateUrl: "#",
+    notes: "25L / 33-can capacity. Most compact CFX5. VIP insulation, USB QC 3.0, Bluetooth app control.",
+  },
+  {
+    id: "dometic-cfx5-35",
+    brand: "Dometic",
+    model: "CFX5 35",
+    type: "fridge-freezer",
+    weightLbs: 37,
+    capacityQts: 37,    // 35L
+    drawAmps: 7.6,      // rated 12V DC input current per Dometic spec
+    affiliateUrl: "https://www.amazon.com/dp/B0DVM1G8VM?tag=prepperevo-20",
+    notes: "35L / 50-can capacity. Vacuum Insulated Panels. TFT color display. USB QC 3.0. Bluetooth.",
+  },
+  {
+    id: "dometic-cfx5-45",
+    brand: "Dometic",
+    model: "CFX5 45",
+    type: "fridge-freezer",
+    weightLbs: 42,
+    capacityQts: 49,    // 46L
+    drawAmps: 9.4,      // rated 12V DC input current per Dometic spec
+    affiliateUrl: "#",
+    notes: "46L / 72-can capacity. Mid-size sweet spot. VIP insulation, TFT display, USB QC 3.0.",
+  },
+  {
+    id: "dometic-cfx5-55im",
+    brand: "Dometic",
+    model: "CFX5 55 IM",
+    type: "fridge-freezer",
+    weightLbs: 48,
+    capacityQts: 58,    // 55L
+    drawAmps: 9.6,      // rated 12V DC input current per Dometic spec
+    affiliateUrl: "https://www.amazon.com/dp/B0F9LFZTVC?tag=prepperevo-20",
+    notes: "55L / 83-can capacity with built-in ice maker. VIP insulation, TFT display, USB QC 3.0.",
+  },
+  {
+    id: "dometic-cfx5-75dz",
+    brand: "Dometic",
+    model: "CFX5 75DZ",
+    type: "fridge-freezer",
+    weightLbs: 60,
+    capacityQts: 79,    // 75L dual zone (45L + 30L)
+    drawAmps: 9.7,      // rated 12V DC input current per Dometic spec
+    affiliateUrl: "#",
+    notes: "75L dual-zone (45L + 30L) — independent fridge and freezer. VIP insulation, TFT display, Bluetooth.",
+  },
+  {
+    id: "dometic-cfx5-95dz",
+    brand: "Dometic",
+    model: "CFX5 95DZ",
+    type: "fridge-freezer",
+    weightLbs: 64,
+    capacityQts: 99,    // 94L dual zone
+    drawAmps: 9.8,      // rated 12V DC input current per Dometic spec (US)
+    affiliateUrl: "#",
+    notes: "94L dual-zone — largest Dometic portable cooler. 133-can capacity. For extended family trips.",
   },
 
   // ─── ARB ─────────────────────────────────────────────────────────────────

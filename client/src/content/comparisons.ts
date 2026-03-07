@@ -1497,7 +1497,7 @@ const comparisons: Comparison[] = [
     title: "Best LiFePO4 Power Stations for Overlanding & Emergencies (2026)",
     metaTitle: "Best LiFePO4 Power Stations 2026 — Bluetti, EcoFlow & Jackery",
     description:
-      "Compare the best LiFePO4 power stations for overlanding and home backup. Bluetti AC200MAX vs EcoFlow DELTA Pro 3 vs Jackery Explorer 2000 Plus vs VTOMAN FlashSpeed 1500 — capacity, cycle life, and value.",
+      "Compare the best LiFePO4 power stations for overlanding and home backup. Bluetti AC200PL vs EcoFlow DELTA Pro 3 vs Jackery Explorer 2000 Plus vs VTOMAN FlashSpeed 1500 — capacity, cycle life, and value.",
     date: "2026-02-18",
     lastUpdated: "2026-02-18",
     category: "overlanding",
@@ -1510,11 +1510,11 @@ const comparisons: Comparison[] = [
       "LiFePO4 vs. lithium-ion: LiFePO4 lasts 4,000+ cycles to 80% capacity vs. 500-800 for lithium-ion. At one charge per day, that's 10+ years of daily use. LiFePO4 is also safer (no thermal runaway), performs better in cold, and retains more capacity over time. The only downside is slightly more weight per Wh.",
       "Capacity (Wh) sizing: A 12V fridge uses ~500Wh/day. A CPAP uses ~200Wh/night. Charging devices: ~50-100Wh/day. For overlanding, 1000-2000Wh covers most needs. For home backup, 2000Wh+ handles essentials (fridge, lights, devices) for 12-24 hours.",
       "Expandable systems: If you might need more power later, choose a station that accepts expansion batteries. The EcoFlow DELTA Pro 3 expands to 48kWh — enough to power a home for days. Jackery 2000 Plus expands to 12kWh. Buying expandable now saves you from replacing the entire system later.",
-      "Solar charging speed: Faster solar input means more energy harvested per day. The EcoFlow DELTA Pro 3 accepts 2400W solar input. Bluetti AC200MAX accepts 900W. In practice, most overlanders run 200-400W of panels, but higher input capacity means faster recovery on cloudy days.",
-      "UPS (Uninterruptible Power Supply) mode: Some stations can function as a UPS for your home — when grid power fails, they switch to battery in under 20ms, keeping your fridge and internet running without interruption. The EcoFlow DELTA Pro 3 and Bluetti AC200MAX both offer this.",
+      "Solar charging speed: Faster solar input means more energy harvested per day. The EcoFlow DELTA Pro 3 accepts 2400W solar input. Bluetti AC200PL accepts 1200W. In practice, most overlanders run 200-400W of panels, but higher input capacity means faster recovery on cloudy days.",
+      "UPS (Uninterruptible Power Supply) mode: Some stations can function as a UPS for your home — when grid power fails, they switch to battery in under 20ms, keeping your fridge and internet running without interruption. The EcoFlow DELTA Pro 3 and Bluetti AC200PL both offer this.",
     ],
     verdict:
-      "The Jackery Explorer 2000 Plus is the best overall value — 2042Wh of LiFePO4, expandable to 12kWh, and fast charging at a competitive price. The EcoFlow DELTA Pro 3 is the premium pick for home backup with its 4000W output, 120/240V split-phase, and expandability to 48kWh. The Bluetti AC200MAX is the best mid-range option with excellent expandability. The VTOMAN FlashSpeed 1500 is the best budget LiFePO4 station with a built-in MPPT controller.",
+      "The Jackery Explorer 2000 Plus is the best overall value — 2042Wh of LiFePO4, expandable to 12kWh, and fast charging at a competitive price. The EcoFlow DELTA Pro 3 is the premium pick for home backup with its 4000W output, 120/240V split-phase, and expandability to 48kWh. The Bluetti AC200PL is the best mid-range option with excellent expandability. The VTOMAN FlashSpeed 1500 is the best budget LiFePO4 station with a built-in MPPT controller.",
     specLabels: [
       { key: "capacity", label: "Capacity" },
       { key: "output", label: "AC Output" },
@@ -1624,8 +1624,8 @@ const comparisons: Comparison[] = [
         },
       },
       {
-        slug: "bluetti-ac200max",
-        name: "Bluetti AC200MAX",
+        slug: "bluetti-ac200pl",
+        name: "Bluetti AC200PL",
         image:
           "https://images.unsplash.com/photo-1497440001374-f26997328c1b?w=600&q=80",
         price: "$1,599",
@@ -1634,24 +1634,24 @@ const comparisons: Comparison[] = [
         affiliateUrl:
           "https://www.amazon.com/dp/B0D17CW6KK?tag=prepperevo-20",
         verdict:
-          "The best mid-range LiFePO4 station with excellent expandability. Accepts up to two B230 or B300 expansion batteries for up to 8192Wh total. The modular approach lets you start small and build over time.",
+          "The AC200MAX successor with more power and faster charging. 2304Wh base expandable to 8448Wh. 2400W output with 3600W power lifting handles heavy loads. 30A TT-30 RV port included.",
         pros: [
-          "Expandable to 8192Wh with B300 batteries",
-          "2200W output with Bluetooth app",
-          "Wireless charging pad on top",
+          "Expandable to 8448Wh with B300 batteries",
+          "2400W output (3600W power lifting)",
+          "30A TT-30 RV port included",
           "UPS mode for home backup",
         ],
         cons: [
-          "2048Wh base — less than Jackery 2000 Plus",
-          "900W solar input — slower than EcoFlow",
+          "2304Wh base — less than Jackery 2000 Plus",
+          "1200W solar input — still slower than EcoFlow",
           "62 lbs base unit",
         ],
         specs: {
-          capacity: "2048Wh",
-          output: "2200W (4800W surge)",
-          cycles: "3500+ to 80%",
-          solar: "900W max",
-          expandable: "8192Wh (with 2x B300)",
+          capacity: "2304Wh",
+          output: "2400W (3600W power lifting)",
+          cycles: "3000+ to 80%",
+          solar: "1200W max",
+          expandable: "8448Wh (with 2x B300)",
           weight: "62 lbs",
         },
       },

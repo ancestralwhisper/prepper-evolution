@@ -59,6 +59,16 @@ const calculators: Tool[] = [
     version: "v1.3",
   },
   {
+    slug: "power-station-runtime",
+    name: "Power Station Runtime Calculator",
+    description:
+      "Already have a power station? Select it, add your devices, and see exactly how long your battery will last. Cut devices for longer runtime, or add solar to extend it.",
+    icon: BatteryCharging,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+  },
+  {
     slug: "72-hour-kit-builder",
     name: "72-Hour Kit Builder",
     description:

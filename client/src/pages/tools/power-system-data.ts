@@ -98,8 +98,11 @@ export const deviceCategoryNotes: Partial<Record<DeviceCategory, string>> = {
 export const deviceDatabase: DeviceEntry[] = [
   // ─── Refrigeration ───
   { id: "dometic-cfx3-55",  name: "Dometic CFX3 55 (55L)", watts: 45,  amps12v: 3.75, dutyCyclePct: 33, defaultHoursPerDay: 24, category: "refrigeration" },
-  { id: "arb-63qt",         name: "ARB Classic II 63QT",   watts: 45,  amps12v: 3.75, dutyCyclePct: 35, defaultHoursPerDay: 24, category: "refrigeration" },
   { id: "dometic-cfx3-75",  name: "Dometic CFX3 75DZ (75L)", watts: 55, amps12v: 4.58, dutyCyclePct: 40, defaultHoursPerDay: 24, category: "refrigeration" },
+  { id: "dometic-cfx5-45",  name: "Dometic CFX5 45 (46L)", watts: 43,  amps12v: 3.58, dutyCyclePct: 33, defaultHoursPerDay: 24, category: "refrigeration" },
+  { id: "dometic-cfx5-55im",name: "Dometic CFX5 55 IM (55L)", watts: 47, amps12v: 3.92, dutyCyclePct: 33, defaultHoursPerDay: 24, category: "refrigeration" },
+  { id: "dometic-cfx5-75dz",name: "Dometic CFX5 75DZ (75L)", watts: 61, amps12v: 5.08, dutyCyclePct: 40, defaultHoursPerDay: 24, category: "refrigeration" },
+  { id: "arb-63qt",         name: "ARB Classic II 63QT",   watts: 45,  amps12v: 3.75, dutyCyclePct: 35, defaultHoursPerDay: 24, category: "refrigeration" },
 
   // ─── Lighting ───
   { id: "led-interior",  name: "LED Interior Light",   watts: 10,  amps12v: 0.83, dutyCyclePct: 100, defaultHoursPerDay: 4, category: "lighting" },

@@ -16,6 +16,7 @@ import ZipLookup from "@/components/tools/ZipLookup";
 import type { ZipPrefixData } from "@/pages/tools/zip-types";
 import {
   deviceCategories,
+  allDevices,
   solarRegions,
   powerStations,
   solarPanels,
@@ -38,10 +39,40 @@ interface SelectedDevices {
 
 type UseCase = "emergency" | "offgrid" | "camping";
 
-const useCaseLabels: Record<UseCase, { name: string; desc: string }> = {
-  emergency: { name: "Emergency Backup", desc: "Power outage, natural disaster — keep essentials running at home" },
-  offgrid: { name: "Off-Grid Living", desc: "Cabin, homestead, or full-time off-grid setup" },
-  camping: { name: "Overlanding / Camping", desc: "Portable power for camp, vehicle, or base camp" },
+const useCaseLabels: Record<UseCase, { name: string; desc: string; living: LivingSituation }> = {
+  emergency: { name: "Emergency Backup", desc: "Power outage, natural disaster — keep essentials running at home", living: "house" },
+  offgrid: { name: "Off-Grid Living", desc: "Cabin, homestead, or full-time off-grid setup", living: "rural" },
+  camping: { name: "Overlanding / Camping", desc: "Portable power for camp, vehicle, or base camp", living: "rv" },
+};
+
+const useCasePresets: Record<UseCase, Record<string, { qty: number; hours: number }>> = {
+  emergency: {
+    "led-bulb": { qty: 3, hours: 6 },
+    "phone-charger": { qty: 2, hours: 2 },
+    "wifi-router": { qty: 1, hours: 24 },
+    "mini-fridge": { qty: 1, hours: 24 },
+    "radio-scanner": { qty: 1, hours: 12 },
+    "box-fan": { qty: 1, hours: 8 },
+    "laptop-charger": { qty: 1, hours: 4 },
+  },
+  offgrid: {
+    "led-bulb": { qty: 4, hours: 6 },
+    "phone-charger": { qty: 2, hours: 2 },
+    "wifi-router": { qty: 1, hours: 24 },
+    "full-fridge": { qty: 1, hours: 24 },
+    "laptop-charger": { qty: 1, hours: 4 },
+    "water-pump": { qty: 1, hours: 2 },
+    "ceiling-fan": { qty: 1, hours: 10 },
+    "security-camera": { qty: 1, hours: 24 },
+  },
+  camping: {
+    "12v-fridge": { qty: 1, hours: 24 },
+    "camp-lights-12v": { qty: 1, hours: 5 },
+    "phone-charger": { qty: 2, hours: 2 },
+    "laptop-charger": { qty: 1, hours: 3 },
+    "roof-fan": { qty: 1, hours: 8 },
+    "ham-radio": { qty: 1, hours: 12 },
+  },
 };
 
 export default function SolarPowerCalculator() {
@@ -94,6 +125,24 @@ export default function SolarPowerCalculator() {
     }
     const ls = params.get("ls");
     if (ls && livingSituations.some((l) => l.id === ls)) setLivingSituation(ls as LivingSituation);
+
+    if (!g) {
+      const activeUc = (uc === "offgrid" || uc === "camping") ? uc as UseCase : "emergency";
+      const preset = useCasePresets[activeUc];
+      const devices: SelectedDevices = {};
+      for (const [id, { qty, hours }] of Object.entries(preset)) {
+        const device = allDevices.find((dev) => dev.id === id);
+        devices[id] = { qty, hours, watts: device?.watts };
+      }
+      setSelected(devices);
+      if (!ls) setLivingSituation(useCaseLabels[activeUc].living);
+      const cats = new Set(Object.keys(preset).map((id) => {
+        const d = allDevices.find((dev) => dev.id === id);
+        return d?.category || "";
+      }).filter(Boolean));
+      setExpandedCats(cats);
+    }
+
     setInitialized(true);
   }, []);
 
@@ -102,6 +151,24 @@ export default function SolarPowerCalculator() {
     const data = { people, days, region, useCase, selected, livingSituation, timestamp: Date.now() };
     localStorage.setItem("pe-solar-calculator", JSON.stringify(data));
   }, [people, days, region, useCase, selected, livingSituation, initialized]);
+
+  const applyUseCase = useCallback((uc: UseCase) => {
+    setUseCase(uc);
+    setLivingSituation(useCaseLabels[uc].living);
+    const preset = useCasePresets[uc];
+    const devices: SelectedDevices = {};
+    for (const [id, { qty, hours }] of Object.entries(preset)) {
+      const device = allDevices.find((d) => d.id === id);
+      devices[id] = { qty, hours, watts: device?.watts };
+    }
+    setSelected(devices);
+    const cats = new Set(Object.keys(preset).map((id) => {
+      const d = allDevices.find((dev) => dev.id === id);
+      return d?.category || "";
+    }).filter(Boolean));
+    setExpandedCats(cats);
+    trackEvent("pe_solar_usecase", { use_case: uc });
+  }, []);
 
   const handleZipResult = useCallback((data: ZipPrefixData | null) => {
     if (data) setRegion(data.sr);
@@ -535,12 +602,12 @@ export default function SolarPowerCalculator() {
                 <h3 className="text-sm font-bold uppercase tracking-wide">Your Setup</h3>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Use Case</label>
+                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Use Case <span className="font-normal normal-case">&mdash; pre-loads common devices</span></label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {(Object.keys(useCaseLabels) as UseCase[]).map((uc) => (
                       <button
                         key={uc}
-                        onClick={() => setUseCase(uc)}
+                        onClick={() => applyUseCase(uc)}
                         className={`text-left p-3 rounded-lg border transition-colors ${
                           useCase === uc
                             ? "border-primary bg-primary/5"
