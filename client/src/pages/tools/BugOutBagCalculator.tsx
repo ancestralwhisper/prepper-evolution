@@ -445,6 +445,20 @@ export default function BugOutBagCalculator() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
+
+              {/* How This Tool Works */}
+              <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
+                <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
+                <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
+                  <p>
+                    Check off the gear you&apos;re packing, adjust quantities, and we&apos;ll track the total weight against your body weight in real time. Every item links straight to Amazon so you can price it out and buy in one shot. We&apos;ve loaded 80+ products across 11 categories &mdash; from shelter and fire to first aid and comms &mdash; so nothing gets forgotten.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Bottom line:</strong> the number one bug out bag mistake is overpacking. This tool keeps you honest with a live weight gauge so you can prioritize what actually matters and ditch the dead weight before it slows you down.
+                  </p>
+                </div>
+              </div>
+
               <div className="bg-card border border-border rounded-xl p-5">
                 <label htmlFor="body-weight" className="block text-sm font-bold mb-3 uppercase tracking-wide">
                   Your Body Weight (lbs)
@@ -788,19 +802,6 @@ export default function BugOutBagCalculator() {
                     </li>
                   ))}
                 </ul>
-              </div>
-
-              {/* How This Tool Works */}
-              <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
-                <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
-                <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
-                  <p>
-                    Check off the gear you&apos;re packing, adjust quantities, and we&apos;ll track the total weight against your body weight in real time. Every item links straight to Amazon so you can price it out and buy in one shot. We&apos;ve loaded 80+ products across 11 categories &mdash; from shelter and fire to first aid and comms &mdash; so nothing gets forgotten.
-                  </p>
-                  <p>
-                    <strong className="text-foreground">Bottom line:</strong> the number one bug out bag mistake is overpacking. This tool keeps you honest with a live weight gauge so you can prioritize what actually matters and ditch the dead weight before it slows you down.
-                  </p>
-                </div>
               </div>
 
               <DataPrivacyNotice />

@@ -167,7 +167,7 @@ export default function SolarPowerCalculator() {
       return d?.category || "";
     }).filter(Boolean));
     setExpandedCats(cats);
-    trackEvent("pe_solar_usecase", { use_case: uc });
+    trackEvent("pe_tool_started", { tool: "solar-power-calculator" });
   }, []);
 
   const handleZipResult = useCallback((data: ZipPrefixData | null) => {

@@ -11,9 +11,6 @@ export default function TrailIntelPage() {
 
   return (
     <div className="space-y-6">
-      {/* Main component */}
-      <TrailIntel showZipInput defaultCollapsed={false} />
-
       {/* How This Tool Works */}
       <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
         <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
@@ -26,6 +23,9 @@ export default function TrailIntelPage() {
           </p>
         </div>
       </div>
+
+      {/* Main component */}
+      <TrailIntel showZipInput defaultCollapsed={false} />
 
       {/* Footer stack */}
       <div className="space-y-4 no-print">

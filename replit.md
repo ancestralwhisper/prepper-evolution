@@ -30,7 +30,8 @@ Preferred communication style: Simple, everyday language.
 - `/category/:name` — Category-filtered content pages
 - `/tools` — Tools index page with video hero, quiz banner, saved kits link, all 7 tools
 - `/tools/bug-out-bag-calculator` — Interactive BOB weight calculator with 60+ gear items, donut chart, affiliate links, print/share
-- `/tools/solar-power-calculator` — Solar panel & power station sizing calculator with device library, region-based sun hours, PDF export
+- `/tools/solar-power-calculator` — Solar panel & power station sizing calculator with device library, region-based sun hours, PDF export, use-case presets
+- `/tools/power-station-runtime` — Power Station Runtime Calculator: select a power station, add devices, see battery runtime with optional solar extension
 - `/tools/water-storage-calculator` — Water storage calculator for household/emergency planning with usage breakdown donut chart
 - `/tools/food-storage-calculator` — Food storage calculator with calorie planning, shelf life tracking, family size support
 - `/tools/72-hour-kit-builder` — Guided questionnaire that generates a personalized 72-hour emergency kit checklist
