@@ -421,6 +421,14 @@ export default function WaterStorageCalculator() {
           </p>
         </div>
 
+        <div className="no-print mb-6">
+          {/* Tool Title */}
+          <div>
+            <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Free Tool</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold">Water Storage <span className="text-primary">Calculator</span></h2>
+          </div>
+        </div>
+
         <div className="grid lg:grid-cols-3 gap-8 no-print">
           <div className="lg:col-span-2 space-y-6">
 

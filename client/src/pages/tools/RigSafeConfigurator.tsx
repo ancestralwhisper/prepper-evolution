@@ -573,6 +573,12 @@ export default function RigSafeConfigurator() {
 
   return (
     <div className="space-y-6">
+      {/* Tool Title */}
+      <div>
+        <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Ops Deck</p>
+        <h2 className="text-2xl sm:text-3xl font-extrabold">RigSafe Overland <span className="text-primary">Configurator</span></h2>
+      </div>
+
       {/* Safety Disclaimer */}
       <ToolSafetyDisclaimer level="safety-critical" />
 

@@ -1146,6 +1146,12 @@ export default function PowerSystemBuilder() {
 
   return (
     <div className="space-y-6">
+      {/* Tool Title */}
+      <div>
+        <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Ops Deck</p>
+        <h2 className="text-2xl sm:text-3xl font-extrabold">Power System <span className="text-primary">Builder</span></h2>
+      </div>
+
       {/* Safety disclaimer at top */}
       <ToolSafetyDisclaimer level="safety-critical" message={ELECTRICAL_SAFETY_MESSAGE} />
 

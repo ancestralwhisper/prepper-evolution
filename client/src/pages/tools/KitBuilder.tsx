@@ -658,6 +658,12 @@ export default function KitBuilder() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 no-print">
 
+        {/* Tool Title */}
+        <div className="mb-6">
+          <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Free Tool</p>
+          <h2 className="text-2xl sm:text-3xl font-extrabold">72-Hour Kit <span className="text-primary">Builder</span></h2>
+        </div>
+
         {/* How This Tool Works */}
         <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6 mb-6">
           <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>

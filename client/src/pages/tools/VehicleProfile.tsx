@@ -541,6 +541,12 @@ export default function VehicleProfileEditor() {
   return (
     <div className="space-y-8">
 
+      {/* Tool Title */}
+      <div>
+        <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Ops Deck</p>
+        <h2 className="text-2xl sm:text-3xl font-extrabold">Unified Vehicle <span className="text-primary">Profile</span></h2>
+      </div>
+
       {/* How This Tool Works */}
       <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
         <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
