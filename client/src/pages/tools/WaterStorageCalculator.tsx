@@ -3,7 +3,7 @@ import {
   Plus, Minus, Droplets, Users, Clock, Printer, Share2,
   AlertTriangle, CheckCircle, X, ExternalLink,
   Thermometer, Activity, Baby, Dog, Cat, Heart, Home,
-  MessageSquarePlus, Send,
+  MessageSquarePlus, Send, Info,
 } from "lucide-react";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import PrintQrCode from "@/components/tools/PrintQrCode";
