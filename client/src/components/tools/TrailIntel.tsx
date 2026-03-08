@@ -362,7 +362,7 @@ export default function TrailIntel({
 
           {/* Empty state */}
           {!data && !loading && !error && zip.length < 5 && (
-            <p className="text-[11px] text-muted/60 leading-relaxed">
+            <p className="text-[11px] text-muted-foreground leading-relaxed">
               Punch in a ZIP and we&apos;ll pull weather alerts, disaster declarations, and active wildfires from government feeds. Select a trail system for NPS alerts, BLM route status, and USFS seasonal access. Updated every 15 minutes.
             </p>
           )}

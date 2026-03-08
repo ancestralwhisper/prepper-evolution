@@ -8,24 +8,24 @@ export default function SupportFooter() {
       <div className="flex items-center gap-2 mb-3">
         <Heart className="w-5 h-5 text-primary flex-shrink-0" />
         <h4 className="text-sm font-extrabold uppercase tracking-wide">
-          Look, No Bullshit:
+          Look, No BS:
         </h4>
       </div>
       <div className="text-sm text-muted-foreground leading-relaxed space-y-3 mb-4">
         <p>
-          Prepper Evolution tools are <strong className="text-foreground">free. Always will be.</strong> No ads, no email hustle, no paywall games.
+          Prepper Evolution tools are <strong className="text-foreground">free. Always will be.</strong> No ads, no email gates, no paywall nonsense.
         </p>
         <p>
-          They stay running because when people buy gear they were getting anyway, they click our affiliate links. A few guys also drop a couple bucks straight-up when the site actually saves their ass or makes shit easier.
+          They stay running because when people buy gear they were already getting, they click our affiliate links. A few folks also chip in directly when the site saves them time or makes planning easier.
         </p>
         <p>
-          It costs real money to keep this going &mdash; servers, updating trails/permits/FEMA crap, field testing, new features, making sure it loads when you&apos;re two bars deep in the sticks.
+          It costs real money to keep this going &mdash; servers, updating trails/permits/FEMA data, field testing, new features, making sure it loads when you&apos;re two bars deep in the sticks.
         </p>
         <p>
           If any calculator, builder, or report helped you pack right, ditch dead weight, or just feel more squared away&hellip; and you&apos;re buying anything from the list anyway &mdash; <strong className="text-foreground">use the affiliate links in your report.</strong> You pay the same price (sometimes less). I get a small cut that keeps this alive. That&apos;s the deal.
         </p>
         <p>
-          Not shopping right now? No sweat. If it helped and you wanna buy me a beer or throw a few bucks my way, it&apos;s appreciated. If not, we&apos;re still good.
+          Not shopping right now? No worries. If it helped and you want to throw a few bucks my way, it&apos;s appreciated. If not, we&apos;re still good.
         </p>
       </div>
 

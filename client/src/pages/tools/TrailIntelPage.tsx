@@ -14,7 +14,7 @@ export default function TrailIntelPage() {
       {/* Tool Title */}
       <div>
         <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Ops Deck</p>
-        <h2 className="text-2xl sm:text-3xl font-extrabold">Trail Intel &mdash; <span className="text-primary">Know Before You Go</span></h2>
+        <h2 className="text-2xl sm:text-3xl font-extrabold">Trail Intel <span className="text-primary">Know Before You Go</span></h2>
       </div>
 
       {/* How This Tool Works */}
