@@ -42,6 +42,14 @@ export interface CargoItem {
   qty: number;
 }
 
+export interface Occupant {
+  id: string;
+  label: string;       // "Driver", "Passenger", "Rear 1", etc.
+  weightLbs: number;
+  isSleeper: boolean;   // sleeps in tent (counts toward static roof load)
+}
+
+// Kept for backward compat — old configs still work
 export interface OccupantConfig {
   adults: number;
   avgAdultLbs: number;
@@ -74,10 +82,10 @@ export interface RigSafeConfig {
   };
   useManual: boolean;
 
-  // Mounting
+  // Primary Rack (bed rack for trucks, roof rack for cars/SUVs)
   mountType: "bed-rack" | "roof-rack" | "cab-rack";
   rack: RackEntry | null;
-  rackHeightSetting: number | null; // inches, if rack has height settings
+  rackHeightSetting: number | null;
   manualRack: {
     weightLbs: number;
     staticLbs: number;
@@ -86,6 +94,25 @@ export interface RigSafeConfig {
     heightIn: number;
   };
   useManualRack: boolean;
+
+  // Secondary Rack (cab roof rack on trucks — optional, independent load zone)
+  hasSecondaryRack: boolean;
+  secondaryRack: RackEntry | null;
+  secondaryRackHeightSetting: number | null;
+  manualSecondaryRack: {
+    weightLbs: number;
+    staticLbs: number;
+    onRoadDynamicLbs: number;
+    offRoadDynamicLbs: number;
+    heightIn: number;
+  };
+  useManualSecondaryRack: boolean;
+  // Items on secondary rack
+  secondaryRackSolar: boolean;
+  secondaryRackSolarWeightLbs: number;
+  secondaryRackLightBar: boolean;
+  secondaryRackLightBarWeightLbs: number;
+  secondaryRackCargoLbs: number;
 
   // Tonneau (trucks only)
   tonneau: TonneauEntry | null;
@@ -198,7 +225,9 @@ export interface RigSafeConfig {
   // Quick-add rack cargo presets
   rackPresets: string[]; // array of preset IDs that are toggled on
 
-  // Occupants
+  // Occupants (new: individual list)
+  occupantList: Occupant[];
+  // Legacy fallback (used if occupantList is empty)
   occupants: OccupantConfig;
 
   // Bedding
@@ -225,15 +254,25 @@ export interface RackBudget {
 }
 
 export interface RigSafeResult {
-  // Chain 1: Rack load
+  // Chain 1: Rack load (roof only)
   rackStatic: RackBudget;
   rackOnRoad: RackBudget;
   rackOffRoad: RackBudget;
 
-  // Chain 2: Vehicle payload
+  // Chain 2: Bed load (in the truck bed — not on roof)
+  bedLoad: { used: number; items: { label: string; value: number }[] };
+
+  // Chain 3: Frame mods (bolted to chassis)
+  frameMods: { used: number; items: { label: string; value: number }[] };
+
+  // Chain 4: Vehicle payload (everything combined)
   vehiclePayload: RackBudget;
 
-  // Chain 3: Weakest link
+  // Secondary rack load (cab roof rack on trucks — optional)
+  secondaryRackOnRoad: RackBudget | null;
+  secondaryRackOffRoad: RackBudget | null;
+
+  // Weakest link
   weakestLink: {
     component: "rack" | "vehicle-roof";
     staticLimit: number;
@@ -345,6 +384,54 @@ function getAwning(config: RigSafeConfig) {
   };
 }
 
+// ─── Helper: Occupant weights ────────────────────────────────────────
+
+function getOccupantTotalWeight(config: RigSafeConfig): number {
+  if (config.occupantList && config.occupantList.length > 0) {
+    return config.occupantList.reduce((sum, o) => sum + o.weightLbs, 0);
+  }
+  // Legacy fallback
+  return config.occupants.adults * config.occupants.avgAdultLbs
+    + config.occupants.kids * config.occupants.avgKidLbs;
+}
+
+function getSleeperTotalWeight(config: RigSafeConfig): number {
+  if (config.occupantList && config.occupantList.length > 0) {
+    return config.occupantList.filter(o => o.isSleeper).reduce((sum, o) => sum + o.weightLbs, 0);
+  }
+  // Legacy: assume all occupants sleep in tent
+  return config.occupants.adults * config.occupants.avgAdultLbs
+    + config.occupants.kids * config.occupants.avgKidLbs;
+}
+
+function getSleeperCount(config: RigSafeConfig): number {
+  if (config.occupantList && config.occupantList.length > 0) {
+    return config.occupantList.filter(o => o.isSleeper).length;
+  }
+  return config.occupants.adults + config.occupants.kids;
+}
+
+function getOccupantCount(config: RigSafeConfig): number {
+  if (config.occupantList && config.occupantList.length > 0) {
+    return config.occupantList.length;
+  }
+  return config.occupants.adults + config.occupants.kids;
+}
+
+function getSecondaryRack(config: RigSafeConfig) {
+  if (!config.hasSecondaryRack) return null;
+  if (config.useManualSecondaryRack || !config.secondaryRack) {
+    return config.manualSecondaryRack;
+  }
+  return {
+    weightLbs: config.secondaryRack.weightLbs,
+    staticLbs: config.secondaryRack.staticLbs,
+    onRoadDynamicLbs: config.secondaryRack.onRoadDynamicLbs,
+    offRoadDynamicLbs: config.secondaryRack.offRoadDynamicLbs,
+    heightIn: config.secondaryRackHeightSetting ?? config.secondaryRack.heightSettings?.[0] ?? 4,
+  };
+}
+
 function getTonneau(config: RigSafeConfig) {
   if (!config.hasTonneau) return null;
   if (config.useManualTonneau || !config.tonneau) {
@@ -356,9 +443,9 @@ function getTonneau(config: RigSafeConfig) {
   };
 }
 
-// ─── Helper: Vehicle Mods Weight ─────────────────────────────────────
+// ─── Helper: Frame Mods Weight (bolted to chassis — not in bed or on roof) ──
 
-export function computeVehicleModsWeight(config: RigSafeConfig): number {
+export function computeFrameModsWeight(config: RigSafeConfig): number {
   let total = 0;
 
   // Bumpers
@@ -373,28 +460,51 @@ export function computeVehicleModsWeight(config: RigSafeConfig): number {
       : (config.rearBumper?.weightLbs ?? 0);
   }
 
-  // Winch
+  // Winch (mounted on front bumper)
   if (config.hasWinch) {
     total += config.useManualWinch
       ? config.manualWinchWeightLbs
       : (config.winch?.weightLbs ?? 0);
   }
 
-  // Drawers
+  // Skid plates (bolted to frame)
+  if (config.hasSkidPlates) {
+    total += config.useManualSkidPlates
+      ? config.manualSkidPlateWeightLbs
+      : (config.skidPlates?.weightLbs ?? 0);
+  }
+
+  // Spare tire carrier + tire (rear-mounted)
+  if (config.hasSpareCarrier) {
+    total += config.useManualSpareCarrier
+      ? config.manualSpareCarrierWeightLbs
+      : (config.spareCarrier?.carrierWeightLbs ?? 0);
+    total += config.spareTireWeightLbs;
+  }
+
+  return Math.round(total);
+}
+
+// ─── Helper: Bed Load Weight (cargo in the truck bed) ────────────────
+
+export function computeBedLoadWeight(config: RigSafeConfig): number {
+  let total = 0;
+
+  // Drawers (bed-mounted storage system)
   if (config.hasDrawers) {
     total += config.useManualDrawers
       ? config.manualDrawerWeightLbs
       : (config.drawers?.weightLbs ?? 0);
   }
 
-  // Fridge
+  // Fridge (sits in bed or on drawer slide)
   if (config.hasFridge) {
     total += config.useManualFridge
       ? config.manualFridgeWeightLbs
       : (config.fridge?.weightLbs ?? 0);
   }
 
-  // Water tank (weight depends on fill level)
+  // Water tank (bed-mounted)
   if (config.hasWaterTank) {
     if (config.useManualWaterTank) {
       total += config.manualWaterTank.emptyWeightLbs
@@ -405,22 +515,32 @@ export function computeVehicleModsWeight(config: RigSafeConfig): number {
     }
   }
 
-  // Skid plates
-  if (config.hasSkidPlates) {
-    total += config.useManualSkidPlates
-      ? config.manualSkidPlateWeightLbs
-      : (config.skidPlates?.weightLbs ?? 0);
+  // Slide-out kitchen (bed-mounted)
+  if (config.hasSlideKitchen) {
+    total += config.useManualKitchen
+      ? config.manualKitchenWeightLbs
+      : (config.slideKitchen?.weightLbs ?? 0);
   }
 
-  // Spare tire carrier + tire
-  if (config.hasSpareCarrier) {
-    total += config.useManualSpareCarrier
-      ? config.manualSpareCarrierWeightLbs
-      : (config.spareCarrier?.carrierWeightLbs ?? 0);
-    total += config.spareTireWeightLbs;
+  // Recovery gear (typically stored in bed)
+  if (config.hasRecoveryGear) {
+    if (config.useManualRecovery) {
+      total += config.manualRecoveryWeightLbs;
+    } else {
+      total += config.recoveryGear.reduce((sum, g) => sum + g.weightLbs, 0);
+    }
   }
 
-  // Solar panels
+  return Math.round(total);
+}
+
+// ─── Helper: All vehicle mods weight (frame + bed + roof-mounted non-rack) ──
+// Kept for backward compat — sums all three zones
+
+export function computeVehicleModsWeight(config: RigSafeConfig): number {
+  let total = computeFrameModsWeight(config) + computeBedLoadWeight(config);
+
+  // Solar panels (may be roof or bed-mounted)
   if (config.hasSolar) {
     total += config.useManualSolar
       ? config.manualSolarWeightLbs
@@ -432,22 +552,6 @@ export function computeVehicleModsWeight(config: RigSafeConfig): number {
     total += config.useManualLightBar
       ? config.manualLightBarWeightLbs
       : (config.lightBar?.weightLbs ?? 0);
-  }
-
-  // Slide-out kitchen
-  if (config.hasSlideKitchen) {
-    total += config.useManualKitchen
-      ? config.manualKitchenWeightLbs
-      : (config.slideKitchen?.weightLbs ?? 0);
-  }
-
-  // Recovery gear
-  if (config.hasRecoveryGear) {
-    if (config.useManualRecovery) {
-      total += config.manualRecoveryWeightLbs;
-    } else {
-      total += config.recoveryGear.reduce((sum, g) => sum + g.weightLbs, 0);
-    }
   }
 
   return Math.round(total);
@@ -476,22 +580,25 @@ function computeRoofMountedModWeight(config: RigSafeConfig): number {
 
 // ─── Rack Cargo Presets ─────────────────────────────────────────────
 
+// location: "rack" = on top of rack, "bed" = in the truck bed
 export const RACK_CARGO_PRESETS = [
-  { id: "recovery-boards", name: "Recovery Boards (pair)", weightLbs: 8 },
-  { id: "shovel", name: "Folding Shovel", weightLbs: 5 },
-  { id: "axe-hatchet", name: "Axe / Hatchet", weightLbs: 4 },
-  { id: "hi-lift-mount", name: "Hi-Lift Jack (rack mounted)", weightLbs: 30 },
-  { id: "jerry-can-fuel", name: "Fuel Jerry Can (full, 5 gal)", weightLbs: 40 },
-  { id: "jerry-can-water", name: "Water Jerry Can (full, 5 gal)", weightLbs: 44 },
-  { id: "rotopax-2gal", name: "RotoPax 2-Gal Fuel (full)", weightLbs: 15 },
-  { id: "fire-extinguisher", name: "Fire Extinguisher", weightLbs: 6 },
-  { id: "camp-chairs-2", name: "Camp Chairs (x2)", weightLbs: 14 },
-  { id: "camp-table", name: "Camp Table", weightLbs: 12 },
-  { id: "portable-compressor", name: "Portable Air Compressor", weightLbs: 10 },
-  { id: "traction-mats", name: "Traction Mats (pair)", weightLbs: 6 },
-  { id: "dry-bag-large", name: "Large Dry Bag (loaded)", weightLbs: 20 },
-  { id: "propane-tank", name: "Propane Tank (5 lb)", weightLbs: 10 },
-  { id: "camp-shower", name: "Camp Shower Bag (full)", weightLbs: 22 },
+  // ─── Rack-mounted (counts toward roof load) ───
+  { id: "recovery-boards", name: "Recovery Boards (pair)", weightLbs: 8, location: "rack" as const },
+  { id: "shovel", name: "Folding Shovel", weightLbs: 5, location: "rack" as const },
+  { id: "axe-hatchet", name: "Axe / Hatchet", weightLbs: 4, location: "rack" as const },
+  { id: "hi-lift-mount", name: "Hi-Lift Jack (rack mounted)", weightLbs: 30, location: "rack" as const },
+  { id: "jerry-can-fuel", name: "Fuel Jerry Can (full, 5 gal)", weightLbs: 40, location: "rack" as const },
+  { id: "jerry-can-water", name: "Water Jerry Can (full, 5 gal)", weightLbs: 44, location: "rack" as const },
+  { id: "rotopax-2gal", name: "RotoPax 2-Gal Fuel (full)", weightLbs: 15, location: "rack" as const },
+  { id: "fire-extinguisher", name: "Fire Extinguisher", weightLbs: 6, location: "rack" as const },
+  { id: "traction-mats", name: "Traction Mats (pair)", weightLbs: 6, location: "rack" as const },
+  { id: "dry-bag-large", name: "Large Dry Bag (loaded)", weightLbs: 20, location: "rack" as const },
+  // ─── Bed cargo (counts toward payload only, NOT roof load) ───
+  { id: "camp-chairs-2", name: "Camp Chairs (x2)", weightLbs: 14, location: "bed" as const },
+  { id: "camp-table", name: "Camp Table", weightLbs: 12, location: "bed" as const },
+  { id: "portable-compressor", name: "Portable Air Compressor", weightLbs: 10, location: "bed" as const },
+  { id: "propane-tank", name: "Propane Tank (5 lb)", weightLbs: 10, location: "bed" as const },
+  { id: "camp-shower", name: "Camp Shower Bag (full)", weightLbs: 22, location: "bed" as const },
 ] as const;
 
 // ─── Compute: Rack Load Budget ──────────────────────────────────────
@@ -520,23 +627,29 @@ export function computeRackLoad(config: RigSafeConfig): {
     cargoBoxWeight += config.cargoBoxContentsLbs;
   }
 
-  // Rack preset items
+  // Rack preset items (only items physically on the rack — not bed cargo)
   const presetWeight = config.rackPresets.reduce((sum, id) => {
     const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
-    return sum + (preset?.weightLbs ?? 0);
+    if (!preset || preset.location === "bed") return sum; // bed items don't load the rack
+    return sum + preset.weightLbs;
   }, 0);
 
-  // Occupant weight (only for static — sleeping in tent)
-  const totalOccupantWeight =
-    config.occupants.adults * config.occupants.avgAdultLbs +
-    config.occupants.kids * config.occupants.avgKidLbs;
+  // Bed preset items weight (for payload calc, not rack)
+  const bedPresetWeight = config.rackPresets.reduce((sum, id) => {
+    const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
+    if (!preset || preset.location !== "bed") return sum;
+    return sum + preset.weightLbs;
+  }, 0);
 
-  // Bedding weight (only for static)
+  // Occupant weight (only sleepers for static — they're in the tent on the rack)
+  const sleeperWeight = getSleeperTotalWeight(config);
+
+  // Bedding weight (only for static, per sleeper)
   let beddingPerPerson = 0;
   if (config.beddingLevel === "light") beddingPerPerson = 10;
   else if (config.beddingLevel === "full") beddingPerPerson = 20;
   else beddingPerPerson = config.customBeddingLbsPerPerson;
-  const totalSleepers = config.occupants.adults + config.occupants.kids;
+  const totalSleepers = getSleeperCount(config);
   const beddingWeight = beddingPerPerson * totalSleepers;
 
   // Roof-mounted mods (solar panels, light bars on rack)
@@ -545,8 +658,8 @@ export function computeRackLoad(config: RigSafeConfig): {
   // Dynamic loads (driving — no people or bedding on rack)
   const dynamicLoad = tentWeight + awningBracketWeight + cargoWeight + cargoBoxWeight + presetWeight + roofModWeight;
 
-  // Static loads (camping — people and bedding on rack)
-  const staticLoad = dynamicLoad + totalOccupantWeight + beddingWeight;
+  // Static loads (camping — sleepers and bedding on rack)
+  const staticLoad = dynamicLoad + sleeperWeight + beddingWeight;
 
   const mkBudget = (rating: number, used: number): RackBudget => ({
     rating,
@@ -559,6 +672,35 @@ export function computeRackLoad(config: RigSafeConfig): {
     static: mkBudget(rack.staticLbs, staticLoad),
     onRoad: mkBudget(rack.onRoadDynamicLbs, dynamicLoad),
     offRoad: mkBudget(rack.offRoadDynamicLbs, dynamicLoad),
+  };
+}
+
+// ─── Compute: Secondary Rack Load (cab roof rack) ──────────────────
+
+export function computeSecondaryRackLoad(config: RigSafeConfig): {
+  onRoad: RackBudget;
+  offRoad: RackBudget;
+} | null {
+  const secRack = getSecondaryRack(config);
+  if (!secRack) return null;
+
+  let load = 0;
+
+  // Items assigned to secondary rack
+  if (config.secondaryRackSolar) load += config.secondaryRackSolarWeightLbs;
+  if (config.secondaryRackLightBar) load += config.secondaryRackLightBarWeightLbs;
+  load += config.secondaryRackCargoLbs;
+
+  const mkBudget = (rating: number, used: number): RackBudget => ({
+    rating,
+    used: Math.round(used),
+    remaining: Math.round(rating - used),
+    pct: rating > 0 ? Math.round((used / rating) * 100) : 0,
+  });
+
+  return {
+    onRoad: mkBudget(secRack.onRoadDynamicLbs, load),
+    offRoad: mkBudget(secRack.offRoadDynamicLbs, load),
   };
 }
 
@@ -575,8 +717,17 @@ export function computePayload(config: RigSafeConfig): RackBudget {
 
   let used = 0;
 
-  // Rack weight
+  // Primary rack weight
   used += rack.weightLbs;
+
+  // Secondary rack weight + its load
+  const secRack = getSecondaryRack(config);
+  if (secRack) {
+    used += secRack.weightLbs;
+    if (config.secondaryRackSolar) used += config.secondaryRackSolarWeightLbs;
+    if (config.secondaryRackLightBar) used += config.secondaryRackLightBarWeightLbs;
+    used += config.secondaryRackCargoLbs;
+  }
 
   // Tonneau weight
   if (tonneau) used += tonneau.weightLbs;
@@ -607,16 +758,14 @@ export function computePayload(config: RigSafeConfig): RackBudget {
     used += config.cargoBoxContentsLbs;
   }
 
-  // Rack preset items
+  // All preset items (rack + bed — both count toward payload)
   used += config.rackPresets.reduce((sum, id) => {
     const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
     return sum + (preset?.weightLbs ?? 0);
   }, 0);
 
-  // All occupants
-  used +=
-    config.occupants.adults * config.occupants.avgAdultLbs +
-    config.occupants.kids * config.occupants.avgKidLbs;
+  // All occupants (everyone in the vehicle, not just sleepers)
+  used += getOccupantTotalWeight(config);
 
   // Fuel weight
   const fuelLbsPerGal =
@@ -831,28 +980,44 @@ export function computeWeightBreakdown(config: RigSafeConfig): {
   if (config.hasWallKit && config.wallKitWeightLbs > 0)
     items.push({ label: "Wall Kit", value: config.wallKitWeightLbs, color: "#EC4899" });
 
-  // Vehicle mods as a single combined segment
-  const modsWeight = computeVehicleModsWeight(config);
-  if (modsWeight > 0) items.push({ label: "Vehicle Mods", value: modsWeight, color: "#B45309" });
+  // Frame mods (bumpers, winch, skid plates, spare carrier)
+  const frameWeight = computeFrameModsWeight(config);
+  if (frameWeight > 0) items.push({ label: "Frame Mods", value: frameWeight, color: "#B45309" });
 
-  let cargoWeight = config.cargoItems.reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
-  // Add cargo box weight
+  // Bed load (fridge, drawers, kitchen, water tank, recovery gear)
+  const bedWeight = computeBedLoadWeight(config);
+  if (bedWeight > 0) items.push({ label: "Bed Cargo", value: bedWeight, color: "#D97706" });
+
+  // Solar + light bar (may be roof or bed — count as misc mods)
+  let miscModWeight = 0;
+  if (config.hasSolar) miscModWeight += config.useManualSolar ? config.manualSolarWeightLbs : (config.solarPanels?.weightLbs ?? 0);
+  if (config.hasLightBar) miscModWeight += config.useManualLightBar ? config.manualLightBarWeightLbs : (config.lightBar?.weightLbs ?? 0);
+  if (miscModWeight > 0) items.push({ label: "Solar / Lights", value: miscModWeight, color: "#FBBF24" });
+
+  // Rack cargo (custom items + cargo box + rack-location presets)
+  let rackCargoWeight = config.cargoItems.reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
   if (config.hasCargoBox) {
-    cargoWeight += config.useManualCargoBox
+    rackCargoWeight += config.useManualCargoBox
       ? config.manualCargoBoxWeightLbs
       : (config.cargoBox?.weightLbs ?? 0);
-    cargoWeight += config.cargoBoxContentsLbs;
+    rackCargoWeight += config.cargoBoxContentsLbs;
   }
-  // Add rack preset weights
-  cargoWeight += config.rackPresets.reduce((sum, id) => {
+  rackCargoWeight += config.rackPresets.reduce((sum, id) => {
     const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
-    return sum + (preset?.weightLbs ?? 0);
+    if (!preset || preset.location === "bed") return sum;
+    return sum + preset.weightLbs;
   }, 0);
-  if (cargoWeight > 0) items.push({ label: "Cargo", value: cargoWeight, color: "#EF4444" });
+  if (rackCargoWeight > 0) items.push({ label: "Rack Cargo", value: rackCargoWeight, color: "#EF4444" });
 
-  const occupantWeight =
-    config.occupants.adults * config.occupants.avgAdultLbs +
-    config.occupants.kids * config.occupants.avgKidLbs;
+  // Bed preset cargo (chairs, table, compressor, etc.)
+  const bedPresetCargo = config.rackPresets.reduce((sum, id) => {
+    const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
+    if (!preset || preset.location !== "bed") return sum;
+    return sum + preset.weightLbs;
+  }, 0);
+  if (bedPresetCargo > 0) items.push({ label: "Bed Accessories", value: bedPresetCargo, color: "#F97316" });
+
+  const occupantWeight = getOccupantTotalWeight(config);
   if (occupantWeight > 0) items.push({ label: "Occupants", value: occupantWeight, color: "#6366F1" });
 
   return items.filter((i) => i.value > 0).sort((a, b) => b.value - a.value);
@@ -944,14 +1109,42 @@ export function computeWarnings(config: RigSafeConfig, result: Omit<RigSafeResul
     }
   }
 
-  // Vehicle mods warnings
-  const modsWeight = computeVehicleModsWeight(config);
-  if (modsWeight > 0) {
-    const payloadRating = getVehicle(config).gvwrLbs - getVehicle(config).curbWeightLbs;
-    const modsPct = Math.round((modsWeight / payloadRating) * 100);
+  // Secondary rack warnings
+  if (config.hasSecondaryRack) {
+    const secOnRoad = computeSecondaryRackLoad(config);
+    if (secOnRoad) {
+      if (secOnRoad.onRoad.pct >= 100) {
+        w.push({ level: "danger", message: `Cab roof rack OVER LIMIT (${secOnRoad.onRoad.pct}%). Reduce cab rack cargo.` });
+      } else if (secOnRoad.onRoad.pct >= 85) {
+        w.push({ level: "warning", message: `Cab roof rack at ${secOnRoad.onRoad.pct}% on-road capacity. Leave 10-20% margin.` });
+      }
+    }
+  }
 
+  // Load zone warnings
+  const frameWeight = computeFrameModsWeight(config);
+  const bedWeight = computeBedLoadWeight(config);
+  const modsWeight = computeVehicleModsWeight(config);
+  const payloadRating = getVehicle(config).gvwrLbs - getVehicle(config).curbWeightLbs;
+
+  if (bedWeight > 0) {
+    const bedPct = Math.round((bedWeight / payloadRating) * 100);
+    if (bedWeight >= 300) {
+      w.push({ level: "info", message: `Bed cargo: ${bedWeight} lbs (${bedPct}% of payload). Fridge, drawers, water, kitchen — all riding in the bed.` });
+    }
+  }
+
+  if (frameWeight > 0) {
+    const framePct = Math.round((frameWeight / payloadRating) * 100);
+    if (frameWeight >= 400) {
+      w.push({ level: "warning", message: `Frame mods: ${frameWeight} lbs (${framePct}% of payload). Bumpers, winch, skids, spare carrier — heavy before you load anything.` });
+    }
+  }
+
+  if (modsWeight > 0) {
+    const modsPct = Math.round((modsWeight / payloadRating) * 100);
     if (modsWeight >= 500) {
-      w.push({ level: "warning", message: `Vehicle mods total ${modsWeight} lbs — that's ${modsPct}% of your payload before loading the roof.` });
+      w.push({ level: "warning", message: `All mods total ${modsWeight} lbs — that's ${modsPct}% of your payload before loading the roof.` });
     }
 
     // Heavy front-end (bumper + winch)
@@ -986,6 +1179,7 @@ export function computeWarnings(config: RigSafeConfig, result: Omit<RigSafeResul
 
 export function computeAll(config: RigSafeConfig): RigSafeResult {
   const rackLoad = computeRackLoad(config);
+  const secondaryRack = computeSecondaryRackLoad(config);
   const payload = computePayload(config);
   const weakestLink = computeWeakestLink(config);
   const garage = computeGarageClearance(config);
@@ -996,11 +1190,68 @@ export function computeAll(config: RigSafeConfig): RigSafeResult {
   const breakdown = computeWeightBreakdown(config);
   const vehicleModsWeightLbs = computeVehicleModsWeight(config);
 
+  // Bed load detail
+  const bedLoadItems: { label: string; value: number }[] = [];
+  if (config.hasDrawers) {
+    const w = config.useManualDrawers ? config.manualDrawerWeightLbs : (config.drawers?.weightLbs ?? 0);
+    if (w > 0) bedLoadItems.push({ label: "Drawers", value: w });
+  }
+  if (config.hasFridge) {
+    const w = config.useManualFridge ? config.manualFridgeWeightLbs : (config.fridge?.weightLbs ?? 0);
+    if (w > 0) bedLoadItems.push({ label: "Fridge", value: w });
+  }
+  if (config.hasWaterTank) {
+    let w = 0;
+    if (config.useManualWaterTank) {
+      w = config.manualWaterTank.emptyWeightLbs + (config.manualWaterTank.capacityGal * WATER_LBS_PER_GALLON * config.waterTankFillPct / 100);
+    } else if (config.waterTank) {
+      w = config.waterTank.emptyWeightLbs + (config.waterTank.capacityGal * WATER_LBS_PER_GALLON * config.waterTankFillPct / 100);
+    }
+    if (w > 0) bedLoadItems.push({ label: `Water Tank (${config.waterTankFillPct}%)`, value: Math.round(w) });
+  }
+  if (config.hasSlideKitchen) {
+    const w = config.useManualKitchen ? config.manualKitchenWeightLbs : (config.slideKitchen?.weightLbs ?? 0);
+    if (w > 0) bedLoadItems.push({ label: "Slide Kitchen", value: w });
+  }
+  if (config.hasRecoveryGear) {
+    const w = config.useManualRecovery ? config.manualRecoveryWeightLbs : config.recoveryGear.reduce((s, g) => s + g.weightLbs, 0);
+    if (w > 0) bedLoadItems.push({ label: "Recovery Gear", value: w });
+  }
+  const bedLoad = { used: computeBedLoadWeight(config), items: bedLoadItems };
+
+  // Frame mods detail
+  const frameModItems: { label: string; value: number }[] = [];
+  if (config.hasFrontBumper) {
+    const w = config.useManualBumpers ? config.manualBumperWeightLbs.front : (config.frontBumper?.weightLbs ?? 0);
+    if (w > 0) frameModItems.push({ label: "Front Bumper", value: w });
+  }
+  if (config.hasRearBumper) {
+    const w = config.useManualBumpers ? config.manualBumperWeightLbs.rear : (config.rearBumper?.weightLbs ?? 0);
+    if (w > 0) frameModItems.push({ label: "Rear Bumper", value: w });
+  }
+  if (config.hasWinch) {
+    const w = config.useManualWinch ? config.manualWinchWeightLbs : (config.winch?.weightLbs ?? 0);
+    if (w > 0) frameModItems.push({ label: "Winch", value: w });
+  }
+  if (config.hasSkidPlates) {
+    const w = config.useManualSkidPlates ? config.manualSkidPlateWeightLbs : (config.skidPlates?.weightLbs ?? 0);
+    if (w > 0) frameModItems.push({ label: "Skid Plates", value: w });
+  }
+  if (config.hasSpareCarrier) {
+    const w = (config.useManualSpareCarrier ? config.manualSpareCarrierWeightLbs : (config.spareCarrier?.carrierWeightLbs ?? 0)) + config.spareTireWeightLbs;
+    if (w > 0) frameModItems.push({ label: "Spare Carrier + Tire", value: w });
+  }
+  const frameMods = { used: computeFrameModsWeight(config), items: frameModItems };
+
   // Build partial result for warnings
   const partialResult = {
     rackStatic: rackLoad.static,
     rackOnRoad: rackLoad.onRoad,
     rackOffRoad: rackLoad.offRoad,
+    secondaryRackOnRoad: secondaryRack?.onRoad ?? null,
+    secondaryRackOffRoad: secondaryRack?.offRoad ?? null,
+    bedLoad,
+    frameMods,
     vehiclePayload: payload,
     weakestLink,
     totalHeightIn: garage.totalHeightIn,
@@ -1024,6 +1275,8 @@ export function computeAll(config: RigSafeConfig): RigSafeResult {
     rackLoad.static.pct,
     rackLoad.onRoad.pct,
     rackLoad.offRoad.pct,
+    secondaryRack?.onRoad.pct ?? 0,
+    secondaryRack?.offRoad.pct ?? 0,
     payload.pct,
   );
   let safetyMarginStatus: "safe" | "margin-warning" | "over-limit" = "safe";
@@ -1072,6 +1325,24 @@ export const defaultRigSafeConfig: RigSafeConfig = {
     heightIn: 20,
   },
   useManualRack: false,
+
+  // Secondary rack (cab roof rack — off by default)
+  hasSecondaryRack: false,
+  secondaryRack: null,
+  secondaryRackHeightSetting: null,
+  manualSecondaryRack: {
+    weightLbs: 20,
+    staticLbs: 200,
+    onRoadDynamicLbs: 165,
+    offRoadDynamicLbs: 100,
+    heightIn: 4,
+  },
+  useManualSecondaryRack: false,
+  secondaryRackSolar: false,
+  secondaryRackSolarWeightLbs: 15,
+  secondaryRackLightBar: false,
+  secondaryRackLightBarWeightLbs: 10,
+  secondaryRackCargoLbs: 0,
 
   tonneau: null,
   manualTonneau: { weightLbs: 50, foldedHeightIn: 14 },
@@ -1173,6 +1444,10 @@ export const defaultRigSafeConfig: RigSafeConfig = {
   cargoBoxContentsLbs: 0,
   rackPresets: [],
 
+  occupantList: [
+    { id: "driver", label: "Driver", weightLbs: 180, isSleeper: true },
+    { id: "passenger", label: "Passenger", weightLbs: 150, isSleeper: true },
+  ],
   occupants: {
     adults: 2,
     avgAdultLbs: 180,

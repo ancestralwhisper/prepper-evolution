@@ -181,7 +181,7 @@ export const fridgeDatabase: FridgeEntry[] = [
     brand: "ARB",
     model: "Zero 47Qt",
     type: "fridge-freezer",
-    weightLbs: 48,
+    weightLbs: 52.6,
     capacityQts: 47,
     drawAmps: 4.5,
     affiliateUrl: "https://www.amazon.com/dp/B084Z8Z55B?tag=prepperevo-20",
@@ -195,7 +195,7 @@ export const fridgeDatabase: FridgeEntry[] = [
     brand: "IceCo",
     model: "VL35 ProS",
     type: "fridge-freezer",
-    weightLbs: 46,
+    weightLbs: 48.7,
     capacityQts: 37,    // 35L
     drawAmps: 5.5,      // ~45W average / 12V
     affiliateUrl: "#",
@@ -217,7 +217,7 @@ export const fridgeDatabase: FridgeEntry[] = [
     brand: "IceCo",
     model: "VL60 Pro",
     type: "fridge-freezer",
-    weightLbs: 61,
+    weightLbs: 65,
     capacityQts: 63,    // 60L
     drawAmps: 6.5,      // estimated; ~63Qt class
     affiliateUrl: "#",
