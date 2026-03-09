@@ -65,6 +65,19 @@ function checkPage(doc: jsPDF, y: number, needed: number, pageW: number): number
   return y;
 }
 
+function wrappedTextHeight(doc: jsPDF, text: string, maxWidth: number, lineHeightMm: number): number {
+  const lines = doc.splitTextToSize(text, maxWidth);
+  return lines.length * lineHeightMm;
+}
+
+function truncateUrl(doc: jsPDF, url: string, maxWidth: number): string {
+  if (doc.getTextWidth(url) <= maxWidth) return url;
+  while (url.length > 10 && doc.getTextWidth(url + "...") > maxWidth) {
+    url = url.slice(0, -1);
+  }
+  return url + "...";
+}
+
 // ─── BOB PDF Data Interface ───
 export interface BobPdfData {
   bodyWeight: number;
@@ -343,7 +356,8 @@ export async function generateBobPdf(data: BobPdfData): Promise<void> {
       doc.setFontSize(7);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(...hexToRgb(ACCENT));
-      doc.text(rec.url, 22, y + 3.5);
+      const bobUrl = truncateUrl(doc, rec.url, pageW - 40);
+      doc.text(bobUrl, 22, y + 3.5);
       y += 8;
     }
     y += 2;
@@ -473,7 +487,8 @@ export async function generateSolarPdf(data: SolarPdfData): Promise<void> {
 
       doc.setFontSize(6.5);
       doc.setTextColor(...hexToRgb(ACCENT));
-      doc.text(ps.url, 19, y + 9);
+      const psUrl = truncateUrl(doc, ps.url, pageW - 38);
+      doc.text(psUrl, 19, y + 9);
 
       y += 17;
     }
@@ -506,7 +521,8 @@ export async function generateSolarPdf(data: SolarPdfData): Promise<void> {
 
       doc.setFontSize(6.5);
       doc.setTextColor(...hexToRgb(ACCENT));
-      doc.text(panel.url, 19, y + 9);
+      const panelUrl = truncateUrl(doc, panel.url, pageW - 38);
+      doc.text(panelUrl, 19, y + 9);
 
       y += 17;
     }
@@ -687,7 +703,7 @@ export async function generateRigSafePdf(data: RigSafePdfData) {
 
   // ─── Warnings ───
   if (data.warnings.length > 0) {
-    y = checkPage(doc, y, 10 + data.warnings.length * 7, pageW);
+    y = checkPage(doc, y, 10 + data.warnings.length * 10, pageW);
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...hexToRgb(DARK));
@@ -695,17 +711,18 @@ export async function generateRigSafePdf(data: RigSafePdfData) {
     y += 5;
 
     for (const w of data.warnings) {
-      y = checkPage(doc, y, 7, pageW);
+      doc.setFontSize(6);
+      const warnH = wrappedTextHeight(doc, w.message, pageW - 44, 3.2) + 2;
+      y = checkPage(doc, y, warnH, pageW);
       const icon = w.level === "danger" ? "!!!" : w.level === "warning" ? "!!" : "i";
       const color = w.level === "danger" ? "#EF4444" : w.level === "warning" ? "#EAB308" : "#3B82F6";
-      doc.setFontSize(6);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(...hexToRgb(color));
       doc.text(icon, 19, y);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(...hexToRgb(MUTED));
       doc.text(w.message, 25, y, { maxWidth: pageW - 44 });
-      y += 7;
+      y += warnH;
     }
   }
 
@@ -727,7 +744,8 @@ export async function generateRigSafePdf(data: RigSafePdfData) {
       doc.setFontSize(6);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(...hexToRgb(ACCENT));
-      doc.text(link.url, 19, y + 4);
+      const linkUrl = truncateUrl(doc, link.url, pageW - 38);
+      doc.text(linkUrl, 19, y + 4);
       y += 9;
     }
   }
@@ -782,18 +800,17 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
   y += 20;
 
   // Disclaimer
-  roundedRect(doc, 15, y, pageW - 30, 12, 2, "#FEF2F2");
+  const disclaimerText = "This tool is for planning purposes only. Always verify manufacturer specs, trail conditions, and state laws before riding. Exceeding GVWR voids warranty and risks safety.";
   doc.setFontSize(6);
+  const disclaimerH = wrappedTextHeight(doc, disclaimerText, pageW - 42, 3) + 8;
+  roundedRect(doc, 15, y, pageW - 30, disclaimerH, 2, "#FEF2F2");
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...hexToRgb("#EF4444"));
   doc.text("SAFETY DISCLAIMER", 19, y + 4);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(...hexToRgb(MUTED));
-  doc.text(
-    "This tool is for planning purposes only. Always verify manufacturer specs, trail conditions, and state laws before riding. Exceeding GVWR voids warranty and risks safety.",
-    19, y + 8, { maxWidth: pageW - 42 }
-  );
-  y += 16;
+  doc.text(disclaimerText, 19, y + 8, { maxWidth: pageW - 42 });
+  y += disclaimerH + 4;
 
   // Machine summary
   roundedRect(doc, 15, y, pageW - 30, 22, 2, LIGHT_BG);
@@ -901,7 +918,7 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
 
   // Warnings
   if (data.warnings.length > 0) {
-    y = checkPage(doc, y, 10 + data.warnings.length * 7, pageW);
+    y = checkPage(doc, y, 10 + data.warnings.length * 10, pageW);
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...hexToRgb(DARK));
@@ -909,16 +926,17 @@ export async function generateRigRatedPdf(data: RigRatedPdfData) {
     y += 5;
 
     for (const w of data.warnings) {
-      y = checkPage(doc, y, 7, pageW);
-      const color = w.level === "danger" ? "#EF4444" : w.level === "warning" ? "#EAB308" : "#3B82F6";
       doc.setFontSize(6);
+      const warnH = wrappedTextHeight(doc, w.message, pageW - 44, 3.2) + 2;
+      y = checkPage(doc, y, warnH, pageW);
+      const color = w.level === "danger" ? "#EF4444" : w.level === "warning" ? "#EAB308" : "#3B82F6";
       doc.setFont("helvetica", "bold");
       doc.setTextColor(...hexToRgb(color));
       doc.text(w.level === "danger" ? "!!" : w.level === "warning" ? "!" : "i", 19, y);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(...hexToRgb(MUTED));
       doc.text(w.message, 25, y, { maxWidth: pageW - 44 });
-      y += 7;
+      y += warnH;
     }
   }
 
@@ -998,23 +1016,24 @@ export async function generatePowerSystemPdf(data: PowerSystemPdfData): Promise<
 
   // Warnings
   if (data.warnings.length > 0) {
-    y = checkPage(doc, y, 8 + data.warnings.length * 7, pageW);
+    y = checkPage(doc, y, 8 + data.warnings.length * 10, pageW);
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...hexToRgb("#EF4444"));
     doc.text("WARNINGS", 15, y);
     y += 5;
     for (const w of data.warnings) {
-      y = checkPage(doc, y, 7, pageW);
-      const color = w.level === "critical" ? "#EF4444" : w.level === "warning" ? "#EAB308" : "#3B82F6";
       doc.setFontSize(6);
+      const psWarnH = wrappedTextHeight(doc, w.message, pageW - 44, 3.2) + 2;
+      y = checkPage(doc, y, psWarnH, pageW);
+      const color = w.level === "critical" ? "#EF4444" : w.level === "warning" ? "#EAB308" : "#3B82F6";
       doc.setFont("helvetica", "bold");
       doc.setTextColor(...hexToRgb(color));
       doc.text(w.level === "critical" ? "!!" : "!", 19, y);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(...hexToRgb(MUTED));
       doc.text(w.message, 25, y, { maxWidth: pageW - 44 });
-      y += 7;
+      y += psWarnH;
     }
     y += 3;
   }
@@ -1082,7 +1101,7 @@ export async function generatePowerSystemPdf(data: PowerSystemPdfData): Promise<
   y += 4;
 
   // Safety Checklist
-  y = checkPage(doc, y, 10 + data.safetyChecklist.length * 5, pageW);
+  y = checkPage(doc, y, 10 + data.safetyChecklist.length * 7, pageW);
   roundedRect(doc, 15, y - 3, pageW - 30, 6, 2, "#FEF2F2");
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
@@ -1091,13 +1110,14 @@ export async function generatePowerSystemPdf(data: PowerSystemPdfData): Promise<
   y += 8;
 
   for (const item of data.safetyChecklist) {
-    y = checkPage(doc, y, 5, pageW);
     doc.setFontSize(7);
+    const checkH = wrappedTextHeight(doc, item.text, pageW - 44, 3.5) + 1.5;
+    y = checkPage(doc, y, checkH, pageW);
     doc.setFont("helvetica", item.critical ? "bold" : "normal");
     doc.setTextColor(...hexToRgb(item.critical ? "#EF4444" : MUTED));
     doc.rect(19, y - 2.5, 3, 3);
     doc.text(item.text, 25, y, { maxWidth: pageW - 44 });
-    y += 5;
+    y += checkH;
   }
 
   addFooter(doc, pageW);
