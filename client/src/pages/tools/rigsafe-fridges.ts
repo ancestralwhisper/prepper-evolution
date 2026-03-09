@@ -20,6 +20,9 @@ export interface FridgeEntry {
   weightLbs: number;
   capacityQts: number;
   drawAmps: number;
+  heightIn: number;
+  lengthIn?: number;
+  widthIn?: number;
   affiliateUrl: string;
   notes?: string;
 }
@@ -35,6 +38,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 37,
     capacityQts: 38,    // 36L
     drawAmps: 7.5,      // rated 12V DC draw
+    heightIn: 16.0,     // 407mm
+    lengthIn: 27.3,
+    widthIn: 15.7,
     affiliateUrl: "https://www.amazon.com/dp/B085MM9B2D?tag=prepperevo-20",
     notes: "36L / 50-can capacity. Best-selling compact Dometic. Fits behind most rear seats.",
   },
@@ -46,6 +52,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 41,
     capacityQts: 49,    // 46L
     drawAmps: 8.2,      // rated DC input current per Dometic spec
+    heightIn: 18.7,     // 476mm
+    lengthIn: 27.3,
+    widthIn: 15.7,
     affiliateUrl: "https://www.amazon.com/dp/B0F9LFBJHF?tag=prepperevo-20",
     notes: "46L / 67-can capacity. Most popular mid-size Dometic for overland builds.",
   },
@@ -57,6 +66,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 47,
     capacityQts: 56,    // 53L
     drawAmps: 8.9,
+    heightIn: 18.9,     // 480mm
+    lengthIn: 28.4,
+    widthIn: 17.9,
     affiliateUrl: "https://www.amazon.com/dp/B0DDYWJ7WS?tag=prepperevo-20",
     notes: "53L / 83-can capacity. Strong choice for extended trips with a full crew.",
   },
@@ -68,6 +80,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 61,
     capacityQts: 79,    // 75L dual zone
     drawAmps: 9.6,      // rated DC draw, dual zone running
+    heightIn: 18.6,     // 472mm
+    lengthIn: 35.1,
+    widthIn: 19.5,
     affiliateUrl: "https://www.amazon.com/dp/B0CHXMT21Z?tag=prepperevo-20",
     notes: "75L dual-zone — independent fridge and freezer compartments. WiFi/BT app control.",
   },
@@ -82,6 +97,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 30,
     capacityQts: 26,    // 25L
     drawAmps: 9.2,      // rated 12V DC input current per Dometic spec
+    heightIn: 16.5,     // 420mm
+    lengthIn: 22.4,
+    widthIn: 13.5,
     affiliateUrl: "#",
     notes: "25L / 33-can capacity. Most compact CFX5. VIP insulation, USB QC 3.0, Bluetooth app control.",
   },
@@ -93,6 +111,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 37,
     capacityQts: 37,    // 35L
     drawAmps: 7.6,      // rated 12V DC input current per Dometic spec
+    heightIn: 16.0,     // 407mm — same exterior as CFX3 35
+    lengthIn: 27.3,
+    widthIn: 15.7,
     affiliateUrl: "https://www.amazon.com/dp/B0DVM1G8VM?tag=prepperevo-20",
     notes: "35L / 50-can capacity. Vacuum Insulated Panels. TFT color display. USB QC 3.0. Bluetooth.",
   },
@@ -104,6 +125,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 42,
     capacityQts: 49,    // 46L
     drawAmps: 9.4,      // rated 12V DC input current per Dometic spec
+    heightIn: 18.7,     // 476mm — same exterior as CFX3 45
+    lengthIn: 27.3,
+    widthIn: 15.7,
     affiliateUrl: "#",
     notes: "46L / 72-can capacity. Mid-size sweet spot. VIP insulation, TFT display, USB QC 3.0.",
   },
@@ -115,6 +139,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 48,
     capacityQts: 58,    // 55L
     drawAmps: 9.6,      // rated 12V DC input current per Dometic spec
+    heightIn: 18.9,     // 480mm — same exterior as CFX3 55
+    lengthIn: 28.4,
+    widthIn: 17.9,
     affiliateUrl: "https://www.amazon.com/dp/B0F9LFZTVC?tag=prepperevo-20",
     notes: "55L / 83-can capacity with built-in ice maker. VIP insulation, TFT display, USB QC 3.0.",
   },
@@ -126,6 +153,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 60,
     capacityQts: 79,    // 75L dual zone (45L + 30L)
     drawAmps: 9.7,      // rated 12V DC input current per Dometic spec
+    heightIn: 18.6,     // 472mm — same exterior as CFX3 75DZ
+    lengthIn: 35.1,
+    widthIn: 19.5,
     affiliateUrl: "#",
     notes: "75L dual-zone (45L + 30L) — independent fridge and freezer. VIP insulation, TFT display, Bluetooth.",
   },
@@ -137,6 +167,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 64,
     capacityQts: 99,    // 94L dual zone
     drawAmps: 9.8,      // rated 12V DC input current per Dometic spec (US)
+    heightIn: 18.6,     // 472mm
+    lengthIn: 37.9,
+    widthIn: 20.9,
     affiliateUrl: "#",
     notes: "94L dual-zone — largest Dometic portable cooler. 133-can capacity. For extended family trips.",
   },
@@ -151,6 +184,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 53,
     capacityQts: 50,
     drawAmps: 4.5,      // estimated compressor running draw; ARB publishes 0.87 Ah/h cycling avg
+    heightIn: 20.0,     // 508mm
+    lengthIn: 27.8,
+    widthIn: 15.0,
     affiliateUrl: "https://www.amazon.com/dp/B07Q75PB68?tag=prepperevo-20",
     notes: "The gold standard for expedition use. Dual-zone compartment lid. Rock-solid build quality.",
   },
@@ -162,6 +198,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 70,
     capacityQts: 63,    // 60L
     drawAmps: 4.5,      // ~0.89 Ah average cycling
+    heightIn: 17.1,     // 434mm
+    lengthIn: 32.3,
+    widthIn: 19.3,
     affiliateUrl: "https://www.amazon.com/dp/B073X696GN?tag=prepperevo-20",
     notes: "Stainless steel exterior, fully weatherproof. Best ARB fridge for harsh conditions.",
   },
@@ -173,6 +212,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 49,
     capacityQts: 38,    // 36L
     drawAmps: 4.0,      // estimated; similar class to Zero 47
+    heightIn: 17.2,     // 437mm
+    lengthIn: 26.6,
+    widthIn: 16.6,
     affiliateUrl: "#",
     notes: "Compact single-zone with ARB's ultra-efficient SECOP compressor. -22°F to +50°F range.",
   },
@@ -184,6 +226,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 52.6,
     capacityQts: 47,
     drawAmps: 4.5,
+    heightIn: 19.5,     // 495mm
+    lengthIn: 26.6,
+    widthIn: 16.7,
     affiliateUrl: "https://www.amazon.com/dp/B084Z8Z55B?tag=prepperevo-20",
     notes: "Front-opening lid — unique to 38Qt and 47Qt. Perfect for bedside placement in a truck bed.",
   },
@@ -198,6 +243,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 48.7,
     capacityQts: 37,    // 35L
     drawAmps: 5.5,      // ~45W average / 12V
+    heightIn: 15.7,     // 399mm
+    lengthIn: 28.1,
+    widthIn: 15.9,
     affiliateUrl: "#",
     notes: "Metal construction, dual-zone capable. SECOP compressor. Strong budget alternative to Dometic.",
   },
@@ -209,6 +257,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 52,
     capacityQts: 48,    // 45L → ~47.6 qt; listed as 47 qt
     drawAmps: 5.5,      // ~55W average / 12V
+    heightIn: 18.1,     // 460mm
+    lengthIn: 28.1,
+    widthIn: 15.9,
     affiliateUrl: "#",
     notes: "47Qt single-zone. Slide mount compatible. Solid performer at a lower price point.",
   },
@@ -220,6 +271,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 65,
     capacityQts: 63,    // 60L
     drawAmps: 6.5,      // estimated; ~63Qt class
+    heightIn: 18.1,     // 460mm
+    lengthIn: 30.2,
+    widthIn: 18.5,
     affiliateUrl: "#",
     notes: "Dual-zone option available (VL60D). Largest VL-series for extended family trips.",
   },
@@ -234,6 +288,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 28,
     capacityQts: 30,
     drawAmps: 3.75,     // 45W ECO / 12V
+    heightIn: 16.2,     // 412mm
+    lengthIn: 22.7,
+    widthIn: 12.6,
     affiliateUrl: "https://www.amazon.com/dp/B0B9S6YX5N?tag=prepperevo-20",
     notes: "Lightest fridge on this list. Great for solo rigs or when payload is tight.",
   },
@@ -245,6 +302,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 44,
     capacityQts: 48,    // 45L
     drawAmps: 5.0,      // 60W max / 12V
+    heightIn: 20.0,     // 508mm
+    lengthIn: 28.0,
+    widthIn: 18.1,
     affiliateUrl: "https://www.amazon.com/dp/B091SJTWP5?tag=prepperevo-20",
     notes: "48Qt dual-zone option. App control. Best value in the 45L class.",
   },
@@ -259,6 +319,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 45,
     capacityQts: 37,    // 35L
     drawAmps: 4.6,      // 55W rated compressor / 12V; 0.57 Ah/h cycling avg
+    heightIn: 15.9,     // 404mm
+    lengthIn: 27.8,
+    widthIn: 15.7,
     affiliateUrl: "https://www.amazon.com/dp/B0F4DP9BKH?tag=prepperevo-20",
     notes: "Dual-zone (fridge + freezer). Detachable battery option. Ice-making mode. App control via WiFi/BT.",
   },
@@ -270,6 +333,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 51,
     capacityQts: 48,    // 45L
     drawAmps: 4.6,      // 55W rated compressor / 12V; same compressor as 35L
+    heightIn: 18.9,     // 480mm
+    lengthIn: 27.8,
+    widthIn: 15.7,
     affiliateUrl: "https://www.amazon.com/dp/B0FS6T2539?tag=prepperevo-20",
     notes: "Dual-zone. Same feature set as 35L in a larger package. Good for 2-4 person trips.",
   },
@@ -281,6 +347,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 55.6,
     capacityQts: 58,    // 55L
     drawAmps: 4.6,      // 55W rated compressor / 12V; same compressor as 35L/45L
+    heightIn: 18.9,     // 480mm
+    lengthIn: 27.8,
+    widthIn: 18.4,
     affiliateUrl: "https://www.amazon.com/dp/B0FS68S9V6?tag=prepperevo-20",
     notes: "Largest GLACIER. Dual-zone. Pairs perfectly with DELTA 3 series for extended off-grid use.",
   },
@@ -295,6 +364,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 22,
     capacityQts: 21,    // 19.8L
     drawAmps: 4.2,      // ~50W / 12V
+    heightIn: 12.6,     // 320mm
+    lengthIn: 22.4,
+    widthIn: 12.6,
     affiliateUrl: "#",
     notes: "Ultra-compact entry-level fridge. 21Qt. Good for day runs or secondary cooler duty.",
   },
@@ -306,6 +378,9 @@ export const fridgeDatabase: FridgeEntry[] = [
     weightLbs: 30,
     capacityQts: 38,    // 35.7L / 38Qt
     drawAmps: 5.0,      // 45W–60W / 12V
+    heightIn: 16.5,     // 419mm
+    lengthIn: 22.6,
+    widthIn: 14.4,
     affiliateUrl: "https://www.amazon.com/dp/B01N4WOSTZ?tag=prepperevo-20",
     notes: "38Qt single-zone. Budget-friendly compressor fridge. Popular first upgrade from ice chests.",
   },
@@ -314,7 +389,7 @@ export const fridgeDatabase: FridgeEntry[] = [
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 export function getFridgeBrands(): string[] {
-  return [...new Set(fridgeDatabase.map((f) => f.brand))].sort();
+  return Array.from(new Set(fridgeDatabase.map((f) => f.brand))).sort();
 }
 
 export function getFridgeModels(brand: string): FridgeEntry[] {

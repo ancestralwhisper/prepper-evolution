@@ -112,6 +112,17 @@ export interface DrivetrainMods {
   lockerType: "none" | "auto" | "selectable" | "spool";
 }
 
+// ─── Bed Slide ────────────────────────────────────────────────────
+
+export interface BedSlide {
+  installed: boolean;
+  type: "fridge-slide" | "full-extension" | "three-quarter" | "drawer-system";
+  material: "aluminum" | "steel" | "composite";
+  weightLbs: number;
+  loadCapacityLbs: number;
+  cargoWeightLbs: number;
+}
+
 // ─── Recovery Gear ─────────────────────────────────────────────────
 
 export interface RecoveryGear {
@@ -185,6 +196,7 @@ export interface VehicleProfile {
   trailer: TrailerSetup;
   drivetrainMods: DrivetrainMods;
   recovery: RecoveryGear;
+  bedSlide: BedSlide;
   waterFording: WaterFording;
 
   // ─── Custom / Misc ───

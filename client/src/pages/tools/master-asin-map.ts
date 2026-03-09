@@ -60,7 +60,8 @@ export type CategoryKey =
   | "lighting"
   | "camping"
   | "emergency-medical"
-  | "vehicle-protection";
+  | "vehicle-protection"
+  | "fire-starting";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -303,6 +304,7 @@ export const MASTER_ASIN_MAP: Record<CategoryKey, ProductEntry[]> = {
     p("B07MVF491C", "Front Runner Slimline II Roof Rack", "Overlanding Gear"),
     p("B07KCSPY71", "ARB TRED Pro Recovery Boards", "Overlanding Gear"),
     p("B073V6Q8DY", "Baja Designs Squadron Sport LED Light", "Overlanding Gear"),
+    p("B0BV34JSNK", "Tembo Tusk Super Jumbo Side Pull Fridge Slide (90-96L)", "Overlanding Gear"),
   ],
 
   // =========================================================================
@@ -353,6 +355,17 @@ export const MASTER_ASIN_MAP: Record<CategoryKey, ProductEntry[]> = {
   // =========================================================================
   "vehicle-protection": [
     p("B0BLCYSB3G", "EMP Shield Micro DC-12V", "Vehicle Protection", "On Mike's 2025 Sierra 1500"),
+  ],
+
+  // =========================================================================
+  // FIRE STARTING
+  // =========================================================================
+  "fire-starting": [
+    p("B008CL24SA", "UCO Stormproof Match Kit", "Fire Starting"),
+    p("B07P5JZ4SN", "Light My Fire FireSteel Army Ferro Rod (12,000 strikes)", "Fire Starting"),
+    p("B004412IHE", "Light My Fire Swedish FireSteel 2.0 Army", "Fire Starting"),
+    p("B09C2KFLC5", "Billy Buckskin Fatwood Fire Starter Sticks 10lb", "Fire Starting"),
+    p("B07HNTZTVB", "UST WetFire Tinder Cubes", "Fire Starting"),
   ],
 };
 

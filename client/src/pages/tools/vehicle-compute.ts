@@ -60,6 +60,12 @@ function calcTotalModWeight(p: VehicleProfile): number {
   w += p.fuel.auxTankGal * fuelLbsPerGal;
   w += p.fuel.extraCansGal * fuelLbsPerGal;
 
+  // Bed slide
+  if (p.bedSlide?.installed) {
+    w += p.bedSlide.weightLbs;
+    w += p.bedSlide.cargoWeightLbs;
+  }
+
   // Trailer tongue weight (added to vehicle weight)
   if (p.trailer.hasTrailer) w += p.trailer.tongueWeightLbs;
 
@@ -380,6 +386,12 @@ function calcWeightBreakdown(p: VehicleProfile): { label: string; value: number;
   const auxFuelWeight = (p.fuel.auxTankGal + p.fuel.extraCansGal) * fuelLbsPerGal;
   if (auxFuelWeight > 0) items.push({ label: "Aux Fuel", value: Math.round(auxFuelWeight), color: "#10B981" });
 
+  // Bed slide
+  if (p.bedSlide?.installed) {
+    const slideTotal = p.bedSlide.weightLbs + p.bedSlide.cargoWeightLbs;
+    if (slideTotal > 0) items.push({ label: "Bed Slide", value: slideTotal, color: "#14B8A6" });
+  }
+
   // Tongue weight
   if (p.trailer.hasTrailer && p.trailer.tongueWeightLbs > 0)
     items.push({ label: "Trailer Tongue", value: p.trailer.tongueWeightLbs, color: "#EC4899" });
@@ -446,6 +458,11 @@ function calcWarnings(
   // High CG with roof load
   if (p.roof.rtt && geo.modifiedSsf < 1.1) {
     w.push(`Roof top tent with reduced SSF (${geo.modifiedSsf}). High center of gravity increases roll risk. Remove RTT for highway towing.`);
+  }
+
+  // Bed slide overloaded
+  if (p.bedSlide?.installed && p.bedSlide.cargoWeightLbs > p.bedSlide.loadCapacityLbs && p.bedSlide.loadCapacityLbs > 0) {
+    w.push(`Bed slide cargo (${p.bedSlide.cargoWeightLbs} lbs) exceeds rated capacity (${p.bedSlide.loadCapacityLbs} lbs). Risk of slide failure or rail damage.`);
   }
 
   // No recovery gear with off-road setup

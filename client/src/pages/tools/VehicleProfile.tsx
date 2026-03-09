@@ -287,6 +287,10 @@ function createDefaultProfile(): VehicleProfile {
       tirePlug: false, compressor: false, spareTire: false,
       spareTireFullSize: false, shovel: false,
     },
+    bedSlide: {
+      installed: false, type: "fridge-slide", material: "steel",
+      weightLbs: 35, loadCapacityLbs: 150, cargoWeightLbs: 0,
+    },
     waterFording: { snorkel: false, stockWadingDepthIn: 0, modifiedWadingDepthIn: 0, diffBreathers: false },
     otherModsWeightLbs: 0, otherModsNotes: "",
     testedMpg: null, odometerMiles: 0,
@@ -899,6 +903,39 @@ export default function VehicleProfileEditor() {
                   <Toggle label="Full-Size Spare" checked={profile.recovery.spareTireFullSize} onChange={(v) => updateNested("recovery", { spareTireFullSize: v })} />
                 )}
                 <Toggle label="Shovel" checked={profile.recovery.shovel} onChange={(v) => updateNested("recovery", { shovel: v })} />
+              </div>
+            </Section>
+
+            {/* Bed Slide */}
+            <Section title="Bed Slide / Drawer System" icon={Package} open={openSections.has("bedslide")} onToggle={() => toggleSection("bedslide")}>
+              <div className="space-y-4">
+                <Toggle label="Bed Slide Installed" checked={profile.bedSlide.installed} onChange={(v) => updateNested("bedSlide", { installed: v })} hint="Tembo Tusk, BedSlide, CargoGlide, DECKED, etc." />
+                {profile.bedSlide.installed && (
+                  <>
+                    <div className="grid sm:grid-cols-3 gap-4">
+                      <SelectInput label="Type" value={profile.bedSlide.type} onChange={(v) => updateNested("bedSlide", { type: v })}
+                        options={[
+                          { value: "fridge-slide", label: "Fridge Slide" },
+                          { value: "full-extension", label: "Full Bed Extension" },
+                          { value: "three-quarter", label: "3/4 Bed Extension" },
+                          { value: "drawer-system", label: "Drawer System" },
+                        ]} />
+                      <SelectInput label="Material" value={profile.bedSlide.material} onChange={(v) => updateNested("bedSlide", { material: v })}
+                        options={[
+                          { value: "steel", label: "Steel" },
+                          { value: "aluminum", label: "Aluminum" },
+                          { value: "composite", label: "Composite / HDPE" },
+                        ]} />
+                      <NumberInput label="Slide Weight" value={profile.bedSlide.weightLbs} onChange={(v) => updateNested("bedSlide", { weightLbs: v })} unit="lbs"
+                        hint={profile.bedSlide.type === "fridge-slide" ? "Fridge slides 25-45 lbs" : "Full bed slides 100-250 lbs"} />
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <NumberInput label="Load Capacity" value={profile.bedSlide.loadCapacityLbs} onChange={(v) => updateNested("bedSlide", { loadCapacityLbs: v })} unit="lbs" hint="Manufacturer rated max" />
+                      <NumberInput label="Cargo on Slide" value={profile.bedSlide.cargoWeightLbs} onChange={(v) => updateNested("bedSlide", { cargoWeightLbs: v })} unit="lbs"
+                        hint={profile.bedSlide.type === "fridge-slide" ? "Fridge weight (CFX5 95DZ ~72 lbs)" : "Gear currently loaded"} />
+                    </div>
+                  </>
+                )}
               </div>
             </Section>
 
