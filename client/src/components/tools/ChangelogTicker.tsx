@@ -1,89 +1,10 @@
 
 // ─── Changelog Ticker ────────────────────────────────────────────
 // A scrolling news-ticker-style bar showing recent tool updates.
+// Reads from changelog.json — add new entries there when pushing tool updates.
 // Runs a CSS animation loop; pauses on hover.
 
-interface ChangelogEntry {
-  date: string;      // e.g. "Mar 3, 2026"
-  tool: string;      // e.g. "Vehicle Profile"
-  version: string;   // e.g. "v1.1"
-  summary: string;   // e.g. "Added 9 everyday vehicles"
-}
-
-const changelog: ChangelogEntry[] = [
-  {
-    date: "Mar 5, 2026",
-    tool: "All Tools",
-    version: "v1.1",
-    summary: "Added 'How This Tool Works' explainer card to all 12 tool pages — straight-talk descriptions of what each tool does and why it matters",
-  },
-  {
-    date: "Mar 5, 2026",
-    tool: "Power System Builder",
-    version: "v1.0",
-    summary: "New Ops Deck tool — design a complete 12V aux electrical system with wire gauge calculator, fuse sizing, LiFePO4 battery bank design, DC-DC charger selection, and safety-verified wiring diagram",
-  },
-  {
-    date: "Mar 5, 2026",
-    tool: "Trail Intel",
-    version: "v2.0",
-    summary: "Trail System layer — NPS park closure alerts, BLM route status (open/closed/limited), USFS seasonal access by vehicle type for 7 trail systems including Moab, Bighorn, Paiute, Glamis, and more",
-  },
-  {
-    date: "Mar 3, 2026",
-    tool: "Vehicle Profile",
-    version: "v1.1",
-    summary: "Added 9 everyday vehicles: GMC Canyon, Colorado Z71, Sierra SLE, Silverado LT, Forester Wilderness, Outback Premium, Bronco Sport, RAV4 TRD, Passport TrailSport — 41 vehicles total",
-  },
-  {
-    date: "Mar 1, 2026",
-    tool: "Vehicle Profile",
-    version: "v1.0",
-    summary: "Launched with 32 vehicles, 10 mod categories, real-time MPG/payload/stability physics engine",
-  },
-  {
-    date: "Mar 1, 2026",
-    tool: "All Tools",
-    version: "",
-    summary: "Added data privacy notices, ZIP code auto-fill system, and version tracking across all calculators",
-  },
-  {
-    date: "Feb 28, 2026",
-    tool: "SHTF Simulator",
-    version: "v1.0",
-    summary: "Launched choice-based survival scenarios — your decisions determine if you make it out",
-  },
-  {
-    date: "Feb 26, 2026",
-    tool: "Solar Calculator",
-    version: "v1.3",
-    summary: "Added apartment caps (200W/2500Wh), living situation selector, ZIP-based solar hours",
-  },
-  {
-    date: "Feb 26, 2026",
-    tool: "BOB Calculator",
-    version: "v1.3",
-    summary: "Expanded to 80 items across 11 categories with real ASINs and affiliate links",
-  },
-  {
-    date: "Feb 25, 2026",
-    tool: "Water Storage",
-    version: "v1.2",
-    summary: "Added ZIP lookup, living situation awareness, apartment container filtering",
-  },
-  {
-    date: "Feb 25, 2026",
-    tool: "Food Storage",
-    version: "v1.2",
-    summary: "Added living situation selector with apartment space alerts",
-  },
-  {
-    date: "Feb 25, 2026",
-    tool: "72-Hour Kit",
-    version: "v1.2",
-    summary: "ZIP auto-fills region, climate, and hazards including California wildfire zones",
-  },
-];
+import changelog from "../../pages/tools/changelog.json";
 
 export default function ChangelogTicker() {
   // Duplicate entries for seamless infinite scroll

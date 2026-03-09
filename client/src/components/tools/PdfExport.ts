@@ -171,6 +171,8 @@ function drawSummaryBox(
   roundedRect(doc, 15, y, boxW, boxH, 3, LIGHT_BG);
 
   const colW = boxW / stats.length;
+  const colPad = 4;
+  const maxTextW = colW - colPad * 2;
   stats.forEach((stat, i) => {
     const cx = 15 + colW * i + colW / 2;
 
@@ -179,16 +181,28 @@ function drawSummaryBox(
     doc.setTextColor(...hexToRgb(MUTED));
     doc.text(stat.label.toUpperCase(), cx, y + 7, { align: "center" });
 
-    doc.setFontSize(14);
+    let valueFontSize = 14;
     doc.setFont("helvetica", "bold");
+    doc.setFontSize(valueFontSize);
+    while (valueFontSize > 7 && doc.getTextWidth(stat.value) > maxTextW) {
+      valueFontSize -= 0.5;
+      doc.setFontSize(valueFontSize);
+    }
     doc.setTextColor(...hexToRgb(DARK));
-    doc.text(stat.value, cx, y + 16, { align: "center" });
+    const displayValue = doc.getTextWidth(stat.value) > maxTextW
+      ? truncateUrl(doc, stat.value, maxTextW)
+      : stat.value;
+    doc.text(displayValue, cx, y + 16, { align: "center" });
 
     if (stat.sub) {
       doc.setFontSize(7);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(...hexToRgb(MUTED));
-      doc.text(stat.sub, cx, y + 22, { align: "center" });
+      const subMaxW = maxTextW;
+      const displaySub = doc.getTextWidth(stat.sub) > subMaxW
+        ? truncateUrl(doc, stat.sub, subMaxW)
+        : stat.sub;
+      doc.text(displaySub, cx, y + 22, { align: "center" });
     }
 
     // Column divider

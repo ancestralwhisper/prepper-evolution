@@ -909,7 +909,7 @@ export default function VehicleProfileEditor() {
             {/* Bed Slide */}
             <Section title="Bed Slide / Drawer System" icon={Package} open={openSections.has("bedslide")} onToggle={() => toggleSection("bedslide")}>
               <div className="space-y-4">
-                <Toggle label="Bed Slide Installed" checked={profile.bedSlide.installed} onChange={(v) => updateNested("bedSlide", { installed: v })} hint="Tembo Tusk, BedSlide, CargoGlide, DECKED, etc." />
+                <Toggle label="Bed Slide Installed" checked={profile.bedSlide.installed} onChange={(v) => updateNested("bedSlide", { installed: v })} hint="DFG Offroad, Tembo Tusk, BedSlide, CargoGlide, DECKED, etc." />
                 {profile.bedSlide.installed && (
                   <>
                     <div className="grid sm:grid-cols-3 gap-4">
