@@ -771,7 +771,7 @@ export const accessories: UTVAccessory[] = [
     isCosmetic: false,
     affiliateUrl: "https://www.dfgoffroad.com/",
     compatibleMachines: "all",
-    notes: "Sideways slide-out for Dometic CFX5 95DZ. Low-profile steel. $459.99 — much cheaper than Tembo Tusk.",
+    notes: "Sideways slide-out for Dometic CFX5 95DZ. 38.75\"L x 23.75\"W x 3\"H, tray 37\"x21.75\", 1\" tray height above base, 36\" extension, lock in/out, 350 lb rated capacity. $459.99.",
   },
   {
     id: "dfg-fridge-slide-cfx3-35-45",
