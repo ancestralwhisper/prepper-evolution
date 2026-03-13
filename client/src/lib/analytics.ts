@@ -48,7 +48,11 @@ type PEEvent =
   // Results / outcomes
   | { name: "pe_scenario_completed"; params: { scenario: string; outcome: string; score: number } }
   | { name: "pe_payload_warning"; params: { machine: string; pct: number; warning: string } }
-  | { name: "pe_kit_saved"; params: { tool: string } };
+  | { name: "pe_kit_saved"; params: { tool: string } }
+
+  // Deadstock
+  | { name: "pe_deadstock_reveal"; params: { tool: string } }
+  | { name: "pe_deadstock_reset"; params: Record<string, never> };
 
 declare global {
   interface Window {

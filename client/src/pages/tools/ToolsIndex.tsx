@@ -3,7 +3,7 @@ import {
   Backpack, Droplets, UtensilsCrossed, Zap, ClipboardList, Map,
   ArrowRight, FolderOpen, Shield, Target, Crosshair,
   Siren, Skull, Truck, Fuel, Weight, Brain, Wrench, Radar, BatteryCharging,
-  AlertTriangle, BarChart3, Repeat,
+  AlertTriangle, BarChart3, Repeat, Package,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import ChangelogTicker from "@/components/tools/ChangelogTicker";
@@ -102,6 +102,17 @@ const hardlineTools: Tool[] = [
 ];
 
 const opsDeckTools: Tool[] = [
+  {
+    slug: "deadstock",
+    name: "Deadstock — Supply Lifecycle Manager",
+    description:
+      "Know your exact number. Calculate the precise day your household becomes dependent on outside help. Tracks water, food, medical, power, comms, and gear — 100% private, stored on your device only.",
+    icon: Package,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Find Your Number",
+  },
   {
     slug: "vehicle-profile",
     name: "Unified Vehicle Profile",

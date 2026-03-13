@@ -1,6 +1,12 @@
 [
   {
     "date": "Mar 13, 2026",
+    "tool": "Deadstock",
+    "version": "v1.0",
+    "summary": "New Ops Deck tool: Supply Lifecycle Manager calculates your exact autonomy days across 6 categories. 100% private — all data stays on your device."
+  },
+  {
+    "date": "Mar 13, 2026",
     "tool": "Fuel & Range Planner",
     "version": "v1.0",
     "summary": "New Ops Deck tool: terrain-adjusted MPG calculator with 8 terrain types, elevation penalties, speed curves, climate adjustments, fuel timeline, and jerry can cache recommendations"

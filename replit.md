@@ -28,7 +28,8 @@ Preferred communication style: Simple, everyday language.
 - `/products` — Shop Gear page with all products
 - `/comparisons/:slug` — Head-to-head gear comparison pages
 - `/category/:name` — Category-filtered content pages
-- `/tools` — Tools index page with video hero, quiz banner, saved kits link, all 7 tools
+- `/tools` — Tools index page with video hero, quiz banner, saved kits link, all tools
+- `/tools/deadstock` — Deadstock Supply Lifecycle Manager: 6-category autonomy calculator (water, food, medical, power, comms, gear), household-adjusted, animated reveal, 100% localStorage private
 - `/tools/bug-out-bag-calculator` — Interactive BOB weight calculator with 60+ gear items, donut chart, affiliate links, print/share
 - `/tools/solar-power-calculator` — Solar panel & power station sizing calculator with device library, region-based sun hours, PDF export, use-case presets
 - `/tools/power-station-runtime` — Power Station Runtime Calculator: select a power station, add devices, see battery runtime with optional solar extension
