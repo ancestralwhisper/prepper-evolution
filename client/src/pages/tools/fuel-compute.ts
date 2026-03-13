@@ -73,11 +73,23 @@ export function temperaturePenalty(climateZone: string | null): number {
 
 const RESERVE_PCT = 0.10;
 
+export const JERRY_CAN_WEIGHT_LBS = 42;
+export const JERRY_CAN_GAL = 5;
+export const MPG_PENALTY_PER_100LBS = 0.01;
+
+export function auxFuelMpgPenalty(jerryCans: number, baseMpg: number): number {
+  if (jerryCans <= 0) return baseMpg;
+  const extraWeight = jerryCans * JERRY_CAN_WEIGHT_LBS;
+  const penalty = (extraWeight / 100) * MPG_PENALTY_PER_100LBS;
+  return Math.round(baseMpg * (1 - penalty) * 10) / 10;
+}
+
 export function computeTrip(
   segments: TripSegment[],
   baseMpg: number,
   totalFuelGal: number,
   climateZone: string | null = null,
+  gasPricePerGal: number = 0,
 ): TripResult {
   let fuelRemaining = totalFuelGal;
   const reserve = totalFuelGal * RESERVE_PCT;
@@ -86,8 +98,14 @@ export function computeTrip(
   let totalDistance = 0;
   let totalFuel = 0;
   let totalTime = 0;
+  let refuelStopCount = 0;
 
   const results: SegmentResult[] = segments.map((seg, idx) => {
+    if (seg.isFuelStop && idx > 0) {
+      fuelRemaining = totalFuelGal;
+      refuelStopCount++;
+    }
+
     const terrainMult = terrainMpgMultiplier[seg.terrain];
 
     const rawElevPenalty = seg.elevationGainFt > 0
@@ -105,6 +123,8 @@ export function computeTrip(
 
     const fuelUsed = seg.distanceMiles / adjustedMpg;
     const timeHours = seg.speedMph > 0 ? seg.distanceMiles / seg.speedMph : 0;
+
+    const fuelAfterRefill = seg.isFuelStop && idx > 0 ? totalFuelGal : fuelRemaining + fuelUsed;
 
     fuelRemaining -= fuelUsed;
     totalDistance += seg.distanceMiles;
@@ -128,6 +148,8 @@ export function computeTrip(
       adjustedMpg: Math.round(adjustedMpg * 10) / 10,
       fuelUsedGal: Math.round(fuelUsed * 100) / 100,
       fuelRemainingGal: Math.round(Math.max(0, fuelRemaining) * 100) / 100,
+      fuelAfterRefillGal: Math.round(fuelAfterRefill * 100) / 100,
+      didRefuel: seg.isFuelStop && idx > 0,
       cumulativeDistanceMiles: Math.round(totalDistance * 10) / 10,
       timeHours: Math.round(timeHours * 100) / 100,
       terrainMultiplier: terrainMult,
@@ -137,6 +159,10 @@ export function computeTrip(
     };
   });
 
+  const totalCost = gasPricePerGal > 0
+    ? Math.round(totalFuel * gasPricePerGal * 100) / 100
+    : 0;
+
   return {
     segments: results,
     totalDistanceMiles: Math.round(totalDistance * 10) / 10,
@@ -144,6 +170,8 @@ export function computeTrip(
     totalFuelCapacityGal: totalFuelGal,
     fuelRemainingGal: Math.round(Math.max(0, fuelRemaining) * 100) / 100,
     totalTimeHours: Math.round(totalTime * 100) / 100,
+    totalFuelCost: totalCost,
+    refuelStopCount,
     pointOfNoReturnIdx: pointOfNoReturn,
     reserveWarning: fuelRemaining >= 0 && fuelRemaining < reserve,
     outOfFuel: fuelRemaining < 0,

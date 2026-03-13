@@ -2,9 +2,10 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link } from "wouter";
 import {
   Fuel, MapPin, Plus, Trash2, ChevronUp, ChevronDown,
-  AlertTriangle, Gauge, Clock, Route, Mountain, Truck,
+  AlertTriangle, Gauge, Route, Mountain, Truck,
   ArrowDown, Info, GripVertical, Copy, RotateCcw,
-  Printer, Share2, Download,
+  Printer, Download, DollarSign, Package, RefreshCw,
+  Repeat, BookOpen, ChevronRight,
 } from "lucide-react";
 import { computeVehicle } from "./vehicle-compute";
 import type { VehicleProfile as VehicleProfileType, VehicleComputed } from "./vehicle-types";
@@ -12,8 +13,10 @@ import { VEHICLE_PROFILE_KEY } from "./vehicle-types";
 import {
   computeTrip, terrainLabels, terrainDefaultSpeed,
   terrainMpgMultiplier, terrainIcons, formatTime, fuelPct,
+  auxFuelMpgPenalty, JERRY_CAN_GAL, JERRY_CAN_WEIGHT_LBS,
 } from "./fuel-compute";
 import type { TerrainType, TripSegment, TripResult } from "./fuel-types";
+import { tripPresets } from "./fuel-presets";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
 import ZipLookup from "@/components/tools/ZipLookup";
@@ -22,6 +25,7 @@ import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
+import { generateFuelRangePdf } from "@/components/tools/PdfExport";
 import { trackEvent } from "@/lib/analytics";
 import { useSEO } from "@/hooks/useSEO";
 
@@ -54,6 +58,7 @@ function defaultSegment(index: number): TripSegment {
     terrain: "highway",
     elevationGainFt: 0,
     speedMph: terrainDefaultSpeed.highway,
+    isFuelStop: false,
   };
 }
 
@@ -80,7 +85,7 @@ interface SegmentEditorProps {
   segment: TripSegment;
   index: number;
   total: number;
-  onChange: (id: string, field: string, value: string | number) => void;
+  onChange: (id: string, field: string, value: string | number | boolean) => void;
   onRemove: (id: string) => void;
   onMoveUp: (id: string) => void;
   onMoveDown: (id: string) => void;
@@ -96,15 +101,29 @@ function SegmentEditor({
   };
 
   return (
-    <div className="bg-card border border-border rounded-lg p-4" data-testid={`segment-editor-${index}`}>
+    <div className={`bg-card border rounded-lg p-4 ${segment.isFuelStop ? "border-blue-500/50 bg-blue-500/5" : "border-border"}`} data-testid={`segment-editor-${index}`}>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <GripVertical className="w-4 h-4 text-muted-foreground/30" />
           <span className="text-[10px] font-bold uppercase tracking-wide text-primary">
             Segment {index + 1}
           </span>
+          {segment.isFuelStop && (
+            <span className="text-[9px] font-bold uppercase tracking-wide text-blue-400 bg-blue-400/10 px-1.5 py-0.5 rounded">
+              Fuel Stop
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-1">
+          <button
+            onClick={() => onChange(segment.id, "isFuelStop", !segment.isFuelStop)}
+            className={`p-1 transition-colors ${segment.isFuelStop ? "text-blue-400 hover:text-blue-300" : "text-muted-foreground/40 hover:text-blue-400"}`}
+            aria-label="Toggle fuel stop"
+            title={segment.isFuelStop ? "Remove fuel stop" : "Mark as fuel stop"}
+            data-testid={`button-fuel-stop-${index}`}
+          >
+            <Fuel className="w-4 h-4" />
+          </button>
           <button
             onClick={() => onDuplicate(segment.id)}
             className="p-1 text-muted-foreground/40 hover:text-foreground transition-colors"
@@ -256,6 +275,12 @@ export default function FuelRangePlanner() {
   const [manualMpg, setManualMpg] = useState<number | null>(null);
   const [manualFuel, setManualFuel] = useState<number | null>(null);
   const [showManualOverride, setShowManualOverride] = useState(false);
+  const [gasPrice, setGasPrice] = useState<number>(0);
+  const [jerryCans, setJerryCans] = useState(0);
+  const [roundTrip, setRoundTrip] = useState(false);
+  const [showPresets, setShowPresets] = useState(false);
+  const [showAuxFuel, setShowAuxFuel] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
 
   useEffect(() => {
     trackEvent("pe_tool_view", { tool: "fuel-range-planner" });
@@ -278,6 +303,9 @@ export default function FuelRangePlanner() {
           if (trip.tripName) setTripName(trip.tripName);
           if (trip.manualMpg) setManualMpg(trip.manualMpg);
           if (trip.manualFuel) setManualFuel(trip.manualFuel);
+          if (trip.gasPrice) setGasPrice(trip.gasPrice);
+          if (trip.jerryCans) setJerryCans(trip.jerryCans);
+          if (trip.roundTrip) setRoundTrip(trip.roundTrip);
         }
       } catch { /* corrupted */ }
     }
@@ -286,18 +314,31 @@ export default function FuelRangePlanner() {
   useEffect(() => {
     localStorage.setItem(
       TRIP_STORAGE_KEY,
-      JSON.stringify({ tripName, segments, manualMpg, manualFuel }),
+      JSON.stringify({ tripName, segments, manualMpg, manualFuel, gasPrice, jerryCans, roundTrip }),
     );
-  }, [tripName, segments, manualMpg, manualFuel]);
+  }, [tripName, segments, manualMpg, manualFuel, gasPrice, jerryCans, roundTrip]);
 
-  const baseMpg = manualMpg ?? computed?.estimatedMpg ?? 20;
-  const totalFuelGal = manualFuel ?? computed?.totalFuelGal ?? 24;
+  const rawBaseMpg = manualMpg ?? computed?.estimatedMpg ?? 20;
+  const baseMpg = jerryCans > 0 ? auxFuelMpgPenalty(jerryCans, rawBaseMpg) : rawBaseMpg;
+  const tankFuel = manualFuel ?? computed?.totalFuelGal ?? 24;
+  const totalFuelGal = tankFuel + (jerryCans * JERRY_CAN_GAL);
+
+  const effectiveSegments = useMemo(() => {
+    if (!roundTrip) return segments;
+    const reversed = [...segments].reverse().map((seg, i) => ({
+      ...seg,
+      id: makeId(),
+      name: `${seg.name} (return)`,
+      isFuelStop: false,
+    }));
+    return [...segments, ...reversed];
+  }, [segments, roundTrip]);
 
   const tripResult: TripResult | null = useMemo(() => {
-    const validSegments = segments.filter((s) => s.distanceMiles > 0);
+    const validSegments = effectiveSegments.filter((s) => s.distanceMiles > 0);
     if (validSegments.length === 0) return null;
-    return computeTrip(validSegments, baseMpg, totalFuelGal, climateZone);
-  }, [segments, baseMpg, totalFuelGal, climateZone]);
+    return computeTrip(validSegments, baseMpg, totalFuelGal, climateZone, gasPrice);
+  }, [effectiveSegments, baseMpg, totalFuelGal, climateZone, gasPrice]);
 
   const terrainBreakdown = useMemo(() => {
     if (!tripResult) return [];
@@ -325,7 +366,7 @@ export default function FuelRangePlanner() {
   }, [tripResult]);
 
   const updateSegment = useCallback(
-    (id: string, field: string, value: string | number) => {
+    (id: string, field: string, value: string | number | boolean) => {
       setSegments((prev) =>
         prev.map((s) => (s.id === id ? { ...s, [field]: value } : s)),
       );
@@ -367,6 +408,9 @@ export default function FuelRangePlanner() {
     setTripName("My Trip");
     setManualMpg(null);
     setManualFuel(null);
+    setGasPrice(0);
+    setJerryCans(0);
+    setRoundTrip(false);
     localStorage.removeItem(TRIP_STORAGE_KEY);
     trackEvent("pe_fuel_trip_reset", {} as Record<string, never>);
   }, []);
@@ -387,6 +431,15 @@ export default function FuelRangePlanner() {
     });
   }, []);
 
+  const loadPreset = useCallback((presetId: string) => {
+    const preset = tripPresets.find((p) => p.id === presetId);
+    if (!preset) return;
+    setTripName(preset.name);
+    setSegments(preset.segments.map((s) => ({ ...s, id: makeId() })));
+    setShowPresets(false);
+    trackEvent("pe_tool_started", { tool: "fuel-range-planner" });
+  }, []);
+
   const handleZipResult = useCallback((data: ZipPrefixData | null) => {
     setClimateZone(data?.cz ?? null);
   }, []);
@@ -395,6 +448,54 @@ export default function FuelRangePlanner() {
     trackEvent("pe_fuel_print", { tripName });
     window.print();
   }, [tripName]);
+
+  const handlePdfExport = useCallback(async () => {
+    if (!tripResult) return;
+    setPdfLoading(true);
+    try {
+      const cacheNeeded = tripResult.outOfFuel
+        ? Math.ceil(tripResult.totalFuelUsedGal - totalFuelGal + totalFuelGal * 0.1)
+        : null;
+      await generateFuelRangePdf({
+        tripName,
+        vehicleName: profile ? `${profile.year} ${profile.make} ${profile.model}` : null,
+        baseMpg,
+        totalFuelGal,
+        rangeMiles: computed?.estimatedRangeMiles ?? null,
+        gasPricePerGal: gasPrice,
+        jerryCans,
+        climateZone,
+        segments: tripResult.segments.map((r) => ({
+          name: r.segment.name,
+          terrain: terrainLabels[r.segment.terrain],
+          distanceMiles: r.segment.distanceMiles,
+          elevationGainFt: r.segment.elevationGainFt,
+          speedMph: r.segment.speedMph,
+          adjustedMpg: r.adjustedMpg,
+          fuelUsedGal: r.fuelUsedGal,
+          fuelRemainingGal: r.fuelRemainingGal,
+          timeFormatted: formatTime(r.timeHours),
+          isFuelStop: r.segment.isFuelStop,
+          didRefuel: r.didRefuel,
+          warnings: r.warnings,
+        })),
+        totalDistanceMiles: tripResult.totalDistanceMiles,
+        totalFuelUsedGal: tripResult.totalFuelUsedGal,
+        fuelRemainingGal: tripResult.fuelRemainingGal,
+        totalTimeFormatted: formatTime(tripResult.totalTimeHours),
+        totalFuelCost: tripResult.totalFuelCost,
+        outOfFuel: tripResult.outOfFuel,
+        reserveWarning: tripResult.reserveWarning,
+        pointOfNoReturnIdx: tripResult.pointOfNoReturnIdx,
+        refuelStopCount: tripResult.refuelStopCount,
+        cacheGallons: cacheNeeded,
+        cacheCans: cacheNeeded !== null ? Math.ceil(cacheNeeded / 5) : null,
+      });
+      trackEvent("pe_pdf_exported", { tool: "fuel-range-planner" });
+    } finally {
+      setPdfLoading(false);
+    }
+  }, [tripResult, tripName, profile, baseMpg, totalFuelGal, computed, gasPrice, jerryCans, climateZone]);
 
   const schemaMarkup = {
     "@context": "https://schema.org",
@@ -414,7 +515,7 @@ export default function FuelRangePlanner() {
         <div className="print-header">
           <img src="/images/pe-badge.png" alt="Prepper Evolution" className="print-logo" />
           <div>
-            <h2 className="print-title">Fuel & Range Plan: {tripName}</h2>
+            <h2 className="print-title">Fuel & Range Plan: {tripName}{roundTrip ? " (Round Trip)" : ""}</h2>
             <p className="print-date">{new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
           </div>
         </div>
@@ -427,66 +528,72 @@ export default function FuelRangePlanner() {
               </div>
               <div>
                 <span className="print-label">Est. MPG</span>
-                <span className="print-value">{baseMpg}</span>
+                <span className="print-value">{baseMpg}{jerryCans > 0 ? ` (${rawBaseMpg} base - weight penalty)` : ""}</span>
               </div>
               <div>
                 <span className="print-label">Fuel Capacity</span>
-                <span className="print-value">{totalFuelGal} gal</span>
+                <span className="print-value">{totalFuelGal} gal{jerryCans > 0 ? ` (${tankFuel} tank + ${jerryCans * JERRY_CAN_GAL} aux)` : ""}</span>
               </div>
             </div>
           </div>
         )}
         {tripResult && (
-          <div className="print-summary">
-            <div className="print-summary-grid">
-              <div>
-                <span className="print-label">Total Distance</span>
-                <span className="print-value">{tripResult.totalDistanceMiles} mi</span>
-              </div>
-              <div>
-                <span className="print-label">Fuel Required</span>
-                <span className="print-value">{tripResult.totalFuelUsedGal} gal</span>
-              </div>
-              <div>
-                <span className="print-label">Fuel Remaining</span>
-                <span className="print-value">{tripResult.outOfFuel ? "EMPTY" : `${tripResult.fuelRemainingGal} gal`}</span>
-              </div>
-              <div>
-                <span className="print-label">Drive Time</span>
-                <span className="print-value">{formatTime(tripResult.totalTimeHours)}</span>
+          <>
+            <div className="print-summary">
+              <div className="print-summary-grid">
+                <div>
+                  <span className="print-label">Total Distance</span>
+                  <span className="print-value">{tripResult.totalDistanceMiles} mi</span>
+                </div>
+                <div>
+                  <span className="print-label">Fuel Required</span>
+                  <span className="print-value">{tripResult.totalFuelUsedGal} gal</span>
+                </div>
+                <div>
+                  <span className="print-label">Fuel Remaining</span>
+                  <span className="print-value">{tripResult.outOfFuel ? "EMPTY" : `${tripResult.fuelRemainingGal} gal`}</span>
+                </div>
+                <div>
+                  <span className="print-label">Drive Time</span>
+                  <span className="print-value">{formatTime(tripResult.totalTimeHours)}</span>
+                </div>
+                {gasPrice > 0 && (
+                  <div>
+                    <span className="print-label">Est. Fuel Cost</span>
+                    <span className="print-value">${tripResult.totalFuelCost.toFixed(2)}</span>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-        )}
-        {tripResult && (
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "11px", marginTop: "12px" }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid #333", textAlign: "left" }}>
-                <th style={{ padding: "4px 8px" }}>#</th>
-                <th style={{ padding: "4px 8px" }}>Segment</th>
-                <th style={{ padding: "4px 8px" }}>Terrain</th>
-                <th style={{ padding: "4px 8px", textAlign: "right" }}>Dist</th>
-                <th style={{ padding: "4px 8px", textAlign: "right" }}>MPG</th>
-                <th style={{ padding: "4px 8px", textAlign: "right" }}>Fuel</th>
-                <th style={{ padding: "4px 8px", textAlign: "right" }}>Left</th>
-                <th style={{ padding: "4px 8px", textAlign: "right" }}>Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tripResult.segments.map((r, i) => (
-                <tr key={r.segment.id} style={{ borderBottom: "1px solid #ddd" }}>
-                  <td style={{ padding: "4px 8px" }}>{i + 1}</td>
-                  <td style={{ padding: "4px 8px" }}>{r.segment.name}</td>
-                  <td style={{ padding: "4px 8px" }}>{terrainLabels[r.segment.terrain]}</td>
-                  <td style={{ padding: "4px 8px", textAlign: "right" }}>{r.segment.distanceMiles} mi</td>
-                  <td style={{ padding: "4px 8px", textAlign: "right" }}>{r.adjustedMpg}</td>
-                  <td style={{ padding: "4px 8px", textAlign: "right" }}>-{r.fuelUsedGal}</td>
-                  <td style={{ padding: "4px 8px", textAlign: "right" }}>{r.fuelRemainingGal} gal</td>
-                  <td style={{ padding: "4px 8px", textAlign: "right" }}>{formatTime(r.timeHours)}</td>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "11px", marginTop: "12px" }}>
+              <thead>
+                <tr style={{ borderBottom: "2px solid #333", textAlign: "left" }}>
+                  <th style={{ padding: "4px 8px" }}>#</th>
+                  <th style={{ padding: "4px 8px" }}>Segment</th>
+                  <th style={{ padding: "4px 8px" }}>Terrain</th>
+                  <th style={{ padding: "4px 8px", textAlign: "right" }}>Dist</th>
+                  <th style={{ padding: "4px 8px", textAlign: "right" }}>MPG</th>
+                  <th style={{ padding: "4px 8px", textAlign: "right" }}>Fuel</th>
+                  <th style={{ padding: "4px 8px", textAlign: "right" }}>Left</th>
+                  <th style={{ padding: "4px 8px", textAlign: "right" }}>Time</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tripResult.segments.map((r, i) => (
+                  <tr key={r.segment.id} style={{ borderBottom: "1px solid #ddd" }}>
+                    <td style={{ padding: "4px 8px" }}>{i + 1}</td>
+                    <td style={{ padding: "4px 8px" }}>{r.didRefuel ? "\u26FD " : ""}{r.segment.name}</td>
+                    <td style={{ padding: "4px 8px" }}>{terrainLabels[r.segment.terrain]}</td>
+                    <td style={{ padding: "4px 8px", textAlign: "right" }}>{r.segment.distanceMiles} mi</td>
+                    <td style={{ padding: "4px 8px", textAlign: "right" }}>{r.adjustedMpg}</td>
+                    <td style={{ padding: "4px 8px", textAlign: "right" }}>-{r.fuelUsedGal}</td>
+                    <td style={{ padding: "4px 8px", textAlign: "right" }}>{r.fuelRemainingGal} gal</td>
+                    <td style={{ padding: "4px 8px", textAlign: "right" }}>{formatTime(r.timeHours)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
         )}
         <PrintQrCode url="https://prepperevolution.com/tools/fuel-range-planner" />
       </div>
@@ -522,6 +629,17 @@ export default function FuelRangePlanner() {
                 <Printer className="w-3.5 h-3.5" />
                 Print
               </button>
+              {tripResult && (
+                <button
+                  onClick={handlePdfExport}
+                  disabled={pdfLoading}
+                  className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+                  data-testid="button-pdf-export"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  {pdfLoading ? "Generating..." : "Export PDF"}
+                </button>
+              )}
               <ToolSocialShare
                 toolName="Fuel & Range Planner"
                 url="https://prepperevolution.com/tools/fuel-range-planner"
@@ -551,20 +669,23 @@ export default function FuelRangePlanner() {
                   <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
                     <div>
                       <span className="text-muted-foreground">MPG: </span>
-                      <span className="font-bold text-foreground">{computed.estimatedMpg}</span>
-                      {computed.mpgPenaltyPct > 0 && (
+                      <span className="font-bold text-foreground">{baseMpg}</span>
+                      {(computed.mpgPenaltyPct > 0 || jerryCans > 0) && (
                         <span className="text-red-400 text-xs ml-1">
-                          (-{Math.round(computed.mpgPenaltyPct)}%)
+                          ({jerryCans > 0 ? `${rawBaseMpg} base - cargo` : `-${Math.round(computed.mpgPenaltyPct)}%`})
                         </span>
                       )}
                     </div>
                     <div>
                       <span className="text-muted-foreground">Fuel: </span>
-                      <span className="font-bold text-foreground">{computed.totalFuelGal} gal</span>
+                      <span className="font-bold text-foreground">{totalFuelGal} gal</span>
+                      {jerryCans > 0 && (
+                        <span className="text-blue-400 text-xs ml-1">(+{jerryCans * JERRY_CAN_GAL} aux)</span>
+                      )}
                     </div>
                     <div>
                       <span className="text-muted-foreground">Range: </span>
-                      <span className="font-bold text-foreground">{computed.estimatedRangeMiles} mi</span>
+                      <span className="font-bold text-foreground">{Math.round(baseMpg * totalFuelGal)} mi</span>
                     </div>
                   </div>
                 </div>
@@ -576,16 +697,6 @@ export default function FuelRangePlanner() {
                         {w}
                       </div>
                     ))}
-                  </div>
-                )}
-                {(manualMpg !== null || manualFuel !== null) && (
-                  <div className="mt-3 pt-3 border-t border-border">
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-amber-400 mb-1">
-                      Manual Override Active
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Using {manualMpg ?? computed.estimatedMpg} MPG / {manualFuel ?? computed.totalFuelGal} gal instead of Vehicle Profile values.
-                    </p>
                   </div>
                 )}
               </div>
@@ -611,63 +722,126 @@ export default function FuelRangePlanner() {
               </div>
             )}
 
-            <div className="bg-card border border-border rounded-lg p-4">
-              <button
-                onClick={() => setShowManualOverride(!showManualOverride)}
-                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors w-full"
-                data-testid="button-manual-override"
-              >
-                <Gauge className="w-4 h-4 text-primary flex-shrink-0" />
-                Manual MPG / Fuel Override
-                <ChevronDown className={`w-3 h-3 ml-auto transition-transform ${showManualOverride ? "rotate-180" : ""}`} />
-              </button>
-              {showManualOverride && (
-                <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-border">
-                  <div>
-                    <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
-                      Base MPG
-                    </label>
-                    <input
-                      type="number"
-                      inputMode="decimal"
-                      value={manualMpg ?? ""}
-                      onChange={(e) => setManualMpg(e.target.value ? parseFloat(e.target.value) : null)}
-                      placeholder={String(computed?.estimatedMpg ?? 20)}
-                      min="1"
-                      max="99"
-                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 outline-none transition-colors"
-                      data-testid="input-manual-mpg"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
-                      Total Fuel (gal)
-                    </label>
-                    <input
-                      type="number"
-                      inputMode="decimal"
-                      value={manualFuel ?? ""}
-                      onChange={(e) => setManualFuel(e.target.value ? parseFloat(e.target.value) : null)}
-                      placeholder={String(computed?.totalFuelGal ?? 24)}
-                      min="1"
-                      max="999"
-                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 outline-none transition-colors"
-                      data-testid="input-manual-fuel"
-                    />
-                  </div>
-                  {(manualMpg !== null || manualFuel !== null) && (
-                    <div className="col-span-2">
-                      <button
-                        onClick={() => { setManualMpg(null); setManualFuel(null); }}
-                        className="text-[10px] font-bold uppercase tracking-wide text-red-400 hover:text-red-300 transition-colors"
-                        data-testid="button-clear-override"
-                      >
-                        Clear Override
-                      </button>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="bg-card border border-border rounded-lg p-4">
+                <button
+                  onClick={() => setShowManualOverride(!showManualOverride)}
+                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors w-full"
+                  data-testid="button-manual-override"
+                >
+                  <Gauge className="w-4 h-4 text-primary flex-shrink-0" />
+                  Manual MPG / Fuel Override
+                  <ChevronDown className={`w-3 h-3 ml-auto transition-transform ${showManualOverride ? "rotate-180" : ""}`} />
+                </button>
+                {showManualOverride && (
+                  <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-border">
+                    <div>
+                      <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                        Base MPG
+                      </label>
+                      <input
+                        type="number"
+                        inputMode="decimal"
+                        value={manualMpg ?? ""}
+                        onChange={(e) => setManualMpg(e.target.value ? parseFloat(e.target.value) : null)}
+                        placeholder={String(computed?.estimatedMpg ?? 20)}
+                        min="1"
+                        max="99"
+                        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 outline-none transition-colors"
+                        data-testid="input-manual-mpg"
+                      />
                     </div>
-                  )}
-                </div>
-              )}
+                    <div>
+                      <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                        Tank Size (gal)
+                      </label>
+                      <input
+                        type="number"
+                        inputMode="decimal"
+                        value={manualFuel ?? ""}
+                        onChange={(e) => setManualFuel(e.target.value ? parseFloat(e.target.value) : null)}
+                        placeholder={String(computed?.totalFuelGal ?? 24)}
+                        min="1"
+                        max="999"
+                        className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 outline-none transition-colors"
+                        data-testid="input-manual-fuel"
+                      />
+                    </div>
+                    {(manualMpg !== null || manualFuel !== null) && (
+                      <div className="col-span-2">
+                        <button
+                          onClick={() => { setManualMpg(null); setManualFuel(null); }}
+                          className="text-[10px] font-bold uppercase tracking-wide text-red-400 hover:text-red-300 transition-colors"
+                          data-testid="button-clear-override"
+                        >
+                          Clear Override
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-card border border-border rounded-lg p-4">
+                <button
+                  onClick={() => setShowAuxFuel(!showAuxFuel)}
+                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors w-full"
+                  data-testid="button-aux-fuel-toggle"
+                >
+                  <Package className="w-4 h-4 text-primary flex-shrink-0" />
+                  Auxiliary Fuel & Cost
+                  <ChevronDown className={`w-3 h-3 ml-auto transition-transform ${showAuxFuel ? "rotate-180" : ""}`} />
+                </button>
+                {showAuxFuel && (
+                  <div className="space-y-3 mt-3 pt-3 border-t border-border">
+                    <div>
+                      <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                        Jerry Cans (5 gal each)
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          value={jerryCans || ""}
+                          onChange={(e) => setJerryCans(Math.max(0, parseInt(e.target.value) || 0))}
+                          placeholder="0"
+                          min="0"
+                          max="10"
+                          className="w-20 bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 outline-none transition-colors"
+                          data-testid="input-jerry-cans"
+                        />
+                        {jerryCans > 0 && (
+                          <span className="text-xs text-muted-foreground">
+                            +{jerryCans * JERRY_CAN_GAL} gal / +{jerryCans * JERRY_CAN_WEIGHT_LBS} lbs cargo
+                          </span>
+                        )}
+                      </div>
+                      {jerryCans > 0 && (
+                        <p className="text-[10px] text-amber-400 mt-1">
+                          MPG reduced {rawBaseMpg} &rarr; {baseMpg} due to extra weight
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                        <DollarSign className="w-3 h-3 inline -mt-0.5" /> Gas Price ($/gal)
+                      </label>
+                      <input
+                        type="number"
+                        inputMode="decimal"
+                        step="0.01"
+                        value={gasPrice || ""}
+                        onChange={(e) => setGasPrice(parseFloat(e.target.value) || 0)}
+                        placeholder="0.00"
+                        min="0"
+                        max="20"
+                        className="w-28 bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 outline-none transition-colors"
+                        data-testid="input-gas-price"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             <ZipLookup
@@ -684,15 +858,62 @@ export default function FuelRangePlanner() {
                     Trip Planner
                   </h3>
                 </div>
-                <button
-                  onClick={resetTrip}
-                  className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/50 hover:text-red-400 transition-colors"
-                  data-testid="button-reset-trip"
-                >
-                  <RotateCcw className="w-3 h-3" />
-                  Reset
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setRoundTrip(!roundTrip)}
+                    className={`flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide transition-colors ${roundTrip ? "text-primary" : "text-muted-foreground/50 hover:text-primary"}`}
+                    data-testid="button-round-trip"
+                    title="Mirror segments for return trip"
+                  >
+                    <Repeat className="w-3 h-3" />
+                    Round Trip {roundTrip ? "ON" : "OFF"}
+                  </button>
+                  <button
+                    onClick={() => setShowPresets(!showPresets)}
+                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/50 hover:text-primary transition-colors"
+                    data-testid="button-presets"
+                  >
+                    <BookOpen className="w-3 h-3" />
+                    Presets
+                  </button>
+                  <button
+                    onClick={resetTrip}
+                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/50 hover:text-red-400 transition-colors"
+                    data-testid="button-reset-trip"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    Reset
+                  </button>
+                </div>
               </div>
+
+              {showPresets && (
+                <div className="mb-4 p-3 bg-muted rounded-lg border border-border">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-primary mb-3">
+                    Load a Route Template
+                  </p>
+                  <div className="grid sm:grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+                    {tripPresets.map((preset) => (
+                      <button
+                        key={preset.id}
+                        onClick={() => loadPreset(preset.id)}
+                        className="text-left p-3 bg-card border border-border rounded-lg hover:border-primary/50 transition-colors"
+                        data-testid={`button-preset-${preset.id}`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-bold text-foreground">{preset.name}</span>
+                          <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                        </div>
+                        <p className="text-[10px] text-primary font-bold mb-1">
+                          {preset.region} &middot; {preset.totalMiles} mi &middot; {preset.segments.length} segments
+                        </p>
+                        <p className="text-[10px] text-muted-foreground line-clamp-2">{preset.description}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <input
                 type="text"
                 value={tripName}
@@ -701,6 +922,12 @@ export default function FuelRangePlanner() {
                 className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm font-bold text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 outline-none transition-colors"
                 data-testid="input-trip-name"
               />
+              {roundTrip && (
+                <p className="text-[10px] text-primary mt-2 flex items-center gap-1">
+                  <Repeat className="w-3 h-3" />
+                  Round-trip mode: your {segments.length} segment{segments.length !== 1 ? "s" : ""} will be mirrored for the return ({segments.length * 2} total segments calculated)
+                </p>
+              )}
             </div>
 
             <div className="space-y-3">
@@ -735,7 +962,7 @@ export default function FuelRangePlanner() {
                   <div className="flex items-center gap-2 mb-4">
                     <Gauge className="w-4 h-4 text-primary flex-shrink-0" />
                     <h3 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                      Trip Summary
+                      Trip Summary {roundTrip ? "(Round Trip)" : ""}
                     </h3>
                   </div>
 
@@ -773,6 +1000,24 @@ export default function FuelRangePlanner() {
                       </p>
                     </div>
                   </div>
+
+                  {(gasPrice > 0 || tripResult.refuelStopCount > 0) && (
+                    <div className="flex flex-wrap gap-x-6 gap-y-1 mb-4 text-sm">
+                      {gasPrice > 0 && (
+                        <div data-testid="text-fuel-cost">
+                          <span className="text-muted-foreground">Est. Cost: </span>
+                          <span className="font-bold text-foreground">${tripResult.totalFuelCost.toFixed(2)}</span>
+                          <span className="text-muted-foreground text-xs ml-1">@ ${gasPrice.toFixed(2)}/gal</span>
+                        </div>
+                      )}
+                      {tripResult.refuelStopCount > 0 && (
+                        <div>
+                          <span className="text-muted-foreground">Fuel Stops: </span>
+                          <span className="font-bold text-blue-400">{tripResult.refuelStopCount}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   <div>
                     <div className="flex justify-between text-[10px] text-muted-foreground mb-1">
@@ -897,7 +1142,19 @@ export default function FuelRangePlanner() {
                     const isPonr = tripResult.pointOfNoReturnIdx === idx;
 
                     return (
-                      <div key={res.segment.id}>
+                      <div key={res.segment.id + idx}>
+                        {res.didRefuel && (
+                          <div className="flex items-center gap-3 my-1">
+                            <div className="w-3 flex justify-center">
+                              <div className="w-0.5 h-4 bg-blue-500/50" />
+                            </div>
+                            <div className="flex-1 bg-blue-500/10 border border-blue-500/30 rounded px-2 py-1">
+                              <span className="text-[10px] font-bold text-blue-400">
+                                FUEL STOP &mdash; Tank refilled to {totalFuelGal} gal
+                              </span>
+                            </div>
+                          </div>
+                        )}
                         <div className="flex gap-3">
                           <div className="w-3 flex justify-center">
                             <div className={`w-0.5 h-full min-h-[48px] ${isOutOfFuel ? "bg-red-500/50" : "bg-border"}`} />
@@ -994,11 +1251,14 @@ export default function FuelRangePlanner() {
                           const isOutOfFuel = tripResult.outOfFuelAtIdx !== null && idx >= tripResult.outOfFuelAtIdx;
                           return (
                             <tr
-                              key={res.segment.id}
-                              className={`border-b border-border/50 ${isOutOfFuel ? "bg-red-500/5" : ""}`}
+                              key={res.segment.id + idx}
+                              className={`border-b border-border/50 ${isOutOfFuel ? "bg-red-500/5" : res.didRefuel ? "bg-blue-500/5" : ""}`}
                             >
                               <td className="px-4 py-2 text-muted-foreground">{idx + 1}</td>
-                              <td className="px-4 py-2 font-bold text-foreground">{res.segment.name}</td>
+                              <td className="px-4 py-2 font-bold text-foreground">
+                                {res.didRefuel && <span className="text-blue-400 mr-1" title="Fuel stop">&#9981;</span>}
+                                {res.segment.name}
+                              </td>
                               <td className="px-4 py-2 text-right text-muted-foreground">{res.segment.distanceMiles} mi</td>
                               <td className="px-4 py-2 text-muted-foreground">{terrainIcons[res.segment.terrain]} {terrainLabels[res.segment.terrain]}</td>
                               <td className="px-4 py-2 text-right font-bold text-foreground">{res.adjustedMpg}</td>
@@ -1021,6 +1281,17 @@ export default function FuelRangePlanner() {
                           </td>
                           <td className="px-4 py-2 text-right">{formatTime(tripResult.totalTimeHours)}</td>
                         </tr>
+                        {gasPrice > 0 && (
+                          <tr className="bg-muted/50">
+                            <td className="px-4 py-2" colSpan={5}>
+                              <span className="font-bold">Estimated Fuel Cost</span>
+                              <span className="text-muted-foreground ml-2">@ ${gasPrice.toFixed(2)}/gal</span>
+                            </td>
+                            <td className="px-4 py-2 text-right font-bold text-foreground" colSpan={3}>
+                              ${tripResult.totalFuelCost.toFixed(2)}
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -1046,6 +1317,11 @@ export default function FuelRangePlanner() {
                             this trip with a 10% reserve. That's{" "}
                             {Math.ceil((tripResult.totalFuelUsedGal - totalFuelGal + totalFuelGal * 0.1) / 5)}{" "}
                             jerry cans (5 gal each).
+                            {gasPrice > 0 && (
+                              <span className="text-muted-foreground">
+                                {" "}Estimated cache cost: ${(Math.ceil(tripResult.totalFuelUsedGal - totalFuelGal + totalFuelGal * 0.1) * gasPrice).toFixed(2)}
+                              </span>
+                            )}
                           </p>
                         </div>
                       )}

@@ -15,6 +15,7 @@ export interface TripSegment {
   terrain: TerrainType;
   elevationGainFt: number;
   speedMph: number;
+  isFuelStop: boolean;
 }
 
 export interface SegmentResult {
@@ -22,6 +23,8 @@ export interface SegmentResult {
   adjustedMpg: number;
   fuelUsedGal: number;
   fuelRemainingGal: number;
+  fuelAfterRefillGal: number;
+  didRefuel: boolean;
   cumulativeDistanceMiles: number;
   timeHours: number;
   terrainMultiplier: number;
@@ -37,8 +40,19 @@ export interface TripResult {
   totalFuelCapacityGal: number;
   fuelRemainingGal: number;
   totalTimeHours: number;
+  totalFuelCost: number;
+  refuelStopCount: number;
   pointOfNoReturnIdx: number | null;
   reserveWarning: boolean;
   outOfFuel: boolean;
   outOfFuelAtIdx: number | null;
+}
+
+export interface TripPreset {
+  id: string;
+  name: string;
+  region: string;
+  description: string;
+  totalMiles: number;
+  segments: Omit<TripSegment, "id">[];
 }

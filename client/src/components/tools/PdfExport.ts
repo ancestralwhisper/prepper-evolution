@@ -1289,3 +1289,226 @@ export async function generateTripPlanPdf(data: TripPlanPdfData) {
   addFooter(doc, pageW);
   doc.save("prepper-evolution-trip-plan.pdf");
 }
+
+// ─── Fuel & Range Planner PDF ──────────────────────────────────
+
+export interface FuelRangePdfData {
+  tripName: string;
+  vehicleName: string | null;
+  baseMpg: number;
+  totalFuelGal: number;
+  rangeMiles: number | null;
+  gasPricePerGal: number;
+  jerryCans: number;
+  climateZone: string | null;
+  segments: {
+    name: string;
+    terrain: string;
+    distanceMiles: number;
+    elevationGainFt: number;
+    speedMph: number;
+    adjustedMpg: number;
+    fuelUsedGal: number;
+    fuelRemainingGal: number;
+    timeFormatted: string;
+    isFuelStop: boolean;
+    didRefuel: boolean;
+    warnings: string[];
+  }[];
+  totalDistanceMiles: number;
+  totalFuelUsedGal: number;
+  fuelRemainingGal: number;
+  totalTimeFormatted: string;
+  totalFuelCost: number;
+  outOfFuel: boolean;
+  reserveWarning: boolean;
+  pointOfNoReturnIdx: number | null;
+  refuelStopCount: number;
+  cacheGallons: number | null;
+  cacheCans: number | null;
+}
+
+export async function generateFuelRangePdf(data: FuelRangePdfData): Promise<void> {
+  const doc = new jsPDF({ unit: "mm", format: "letter" });
+  const pageW = doc.internal.pageSize.getWidth();
+  const logo = await loadLogoBase64();
+  let y = 15;
+
+  if (logo) {
+    doc.addImage(logo, "PNG", 15, y, 18, 18);
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...hexToRgb(DARK));
+    doc.text("Fuel & Range Plan", 37, y + 7);
+    doc.setFontSize(10);
+    doc.setTextColor(...hexToRgb(MUTED));
+    doc.text(data.tripName, 37, y + 13);
+  } else {
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...hexToRgb(DARK));
+    doc.text(`Fuel & Range Plan: ${data.tripName}`, 15, y + 7);
+  }
+  y += 26;
+
+  doc.setDrawColor(...hexToRgb(ACCENT));
+  doc.setLineWidth(0.8);
+  doc.line(15, y, pageW - 15, y);
+  y += 6;
+
+  roundedRect(doc, 15, y, pageW - 30, 28, 3, LIGHT_BG);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...hexToRgb(MUTED));
+  const col1 = 20;
+  const col2 = pageW * 0.35;
+  const col3 = pageW * 0.65;
+  doc.text("VEHICLE", col1, y + 5);
+  doc.text("MPG / FUEL", col2, y + 5);
+  doc.text("TRIP TOTALS", col3, y + 5);
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(...hexToRgb(DARK));
+  doc.text(data.vehicleName || "Manual / Default", col1, y + 11);
+  doc.text(`${data.baseMpg} MPG / ${data.totalFuelGal} gal tank`, col2, y + 11);
+  doc.text(`${data.totalDistanceMiles} mi / ${data.totalTimeFormatted}`, col3, y + 11);
+  doc.text(data.jerryCans > 0 ? `+${data.jerryCans} jerry can${data.jerryCans > 1 ? "s" : ""} (${data.jerryCans * 5} gal extra)` : "No auxiliary fuel", col1, y + 17);
+  doc.text(`Fuel used: ${data.totalFuelUsedGal} gal`, col2, y + 17);
+  const remainText = data.outOfFuel ? "EMPTY \u2014 OUT OF FUEL" : `${data.fuelRemainingGal} gal remaining`;
+  if (data.outOfFuel) {
+    doc.setTextColor(...hexToRgb("#EF4444"));
+  } else if (data.reserveWarning) {
+    doc.setTextColor(...hexToRgb("#F59E0B"));
+  } else {
+    doc.setTextColor(...hexToRgb("#10B981"));
+  }
+  doc.text(remainText, col3, y + 17);
+  doc.setTextColor(...hexToRgb(DARK));
+  if (data.gasPricePerGal > 0) {
+    doc.text(`$${data.gasPricePerGal.toFixed(2)}/gal \u2014 Est. cost: $${data.totalFuelCost.toFixed(2)}`, col1, y + 23);
+  }
+  if (data.climateZone) {
+    doc.text(`Climate: ${data.climateZone}`, col2, y + 23);
+  }
+  if (data.refuelStopCount > 0) {
+    doc.text(`${data.refuelStopCount} fuel stop${data.refuelStopCount > 1 ? "s" : ""} planned`, col3, y + 23);
+  }
+  y += 34;
+
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...hexToRgb(ACCENT));
+  doc.text("SEGMENT BREAKDOWN", 15, y);
+  y += 5;
+
+  const headers = ["#", "Segment", "Terrain", "Dist", "MPG", "Fuel", "Left", "Time"];
+  const colWidths = [8, 42, 34, 16, 14, 16, 18, 16];
+  let cx = 15;
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...hexToRgb(MUTED));
+  headers.forEach((h, i) => {
+    doc.text(h, cx, y);
+    cx += colWidths[i];
+  });
+  y += 2;
+  doc.setDrawColor(...hexToRgb(TABLE_BORDER));
+  doc.setLineWidth(0.3);
+  doc.line(15, y, pageW - 15, y);
+  y += 3;
+
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+
+  data.segments.forEach((seg, idx) => {
+    y = checkPage(doc, y, 8, pageW);
+
+    if (seg.didRefuel) {
+      doc.setFillColor(219, 234, 254);
+      doc.rect(15, y - 3, pageW - 30, 4, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(...hexToRgb("#2563EB"));
+      doc.text("\u26FD FUEL STOP \u2014 Tank refilled to " + data.totalFuelGal + " gal", 17, y);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(...hexToRgb(DARK));
+      y += 5;
+    }
+
+    const isOut = seg.warnings.some((w) => w.includes("OUT OF FUEL"));
+    if (isOut) {
+      doc.setFillColor(254, 242, 242);
+      doc.rect(15, y - 3, pageW - 30, 4, "F");
+    }
+
+    cx = 15;
+    doc.setTextColor(...hexToRgb(isOut ? "#EF4444" : DARK));
+    const vals = [
+      String(idx + 1),
+      seg.name.length > 22 ? seg.name.substring(0, 20) + "\u2026" : seg.name,
+      seg.terrain.length > 18 ? seg.terrain.substring(0, 16) + "\u2026" : seg.terrain,
+      `${seg.distanceMiles} mi`,
+      String(seg.adjustedMpg),
+      `-${seg.fuelUsedGal}`,
+      isOut ? "EMPTY" : `${seg.fuelRemainingGal}`,
+      seg.timeFormatted,
+    ];
+    vals.forEach((v, i) => {
+      doc.text(v, cx, y);
+      cx += colWidths[i];
+    });
+    y += 4;
+
+    seg.warnings.forEach((w) => {
+      y = checkPage(doc, y, 4, pageW);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(...hexToRgb("#EF4444"));
+      doc.text(`  \u26A0 ${w}`, 23, y);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(...hexToRgb(DARK));
+      y += 4;
+    });
+  });
+
+  y += 2;
+  doc.setDrawColor(...hexToRgb(TABLE_BORDER));
+  doc.line(15, y, pageW - 15, y);
+  y += 4;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.text(`TOTAL: ${data.totalDistanceMiles} mi`, 15, y);
+  doc.text(`${data.totalFuelUsedGal} gal used`, pageW * 0.4, y);
+  if (data.outOfFuel) {
+    doc.setTextColor(...hexToRgb("#EF4444"));
+    doc.text("EMPTY", pageW * 0.65, y);
+  } else {
+    doc.setTextColor(...hexToRgb("#10B981"));
+    doc.text(`${data.fuelRemainingGal} gal left`, pageW * 0.65, y);
+  }
+  doc.setTextColor(...hexToRgb(DARK));
+  doc.text(data.totalTimeFormatted, pageW - 30, y);
+  y += 8;
+
+  if (data.cacheGallons !== null && data.cacheCans !== null) {
+    y = checkPage(doc, y, 14, pageW);
+    roundedRect(doc, 15, y, pageW - 30, 12, 2, "#FEF2F2");
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...hexToRgb("#EF4444"));
+    doc.text("FUEL CACHE RECOMMENDATION", 19, y + 5);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...hexToRgb(DARK));
+    doc.text(`Cache ${data.cacheGallons} gallons (${data.cacheCans} jerry cans) to complete trip with 10% reserve.`, 19, y + 9);
+    y += 16;
+  }
+
+  if (data.pointOfNoReturnIdx !== null) {
+    y = checkPage(doc, y, 8, pageW);
+    doc.setFontSize(7);
+    doc.setTextColor(...hexToRgb("#F59E0B"));
+    doc.text(`\u26A0 Point of No Return: Segment ${data.pointOfNoReturnIdx + 1} \u2014 beyond here, you can't retrace your route on remaining fuel.`, 15, y);
+    y += 6;
+  }
+
+  addFooter(doc, pageW);
+  doc.save(`fuel-range-plan-${data.tripName.toLowerCase().replace(/\s+/g, "-")}.pdf`);
+}
