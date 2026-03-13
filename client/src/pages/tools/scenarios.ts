@@ -141,6 +141,18 @@ const GEAR = {
     name: "Luci Solar Inflatable Lantern",
     url: "https://www.amazon.com/dp/B00BXUKM4W?tag=prepperevo-20",
   },
+  faradayBag: {
+    name: "Mission Darkness Faraday Bag",
+    url: "https://www.amazon.com/dp/B07F9RL3NB?tag=prepperevo-20",
+  },
+  kellyKettle: {
+    name: "Kelly Kettle Base Camp Stainless Steel",
+    url: "https://www.amazon.com/dp/B001QDIPY6?tag=prepperevo-20",
+  },
+  augason30day: {
+    name: "Augason Farms 30-Day Food Supply",
+    url: "https://www.amazon.com/dp/B00B194TKU?tag=prepperevo-20",
+  },
 };
 
 // ═══════════════════════════════════════════════════════
@@ -2423,6 +2435,1403 @@ const infrastructureAttack: Scenario = {
   ],
 };
 
+// ═══════════════════════════════════════════════════════
+// SCENARIO 7: EMP STRIKE
+// ═══════════════════════════════════════════════════════
+const empStrike: Scenario = {
+  id: "emp-strike",
+  name: "EMP Strike",
+  icon: "radio-tower",
+  difficulty: "Extreme",
+  description:
+    "A high-altitude electromagnetic pulse detonates 250 miles above Kansas. In one second, the electrical grid, every unshielded computer chip, every modern vehicle's ECU, and the entire communications infrastructure across the continental US goes dark. No phones. No internet. No cars built after 2000. No recovery timeline. Welcome to year zero.",
+  startingNodeId: "emp-1",
+  totalNodes: 6,
+  nodes: [
+    {
+      id: "emp-1",
+      emoji: "⚡",
+      situation:
+        "3:14 PM on a Thursday. A bright flash in the sky — not lightning, something different. Your phone is dead. Not out of battery — dead. The microwave clock is blank. Your car will not start. The neighbor's car will not start. Nothing with a circuit board works. The only sound is dogs barking and people stepping outside looking confused. You have about 6 hours of daylight left. Nobody knows what happened yet, but you have read enough to have a guess.",
+      choices: [
+        {
+          text: "Immediately secure water, pull out your analog gear, and start filling every container in the house before the water pressure dies",
+          consequence:
+            "You are thinking clearly while everyone else is still tapping dead phone screens. Municipal water pumps run on electricity — when the backup generators run dry in 12-24 hours, the taps stop. You fill bathtubs, pots, coolers, and the kids' inflatable pool. You pull out the hand-crank radio, the manual can opener, and the water filter you bought three years ago. While neighbors are trying to restart their cars, you are buying your family survival time.",
+          scoreImpact: 25,
+          nextNodeId: "emp-2a",
+        },
+        {
+          text: "Walk to the neighbor's house to compare notes and figure out what happened",
+          consequence:
+            "Community information is valuable, but the clock is ticking on resources you cannot get back. You spend two hours knocking on doors and discussing theories. By the time you think about water, the pressure is already dropping in some areas. You get some containers filled but miss the window for bulk storage. You know more about what happened, but you acted on the wrong priority first.",
+          scoreImpact: 5,
+          nextNodeId: "emp-2b",
+        },
+        {
+          text: "Try to get your car started — maybe it just needs a jump or a reset",
+          consequence:
+            "You spend the rest of the daylight trying to troubleshoot a vehicle whose entire electrical system was fried by electromagnetic energy traveling at the speed of light. The battery is fine. The engine is fine. Every computer chip that controls fuel injection, ignition timing, and transmission is permanently destroyed. Modern cars are rolling computers, and computers do not survive EMPs. You just wasted your most valuable resource — the first hours — on a dead machine.",
+          scoreImpact: -10,
+          nextNodeId: "emp-2b",
+        },
+      ],
+    },
+    {
+      id: "emp-2a",
+      emoji: "📻",
+      situation:
+        "Day 2. Your hand-crank radio picks up a faint AM broadcast from a station running on a backup generator 60 miles away. The news is devastating: electromagnetic pulse, likely a high-altitude nuclear detonation. The entire grid east of the Rockies is down. No timeline for restoration — the transformers that step down high-voltage transmission lines are custom-built overseas and take 18-24 months to manufacture. This is not a week-long event. This could be months. Maybe longer. Your neighbor has a 1987 Ford F-150 that actually starts — no computer chips to fry. He is talking about driving to his family 300 miles away. He offers you a ride.",
+      choices: [
+        {
+          text: "Stay put. You have water, supplies, and your home is your best asset. Offer to help organize the block instead.",
+          consequence:
+            "Correct call. In a long-duration event, mobility is less important than established shelter, stored resources, and community. Your house has insulation, storage, tools, and defensive advantages a truck cab does not. You let the neighbor go and start organizing: the retired guy on the corner has a woodstove, the teacher three doors down has a huge garden, and you just became the block's planning hub. Shelter in place is almost always the right call unless staying will kill you.",
+          scoreImpact: 25,
+          nextNodeId: "emp-3a",
+        },
+        {
+          text: "Go with him — 300 miles to family and a rural area with well water is better than suburbia",
+          consequence:
+            "Rural well water and family support are real advantages. But 300 miles in a post-EMP landscape is not a Sunday drive. Gas stations are dead — you need fuel cans. Roads will have stalled vehicles everywhere. And you are leaving behind everything you prepared at home. You make it after two days of slow driving and siphoning gas from dead cars, but you arrive with nothing but what you could carry. Starting over is expensive even when the world is working.",
+          scoreImpact: 5,
+          nextNodeId: "emp-3b",
+        },
+      ],
+    },
+    {
+      id: "emp-2b",
+      emoji: "💧",
+      situation:
+        "Day 2. Reality is setting in hard. The water pressure died overnight. Your phone is a brick. No TV, no internet, no way to know what happened or how long it will last. A neighbor with an old transistor radio picks up a faint broadcast: EMP event, entire eastern grid destroyed, no restoration timeline. People are starting to get scared. The family across the street has a diabetic teenager whose insulin needs refrigeration — it has been at room temperature for 24 hours. Three houses down, an elderly couple has not come outside since yesterday.",
+      choices: [
+        {
+          text: "Check on the elderly couple, then organize a neighborhood meeting to pool information and resources",
+          consequence:
+            "The elderly couple is okay but frightened and confused. The husband is on oxygen — the concentrator is dead. You help them move to the neighbor's house where there is a woodstove for warmth. At the neighborhood meeting, you discover useful skills: a nurse, a mechanic who knows pre-computer engines, a woman with a huge pantry. The diabetic teen's insulin is still viable for about 28 days at room temperature — not ideal but not a death sentence yet. Organizing now saves lives later.",
+          scoreImpact: 15,
+          nextNodeId: "emp-3b",
+        },
+        {
+          text: "Focus on your own family — you did not prepare enough to help everyone else",
+          consequence:
+            "Understandable instinct, but in a months-long event, you cannot survive alone. The family with the garden is not going to share tomatoes with the neighbor who would not share water. The mechanic is not going to fix that pre-computer truck for someone who shut their door. Survival is a community sport, especially when the timeline stretches past two weeks. You are fed for now but isolated, and isolation has a cost that compounds daily.",
+          scoreImpact: 0,
+          nextNodeId: "emp-3b",
+        },
+      ],
+    },
+    {
+      id: "emp-3a",
+      emoji: "🏘️",
+      situation:
+        "Day 5. You have organized the block into a functioning unit. Water is being collected from a creek a quarter mile away and filtered. The woodstove house is the warming and cooking station. People are eating through their freezers first — all that meat is thawing and needs to be cooked or smoked now or it is wasted. But the real problem is arriving on foot: refugees from the city 20 miles east. Hungry, thirsty, some desperate. A group of eight adults just walked into your neighborhood asking for water. They look rough. Behind them, you can see more people on the road.",
+      choices: [
+        {
+          text: "Offer water and a meal, but be honest about your limits. Ask what skills they bring and whether they want to contribute to the community.",
+          consequence:
+            "Compassion with boundaries. You give them water and a hot meal from the thawing freezer supply. Two of them are useful — a paramedic and a guy who ran a machine shop. The others are office workers who have never built anything, but they are willing to learn and work. You set ground rules: everyone contributes, everyone rations equally, security watches are shared. You just grew your community's capability. The paramedic alone is worth fifty cans of beans.",
+          scoreImpact: 20,
+          nextNodeId: "emp-4a",
+        },
+        {
+          text: "Set up a perimeter checkpoint — control who comes in and who does not. No free rides.",
+          consequence:
+            "Security matters and you are not wrong to control access. But a hard perimeter this early creates an us-vs-them dynamic. The group moves on, including the paramedic and the machinist you never knew about. Word spreads on the walking trails that your block is hostile. Future travelers with valuable skills bypass you entirely. Security is essential, but it needs to be paired with a gate, not just a wall.",
+          scoreImpact: 10,
+          nextNodeId: "emp-4b",
+        },
+      ],
+    },
+    {
+      id: "emp-3b",
+      emoji: "🚶",
+      situation:
+        "Day 7. One week without electricity, vehicles, phones, or running water. The grocery stores were cleaned out by Day 3. Walking refugees from the nearest city are passing through — some asking for help, some not asking. Your food supply is getting thin. You hear gunshots at night now, maybe a mile away. The veneer of civilization is peeling back faster than anyone expected. A neighbor suggests raiding an abandoned big box store two miles away for supplies.",
+      choices: [
+        {
+          text: "Organize a scavenging team with a plan — go in numbers, take only essentials, and fortify your position for the long haul",
+          consequence:
+            "Scavenging is not looting when the supply chain is dead and the store's inventory will rot on the shelves. You go with four neighbors, armed with tools and a plan. You prioritize: canned goods, water containers, first aid supplies, hand tools, seeds, and propane. You leave luxury items alone. You haul back enough to extend your neighborhood's food supply by two weeks. The trip teaches your group to move as a team, communicate, and watch each other's backs. Those skills matter more than the beans.",
+          scoreImpact: 15,
+          nextNodeId: "emp-4b",
+        },
+        {
+          text: "Stay home and ration harder. Going out there right now is too dangerous.",
+          consequence:
+            "Caution is not cowardice, but resources do not appear from thin air. Your current food supply lasts maybe 5 more days with strict rationing. After that, you are making the same trip but weaker, hungrier, and with fewer supplies left on the shelves. Sometimes the safer choice in the short term is the more dangerous one in the long term. Timing matters — and waiting too long is a decision too.",
+          scoreImpact: 0,
+          nextNodeId: "emp-4b",
+        },
+      ],
+    },
+    {
+      id: "emp-4a",
+      emoji: "🌱",
+      situation:
+        "Day 14. Two weeks post-EMP. Your community has stabilized: water filtration running, firewood rotation organized, security watches set, and the paramedic has treated three injuries and one infection. But the long game is staring you in the face. Stored food is finite. You need to start producing calories. The teacher's garden has seedlings. The machinist thinks he can rig a hand pump for the abandoned well on the vacant lot. The question is not whether to start — it is what to prioritize.",
+      choices: [
+        {
+          text: "Water infrastructure first — get that well hand-pump operational. Food grows slow but dehydration kills fast.",
+          consequence:
+            "The right priority. The machinist fabricates a hand pump from pipe fittings and a check valve scavenged from a hardware store. It takes three days of work and a lot of trial and error, but on Day 17 you have a hand-pumped well producing 5 gallons per minute of clean groundwater. Your community just became water-independent. The garden goes in simultaneously — the teacher has seeds for fast-growing crops: radishes in 25 days, lettuce in 30, beans in 60. You are building something that lasts.",
+          scoreImpact: 20,
+          nextNodeId: "end",
+        },
+        {
+          text: "Food production is the bottleneck. Get every square foot of soil planted NOW — water can be hauled from the creek.",
+          consequence:
+            "Planting is essential and you are not wrong about the urgency. But hauling water from a creek a quarter mile away burns calories you cannot afford to spend, and creek water needs filtering every single time. Within a week, the water hauling is exhausting your people and cutting into the labor available for everything else. The garden is growing but the community is burning out. You eventually get the well pump built, but the delay cost you three weeks of easier water access. Sequence matters.",
+          scoreImpact: 10,
+          nextNodeId: "end",
+        },
+      ],
+    },
+    {
+      id: "emp-4b",
+      emoji: "🔥",
+      situation:
+        "Day 14. Two weeks in and the reality of long-term survival is hitting hard. Food is running low across the neighborhood. The nightly gunshots are closer now. Two houses on the next block were broken into last night. Your group — however large or small it is — needs to make a decision about the future. Stay and build, or pack what you can carry and walk toward the rural areas where food might be growing and population density is lower.",
+      choices: [
+        {
+          text: "Stay and build. Fortify your position, start growing food, and make this block your long-term base.",
+          consequence:
+            "Bugging out on foot with your family into an uncertain landscape is almost always worse than defending a known position with shelter, tools, and community. You organize a garden using seeds from the hardware store scavenging run. You set up rain catchment. Security watches get tighter. It is hard, it is scary, and some nights are long. But by Day 30, you have food growing, water systems working, and a community that has each other's backs. This is what rebuilding looks like.",
+          scoreImpact: 15,
+          nextNodeId: "end",
+        },
+        {
+          text: "Bug out toward rural farmland — cities and suburbs will eat themselves alive. Time to move.",
+          consequence:
+            "Walking 50+ miles with limited food and water, through territory where desperate people are also walking, carrying everything you own on your back — this is not a hiking trip. You make it 30 miles in three days before exhaustion forces a stop. You find a small town that is already suspicious of outsiders. They let you stay but you are starting from zero: no shelter, no stored food, no garden, no community trust. You traded a bad situation for a different bad situation, except now you are exhausted and have nothing.",
+          scoreImpact: -5,
+          nextNodeId: "end",
+        },
+      ],
+    },
+  ],
+  endResults: [
+    {
+      id: "emp-thrived",
+      finalScore: 90,
+      rating: "Thrived",
+      summary:
+        "An EMP that sent most of the country back to the 1800s and you built a functioning community in two weeks. Water secured before the taps died, analog gear ready to go, community organized, refugees integrated with boundaries, and long-term food and water infrastructure started. You did not just survive the EMP — you became the foundation of what comes next.",
+      didRight: [
+        "Secured water immediately — understood that pumps need electricity",
+        "Had analog gear ready: hand-crank radio, manual tools, water filter",
+        "Chose shelter-in-place over panic mobility",
+        "Built community instead of building walls",
+        "Prioritized long-term infrastructure: well pump, gardens, security",
+      ],
+      couldImprove: [
+        "A Faraday bag for critical electronics would have preserved radios and a spare phone for stored information",
+        "Pre-positioned seeds and gardening tools for exactly this scenario",
+        "A pre-computer vehicle (pre-1980) would have given your community critical mobility",
+      ],
+      gearRecommendations: [
+        { name: GEAR.faradayBag.name, reason: "Store your ham radio, a spare phone loaded with survival guides, and a solar charger inside this. If an EMP hits, you pull out working electronics while everyone else has bricks.", url: GEAR.faradayBag.url },
+        { name: GEAR.baofengUV5R.name, reason: "Stored inside a Faraday bag, this radio becomes your only link to the outside world post-EMP. Ham operators will be the new internet. Get licensed now.", url: GEAR.baofengUV5R.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "When municipal water dies permanently, this filter turns any freshwater source into drinking water. 100,000 gallon capacity. No electricity required.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.kellyKettle.name, reason: "Boils water using nothing but twigs and small sticks. No fuel canisters, no electricity, no moving parts. Works when everything else is dead.", url: GEAR.kellyKettle.url },
+        { name: GEAR.mountainHouse.name, reason: "25-year shelf life freeze-dried food bridges the gap between Day 1 and when your garden starts producing. Just add boiled water.", url: GEAR.mountainHouse.url },
+      ],
+    },
+    {
+      id: "emp-survived",
+      finalScore: 50,
+      rating: "Survived",
+      summary:
+        "You made it through the first two weeks of a civilization-ending event. Some solid decisions mixed with some costly delays. The water scramble was tighter than it needed to be and community building started later than ideal, but your family is alive, fed, and part of a group. The hard part is not over — it is just beginning. But you are still standing.",
+      didRight: [
+        "Eventually recognized the severity and adapted",
+        "Made community connections even if they came late",
+        "Kept your family together and functional through extreme stress",
+      ],
+      couldImprove: [
+        "Water storage and filtration need to be in place before an event — the window after an EMP is hours, not days",
+        "Analog backups for everything: hand-crank radio, manual tools, paper maps, physical books",
+        "A Faraday bag with protected electronics is cheap insurance for exactly this scenario",
+        "Community relationships built before a crisis are ten times more effective than ones built during it",
+      ],
+      gearRecommendations: [
+        { name: GEAR.reliance5gal.name, reason: "Pre-filled water storage. Four containers gives your family a week of drinking water with zero effort when the taps die.", url: GEAR.reliance5gal.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "Long-term water independence. Filters creek water, rain water, pond water. No electricity, no pumps, no moving parts.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.faradayBag.name, reason: "A $30 bag that protects your radio, phone, and solar charger from electromagnetic pulse. The cheapest insurance you will ever buy.", url: GEAR.faradayBag.url },
+        { name: GEAR.readyWise.name, reason: "Emergency food supply with a 25-year shelf life. When supply chains die permanently, this is your bridge to self-sufficiency.", url: GEAR.readyWise.url },
+        { name: GEAR.renogy200w.name, reason: "If your solar panel and charge controller survive inside a Faraday cage, you have the only reliable power source left on the continent.", url: GEAR.renogy200w.url },
+      ],
+    },
+    {
+      id: "emp-barely",
+      finalScore: 15,
+      rating: "Barely Made It",
+      summary:
+        "Two weeks into a permanent grid-down event and you are running on fumes. Late to secure water, slow to build community, and the food situation is dire. You survived the initial shock but the next two weeks will be harder than the first two. The good news: you are alive and you learned more in 14 days than most people learn in a lifetime. Use that.",
+      didRight: [
+        "You did not quit — mental toughness is real survival currency",
+        "You eventually took action instead of waiting for a rescue that is not coming",
+      ],
+      couldImprove: [
+        "The first 6 hours after an EMP are the most valuable hours of your life — do not waste them on dead electronics",
+        "Water, water, water. Fill everything before the pressure dies. Then get a filter for what comes after.",
+        "Community is not optional in a long-duration event. Lone wolves die tired.",
+        "Analog gear: hand tools, manual can openers, crank radios, paper maps, physical reference books",
+        "Stored food is the difference between rational decisions and desperate ones",
+      ],
+      gearRecommendations: [
+        { name: GEAR.sawyerSqueeze.name, reason: "Your most critical purchase. When taps die forever, this turns any freshwater into drinking water. 100,000 gallons. Three ounces. No excuse.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.augason30day.name, reason: "30-day food supply for one person. In a permanent grid-down, this is the bridge between panic and planning. Buy it, store it, forget it until you need it.", url: GEAR.augason30day.url },
+        { name: GEAR.faradayBag.name, reason: "Put a radio, a phone loaded with survival PDFs, and a small solar charger in this bag. If an EMP ever hits, you will be one of the only people with working electronics.", url: GEAR.faradayBag.url },
+        { name: GEAR.aquamiraDrops.name, reason: "Chemical water treatment that kills what filters might miss. Lightweight, long shelf life, treats 60 gallons.", url: GEAR.aquamiraDrops.url },
+        { name: GEAR.kellyKettle.name, reason: "Boil water with twigs. No gas, no electricity, no fuel canisters. When infrastructure is gone permanently, simplicity wins.", url: GEAR.kellyKettle.url },
+      ],
+    },
+    {
+      id: "emp-didnt",
+      finalScore: 0,
+      rating: "Didn't Make It",
+      summary:
+        "An EMP is the hardest scenario in this simulator for a reason — it removes everything modern life depends on in one second. You spent critical hours on dead technology, missed the water window, and isolation left you vulnerable when the social fabric tore. In a simulation, you restart. In reality, the preparations you make today are the only ones that count.",
+      didRight: [
+        "You ran the hardest scenario in the simulator — that curiosity is the first step toward real preparation",
+      ],
+      couldImprove: [
+        "Accept that modern vehicles and electronics are dead — do not waste hours on them",
+        "Water is the first priority. Always. Fill everything within the first hour.",
+        "Get a hand-crank radio and a water filter. These two items change everything.",
+        "Store food: 30 days minimum. When grocery stores are permanently closed, there is no backup plan.",
+        "Build community NOW. Meet your neighbors. Know who has skills. An EMP is not survivable alone.",
+      ],
+      gearRecommendations: [
+        { name: GEAR.sawyerSqueeze.name, reason: "Start here. A $30 water filter that works without electricity. When the taps die forever, this keeps you alive.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.mountainHouse.name, reason: "14 days of food. Just add hot water. When the grocery stores are permanently empty, this is the difference between eating and starving.", url: GEAR.mountainHouse.url },
+        { name: GEAR.faradayBag.name, reason: "Store a radio and solar charger in this before an EMP hits. After the flash, you will have working electronics when no one else does.", url: GEAR.faradayBag.url },
+        { name: GEAR.reliance5gal.name, reason: "Fill four of these and put them in your garage. That is 28 gallons of water ready before anything happens.", url: GEAR.reliance5gal.url },
+        { name: GEAR.baofengUV5R.name, reason: "A ham radio stored in a Faraday bag is your only connection to the outside world after an EMP. Get the radio, get the license, learn the frequencies.", url: GEAR.baofengUV5R.url },
+      ],
+    },
+  ],
+};
+
+// ═══════════════════════════════════════════════════════
+// SCENARIO 8: ECONOMIC COLLAPSE
+// ═══════════════════════════════════════════════════════
+const economicCollapse: Scenario = {
+  id: "economic-collapse",
+  name: "Economic Collapse",
+  icon: "trending-down",
+  difficulty: "Hard",
+  description:
+    "Monday morning. Your bank app shows an error. Then the news breaks: a cascading failure in the banking system has triggered a federal bank holiday. ATMs are offline. Credit cards are declined everywhere. Cash is king — and you have whatever is in your wallet. This is not 2008. This is Argentina 2001. This is Lebanon 2020. And it is happening here.",
+  startingNodeId: "ec-1",
+  totalNodes: 5,
+  nodes: [
+    {
+      id: "ec-1",
+      emoji: "🏦",
+      situation:
+        "The bank holiday was supposed to last 48 hours. It is now Day 3 and the government just extended it indefinitely. ATMs are dark. Credit card terminals show 'NETWORK ERROR.' Your mortgage auto-pay bounced. You have $127 in cash in your wallet and whatever is in the junk drawer. The gas station on the corner just switched to cash-only and jacked prices 40%. The grocery store has a line around the block.",
+      choices: [
+        {
+          text: "Use your cash strategically — buy shelf-stable food and fuel NOW before prices go higher. Pay with small bills only.",
+          consequence:
+            "Smart money management under pressure. You hit the grocery store first and buy rice, beans, canned goods, and peanut butter — calorie-dense, shelf-stable, and still at semi-normal prices. You fill the car's tank and your two gas cans. You pay with small bills and keep your twenties hidden — making change becomes a problem when registers are down. Within 48 hours, prices will triple and cash-only stores will start refusing bills they cannot break. You just bought at the bottom.",
+          scoreImpact: 25,
+          nextNodeId: "ec-2a",
+        },
+        {
+          text: "Sit tight — this happened in 2008 and everything was fine after a few days",
+          consequence:
+            "In 2008, ATMs still worked. Credit cards still processed. Banks reopened in days. This is different — the settlement system itself is broken. By the time you realize this is not 2008, the stores are stripped. The cash in your wallet buys half what it did two days ago because prices are climbing by the hour. Normalcy bias — the belief that things will return to normal because they always have — is the most expensive cognitive error in a crisis.",
+          scoreImpact: -5,
+          nextNodeId: "ec-2b",
+        },
+        {
+          text: "Pull cash from every hiding spot — couch cushions, car console, piggy bank — and take a full inventory of every supply in the house",
+          consequence:
+            "Inventory first is a solid move. You find $83 more in scattered cash, bringing your total to $210. More importantly, you catalog what you actually have: 10 days of normal food, cleaning supplies, a full medicine cabinet, half a tank of gas, and a bunch of stuff in the garage that might become barter currency. Knowledge of your assets is the foundation of every decision that follows. Now you can spend smart instead of spending scared.",
+          scoreImpact: 15,
+          nextNodeId: "ec-2a",
+        },
+      ],
+    },
+    {
+      id: "ec-2a",
+      emoji: "💸",
+      situation:
+        "Week 2. Prices are unrecognizable. A gallon of milk is $14. Gas hit $12 a gallon and some stations have stopped selling entirely. Your employer sent an email — from a personal account, since corporate systems are down — saying payroll is frozen until the banks reopen. No paycheck this Friday. Your landlord calls and says rent is still due. The pharmacy says your kid's inhaler refill is $380 cash and they cannot process insurance. Barter is starting to happen in your neighborhood — eggs for labor, gas for firewood.",
+      choices: [
+        {
+          text: "Start bartering with what you have. Trade surplus supplies for things you need. Build a reputation as someone who deals fair.",
+          consequence:
+            "You trade two bottles of laundry detergent for a dozen eggs. A spare phone charger cable for three cans of soup (the neighbor has a generator). A bottle of bourbon you never opened for a full tank of gas from a guy who works at the refinery. Fair trades build trust, and trust becomes the new currency. Within days, people are coming to you first because you do not gouge. That reputation is worth more than cash right now.",
+          scoreImpact: 20,
+          nextNodeId: "ec-3a",
+        },
+        {
+          text: "Hoard everything. Do not trade, do not share. Ride it out on what you have.",
+          consequence:
+            "Your supplies last longer, but you are burning through food with no way to replenish it. The neighbor who offered eggs for labor stops knocking. The guy with the generator stops sharing power. You are fed for now, but you are building a wall around yourself when you need a network. In an economic collapse, relationships are more valuable than inventory. You cannot eat a stockpile forever.",
+          scoreImpact: 5,
+          nextNodeId: "ec-3b",
+        },
+      ],
+    },
+    {
+      id: "ec-2b",
+      emoji: "🏪",
+      situation:
+        "Week 2. You waited too long and the prices caught up with you. The $127 in your wallet now buys what $40 would have bought last week. The grocery store is rationing — two of any item per customer, cash only. Your fridge has maybe 4 days of food left. Gas is $12 a gallon and you are at a quarter tank. No paycheck coming. The pharmacy cannot process your insurance and prescriptions are cash-only at prices that make your eyes water.",
+      choices: [
+        {
+          text: "Get creative — offer labor for food, check with neighbors, and start identifying what in your house has barter value",
+          consequence:
+            "Desperation is a teacher. You offer to help the elderly neighbor with yard work and she sends you home with a bag of potatoes and canned vegetables from a pantry she has been stocking for decades. You realize your garage has barter goldmines: tools, batteries, duct tape, rope, and that bottle of Tylenol everyone needs but nobody bought enough of. You are behind the curve but adapting. The people who adapt survive. The people who wait for normal do not.",
+          scoreImpact: 10,
+          nextNodeId: "ec-3b",
+        },
+        {
+          text: "Drive to the next county where prices might be better and banks might be open",
+          consequence:
+            "You burn a quarter tank of irreplaceable gas to find the exact same situation 30 miles away. Banks are closed everywhere. Prices are the same or worse. Gas stations have lines. You come home with less fuel and the same empty fridge. In an economic collapse, the crisis is systemic — there is no neighboring county that is still normal. You cannot outrun a banking failure.",
+          scoreImpact: -10,
+          nextNodeId: "ec-3b",
+        },
+      ],
+    },
+    {
+      id: "ec-3a",
+      emoji: "🤝",
+      situation:
+        "Week 3. The utilities company announced rolling blackouts — they cannot pay their fuel suppliers either. Your electricity is on 8 hours a day, unpredictably. The landlord is threatening eviction but the courts are closed so it is an empty threat for now. Good news: your barter network is solid. You have food, relationships, and a reputation. Bad news: some neighbors are getting desperate. Someone broke into a house on the next block while the family was at a food distribution line. Security is becoming a real concern.",
+      choices: [
+        {
+          text: "Organize a neighborhood watch and rotate security shifts. Pool resources for the most vulnerable families.",
+          consequence:
+            "Community defense is not about being tough — it is about being organized. You set up two-person watch shifts, establish a whistle system for alerts, and make sure the single mom, the elderly couple, and the disabled vet on the block are included in the resource pool. Desperation drives crime, and visible community cohesion is the best deterrent. The break-ins stop on your block because thieves target isolation, not organization.",
+          scoreImpact: 20,
+          nextNodeId: "ec-4a",
+        },
+        {
+          text: "Quietly increase your own home security. Motion lights, locked gates, keep a low profile about your supplies.",
+          consequence:
+            "Individually smart but collectively limited. Your house is more secure, but the block is still vulnerable. The single mom two doors down gets her food stolen. The elderly couple's medication disappears from their mailbox. Crime is rising and your secure house sits in an insecure neighborhood. Eventually, your house becomes the obvious target because it is the only one that looks like it has something worth protecting.",
+          scoreImpact: 5,
+          nextNodeId: "ec-4b",
+        },
+      ],
+    },
+    {
+      id: "ec-3b",
+      emoji: "⚖️",
+      situation:
+        "Week 3. Things are getting raw. Power is intermittent — 8 hours on, 16 off, and you never know when. Your food is stretching thin. The neighborhood mood is tense. A local church opened a food bank but the line is four hours long and they run out before everyone gets through. Your kid needs that inhaler refill and the pharmacy wants $380 you do not have. A neighbor offers to trade you a full inhaler — his kid outgrew the same prescription — for your power drill and a case of bottled water.",
+      choices: [
+        {
+          text: "Take the inhaler trade — your kid's breathing is worth more than any tool. Then figure out the rest.",
+          consequence:
+            "No hesitation. A power drill is replaceable. Your kid's ability to breathe is not. You make the trade and your kid has a full inhaler for the next month. This is what barter looks like when it matters — not haggling over fair value but understanding what is actually important. The drill was sitting in the garage. The inhaler sits in your kid's pocket. That trade was the easiest decision you made all month.",
+          scoreImpact: 15,
+          nextNodeId: "ec-4b",
+        },
+        {
+          text: "Try to negotiate a better deal — a power drill is worth more than one inhaler. Ask for the inhaler plus food.",
+          consequence:
+            "You push for more and the neighbor walks away. He trades with someone else on the block. Now your kid still needs the inhaler, you still have the drill, and you have a reputation as someone who plays hardball when kids' health is on the table. In a week you find another inhaler source but it costs you more than the drill and the water combined. Negotiation has its place, but when your kid cannot breathe, speed beats margin.",
+          scoreImpact: -5,
+          nextNodeId: "ec-4b",
+        },
+      ],
+    },
+    {
+      id: "ec-4a",
+      emoji: "📈",
+      situation:
+        "Week 4. The government announces a partial banking restoration — limited withdrawals, $300 per day per person. It will take weeks for the full system to recover, but the worst is over. Prices are still inflated but starting to stabilize. Your neighborhood is intact: no one went hungry, no one lost their home to break-ins, and the barter network you built is still functioning. The question now is what you learned.",
+      choices: [
+        {
+          text: "Keep 30 days of cash at home, build a deep pantry, and maintain the neighborhood network even after things normalize",
+          consequence:
+            "The number one lesson from every economic collapse in history: cash at home, food on shelves, and relationships with your neighbors. Argentina, Greece, Lebanon, Venezuela — the pattern is identical every time. Banks close, prices spike, supply chains break, and the people who had physical resources and community survived. The people who had everything in digital accounts learned the hardest lesson there is.",
+          scoreImpact: 15,
+          nextNodeId: "end",
+        },
+        {
+          text: "Focus on financial diversification — multiple banks, precious metals, cryptocurrency, emergency fund",
+          consequence:
+            "Financial preparedness is real preparedness. Multiple bank accounts mean one closure does not wipe you out. Physical cash at home covers the first 2-4 weeks. Precious metals hold value when currency does not. But do not forget the basics — all the gold in the world does not matter if you do not have food in the pantry and neighbors who trust you. Financial prep AND physical prep. Both.",
+          scoreImpact: 15,
+          nextNodeId: "end",
+        },
+      ],
+    },
+    {
+      id: "ec-4b",
+      emoji: "🔄",
+      situation:
+        "Week 4. Partial banking restoration is announced. Limited withdrawals starting next week. It is not over, but the end is visible. Your neighborhood is battered — some families lost a lot. The grocery stores are slowly restocking but prices are still 2-3x normal. You made it through, but it was ugly in spots. Looking back, you can see exactly what would have made this easier.",
+      choices: [
+        {
+          text: "Build a 30-day emergency cash fund, stock a deep pantry, and never be this vulnerable again",
+          consequence:
+            "Every economic collapse in modern history follows the same pattern: banks close, prices spike, digital money becomes inaccessible, and physical resources become everything. Having $2,000 in small bills at home, 30 days of food in the pantry, and a full medicine cabinet is not paranoia — it is insurance against a scenario that has happened in dozens of countries in your lifetime. You lived it. Now prepare for the next one.",
+          scoreImpact: 10,
+          nextNodeId: "end",
+        },
+        {
+          text: "Focus on barter skills and community — relationships saved you more than money did",
+          consequence:
+            "You are not wrong. The neighbor who traded you eggs, the elderly woman who shared her pantry, the watch rotation that kept your block safe — none of that required a bank account. Skills, relationships, and reputation are inflation-proof assets. But combine that with physical cash, a stocked pantry, and stored medications, and you have a system that handles anything the financial system throws at you.",
+          scoreImpact: 10,
+          nextNodeId: "end",
+        },
+      ],
+    },
+  ],
+  endResults: [
+    {
+      id: "ec-thrived",
+      finalScore: 90,
+      rating: "Thrived",
+      summary:
+        "Banks closed, prices tripled, paychecks stopped, and you navigated all of it. Early action on cash and supplies, a functioning barter network, community security, and the discipline not to panic. Most people were blindsided. You were buying rice while they were refreshing their bank apps.",
+      didRight: [
+        "Acted on cash and supplies immediately — before prices spiked",
+        "Built a barter network based on fair dealing and trust",
+        "Organized community security before crime became a problem",
+        "Managed resources strategically instead of hoarding or panicking",
+        "Understood that relationships are the most inflation-proof asset",
+      ],
+      couldImprove: [
+        "Pre-positioned emergency cash at home eliminates the Day 1 scramble entirely",
+        "A deep pantry with 30+ days of food removes the grocery store dependency",
+        "Stored prescription medications beyond the current month's supply",
+      ],
+      gearRecommendations: [
+        { name: GEAR.mountainHouse.name, reason: "25-year shelf life, no refrigeration needed. When grocery stores are cash-only at triple prices, your pantry is your paycheck.", url: GEAR.mountainHouse.url },
+        { name: GEAR.readyWise.name, reason: "Emergency food supply that sits on a shelf until you need it. In an economic collapse, food is more valuable than currency.", url: GEAR.readyWise.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "If utilities shut off because the water company cannot pay its bills, this filter turns any water source into drinking water.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.ecoflowDelta3.name, reason: "When rolling blackouts hit, a power station keeps your fridge running, your phones charged, and your food from spoiling. Pair with solar for indefinite power.", url: GEAR.ecoflowDelta3.url },
+        { name: GEAR.renogy200w.name, reason: "Solar panel that recharges your power station for free. When you cannot afford the electric bill, the sun does not send invoices.", url: GEAR.renogy200w.url },
+      ],
+    },
+    {
+      id: "ec-survived",
+      finalScore: 50,
+      rating: "Survived",
+      summary:
+        "You made it through a month of economic chaos. Some good moves, some expensive lessons. The delayed action on supplies cost you purchasing power, and community building started later than ideal. But your family ate, your home is secure, and you learned what matters when the financial system breaks.",
+      didRight: [
+        "Adapted to the barter economy when cash became scarce",
+        "Prioritized family needs over material possessions",
+        "Recognized the situation's severity before it was too late",
+      ],
+      couldImprove: [
+        "Emergency cash at home — at least $2,000 in small bills — eliminates the first-week scramble",
+        "A stocked pantry means you do not compete with panicked crowds at the grocery store",
+        "Prescription medications: keep a 90-day supply when possible, not 30",
+        "Community relationships should be built before the banks close, not after",
+      ],
+      gearRecommendations: [
+        { name: GEAR.augason30day.name, reason: "30-day food supply per person. When grocery prices triple, you eat from the pantry instead of the bank account.", url: GEAR.augason30day.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "If utilities companies go bankrupt and water stops flowing, this filter is your independence.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.jackery1000.name, reason: "Portable power for rolling blackouts. Keep the fridge running, phones charged, and medical devices powered.", url: GEAR.jackery1000.url },
+        { name: GEAR.midlandGXT1000.name, reason: "Communication with neighbors when cell networks degrade. Coordinate security watches, resource sharing, and community info.", url: GEAR.midlandGXT1000.url },
+        { name: GEAR.luciLight.name, reason: "Solar-charged lantern for rolling blackouts. No batteries, no fuel, no ongoing cost. Charge in the window, light your house at night.", url: GEAR.luciLight.url },
+      ],
+    },
+    {
+      id: "ec-barely",
+      finalScore: 15,
+      rating: "Barely Made It",
+      summary:
+        "A month of financial chaos and you scraped through on fumes. Late to act on supplies, thin on food, behind on barter networks, and a few decisions that cost you dearly. Your family is okay, but it was close. The silver lining: you now understand exactly what an economic collapse looks like, and it is 100% survivable with basic preparation.",
+      didRight: [
+        "You kept your family together through a genuinely scary situation",
+        "You eventually adapted to the barter economy",
+      ],
+      couldImprove: [
+        "Cash at home. Not in the bank. Physical bills in a fireproof box. This is non-negotiable.",
+        "Food storage: even two weeks of canned goods changes the entire equation",
+        "Do not burn gas chasing normalcy in the next county — economic collapses are systemic",
+        "Build relationships with neighbors before you need to trade with them",
+        "Keep a 90-day supply of critical medications — pharmacies fail fast in economic crises",
+      ],
+      gearRecommendations: [
+        { name: GEAR.readyWise.name, reason: "Emergency food that sits on a shelf until the banks close. When they do, you eat while everyone else is standing in line.", url: GEAR.readyWise.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "Water independence. If the utility company goes under, your family still drinks clean water.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.reliance5gal.name, reason: "Pre-filled water storage. When utilities threaten shutoffs, you already have 28 gallons staged.", url: GEAR.reliance5gal.url },
+        { name: GEAR.bioliteHeadlamp.name, reason: "Rechargeable hands-free light for rolling blackouts. No batteries to buy at inflated prices.", url: GEAR.bioliteHeadlamp.url },
+        { name: GEAR.survivalTabs.name, reason: "Compact emergency nutrition. 15-day supply fits in a drawer. When money is worthless and shelves are empty, calories are king.", url: GEAR.survivalTabs.url },
+      ],
+    },
+    {
+      id: "ec-didnt",
+      finalScore: 0,
+      rating: "Didn't Make It",
+      summary:
+        "The banks closed and you were caught flat-footed. No cash, no stored food, no community network, and normalcy bias burned your most valuable days. This scenario has played out in Argentina, Greece, Lebanon, and Venezuela — the pattern is always the same. But every gap that hurt you is fixable today, right now, before it matters.",
+      didRight: [
+        "You ran the scenario — that means you are thinking about this, which puts you ahead of most people",
+      ],
+      couldImprove: [
+        "Keep $2,000+ in small bills at home. Not in a bank. In your house. Tomorrow.",
+        "Stock 30 days of food that does not need refrigeration. Canned goods, rice, beans, freeze-dried meals.",
+        "Fill prescriptions at the 90-day maximum, not 30. Pharmacies are among the first businesses to fail.",
+        "Normalcy bias kills — when something unprecedented happens, do not assume it will resolve quickly",
+        "Your neighbors are your safety net. Introduce yourself before you need to trade with them.",
+      ],
+      gearRecommendations: [
+        { name: GEAR.mountainHouse.name, reason: "Step one. 14 days of food per person that lasts 25 years on the shelf. Buy it, store it, forget it until the banks close.", url: GEAR.mountainHouse.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "If utilities companies shut off water, this $30 filter is your family's water independence. 100,000 gallons.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.reliance5gal.name, reason: "Prefilled water containers. When everything is falling apart, you already have a week of water.", url: GEAR.reliance5gal.url },
+        { name: GEAR.ecoflowDelta2.name, reason: "Power station for rolling blackouts. Keeps your fridge running, food from spoiling, and devices charged.", url: GEAR.ecoflowDelta2.url },
+        { name: GEAR.luciLight.name, reason: "Solar lantern. No batteries, no fuel cost, no electricity needed. Free light forever.", url: GEAR.luciLight.url },
+      ],
+    },
+  ],
+};
+
+// ═══════════════════════════════════════════════════════
+// SCENARIO 9: SEVERE PANDEMIC
+// ═══════════════════════════════════════════════════════
+const severePandemic: Scenario = {
+  id: "severe-pandemic",
+  name: "Severe Pandemic",
+  icon: "heart-pulse",
+  difficulty: "Hard",
+  description:
+    "A novel respiratory pathogen with a 5% case fatality rate is spreading globally. Not COVID — worse. Hospitals are full within two weeks. Your workplace closes. Schools shut down. Amazon stops delivering to your zone because warehouse workers are sick. This is what a serious pandemic looks like when the supply chain buckles.",
+  startingNodeId: "sp-1",
+  totalNodes: 5,
+  nodes: [
+    {
+      id: "sp-1",
+      emoji: "🏥",
+      situation:
+        "Week 1. The WHO declared a pandemic four days ago. Your state just announced a stay-at-home order. Schools are closed starting tomorrow. Your employer says work from home indefinitely. The grocery store is a war zone — toilet paper is gone, canned goods are thinning, and the checkout line wraps around the building. Your family of four has maybe 8 days of normal food. You have a few boxes of cold medicine and a half-empty bottle of Tylenol. The hospitals in your county are already at 90% capacity.",
+      choices: [
+        {
+          text: "Order a 30-day grocery delivery immediately, pull out the emergency food supply from the garage, and set up a quarantine zone in your house",
+          consequence:
+            "If you already have a stored food supply, this is your moment. You supplement it with a large delivery order placed before the system overloads. You designate the guest room as a quarantine room — if someone gets sick, they isolate there with their own bathroom. You set up a disinfection station at the front door: shoes off, hands sanitized, groceries wiped down. Overkill? Ask the families in 1918 who took it seriously. They survived at twice the rate of their neighbors.",
+          scoreImpact: 25,
+          nextNodeId: "sp-2a",
+        },
+        {
+          text: "Go to the store early tomorrow morning and stock up on everything you can get",
+          consequence:
+            "You are in the store at 6 AM with 200 other people who had the same idea. The mask situation is sketchy — half the people are not wearing them and the ones who are keep touching their faces. You get some canned goods, pasta, and medicine, but the exposure risk in that crowded store was real. You spent 90 minutes in the highest-risk environment possible: an indoor space packed with anxious people breathing hard. The supplies help, but the trip might cost you more than it bought.",
+          scoreImpact: 5,
+          nextNodeId: "sp-2b",
+        },
+        {
+          text: "This will peak in a few weeks and pass. Stay home, use what you have, and do not overreact.",
+          consequence:
+            "A 5% CFR pathogen with a 2-week hospital filling time is not something that peaks and passes in a few weeks. The 1918 pandemic lasted over two years with multiple waves. By the time you realize this is not blowing over, delivery slots are booked 3 weeks out and the stores are genuinely empty — not just low, empty. Your 8 days of food is now 5 days of food and you are starting from behind.",
+          scoreImpact: -10,
+          nextNodeId: "sp-2b",
+        },
+      ],
+    },
+    {
+      id: "sp-2a",
+      emoji: "📦",
+      situation:
+        "Week 2. The supply chain is cracking. Amazon's delivery window went from 2 days to 2 weeks. Your regular grocery delivery service is showing 'no available slots.' The delivery drivers are sick. The warehouse workers are sick. The truckers are still running but at reduced capacity. Your food supply is solid but fresh produce and dairy are becoming hard to get. Your neighbor, a nurse, comes home in tears — the hospital is running out of PPE and they are reusing N95s for three days straight. She asks if you have any masks or gloves.",
+      choices: [
+        {
+          text: "Give her a box of N95s and gloves. Set up a decontamination area for her at your door. She is your neighborhood's lifeline.",
+          consequence:
+            "A nurse who lives on your block during a pandemic is the most valuable neighbor you could have. Those N95s cost you $20 at the hardware store last year. The value of having a medical professional who trusts you, shares real-time hospital information, and can advise your family if someone gets sick? Priceless. You set up a boot wash station and a change area in your garage for her. She tells you the hospital strain is mutating — something the news will not report for another week. Information advantage.",
+          scoreImpact: 20,
+          nextNodeId: "sp-3a",
+        },
+        {
+          text: "You would help but you need to keep your PPE for your own family. Offer to help in other ways.",
+          consequence:
+            "Protecting your family's supply is logical but shortsighted. The nurse goes to work without proper PPE and within a week she is symptomatic. Now your neighborhood has lost its only medical resource and there is an active infection on your block. The masks you kept might protect you from the virus, but they cannot replace the medical knowledge and hospital intel you just lost. Sometimes giving something away is the smartest investment.",
+          scoreImpact: 5,
+          nextNodeId: "sp-3b",
+        },
+      ],
+    },
+    {
+      id: "sp-2b",
+      emoji: "🏠",
+      situation:
+        "Week 2. You are locked down at home and the supply situation is getting real. Delivery services are overwhelmed. The store trips feel increasingly risky — a woman in the checkout line yesterday was coughing into her hand. Your kid's school is doing remote learning but the internet is slowing down as everyone in the neighborhood streams and video calls all day. Your spouse is anxious. The kid is restless. You are watching the food supply shrink. A local community group is organizing a shared grocery run — one person goes for five families.",
+      choices: [
+        {
+          text: "Join the shared grocery run system. One person takes the risk instead of five families each making separate trips.",
+          consequence:
+            "Collective action reduces exposure for everyone. You rotate the shopping duty — one trip per week, one person wearing proper PPE, buying for five families from a shared list. Total exposure: one person for 45 minutes versus five people for 45 minutes each. You also reduce crowding at the store, which is better for everyone in the community. This is not communism — it is common sense risk management.",
+          scoreImpact: 15,
+          nextNodeId: "sp-3b",
+        },
+        {
+          text: "Do your own shopping. You do not trust someone else to pick your food and you do not want group entanglements.",
+          consequence:
+            "Independence has value, but five trips to a crowded store expose you five times more than necessary. You spend an hour and a half each time in a high-risk environment — unmasked strangers, recycled air, shared cart handles. By Week 3, the cumulative exposure risk is significant. You are buying the same food you could have gotten through a coordinated system, but accepting five times the risk to do it. That math does not work.",
+          scoreImpact: 0,
+          nextNodeId: "sp-3b",
+        },
+      ],
+    },
+    {
+      id: "sp-3a",
+      emoji: "🤒",
+      situation:
+        "Week 3. Your teenager comes home from the garage where she was talking to a friend through the fence and says she feels hot. Temperature: 101.4. Sore throat. Dry cough starting. Your heart drops into your stomach. The hospital is not taking anyone unless they cannot breathe. The nurse neighbor says it sounds consistent with the pathogen. You have a family of four in a three-bedroom house. Your other kid is 9. Your spouse has mild asthma.",
+      choices: [
+        {
+          text: "Activate the quarantine room. Isolate her immediately. Separate bathroom, meals delivered to the door, everyone else masks up full-time inside the house.",
+          consequence:
+            "This is exactly why you set up the quarantine room in Week 1. Your teen moves into the guest room with a dedicated bathroom. You deliver meals and fluids to the door. You wear N95s inside your own house, which feels insane but is correct. The nurse neighbor checks on her daily through the window, monitoring oxygen levels with a pulse oximeter she brought from the hospital. By Day 5, the fever breaks. By Day 10, she is recovering. No one else in the family gets sick. That quarantine room was the most important decision you made.",
+          scoreImpact: 25,
+          nextNodeId: "sp-4a",
+        },
+        {
+          text: "Keep her comfortable but you cannot really isolate in a 3-bedroom house. Mask up and hope for the best.",
+          consequence:
+            "Partial measures get partial results. You mask up and open windows, but she is still using the shared bathroom and eating in the same kitchen. By Day 4, your spouse develops a cough. Then the 9-year-old. The asthmatic spouse has it worst — oxygen levels dip to 91 on the pulse oximeter and you spend a terrifying night deciding whether the ER is worth the exposure risk. She recovers, but three out of four family members got sick because true isolation was not implemented. A guest room with a door and its own bathroom would have contained it.",
+          scoreImpact: 0,
+          nextNodeId: "sp-4b",
+        },
+      ],
+    },
+    {
+      id: "sp-3b",
+      emoji: "🤒",
+      situation:
+        "Week 3. Your kid develops symptoms. Fever of 101, dry cough, fatigue. The hospitals are full and turning people away unless they need a ventilator. The emergency number has a 4-hour callback time. You are on your own for medical care unless things get critical. You have basic cold medicine, Tylenol, and a thermometer. Your spouse is starting to feel run down too.",
+      choices: [
+        {
+          text: "Set up the best isolation you can — dedicated room, door closed, separate bathroom if possible. Treat symptoms aggressively with what you have.",
+          consequence:
+            "You clear out the bedroom, move the sick kid in, and close the door. Temperature checks every 4 hours. Tylenol for fever. Fluids constantly — the kid does not want to drink but dehydration is the silent killer with respiratory illness. You keep a log of symptoms and temperature that you can share with a doctor if things go south. It is not hospital care, but it is structured, disciplined home care that keeps the situation manageable. Your spouse gets mild symptoms but fights it off in a few days.",
+          scoreImpact: 15,
+          nextNodeId: "sp-4b",
+        },
+        {
+          text: "Drive to the ER. A sick kid with a 101 fever needs a doctor, not home remedies.",
+          consequence:
+            "The ER has a 9-hour wait, most of it in a hallway full of coughing patients. The doctor confirms it is the virus, tells you to manage it at home with Tylenol and fluids, and sends you back. You spent 10 hours in the highest viral-load environment in the county, exposed your family to more concentrated virus, and got the exact same advice you could have found on the CDC website. ER visits are for breathing emergencies, not 101 fevers. You did not need a doctor — you needed information you already had.",
+          scoreImpact: -10,
+          nextNodeId: "sp-4b",
+        },
+      ],
+    },
+    {
+      id: "sp-4a",
+      emoji: "🌤️",
+      situation:
+        "Week 4. Your teen is recovered. No one else in the family got sick. The community infection rate is finally dropping — the peak seems to have passed. But the economic damage is massive. Your spouse's company announced layoffs. Grocery stores are restocking but slowly. Schools will not reopen for months. You are standing on the other side of the worst of it. What sticks with you?",
+      choices: [
+        {
+          text: "Build a permanent pandemic prep kit: N95s, pulse oximeter, quarantine supplies, 30-day food and medicine stockpile",
+          consequence:
+            "The best pandemic prep is boring: masks, gloves, a pulse oximeter, a thermometer, a month of food, and a 90-day supply of every medication your family uses. Add a designated quarantine room plan and decontamination procedures, and you are ready for the next one. Because there will be a next one. The families who had this kit on Day 1 barely noticed the disruption. You can be that family next time.",
+          scoreImpact: 15,
+          nextNodeId: "end",
+        },
+        {
+          text: "Focus on supply chain independence — garden, bulk food storage, water filtration, solar power",
+          consequence:
+            "The supply chain failure scared you more than the virus itself, and you are right to focus there. A garden, a chest freezer full of meat, bulk rice and beans, and a water filter make you independent of the grocery delivery slot that never came. Add solar to keep the freezer running during rolling blackouts, and you have a house that can sustain itself through any disruption. This is not doomsday prepping — it is resilient living.",
+          scoreImpact: 15,
+          nextNodeId: "end",
+        },
+      ],
+    },
+    {
+      id: "sp-4b",
+      emoji: "🔄",
+      situation:
+        "Week 4. The worst seems to be over. Your family is recovering — everyone is tired and run down, but alive. The infection rate in your area is dropping. Grocery stores are slowly restocking. Looking back over the past month, the gaps in your preparation were painful and obvious. What changes?",
+      choices: [
+        {
+          text: "Stock a pandemic kit: masks, gloves, pulse oximeter, OTC medications, and 30 days of food that does not need a supply chain",
+          consequence:
+            "Everything that hurt you this month is fixable with about $300 and a trip to Amazon and Costco before the next event. A box of N95s, nitrile gloves, a $25 pulse oximeter, a thermometer, extra Tylenol and cold medicine, and a 30-day food supply. Add a quarantine room plan — who goes where, how meals are delivered, which bathroom is dedicated. None of this is exotic. All of it is the difference between crisis and inconvenience.",
+          scoreImpact: 10,
+          nextNodeId: "end",
+        },
+        {
+          text: "Invest in community relationships — the shared grocery runs and the nurse neighbor made the biggest difference",
+          consequence:
+            "You identified the real force multiplier. The shared grocery system reduced everyone's exposure. The nurse neighbor provided medical intelligence and guidance. The community group chat kept everyone informed. In a pandemic, community is not a luxury — it is infrastructure. Build those relationships, exchange skills, set up communication systems, and establish mutual aid agreements before the next pathogen arrives.",
+          scoreImpact: 10,
+          nextNodeId: "end",
+        },
+      ],
+    },
+  ],
+  endResults: [
+    {
+      id: "sp-thrived",
+      finalScore: 90,
+      rating: "Thrived",
+      summary:
+        "A severe pandemic with overrun hospitals and a broken supply chain, and your family came through it healthier than most. You had food stored, quarantine protocols ready, community relationships active, and the discipline to execute when it mattered. When your kid got sick, the quarantine room you set up in Week 1 kept the rest of the family healthy. That is not luck — that is preparation.",
+      didRight: [
+        "Had emergency food supply ready before the rush",
+        "Set up quarantine room and decontamination protocols early",
+        "Shared PPE with the nurse neighbor — invested in the community's most valuable asset",
+        "Isolated the sick family member effectively, preventing household spread",
+        "Managed stress and maintained discipline over four weeks",
+      ],
+      couldImprove: [
+        "A pulse oximeter and home medical kit should be pre-staged, not acquired during the event",
+        "90-day prescription supplies eliminate the pharmacy scramble",
+        "Delivery-independent food storage means you never need to enter a crowded store",
+      ],
+      gearRecommendations: [
+        { name: GEAR.mountainHouse.name, reason: "30-day food independence. No grocery runs, no delivery slots, no exposure. Just add hot water and eat.", url: GEAR.mountainHouse.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "If water utility workers get sick and treatment fails, this filter is your backup water supply.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.ecoflowDelta3.name, reason: "Power station for keeping medical devices, phones, and a mini-fridge running during rolling blackouts caused by sick grid workers.", url: GEAR.ecoflowDelta3.url },
+        { name: GEAR.midlandGXT1000.name, reason: "Communicate with your shared grocery group, check on elderly neighbors, and coordinate without face-to-face contact.", url: GEAR.midlandGXT1000.url },
+        { name: GEAR.renogy200w.name, reason: "Solar recharge for your power station. Indefinite electricity when the grid gets unreliable.", url: GEAR.renogy200w.url },
+      ],
+    },
+    {
+      id: "sp-survived",
+      finalScore: 50,
+      rating: "Survived",
+      summary:
+        "You made it through a serious pandemic, but the gaps showed. The food scramble was stressful, the illness hit multiple family members, and some decisions added risk that did not need to be there. Your family is alive and recovering, and you now know exactly what a real pandemic looks like — not the mild version, the ugly one.",
+      didRight: [
+        "Took the threat seriously and adjusted behavior",
+        "Worked with community resources when they were available",
+        "Managed home medical care when the hospitals could not help",
+      ],
+      couldImprove: [
+        "Stored food eliminates the most dangerous activity in a pandemic: going to the store",
+        "A true quarantine room requires a dedicated bathroom and a door that stays closed",
+        "PPE stockpile: N95s, gloves, hand sanitizer, disinfectant — buy before the panic",
+        "Home medical kit: pulse oximeter, thermometer, OTC medications, electrolyte packets",
+      ],
+      gearRecommendations: [
+        { name: GEAR.readyWise.name, reason: "Emergency food supply that eliminates grocery store exposure. Shelf-stable for 25 years. Buy it before the next pandemic.", url: GEAR.readyWise.url },
+        { name: GEAR.aquamiraDrops.name, reason: "Water purification drops as a backup. If water treatment plants run short-staffed, you want a second line of defense.", url: GEAR.aquamiraDrops.url },
+        { name: GEAR.jackery1000.name, reason: "Power for medical devices, phones, and a mini-fridge if rolling blackouts hit. Essential when the grid gets shaky.", url: GEAR.jackery1000.url },
+        { name: GEAR.bioliteHeadlamp.name, reason: "Rechargeable headlamp for nighttime care of sick family members without waking the rest of the house.", url: GEAR.bioliteHeadlamp.url },
+        { name: GEAR.luciLight.name, reason: "Solar lantern for power outages during the pandemic. No batteries to find at stripped stores.", url: GEAR.luciLight.url },
+      ],
+    },
+    {
+      id: "sp-barely",
+      finalScore: 15,
+      rating: "Barely Made It",
+      summary:
+        "Four weeks of a severe pandemic and your family scraped through. Multiple family members got sick, food ran short, and at least one trip to a crowded store or ER added unnecessary risk. The good news: everyone is alive and you now have a crystal-clear picture of what works and what does not in a pandemic.",
+      didRight: [
+        "You took care of your family through illness without hospital support",
+        "You eventually connected with community resources",
+      ],
+      couldImprove: [
+        "Food storage is pandemic prep number one — every grocery trip is an exposure event",
+        "Quarantine means truly separate: room, bathroom, airflow. Not just the same house with masks.",
+        "Do not go to the ER for a 101 fever — call first, save the trip for breathing emergencies",
+        "PPE before the pandemic, not during it. N95s, gloves, sanitizer — buy a case now.",
+        "90-day prescription supply prevents the pharmacy nightmare",
+      ],
+      gearRecommendations: [
+        { name: GEAR.augason30day.name, reason: "30 days of food per person. No store trips, no delivery waits, no exposure. This is pandemic prep step one.", url: GEAR.augason30day.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "Backup water filtration if water treatment gets disrupted by sick workers.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.reliance5gal.name, reason: "Stored water ready before disruptions. Four containers gives you a week of independence.", url: GEAR.reliance5gal.url },
+        { name: GEAR.ecoflowDelta2.name, reason: "Keep medical devices, phones, and a mini-fridge running when the power gets spotty.", url: GEAR.ecoflowDelta2.url },
+        { name: GEAR.midlandT77.name, reason: "GMRS radio for contact-free communication with neighbors. Coordinate shared grocery runs without meeting face to face.", url: GEAR.midlandT77.url },
+      ],
+    },
+    {
+      id: "sp-didnt",
+      finalScore: 0,
+      rating: "Didn't Make It",
+      summary:
+        "The pandemic hit and you were caught without stored food, without medical supplies, without quarantine plans, and with normalcy bias that cost you the critical first days. Multiple family members got sick from avoidable exposure. This is not a judgment — it is a blueprint. Every single thing that went wrong is fixable before the next pandemic arrives.",
+      didRight: [
+        "You ran the scenario and now you know what a real pandemic demands — that knowledge is the first prep",
+      ],
+      couldImprove: [
+        "Store 30 days of food NOW. Every grocery trip during a pandemic is Russian roulette.",
+        "Buy N95 masks, gloves, and hand sanitizer BEFORE the panic buying starts",
+        "Set up a quarantine room plan: who goes where, which bathroom, how food is delivered",
+        "A pulse oximeter costs $25 and tells you whether to go to the ER or stay home. Buy one.",
+        "Fill prescriptions for 90 days, not 30. Pharmacies collapse fast in pandemics.",
+      ],
+      gearRecommendations: [
+        { name: GEAR.mountainHouse.name, reason: "Food that does not require a grocery trip. 25-year shelf life. Buy it now, open it when the pandemic hits.", url: GEAR.mountainHouse.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "Backup water supply when infrastructure workers get sick. This filter works without electricity or plumbing.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.reliance5gal.name, reason: "Stored water ready before anything happens. Fill four, put them in the garage, forget about them until you need them.", url: GEAR.reliance5gal.url },
+        { name: GEAR.survivalTabs.name, reason: "Compact emergency calories. 15-day supply fits in a drawer. When delivery stops and stores are empty, this keeps you fed.", url: GEAR.survivalTabs.url },
+        { name: GEAR.luciLight.name, reason: "Solar lantern for power disruptions. No store trip needed, no batteries, just sunlight.", url: GEAR.luciLight.url },
+      ],
+    },
+  ],
+};
+
+// ═══════════════════════════════════════════════════════
+// SCENARIO 10: CASCADING NATURAL DISASTER
+// ═══════════════════════════════════════════════════════
+const cascadingDisaster: Scenario = {
+  id: "cascading-disaster",
+  name: "Cascading Natural Disaster",
+  icon: "mountain-snow",
+  difficulty: "Extreme",
+  description:
+    "2:47 AM. Your bed is shaking. Not vibrating — violently shaking. A 7.7 magnitude earthquake on the New Madrid fault just ripped through the central US. Within 48 hours, an upstream dam will fail, flooding the valley. The power grid collapses across three counties. Earthquake plus flood plus blackout. FEMA calls this a cascading failure scenario. They war-game it every year. Now it is real.",
+  startingNodeId: "cd-1",
+  totalNodes: 6,
+  nodes: [
+    {
+      id: "cd-1",
+      emoji: "🏚️",
+      situation:
+        "The shaking lasted 45 seconds but it felt like ten minutes. You hear glass breaking, shelves falling, car alarms going off everywhere. The power is out. Your phone has 54% battery and one bar of signal — the towers are overloaded. In the dark, you can smell gas. Not strong, but it is there. Your family is awake and scared. The house feels structurally okay but you have not checked yet. Aftershock could come any minute.",
+      choices: [
+        {
+          text: "Get the family outside immediately. Shut off the gas main at the meter. Grab the emergency bag on the way out.",
+          consequence:
+            "Gas smell after an earthquake means ruptured lines, and ruptured gas lines plus aftershocks equals fire or explosion. Getting outside is the right call. You shut off the gas at the meter using the wrench you keep zip-tied to the pipe — a detail that takes 10 seconds during an emergency and 2 hours to figure out if you did not plan it. The emergency bag has flashlights, a radio, first aid, and water. Your family is outside, safe, and equipped while the neighbors are stumbling around in the dark looking for their shoes.",
+          scoreImpact: 25,
+          nextNodeId: "cd-2a",
+        },
+        {
+          text: "Do a quick safety check of the house — check for structural cracks, water leaks, and gas leaks before deciding whether to stay or leave",
+          consequence:
+            "Assessing before acting is reasonable, but you are searching a dark house that smells like gas while aftershocks are imminent. You find some cracked drywall and a broken water pipe under the kitchen sink. The gas smell is coming from the stove — the pilot light blew out and gas is seeping. You shut the stove off but the main line might have issues too. By the time you get outside, an aftershock hits and knocks more items off shelves. The house check gave you information, but the risk of being inside a compromised structure during aftershocks was high.",
+          scoreImpact: 5,
+          nextNodeId: "cd-2b",
+        },
+        {
+          text: "Stay inside — the house is still standing and it is safer than being outside in the dark with downed power lines",
+          consequence:
+            "The gas smell should have overridden everything. A 5.2 aftershock hits 18 minutes later and the damaged gas line behind the wall ruptures further. The smell gets worse fast. Now you are evacuating in the dark, in a panic, during an aftershock, without your emergency gear. Two neighbors' houses already have small fires from ruptured lines that ignited. Staying in a structure with a gas leak after a major earthquake is one of the most dangerous decisions you can make.",
+          scoreImpact: -15,
+          nextNodeId: "cd-2b",
+        },
+      ],
+    },
+    {
+      id: "cd-2a",
+      emoji: "📻",
+      situation:
+        "Dawn. Your family spent the night in the car with the emergency bag. Aftershocks hit three more times, the worst at 5.2. Your house has cracks but is standing. Several houses on the block are not — one has a collapsed garage, another has a chimney through the roof. No one is seriously hurt on your block, but you can hear sirens everywhere. Your hand-crank radio picks up an emergency broadcast: 7.7 earthquake, major structural damage across four counties, and — here is the bad news — the Clearwater Dam 30 miles upstream is compromised. Army Corps of Engineers is assessing. If it fails, the valley below floods with 2-4 feet of water. You are in the valley.",
+      choices: [
+        {
+          text: "Start loading the car with essentials NOW. If that dam fails, you need to be above the flood line before it hits. Identify high ground within 5 miles.",
+          consequence:
+            "You do not wait for an official evacuation order — by the time they issue one, the roads will be clogged. You pack water, food, the emergency bag, important documents, medications, and pet supplies. You know a ridge 3 miles west that sits 200 feet above the valley floor. You drive there, park, and set up a temporary camp. Six hours later, the dam fails. The valley floods with 3 feet of muddy water. Your house takes water damage but you and your family are dry, fed, and safe on the ridge. The people who waited for the official order are sitting in 2 hours of gridlock when the water arrives.",
+          scoreImpact: 25,
+          nextNodeId: "cd-3a",
+        },
+        {
+          text: "Wait for the official evacuation order — the dam might hold and you do not want to abandon your house unnecessarily",
+          consequence:
+            "The dam holds for 20 more hours while the Corps tries emergency repairs. Then it does not hold. The evacuation order comes 4 hours before the breach, but 50,000 people are trying to leave at the same time on roads already damaged by the earthquake. You get out, but barely — water is lapping at the road behind you as you climb to higher ground. You packed in a rush and forgot medications, important documents, and half your food supply. You are alive but starting from zero on a hilltop.",
+          scoreImpact: 5,
+          nextNodeId: "cd-3b",
+        },
+      ],
+    },
+    {
+      id: "cd-2b",
+      emoji: "🌊",
+      situation:
+        "Morning. The earthquake damage is significant — cracked walls, broken pipes, no power. A neighbor with a battery radio shares the emergency broadcast: major earthquake damage region-wide and the Clearwater Dam upstream is under stress. If it fails, the valley floods. You are in the valley. No official evacuation order yet, but the Army Corps is 'monitoring the situation.' Your car has half a tank. The roads have some debris but seem passable.",
+      choices: [
+        {
+          text: "Do not wait for the order. Load the car and get to high ground now. You have enough gas to get 3 miles uphill.",
+          consequence:
+            "Your instincts override the lack of official guidance and that saves your family. You pack what you can in 30 minutes and drive to the ridge west of town. It is not a comfortable camp, but it is above the flood line. When the dam fails 18 hours later, you watch from safety as the valley fills with brown water. Your house takes flood damage. Your family does not. The official evacuation order came 4 hours before the breach — those who waited are now in traffic as water rises.",
+          scoreImpact: 15,
+          nextNodeId: "cd-3b",
+        },
+        {
+          text: "Stay put and prepare the house — move valuables upstairs, sandbag the doors, and ride it out on the second floor",
+          consequence:
+            "Sandbagging against a dam failure is like putting a band-aid on a bullet wound. When the dam goes, 3 feet of water carrying mud, debris, and sewage pours through your first floor. You are trapped on the second floor with whatever you carried up. No car — it is underwater in the driveway. No way out until the water recedes in 3-5 days. You are alive, but you are stuck in a damaged house surrounded by contaminated floodwater with dwindling food and no clean water. Rescue boats may come. Eventually.",
+          scoreImpact: -10,
+          nextNodeId: "cd-3b",
+        },
+      ],
+    },
+    {
+      id: "cd-3a",
+      emoji: "⛺",
+      situation:
+        "Day 3. You are on the ridge above the flooded valley. Your camp is basic but functional: car, emergency supplies, some food and water. The floodwater below is receding but the valley is a disaster zone — mud, debris, contaminated water everywhere. Power is out across three counties with no restoration timeline. Cell towers are down. Your hand-crank radio says FEMA is staging relief but it is 3-5 days out. You have maybe 4 days of food and 2 days of water. A family you do not know has set up camp 200 yards from you with two small kids and almost nothing.",
+      choices: [
+        {
+          text: "Share food and water, then organize both families into a functioning camp. Pool resources, set watch shifts, and plan a foraging trip to the ridge's water source.",
+          consequence:
+            "The family has nothing but the clothes on their backs and a diaper bag. You share a day's worth of food and water — not reckless, but enough to stabilize them. The father is a plumber and immediately helps you rig a rainwater collection system from a tarp and some buckets. The mother finds a spring-fed creek a quarter mile along the ridge. Your water filter turns it into clean drinking water. Two families, pooled skills, shared security. You just doubled your capability while only reducing your supplies by 25%. That is the math of community.",
+          scoreImpact: 20,
+          nextNodeId: "cd-4a",
+        },
+        {
+          text: "Help them with directions to the nearest shelter or relief staging area. You cannot support two families on your supplies.",
+          consequence:
+            "Not cruel, but a missed opportunity. The family walks toward town, through chest-deep floodwater in some areas, with two small kids. You do not know if they made it. Meanwhile, you sit alone on a ridge with dwindling water and no one to help you if something goes wrong. The plumber's skills, the spring the mother would have found — those assets walk away with them. Sometimes generosity is not charity — it is survival math.",
+          scoreImpact: 5,
+          nextNodeId: "cd-4b",
+        },
+      ],
+    },
+    {
+      id: "cd-3b",
+      emoji: "🚁",
+      situation:
+        "Day 3. You are on higher ground — either the ridge or a shelter — and the valley below is still flooded. The scope of the disaster is becoming clear: earthquake damage plus flood damage plus no electricity across three counties. Roads are impassable in most areas. Helicopters are buzzing overhead but they are focused on rooftop rescues. Your food is getting thin and clean water is becoming a problem. Contaminated floodwater is everywhere and drinking it is a guaranteed ticket to dysentery. You hear there is a creek on the ridge but you have no way to filter it.",
+      choices: [
+        {
+          text: "Find the creek, boil the water using a campfire before drinking it. Ration food strictly and start looking for edible plants, canned goods in abandoned cars, anything useful.",
+          consequence:
+            "You find the creek and build a small fire. A rolling boil for one minute kills bacteria, viruses, and parasites. It is slow work — boiling enough water for a family takes hours — but it is safe water. You scavenge a case of canned food from a car that washed up against a tree line. Not glamorous, but you are hydrated, fed, and stable. A water filter would have made this ten times easier, but fire and knowledge work too.",
+          scoreImpact: 15,
+          nextNodeId: "cd-4b",
+        },
+        {
+          text: "Wait for rescue. FEMA and the National Guard are staging — they will reach your area soon.",
+          consequence:
+            "FEMA is staging for 50,000+ displaced people across four counties after a triple disaster. Your ridge is not a priority when there are people on rooftops in the flood zone. Day 3 becomes Day 4. Day 4 becomes Day 5. You are dehydrated and your family is getting weak. On Day 6, a National Guard truck reaches your ridge and evacuates you to a shelter. You made it, but three days of dehydration in children is dangerous — your youngest needs IV fluids at the field hospital. Waiting for rescue is a valid strategy only if you can sustain yourself while waiting.",
+          scoreImpact: -5,
+          nextNodeId: "cd-4b",
+        },
+      ],
+    },
+    {
+      id: "cd-4a",
+      emoji: "🔧",
+      situation:
+        "Day 5. Your two-family camp is functioning: filtered water from the creek, rationed food supplemented by scavenged supplies, security watches at night. FEMA helicopters are getting closer — you can see them working the valley floor. A relief convoy is reportedly 24 hours away. Your house in the valley is flood-damaged but still standing. The water is receding. You have a decision: wait for relief or start the recovery yourself.",
+      choices: [
+        {
+          text: "Start recovering now. Wade down carefully, assess your home, salvage what you can, and start drying it out before mold sets in.",
+          consequence:
+            "Mold starts growing in flooded structures within 24-48 hours. Every hour you wait, the recovery gets more expensive and more dangerous. You wade down in boots (never barefoot in floodwater — the contamination is no joke), open every window and door, pull out wet drywall and carpet, and start airing the structure. The plumber neighbor helps you cap the broken water lines. By the time FEMA arrives on Day 7, you have already started the hardest part of recovery. Insurance adjusters will later tell you that the early gutting saved your house.",
+          scoreImpact: 20,
+          nextNodeId: "end",
+        },
+        {
+          text: "Wait for the relief convoy. You need proper supplies, clean water, and probably a tetanus shot before wading through contaminated flood mud.",
+          consequence:
+            "Medically cautious and not wrong — floodwater carries sewage, chemicals, and sharp debris. The convoy arrives on Day 7 with clean water, MREs, and medical support. But your house has been sitting in moisture for five days. By the time you start gutting it, mold is established in the walls. The remediation cost doubles. Waiting was not a bad call for your health, but the house paid the price. In recovery, speed and safety are in constant tension.",
+          scoreImpact: 10,
+          nextNodeId: "end",
+        },
+      ],
+    },
+    {
+      id: "cd-4b",
+      emoji: "🏗️",
+      situation:
+        "Day 5. You have made it through the worst: earthquake, dam failure, and five days without power or clean water. FEMA relief is arriving in your area — trucks, water, MREs, and medical teams. Your house in the valley is flood-damaged. The water is receding but the destruction is massive. You are exhausted, your family is shaken, but alive. Recovery starts now.",
+      choices: [
+        {
+          text: "Register with FEMA, get medical checks for the family, and start documenting damage for insurance. Build a recovery plan.",
+          consequence:
+            "The boring work is the important work. You photograph every piece of damage before cleaning up — insurance requires documentation. FEMA registration gets you in the system for assistance. Medical checks confirm everyone is healthy but dehydrated. The recovery will take months, but you are approaching it systematically instead of emotionally. The families who documented first recovered fastest. The ones who started cleaning before photographing lost thousands in uncovered claims.",
+          scoreImpact: 10,
+          nextNodeId: "end",
+        },
+        {
+          text: "Start cleaning and repairing immediately — you want your home back and waiting for bureaucracy will take forever",
+          consequence:
+            "The motivation is understandable but the execution costs you. You gut the flooded first floor without documenting the damage first. When the insurance adjuster arrives a week later, half the evidence is in a dumpster. Your claim gets reduced because you cannot prove the full extent of damage. FEMA assistance requires registration that you delayed. Emotion drove the timeline when process should have. Clean up with a camera in one hand — always.",
+          scoreImpact: 0,
+          nextNodeId: "end",
+        },
+      ],
+    },
+  ],
+  endResults: [
+    {
+      id: "cd-thrived",
+      finalScore: 90,
+      rating: "Thrived",
+      summary:
+        "Earthquake, dam failure, and regional blackout — the triple disaster FEMA war-games as a worst case — and you navigated all three. Gas shut off immediately, evacuated before the flood order, built a functional camp on high ground, integrated refugees into your group, and started recovery before FEMA arrived. This is what preparation looks like when it is tested by everything at once.",
+      didRight: [
+        "Shut off gas and evacuated immediately — the smell was enough, did not wait for confirmation",
+        "Moved to high ground before the dam failed, not after the evacuation order",
+        "Had an emergency bag ready to grab on the way out the door",
+        "Built community on the ridge — shared resources, pooled skills, organized camp",
+        "Started recovery early to prevent mold and maximize insurance documentation",
+      ],
+      couldImprove: [
+        "Pre-identified flood zones and high ground routes before an earthquake — FEMA flood maps are free",
+        "A comprehensive vehicle emergency kit would have made the ridge camp more comfortable",
+        "Water filtration in the emergency bag eliminates the need to find fuel for boiling",
+      ],
+      gearRecommendations: [
+        { name: GEAR.sawyerSqueeze.name, reason: "In a flood scenario, clean water is everywhere but drinkable water is nowhere. This filter turns creek water, rainwater, and even murky sources into safe drinking water. Weighs 3 ounces.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.rush72.name, reason: "72-hour go bag that lives by your door. Earthquake hits at 3 AM, you grab this on the way out. Flashlight, radio, water, food, first aid — all pre-packed.", url: GEAR.rush72.url },
+        { name: GEAR.garminInreach.name, reason: "When cell towers are down and you need to tell family you are alive, satellite messaging works when nothing else does.", url: GEAR.garminInreach.url },
+        { name: GEAR.solBivvy.name, reason: "Emergency shelter for ridge camping after evacuation. Reflects 90% of body heat. Weighs 8 ounces. Fits in your go bag.", url: GEAR.solBivvy.url },
+        { name: GEAR.aquamiraDrops.name, reason: "Chemical water treatment for when you cannot boil. Kills everything in contaminated water. Treats 60 gallons.", url: GEAR.aquamiraDrops.url },
+      ],
+    },
+    {
+      id: "cd-survived",
+      finalScore: 50,
+      rating: "Survived",
+      summary:
+        "Triple disaster and you made it through with your family intact. Some decisions were sharp, others cost you time and comfort. The earthquake response was decent, the flood evacuation was tight, and the camp situation was rough but manageable. You learned what it feels like when three disasters stack on top of each other — and that knowledge is worth everything.",
+      didRight: [
+        "Got your family to safety — the details were messy but the outcome was right",
+        "Recognized the dam threat and acted on it (even if the timing was tight)",
+        "Managed to find water and food during extended displacement",
+      ],
+      couldImprove: [
+        "A pre-packed go bag by the door eliminates the scramble during a 3 AM earthquake",
+        "Know your flood zone and high ground routes before the earthquake hits",
+        "A water filter weighing 3 ounces would have eliminated the biggest stressor on the ridge",
+        "Gas shutoff wrench should be attached to the meter — you will never find a wrench at 3 AM in the dark",
+        "Document damage before cleanup — insurance requires evidence",
+      ],
+      gearRecommendations: [
+        { name: GEAR.sawyerSqueeze.name, reason: "Your biggest vulnerability was clean water. This filter goes in your emergency bag and turns any water source into safe drinking water.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.rush72.name, reason: "Pre-packed 72-hour bag. Earthquake hits, you grab it and go. No packing, no deciding, no wasting time.", url: GEAR.rush72.url },
+        { name: GEAR.ecoflowDelta3.name, reason: "Portable power for your vehicle camp. Charge phones, run a radio, power lights. Solar recharge extends it indefinitely.", url: GEAR.ecoflowDelta3.url },
+        { name: GEAR.mountainHouse.name, reason: "Freeze-dried food for your go bag and vehicle kit. Just add hot water. Weighs almost nothing, lasts 25 years.", url: GEAR.mountainHouse.url },
+        { name: GEAR.gerberStrongarm.name, reason: "Fixed blade knife for camp tasks, scavenging, and emergency situations. Full tang, bombproof construction.", url: GEAR.gerberStrongarm.url },
+      ],
+    },
+    {
+      id: "cd-barely",
+      finalScore: 15,
+      rating: "Barely Made It",
+      summary:
+        "Earthquake, flood, and blackout — and you survived by the thinnest margin. Delayed evacuation, dehydration, and waiting for rescue instead of self-rescuing made this far harder than it needed to be. Your family is alive, but the experience was traumatic. Every gap in preparation was a gap that nearly broke you.",
+      didRight: [
+        "You kept your family alive through a triple disaster — do not minimize that",
+        "You made decisions under extreme stress and did not freeze",
+      ],
+      couldImprove: [
+        "When you smell gas after an earthquake, you leave. Immediately. No assessment needed.",
+        "Do not wait for evacuation orders when a dam upstream is compromised — move to high ground NOW",
+        "A water filter in your emergency kit eliminates the dehydration risk entirely",
+        "Rescue may come, but it might take a week. Be able to sustain yourself for 7 days minimum.",
+        "Pre-pack a go bag. At 3 AM during an earthquake is not the time to decide what to bring.",
+      ],
+      gearRecommendations: [
+        { name: GEAR.sawyerSqueeze.name, reason: "Clean water was your biggest crisis. A 3-ounce filter that handles 100,000 gallons. Put one in your bag today.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.rush72.name, reason: "A pre-packed go bag. Everything you need for 72 hours in one pack. Grab it at 3 AM and you are equipped.", url: GEAR.rush72.url },
+        { name: GEAR.katadynBeFree.name, reason: "Fast-flow water filter in a collapsible bottle. Drink directly from streams, puddles, or any freshwater source.", url: GEAR.katadynBeFree.url },
+        { name: GEAR.solBivvy.name, reason: "Emergency shelter that fits in your pocket. Reflective interior retains 90% of body heat. Sleeping on a ridge in January without this is miserable.", url: GEAR.solBivvy.url },
+        { name: GEAR.survivalTabs.name, reason: "Emergency calories that fit in a jacket pocket. 15-day supply. When you evacuated with nothing, this would have kept you fed.", url: GEAR.survivalTabs.url },
+      ],
+    },
+    {
+      id: "cd-didnt",
+      finalScore: 0,
+      rating: "Didn't Make It",
+      summary:
+        "A triple disaster — earthquake, dam failure, and regional blackout — overwhelmed you at every stage. Delayed evacuation, gas leak exposure, dehydration, and reliance on rescue that came too late. In a simulation, you try again. In real life, a go bag by the door, a water filter in your pocket, and knowledge of your flood zone are the difference between this outcome and a completely different one.",
+      didRight: [
+        "You ran the hardest natural disaster scenario in the simulator — now you know what cascading failure looks like",
+      ],
+      couldImprove: [
+        "Gas smell = leave. No exceptions. Shut it off at the meter if you can, but GET OUT.",
+        "Know your flood zone. Know the high ground. Know the route. Before the earthquake.",
+        "A go bag by the door is not optional — it is the difference between equipped and empty-handed",
+        "Water filter. Pocket-sized, 3 ounces, 100,000 gallons. This is the single most important piece of gear.",
+        "Do not wait for rescue to sustain you. Sustain yourself and let rescue accelerate your recovery.",
+      ],
+      gearRecommendations: [
+        { name: GEAR.sawyerSqueeze.name, reason: "Buy this first. Before anything else. A $30 water filter that turns any freshwater into drinking water. Dehydration was your biggest enemy.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.rush72.name, reason: "Pack this bag tonight and put it by your front door. Flashlight, radio, water, food, first aid, documents. Grab it at 3 AM and GO.", url: GEAR.rush72.url },
+        { name: GEAR.solBivvy.name, reason: "Emergency shelter in your go bag. When you are on a ridge with nothing, this keeps you warm and alive.", url: GEAR.solBivvy.url },
+        { name: GEAR.mountainHouse.name, reason: "Freeze-dried food for your go bag. Just add hot water. Weighs almost nothing. Feeds you for days when you evacuated with nothing.", url: GEAR.mountainHouse.url },
+        { name: GEAR.garminInreach.name, reason: "Satellite messenger. When cell towers are destroyed, this sends your location and status to family via satellite. They know you are alive.", url: GEAR.garminInreach.url },
+      ],
+    },
+  ],
+};
+
+// ═══════════════════════════════════════════════════════
+// SCENARIO 11: SUPPLY CHAIN SIEGE
+// ═══════════════════════════════════════════════════════
+const supplyChainSiege: Scenario = {
+  id: "supply-chain-siege",
+  name: "Supply Chain Siege",
+  icon: "container",
+  difficulty: "Moderate",
+  description:
+    "No explosions. No disaster sirens. Just a slow squeeze. A major port strike combined with a trucking fuel dispute has disrupted deliveries across the eastern US. The news says it is temporary. The shelves say otherwise. This is the scenario that does not make the movies but affects more people than any earthquake — a 30-day supply chain disruption.",
+  startingNodeId: "sc-1",
+  totalNodes: 5,
+  nodes: [
+    {
+      id: "sc-1",
+      emoji: "🏬",
+      situation:
+        "Day 4. The port strike started Monday and the trucking dispute hit Wednesday. The news keeps saying 'negotiations are ongoing.' But you went to the grocery store this morning and the produce section is half empty. The canned goods aisle has gaps. The pharmacy says your blood pressure medication refill is delayed — 'supply chain issue, maybe next week.' Your neighbor posted on the neighborhood app that the Costco gas line was 45 minutes long. This feels different from the normal 'temporarily out of stock' signs.",
+      choices: [
+        {
+          text: "Top off the gas tank, buy 2-3 weeks of shelf-stable food, refill prescriptions early, and quietly prepare for a month-long disruption",
+          consequence:
+            "You read the signals correctly. The produce gaps and pharmacy delays are early indicators, not temporary blips. You fill the car and your gas cans — $180 total but gas prices will climb 30% within a week. You buy rice, beans, pasta, canned goods, peanut butter, and oats — boring food that stores forever and costs $120 for three weeks' worth. You call the pharmacy and push your refill forward by the maximum allowed days. Total prep cost: under $400. Total stress reduction over the next month: immeasurable.",
+          scoreImpact: 25,
+          nextNodeId: "sc-2a",
+        },
+        {
+          text: "Keep an eye on it but do not overreact — supply disruptions happen all the time and they always resolve",
+          consequence:
+            "They do resolve. Usually in 3-5 days. But this one involves a port strike AND a fuel dispute simultaneously, which is different. By Day 10, the grocery store is rationing eggs, milk, and bread. Gas is up 35%. Your pharmacy still does not have your medication and now three other medications are on backorder too. The window for easy, calm preparation closed while you were waiting for normal to reassert itself. You can still act, but it will cost more and the selection is worse.",
+          scoreImpact: 0,
+          nextNodeId: "sc-2b",
+        },
+        {
+          text: "Stock up aggressively — buy everything you can afford. Fill the garage with supplies.",
+          consequence:
+            "The instinct is right but the execution is excessive. You spend $800 in a single day at three different stores, buying way more than you need — 50 pounds of rice, 40 cans of soup, 10 gallons of milk (that will spoil), and enough toilet paper for a year. The aggressive buying actually contributes to the local shortage — when everyone panic-buys, the shelves empty faster than the disruption warrants. You are well-stocked but you also just accelerated the problem for your neighbors. Smart prepping is steady and strategic, not a shopping spree.",
+          scoreImpact: 10,
+          nextNodeId: "sc-2a",
+        },
+      ],
+    },
+    {
+      id: "sc-2a",
+      emoji: "⛽",
+      situation:
+        "Week 2. The disruption is deepening. Gas stations are implementing purchase limits — $40 max per customer. Grocery stores have formal rationing: two of any single item per visit. Baby formula is completely gone. Fresh produce is a memory. Your employer announces work-from-home because the office building's cafeteria supplier cannot deliver. Schools are going remote because there is no fuel for the buses. Your pantry is solid but your neighbor — a single dad with an infant — is standing in his driveway looking stressed. He cannot find formula anywhere.",
+      choices: [
+        {
+          text: "Help him find alternatives — check with other parents in the neighborhood for spare formula, breast milk banks, or pediatrician-approved substitutes. Offer food from your pantry for his older kid.",
+          consequence:
+            "This is community in action. You post on the neighborhood app (while the internet still works) and within an hour, two families respond with partial cans of the same formula brand. A mom three streets over has a full unopened can she bought before her baby transitioned to whole milk. You facilitate the connections and send him home with the formula and a bag of groceries for his 5-year-old. Total cost to you: two cans of soup and an hour of your time. The trust and goodwill you just built is worth a hundred cans.",
+          scoreImpact: 20,
+          nextNodeId: "sc-3a",
+        },
+        {
+          text: "Sympathize but stay out of it. You prepared for your family. He should have prepared for his.",
+          consequence:
+            "True in the abstract, wrong in practice. A single dad with an infant has different constraints than a two-parent household. Judging his preparation level while his baby needs formula is not a survival strategy — it is a character failure. The neighborhood notices who helped and who did not during a crisis. When this resolves (and it will), your reputation is set. Communities have long memories.",
+          scoreImpact: 0,
+          nextNodeId: "sc-3b",
+        },
+      ],
+    },
+    {
+      id: "sc-2b",
+      emoji: "💊",
+      situation:
+        "Week 2. The shelves are noticeably bare now. Not empty — but the variety is gone. Five types of pasta sauce reduced to one. Meat section is hit or miss. Gas is up 35% and stations are limiting purchases. Your medication is still on backorder. You have 6 days left on your current supply. The pharmacy says they 'hope' to have it next week. Your boss announced work-from-home because the office cafeteria closed. Schools just went remote — no bus fuel.",
+      choices: [
+        {
+          text: "Call every pharmacy in a 30-mile radius for your medication. Switch pharmacies if needed. Then stock up on whatever food is still available.",
+          consequence:
+            "Persistence pays. The sixth pharmacy you call has your medication — different manufacturer, same drug, same dosage. You drive 22 miles to pick it up and get a 90-day supply while it is available. On the way back, you stop at a grocery store in that town that is better stocked than yours. You fill the cart with shelf-stable staples. The gas cost hurts but you have medication for three months and food for two weeks. When critical needs are at stake, expand your search radius.",
+          scoreImpact: 15,
+          nextNodeId: "sc-3b",
+        },
+        {
+          text: "Wait for your regular pharmacy to restock. Stretch your current supply by cutting pills in half.",
+          consequence:
+            "Some medications can be safely split. Others absolutely cannot — time-release capsules, blood thinners, and seizure medications can be dangerous at half doses. You did not check with a doctor first. Your blood pressure creeps up over the next week on the reduced dose. The pharmacy gets a partial shipment on Day 12 but it is first-come, first-served and you miss the window. By Week 3, you are out completely and your BP is 160/100. A 22-mile drive a week ago would have prevented all of this.",
+          scoreImpact: -10,
+          nextNodeId: "sc-3b",
+        },
+      ],
+    },
+    {
+      id: "sc-3a",
+      emoji: "🚗",
+      situation:
+        "Week 3. Gas rationing is official now. Even-odd license plate days at the pump, $30 limit. Your work-from-home situation is fine but your spouse's employer is demanding a return to office — 25 miles each way. Schools are still remote, so someone needs to stay home with the kids. Grocery deliveries are 10+ days out. The neighborhood has started an informal food-sharing network — people are trading what they have for what they need. Eggs for flour. Canned goods for fresh milk from a family that keeps chickens three blocks away.",
+      choices: [
+        {
+          text: "Dive into the barter network. Offer your surplus staples for fresh items you need. Coordinate with the neighborhood to maximize everyone's supplies.",
+          consequence:
+            "The barter economy is already more efficient than the broken supply chain. The chicken family has eggs and milk. The guy with the backyard garden has fresh greens. You have rice, beans, and canned protein in surplus. Within days, you have a weekly swap system running on the neighborhood app. No money changes hands. Everyone eats better than they would alone. This is how communities have operated for thousands of years — the grocery store was a 70-year experiment and it just hit a wall.",
+          scoreImpact: 20,
+          nextNodeId: "sc-4a",
+        },
+        {
+          text: "Keep using what you stored. The disruption will end soon and you do not want to trade away supplies you might need.",
+          consequence:
+            "Conservation is not wrong, but opportunity cost is real. Your stored rice and beans are solid but your family is craving variety after two weeks of the same meals. The barter network is offering fresh eggs, greens, and milk — nutrients your family needs — in exchange for bulk staples you have plenty of. Hoarding depreciating assets (your pantry gets less appetizing every day) while declining appreciating ones (fresh food when the store has none) is bad economics even in a crisis.",
+          scoreImpact: 5,
+          nextNodeId: "sc-4b",
+        },
+      ],
+    },
+    {
+      id: "sc-3b",
+      emoji: "📱",
+      situation:
+        "Week 3. The internet is slowing to a crawl — not because of infrastructure failure but because everyone is home streaming, gaming, and video calling. Your work-from-home meetings keep freezing. Gas rationing is in effect. The grocery store gets a shipment every 3-4 days now instead of daily, and there is a line before they open. Your family is getting bored, restless, and tired of canned food. Morale is the new scarcity.",
+      choices: [
+        {
+          text: "Get creative with meals — learn to bake bread, cook from scratch with what you have. Get the family involved. Pull out board games. Make this a challenge, not a punishment.",
+          consequence:
+            "Morale is a survival resource and you just started investing in it. Your kid learns to make bread from flour, water, salt, and yeast — a skill that has been useful for about 10,000 years. Your spouse discovers that rice and beans with different spice combinations can be a different meal every night. Board games replace screens during the slow internet hours. The disruption is still real but your family's psychological state shifts from 'enduring' to 'adapting.' That shift is everything.",
+          scoreImpact: 15,
+          nextNodeId: "sc-4b",
+        },
+        {
+          text: "Push through. It is temporary. Keep meals simple, keep routines normal, and wait for resolution.",
+          consequence:
+            "Routine has value but three weeks of monotony without an end date grinds people down. The kids are fighting more. Your spouse is snapping over small things. You are eating the same pasta three nights a week and no one is excited about dinner anymore. The disruption might last two more weeks — can your family's morale hold? Sometimes the 'soft' skills — cooking creativity, family engagement, psychological resilience — matter more than the stockpile.",
+          scoreImpact: 5,
+          nextNodeId: "sc-4b",
+        },
+      ],
+    },
+    {
+      id: "sc-4a",
+      emoji: "📰",
+      situation:
+        "Week 4. The news breaks: port strike settled, trucking fuel dispute resolved. Full deliveries resume in 7-10 days. The worst is over, but recovery takes time. The stores will be restocked gradually. Gas rationing will lift next week. Your neighborhood barter network is still running and people are talking about keeping it going even after the stores are full again. You made it through 30 days of supply chain disruption without a single panic moment.",
+      choices: [
+        {
+          text: "Keep the neighborhood network alive, build a deeper pantry, and establish a 90-day supply baseline for your family",
+          consequence:
+            "The best prep is the one you build after learning what you actually needed. You know now: 30 days of shelf-stable food, 90-day medication supply, gas cans topped off, and a neighborhood network that can function independently of the supply chain. None of this is expensive. None of it takes much space. And the neighborhood relationships you built over the last month are worth more than anything on a shelf. You do not just survive the next disruption — you barely notice it.",
+          scoreImpact: 15,
+          nextNodeId: "end",
+        },
+        {
+          text: "Get back to normal ASAP. Restock the pantry, fill the gas tank, and be glad it is over.",
+          consequence:
+            "Normal feels great after a month of rationing. But normal is what left you vulnerable in the first place. Restocking is step one. The question is whether you restock to a 3-day supply (what most families have) or a 30-day supply (what you now know you need). The supply chain will disrupt again — ports, weather, pandemics, fuel disputes, labor actions. The only variable is whether you are ready next time.",
+          scoreImpact: 10,
+          nextNodeId: "end",
+        },
+      ],
+    },
+    {
+      id: "sc-4b",
+      emoji: "🔔",
+      situation:
+        "Week 4. Resolution is announced: port strike settled, fuel dispute resolved. Deliveries resume in 7-10 days. Gas rationing lifts next week. You made it through, though some weeks were rougher than others. The stores will slowly fill back up. Life will return to 'normal.' But you just lived through a scenario that most people think only happens in other countries. What changes?",
+      choices: [
+        {
+          text: "Build a 30-day food supply, keep a 90-day medication buffer, and maintain relationships with neighbors who shared resources",
+          consequence:
+            "You lived the lesson. A 30-day food supply costs about $150-200 per person in shelf-stable staples. A 90-day medication supply just requires asking your doctor for the extended prescription and filling it at the right time. Gas cans in the garage cost $50 and hold enough fuel for a week of driving. Total investment: under $500 per person. Total protection: everything you needed this month and did not have. This is not prepping — it is adulting.",
+          scoreImpact: 10,
+          nextNodeId: "end",
+        },
+        {
+          text: "Focus on reducing supply chain dependency long-term — garden, chickens, solar, well water, local food sources",
+          consequence:
+            "The long game. A backyard garden produces fresh food for 6+ months of the year. A few chickens produce more eggs than a family can eat. A rain barrel reduces water dependency. Solar panels reduce grid dependency. A relationship with a local farm reduces grocery dependency. None of these are free or easy, but each one removes a link in the chain that just choked your family for a month. The supply chain is a convenience, not a guarantee.",
+          scoreImpact: 10,
+          nextNodeId: "end",
+        },
+      ],
+    },
+  ],
+  endResults: [
+    {
+      id: "sc-thrived",
+      finalScore: 90,
+      rating: "Thrived",
+      summary:
+        "A 30-day supply chain disruption — no dramatic disaster, just a slow squeeze — and you handled it like it was a mild inconvenience. Early action on food and fuel, community network activated, barter system running, and your family ate well the entire time. This is the most realistic scenario in the simulator and you aced it.",
+      didRight: [
+        "Read the early signals and acted before the shelves emptied",
+        "Topped off gas and stocked shelf-stable food at pre-disruption prices",
+        "Pushed medication refills forward before pharmacy backorders hit",
+        "Built a neighborhood barter and sharing network",
+        "Maintained family morale through creativity and engagement",
+      ],
+      couldImprove: [
+        "A standing 30-day pantry means you never need to react to Day 1 signals — you are already set",
+        "A 90-day medication supply should be standard, not a crisis response",
+        "Gas cans in the garage eliminate the need to hit the pump during rationing",
+      ],
+      gearRecommendations: [
+        { name: GEAR.mountainHouse.name, reason: "Long-term food insurance. 25-year shelf life, just add water. When the shelves are bare, your pantry is full.", url: GEAR.mountainHouse.url },
+        { name: GEAR.readyWise.name, reason: "Emergency food supply that doubles as camping food. Rotate it through your outdoor adventures so nothing goes to waste.", url: GEAR.readyWise.url },
+        { name: GEAR.ecoflowDelta3.name, reason: "If rolling blackouts accompany the supply disruption, a power station keeps your fridge running and food from spoiling.", url: GEAR.ecoflowDelta3.url },
+        { name: GEAR.renogy200w.name, reason: "Solar panel to recharge the power station. When fuel is rationed, solar is the only power source that does not need deliveries.", url: GEAR.renogy200w.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "If the disruption extends to water treatment chemicals, a water filter is your independence. Works without electricity or supply chains.", url: GEAR.sawyerSqueeze.url },
+      ],
+    },
+    {
+      id: "sc-survived",
+      finalScore: 50,
+      rating: "Survived",
+      summary:
+        "You got through a month of supply chain disruption. Some smart moves mixed with some costly delays. The medication situation got tighter than it needed to be and the food monotony ground your family down. But everyone is fed, healthy, and wiser. The biggest takeaway: the most likely disaster is not an earthquake or an EMP — it is this. A slow squeeze that lasts longer than your pantry.",
+      didRight: [
+        "Eventually adapted to the disruption and found creative solutions",
+        "Helped neighbors when it mattered",
+        "Kept your family functional through a stressful month",
+      ],
+      couldImprove: [
+        "Early action on stocking saves money and stress — waiting costs you both",
+        "A 90-day prescription supply should be standard practice, not a crisis scramble",
+        "Gas cans in the garage are cheap insurance against rationing",
+        "Community networks work better when they exist before the crisis",
+      ],
+      gearRecommendations: [
+        { name: GEAR.augason30day.name, reason: "30-day food supply per person. When the shelves are bare, you eat from the pantry instead of standing in line.", url: GEAR.augason30day.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "Water independence if the disruption affects treatment chemicals. Works without electricity or any supply chain.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.jackery1000.name, reason: "Power station to keep your fridge running if rolling blackouts hit. Food spoilage during a supply disruption doubles your problem.", url: GEAR.jackery1000.url },
+        { name: GEAR.reliance5gal.name, reason: "Stored water. Four containers in the garage. If the disruption extends to water treatment, you have a week's supply ready.", url: GEAR.reliance5gal.url },
+        { name: GEAR.luciLight.name, reason: "Solar lantern for potential power disruptions. No batteries to buy at inflated prices. Free light from sunlight.", url: GEAR.luciLight.url },
+      ],
+    },
+    {
+      id: "sc-barely",
+      finalScore: 15,
+      rating: "Barely Made It",
+      summary:
+        "Thirty days of thinning shelves, gas rationing, and medication shortages — and you white-knuckled through it. The delayed response cost you money (higher prices), stress (scrambling for medication), and family morale (three weeks of monotonous meals). The good news: this is the most fixable scenario in the simulator. Everything you needed costs less than a weekend trip.",
+      didRight: [
+        "You made it through a month without a catastrophic failure",
+        "You eventually found solutions for critical needs like medication",
+      ],
+      couldImprove: [
+        "React to Day 1 signals, not Day 10 shortages. The early bird gets the normal-priced rice.",
+        "A 30-day food pantry costs $150-200 per person. Build it this weekend.",
+        "Medication: ask your doctor for 90-day prescriptions. Fill them. Always.",
+        "Gas cans: two 5-gallon cans in the garage. Rotate them every 6 months. $50 total.",
+        "Know your neighbors. Trade surplus for variety. A can of beans for three fresh eggs is a good deal for everyone.",
+      ],
+      gearRecommendations: [
+        { name: GEAR.readyWise.name, reason: "Emergency food supply that eliminates the grocery store scramble. On the shelf when you need it, ignored when you do not.", url: GEAR.readyWise.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "Water filter as insurance. Supply chain disruptions can affect water treatment chemicals. This is your backup.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.reliance5gal.name, reason: "Prefilled water containers. When uncertainty is high, knowing you have a week of water reduces the baseline stress.", url: GEAR.reliance5gal.url },
+        { name: GEAR.survivalTabs.name, reason: "Emergency nutrition in a bottle. 15-day supply. Fits in a kitchen drawer. When meals get thin, these keep you functional.", url: GEAR.survivalTabs.url },
+        { name: GEAR.bioliteHeadlamp.name, reason: "Rechargeable headlamp. If the supply disruption cascades to power, you have hands-free light without buying batteries at 3x markup.", url: GEAR.bioliteHeadlamp.url },
+      ],
+    },
+    {
+      id: "sc-didnt",
+      finalScore: 0,
+      rating: "Didn't Make It",
+      summary:
+        "A 30-day supply chain disruption — the most common and most survivable scenario in this simulator — and it overwhelmed you. No stored food, no medication buffer, no gas reserves, and normalcy bias that cost you the entire first week. But here is the thing: this is the cheapest scenario to prepare for. Everything you needed this month fits in one closet and costs less than a car payment.",
+      didRight: [
+        "You ran a scenario most people never think about — that awareness is step one",
+      ],
+      couldImprove: [
+        "Build a 30-day pantry this weekend. Rice, beans, canned goods, pasta, peanut butter. Under $200.",
+        "Medication: 90-day supply. Talk to your doctor tomorrow. This is non-negotiable.",
+        "Two gas cans in the garage. Fill them. Rotate every 6 months. $50.",
+        "When the news says 'temporary disruption,' assume 30 days and act accordingly.",
+        "Meet your neighbors. Know who has chickens, who has a garden, who has skills. Community is free.",
+      ],
+      gearRecommendations: [
+        { name: GEAR.mountainHouse.name, reason: "Step one. 14 days of food per person. Sits on a shelf for 25 years. When the stores are rationing, your family eats.", url: GEAR.mountainHouse.url },
+        { name: GEAR.readyWise.name, reason: "More food variety in your emergency pantry. Different meals, different flavors. Morale matters when you are eating from a stockpile.", url: GEAR.readyWise.url },
+        { name: GEAR.sawyerSqueeze.name, reason: "Water filter. If the disruption extends to water treatment, a $30 filter is your family's safety net.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.reliance5gal.name, reason: "Water storage containers. Fill them now, store them in the garage. One less thing to worry about.", url: GEAR.reliance5gal.url },
+        { name: GEAR.ankerSolix.name, reason: "Power station for if the supply disruption cascades to the grid. Keep your fridge running and food from spoiling.", url: GEAR.ankerSolix.url },
+      ],
+    },
+  ],
+};
+
+
 export const scenarios: Scenario[] = [
   powerGridFailure,
   hurricaneEvacuation,
@@ -2430,6 +3839,11 @@ export const scenarios: Scenario[] = [
   winterStorm,
   wildfireEvacuation,
   infrastructureAttack,
+  empStrike,
+  economicCollapse,
+  severePandemic,
+  cascadingDisaster,
+  supplyChainSiege,
 ];
 
 // ─── Helper to determine end result based on accumulated score ───
