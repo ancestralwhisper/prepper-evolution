@@ -1077,7 +1077,7 @@ export default function Deadstock() {
                           />
                         </div>
                       </div>
-                      <div className="mt-3">
+                      <div className="mt-6">
                         <ChartLegend segments={donutSegments} />
                       </div>
                     </div>
