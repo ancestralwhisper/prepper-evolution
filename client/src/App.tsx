@@ -33,6 +33,7 @@ import RigRatedConfiguratorPage from "@/pages/tools/RigRatedConfiguratorPage";
 import TrailIntelPage from "@/pages/tools/TrailIntelPage";
 import PowerSystemBuilderPage from "@/pages/tools/PowerSystemBuilderPage";
 import PowerStationRuntimeCalculator from "@/pages/tools/PowerStationRuntimeCalculator";
+import FuelRangePlanner from "@/pages/tools/FuelRangePlanner";
 import Quiz from "@/pages/Quiz";
 import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
@@ -86,6 +87,7 @@ function Router() {
             <Route path="/tools/trail-intel" component={TrailIntelPage} />
             <Route path="/tools/power-system-builder" component={PowerSystemBuilderPage} />
             <Route path="/tools/power-station-runtime" component={PowerStationRuntimeCalculator} />
+            <Route path="/tools/fuel-range-planner" component={FuelRangePlanner} />
             <Route path="/quiz" component={Quiz} />
             <Route path="/contact" component={Contact} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />

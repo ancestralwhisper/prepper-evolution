@@ -1,6 +1,12 @@
 [
   {
     "date": "Mar 13, 2026",
+    "tool": "Fuel & Range Planner",
+    "version": "v1.0",
+    "summary": "New Ops Deck tool: terrain-adjusted MPG calculator with 8 terrain types, elevation penalties, speed curves, climate adjustments, fuel timeline, and jerry can cache recommendations"
+  },
+  {
+    "date": "Mar 13, 2026",
     "tool": "Shop Gear",
     "version": "",
     "summary": "Replaced 35 Unsplash placeholder images with real product photos; swapped Aquamira tablets to drops"

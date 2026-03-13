@@ -117,9 +117,11 @@ const opsDeckTools: Tool[] = [
     slug: "fuel-range-planner",
     name: "Fuel & Range Planner",
     description:
-      "Plot waypoints on a map and watch your fuel burn in real-time. Calculates terrain-adjusted MPG, cache waypoints, altitude penalties, and shows exactly where you run dry.",
+      "Build your route segment by segment and watch your fuel burn in real-time. Terrain-adjusted MPG with elevation penalties, climate adjustments, point of no return, and fuel cache recommendations.",
     icon: Fuel,
-    status: "coming-soon",
+    status: "live",
+    badge: "New",
+    version: "v1.0",
     cta: "Plan Route",
   },
   {

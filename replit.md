@@ -36,6 +36,7 @@ Preferred communication style: Simple, everyday language.
 - `/tools/food-storage-calculator` — Food storage calculator with calorie planning, shelf life tracking, family size support
 - `/tools/72-hour-kit-builder` — Guided questionnaire that generates a personalized 72-hour emergency kit checklist
 - `/tools/shtf-simulator` — Scenario-based survival simulator with branching decisions and scoring
+- `/tools/fuel-range-planner` — Fuel & Range Planner: terrain-adjusted MPG calculator for overland trip planning with 8 terrain types, elevation/speed/climate penalties, fuel timeline, point of no return, jerry can cache recommendations, donut chart breakdown
 - `/tools/rigsafe-configurator` — RigSafe RTT Configurator: three-chain rooftop tent/rack load calculator with static, dynamic, off-road ratings, payload, garage clearance, vehicle request form
 - `/tools/rigrated-configurator` — RigRated UTV Overland Builder: 29 UTVs, 80+ accessories, 50-state legal heatmap, trail scoring, trip plan PDF, year selector, vehicle request form
 - `/tools/trail-intel` — Trail Intel: real-time conditions checker (weather alerts, FEMA disasters, wildfires) + trail system layer (NPS park closures, BLM route status, USFS seasonal access) for 7 trail systems

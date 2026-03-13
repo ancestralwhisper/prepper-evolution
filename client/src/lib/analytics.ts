@@ -34,6 +34,11 @@ type PEEvent =
   | { name: "pe_destination_zip_set"; params: { zip3: string; tool: string } }
   | { name: "pe_trail_system_selected"; params: { trailId: string; tool: string } }
 
+  // Fuel & Range Planner
+  | { name: "pe_fuel_segment_add"; params: { count: number } }
+  | { name: "pe_fuel_trip_reset"; params: Record<string, never> }
+  | { name: "pe_fuel_print"; params: { tripName: string } }
+
   // Power System Builder
   | { name: "pe_power_system_started"; params: { tool: string } }
   | { name: "pe_power_system_load_added"; params: { tool: string; device: string } }
