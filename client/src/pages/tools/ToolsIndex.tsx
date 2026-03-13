@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import ChangelogTicker from "@/components/tools/ChangelogTicker";
+import FeatureShowcase from "@/components/tools/FeatureShowcase";
 import SupportFooter from "@/components/tools/SupportFooter";
 
 interface Tool {
@@ -346,6 +347,24 @@ export default function ToolsIndex() {
           </Link>
         </div>
 
+        {/* ─── Showcase: Deadstock ──────────────────────────────── */}
+        <FeatureShowcase
+          label="New Tool"
+          title="Know Your Exact"
+          titleAccent="Survival Timeline"
+          description="Most people guess how long they could last without outside help. Deadstock replaces that guess with a real number — your Autonomy Clock. Enter your household and supplies, and see the exact date your household hits Day Zero."
+          features={[
+            { highlight: "Autonomy Clock", text: "— the exact number of days your household can survive, updated in real-time as you add or consume supplies" },
+            { highlight: "Last Day Date", text: "— not 'about 3 weeks' but an actual calendar date that hits differently" },
+            { highlight: "Weakest Link Detection", text: "— instantly see which category (water, food, medical, power) runs out first" },
+            { highlight: "Shareable Autonomy Score", text: "— a single 0-365+ number you can share: 'I'm a 47-day household. What are you?'" },
+          ]}
+          imageSrc="/tools/showcase/deadstock.png"
+          imageAlt="Deadstock Autonomy Clock showing days of supply autonomy"
+          cta="Find Your Number"
+          href="/tools/deadstock"
+        />
+
         <div className="mb-16">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -359,6 +378,26 @@ export default function ToolsIndex() {
             ))}
           </div>
         </div>
+
+        {/* ─── Showcase: SHTF Simulator ─────────────────────────── */}
+        <FeatureShowcase
+          label="Hardline Tools"
+          title="Survive the Scenario."
+          titleAccent="Learn the Lesson."
+          description="The SHTF Simulator drops you into realistic emergency scenarios using choice-based gameplay. Every decision matters — wrong call and you don't make it. Right call and you learn what gear would have saved you."
+          features={[
+            { highlight: "Branching scenarios", text: "— your choices create different outcomes, not a linear quiz" },
+            { highlight: "Gear-aware results", text: "— the debrief tells you exactly what items would have changed your outcome" },
+            { highlight: "Replay value", text: "— multiple scenarios with different environments, threats, and decision trees" },
+            { highlight: "No sign-up", text: "— jump straight in and start making survival decisions" },
+          ]}
+          imageSrc="/tools/showcase/shtf-simulator.png"
+          imageAlt="SHTF Scenario Simulator showing a survival decision with branching choices"
+          cta="Launch Simulator"
+          href="/tools/shtf-simulator"
+          reverse
+          variant="red"
+        />
 
         <div className="mb-16">
           <div className="flex items-center gap-3 mb-2">
@@ -376,6 +415,25 @@ export default function ToolsIndex() {
             ))}
           </div>
         </div>
+
+        {/* ─── Showcase: Ops Deck Ecosystem ─────────────────────── */}
+        <FeatureShowcase
+          label="Ops Deck"
+          title="Your Rig. Your Data."
+          titleAccent="One Ecosystem."
+          description="Build your Vehicle Profile once and every Ops Deck tool reads from it automatically. Your MPG, payload, fuel capacity, and mod penalties flow into the Fuel Planner, RigSafe, and every tool that follows. Change a tire size once — your range, stability, and safety numbers update everywhere."
+          features={[
+            { highlight: "40+ real vehicles", text: "— manufacturer specs, NHTSA data, and EPA ratings. Not forum guesses." },
+            { highlight: "Fuel & Range Planner", text: "— terrain-adjusted MPG across 8 surface types with elevation penalties and fuel cache recommendations" },
+            { highlight: "Cross-tool integration", text: "— Vehicle Profile feeds RigSafe, RigRated, Fuel Planner, and Power System Builder automatically" },
+            { highlight: "Physics-based", text: "— every number is derived from published data sources with a multiplicative penalty chain model" },
+          ]}
+          imageSrc="/tools/showcase/ops-deck.png"
+          imageAlt="Ops Deck Vehicle Profile showing mod penalties and trail readiness score"
+          cta="Build Your Profile"
+          href="/tools/vehicle-profile"
+          variant="emerald"
+        />
 
         <div className="mb-16">
           <div className="flex items-center gap-3 mb-2">
