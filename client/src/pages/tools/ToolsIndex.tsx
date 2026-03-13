@@ -359,7 +359,7 @@ export default function ToolsIndex() {
             { highlight: "Weakest Link Detection", text: "— instantly see which category (water, food, medical, power) runs out first" },
             { highlight: "Shareable Autonomy Score", text: "— a single 0-365+ number you can share: 'I'm a 47-day household. What are you?'" },
           ]}
-          imageSrc="/tools/showcase/deadstock.png"
+          imageSrc="https://wp.prepperevolution.com/wp-content/uploads/2026/03/Deadstock.jpg"
           imageAlt="Deadstock Autonomy Clock showing days of supply autonomy"
           cta="Find Your Number"
           href="/tools/deadstock"
@@ -391,7 +391,7 @@ export default function ToolsIndex() {
             { highlight: "Replay value", text: "— multiple scenarios with different environments, threats, and decision trees" },
             { highlight: "No sign-up", text: "— jump straight in and start making survival decisions" },
           ]}
-          imageSrc="/tools/showcase/shtf-simulator.png"
+          imageSrc="https://wp.prepperevolution.com/wp-content/uploads/2026/03/SHTF_simulator.jpg"
           imageAlt="SHTF Scenario Simulator showing a survival decision with branching choices"
           cta="Launch Simulator"
           href="/tools/shtf-simulator"
@@ -428,7 +428,7 @@ export default function ToolsIndex() {
             { highlight: "Cross-tool integration", text: "— Vehicle Profile feeds RigSafe, RigRated, Fuel Planner, and Power System Builder automatically" },
             { highlight: "Physics-based", text: "— every number is derived from published data sources with a multiplicative penalty chain model" },
           ]}
-          imageSrc="/tools/showcase/ops-deck.png"
+          imageSrc="https://wp.prepperevolution.com/wp-content/uploads/2026/03/ops_deck_vehicle_profile.jpg"
           imageAlt="Ops Deck Vehicle Profile showing mod penalties and trail readiness score"
           cta="Build Your Profile"
           href="/tools/vehicle-profile"
