@@ -142,7 +142,7 @@ const products: Product[] = [
     price: "$190",
     rating: 4.6,
     reviewCount: 3200,
-    image: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Waterdrop_King_Tank_Gravity_Water_Filter_System.jpeg",
     description:
       "The gravity-fed water filter that replaced the discontinued Berkey. NSF 42 and 372 certified, reduces chlorine, lead, mercury, PFAS, and 20+ contaminants. 2.25-gallon stainless steel tank with dual filter elements — no electricity or plumbing required.",
     features: [
@@ -168,35 +168,35 @@ const products: Product[] = [
     featured: true,
   },
   {
-    slug: "aquamira-water-purification-tablets",
-    name: "Aquamira Water Purification Tablets (50-pack)",
+    slug: "aquamira-water-treatment-drops",
+    name: "Aquamira Water Treatment Drops (1 oz)",
     category: "water",
-    price: "$12",
+    price: "$16",
     rating: 4.6,
-    reviewCount: 5800,
-    image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=600&q=80",
+    reviewCount: 6200,
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Aquamira_Water_Purification_Drops.jpeg",
     description:
-      "Chlorine dioxide tablets that purify 1 liter each. EPA-registered, effective against bacteria, viruses, Giardia, and Cryptosporidium. 4-year shelf life.",
+      "Two-part chlorine dioxide water treatment drops. Mix Part A and Part B, wait 5 minutes, add to water. Treats up to 30 gallons (112 liters). Iodine-free, chlorine-free, no weird taste.",
     features: [
-      "EPA-registered water purification",
-      "Kills bacteria, viruses, and cysts",
-      "Each tablet treats 1 liter",
-      "4-year shelf life",
-      "Ultralight backup purification",
+      "Chlorine dioxide — kills bacteria, viruses, Giardia, and Crypto",
+      "Treats up to 30 gallons (112 liters) per set",
+      "Two-part liquid drops — no tablets to dissolve",
+      "Iodine-free and chlorine-free",
+      "5-year shelf life",
     ],
-    affiliateUrl: "https://www.amazon.com/dp/B01AUWUAQ6?tag=prepperevo-20",
+    affiliateUrl: "https://www.amazon.com/dp/B0078SA5SE?tag=prepperevo-20",
     pros: [
-      "Kills viruses — covers what filters miss",
-      "Weighs almost nothing",
-      "4-year shelf life",
-      "Only $12 for 50 treatments",
+      "Best taste of any chemical treatment — no iodine or chlorine flavor",
+      "112 liters per set — way more than tablets",
+      "Ultralight at 3 oz total",
+      "Works on viruses, bacteria, and cysts",
     ],
     cons: [
-      "30-minute wait time per treatment",
-      "Slight chemical taste",
-      "Single-use — 50 liters total",
+      "Two-part mixing required before adding to water",
+      "15-minute wait for bacteria, 4 hours for Crypto",
+      "Liquid bottles can leak if not sealed tight",
     ],
-    bestFor: "Backup water purification in any emergency kit",
+    bestFor: "Lightweight backup water treatment for hiking, camping, and emergency kits",
   },
 
   // FOOD
@@ -240,7 +240,7 @@ const products: Product[] = [
     price: "$32",
     rating: 4.6,
     reviewCount: 4200,
-    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Mylar_Bags_with_Oxygen_Absorbers.jpeg",
     description:
       "1-gallon Mylar bags (7mil) with 300cc oxygen absorbers for DIY long-term food storage. Seal with a flat iron for 20+ year shelf life.",
     features: [
@@ -294,7 +294,7 @@ const products: Product[] = [
     price: "$65",
     rating: 4.7,
     reviewCount: 3400,
-    image: "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Compact_IFAK_Trauma_Kit.jpeg",
     description:
       "Individual First Aid Kit with tourniquet, Israeli bandage, chest seal, wound packing gauze, and trauma shears. MOLLE-compatible pouch.",
     features: [
@@ -381,7 +381,7 @@ const products: Product[] = [
     price: "$18",
     rating: 4.5,
     reviewCount: 9800,
-    image: "https://images.unsplash.com/photo-1478827536114-da961b7f86d2?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/SOL_Emergency_Bivvy_with_Rescue_Whistle.jpeg",
     description:
       "Reflects 90% of body heat, windproof and waterproof. Weighs 3.8 oz — small enough for any bug out bag, glove box, or daypack.",
     features: [
@@ -414,7 +414,7 @@ const products: Product[] = [
     price: "$85",
     rating: 4.3,
     reviewCount: 3800,
-    image: "https://images.unsplash.com/photo-1622260614153-03223fb72052?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Akmax_MOLLE_II_Medium_Rucksack.jpeg",
     description:
       "The actual US Military-issue rucksack used in combat operations worldwide. 4,000 cubic inches of capacity with full MOLLE webbing, aluminum frame, and padded kidney belt. Surplus units are battle-tested and absurdly affordable for the quality you get.",
     features: [
@@ -447,7 +447,7 @@ const products: Product[] = [
     price: "$220",
     rating: 4.8,
     reviewCount: 8900,
-    image: "https://images.unsplash.com/photo-1622260614153-03223fb72052?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/5.11_Tactical_RUSH72_2.0_Backpack_55L.jpeg",
     description:
       "The 72-hour bug out bag standard. 55L capacity with 21 compartments, MOLLE/SlickStick web platform, and a hidden CCW pocket. Water-resistant 1050D nylon with self-repairing YKK zippers. The pack most serious preppers choose for their primary bug out bag.",
     features: [
@@ -480,7 +480,7 @@ const products: Product[] = [
     price: "$140",
     rating: 4.7,
     reviewCount: 12400,
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/5.11_Tactical_RUSH24_2.0_Backpack_37L.jpeg",
     description:
       "The compact version of the legendary RUSH72. 37L capacity perfect for a 24-hour get-home bag or lightweight bug out bag. Same 1050D nylon construction, MOLLE webbing, and CCW pocket in a more maneuverable size.",
     features: [
@@ -606,7 +606,7 @@ const products: Product[] = [
     price: "$167",
     rating: 4.6,
     reviewCount: 6200,
-    image: "https://images.unsplash.com/photo-1622260614153-03223fb72052?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Maxpedition_Falcon-II_Backpack_23L.jpeg",
     description:
       "Compact tactical pack built like a tank. 1050D ballistic nylon with Teflon coating for water and stain resistance. Full MOLLE front panel, CCW pocket, and hydration compatible. A proven mid-range choice for smaller bug out bags and get-home kits.",
     features: [
@@ -670,7 +670,7 @@ const products: Product[] = [
     price: "$16",
     rating: 4.8,
     reviewCount: 31000,
-    image: "https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Morakniv_Companion_Fixed-Blade_Knife.jpeg",
     description:
       "Swedish stainless steel blade, razor-sharp out of the box. The most recommended budget survival knife in the prepper community.",
     features: [
@@ -735,7 +735,7 @@ const products: Product[] = [
     price: "$66",
     rating: 4.5,
     reviewCount: 14200,
-    image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/BigBlue_28W_USB_Solar_Charger.jpeg",
     description:
       "Foldable 28W solar panel with 3 USB ports including USB-C. SunPower monocrystalline cells deliver 23.5% efficiency — noticeably better than standard panels in partial shade. Charges phones, radios, GPS, headlamps, and power banks directly from sunlight.",
     features: [
@@ -768,7 +768,7 @@ const products: Product[] = [
     price: "$130",
     rating: 4.4,
     reviewCount: 2800,
-    image: "https://images.unsplash.com/photo-1558002038-1055907df827?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Dakota_Alert_MURS_Wireless_Motion_Sensor.jpg",
     description:
       "Wireless perimeter alert system with up to 4-mile range. Detects movement and sends an alert to a base unit inside your home. No subscription fees.",
     features: [
@@ -834,7 +834,7 @@ const products: Product[] = [
     price: "$299",
     rating: 4.9,
     reviewCount: 4800,
-    image: "https://images.unsplash.com/photo-1494783367193-149034c05e8f?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/MAXTRAX_MKII_Recovery_Boards.jpeg",
     description:
       "The #1 vehicle recovery board in the overlanding world. Engineered teeth grip tires in sand, mud, and snow. UV-stabilized nylon construction built for extreme conditions.",
     features: [
@@ -867,7 +867,7 @@ const products: Product[] = [
     price: "$1,299",
     rating: 4.7,
     reviewCount: 2100,
-    image: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Dometic_CFX3_55IM_Fridge_Ice_Maker.jpeg",
     description:
       "53-liter 12V/120V portable fridge-freezer with built-in ice maker. Runs off your vehicle battery, solar, or shore power. The most trusted cooler brand in overlanding.",
     features: [
@@ -900,7 +900,7 @@ const products: Product[] = [
     price: "$800",
     rating: 4.7,
     reviewCount: 3100,
-    image: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Dometic_CFX3_35_Fridge_36L.jpeg",
     description:
       "The compact version of Dometic's legendary CFX3 line. 36-liter single-zone fridge-freezer that runs on 12V, 24V, or 120V. VMSO3 compressor is whisper-quiet and ultra-efficient. Perfect for smaller rigs, solo overlanders, or as a second fridge for drinks.",
     features: [
@@ -1027,7 +1027,7 @@ const products: Product[] = [
     price: "$170",
     rating: 4.3,
     reviewCount: 8900,
-    image: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Alpicool_C20_Fridge_20L.jpeg",
     description:
       "Ultra-compact 20L 12V fridge that fits in any vehicle. The entry-level choice for car camping, road trips, and overlanders who just need cold drinks and basic food storage. Powered by 12V cigarette lighter or 120V AC.",
     features: [
@@ -1089,7 +1089,7 @@ const products: Product[] = [
     price: "$699",
     rating: 4.7,
     reviewCount: 5200,
-    image: "https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Jackery_Explorer_1000_V2_Power_Station.jpeg",
     description:
       "1070Wh LiFePO4 battery with 1500W output. The upgraded V2 model delivers faster solar charging, 4,000+ cycle lifespan, and smart app control. Powers fridges, CPAP machines, tools, and camp electronics for days off-grid.",
     features: [
@@ -1122,7 +1122,7 @@ const products: Product[] = [
     price: "$640",
     rating: 4.8,
     reviewCount: 3200,
-    image: "https://images.unsplash.com/photo-1621252179027-94459d278660?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Warn_VR_EVO_10-S_Winch.jpeg",
     description:
       "10,000 lb capacity synthetic rope winch. The industry standard for self-recovery in the backcountry. Waterproof (IP68), lightweight synthetic rope, and one-piece tie plate.",
     features: [
@@ -1153,7 +1153,7 @@ const products: Product[] = [
     price: "$575",
     rating: 4.8,
     reviewCount: 2400,
-    image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/ARB_Twin_Motor_Air_Compressor.jpeg",
     description:
       "High-output 12V portable air compressor for airing up tires, running air lockers, and inflating camp gear. Dust and moisture resistant for harsh environments.",
     features: [
@@ -1184,7 +1184,7 @@ const products: Product[] = [
     price: "$895",
     rating: 4.7,
     reviewCount: 3600,
-    image: "https://images.unsplash.com/photo-1519566335946-e6f65f0f4fdf?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Front_Runner_Slimline_II_Roof_Rack.jpeg",
     description:
       "Modular aluminum roof rack system that fits most vehicles. Low-profile, lightweight, and endlessly configurable with accessories for water, fuel, gear, and rooftop tents.",
     features: [
@@ -1215,7 +1215,7 @@ const products: Product[] = [
     price: "$299",
     rating: 4.8,
     reviewCount: 5100,
-    image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Baja_Designs_Squadron_Sport_LED_Pods.jpeg",
     description:
       "Professional-grade LED auxiliary lights built for the trail. 3,150 lumens per light with combo beam pattern. Fully sealed, dust-proof, and backed by a lifetime warranty.",
     features: [
@@ -1246,7 +1246,7 @@ const products: Product[] = [
     price: "$1,599",
     rating: 4.6,
     reviewCount: 3800,
-    image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/EcoFlow_DELTA_2_Max_Power_Station.jpeg",
     description:
       "2048Wh LiFePO4 battery with 2400W output. Expandable to 6kWh. Powers an entire camp — fridges, lights, tools, medical devices. Smart app control and fast solar charging.",
     features: [
@@ -1277,7 +1277,7 @@ const products: Product[] = [
     price: "$1,899",
     rating: 4.7,
     reviewCount: 1200,
-    image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/EcoFlow_DELTA_3_Max_Plus_Power_Station.jpeg",
     description:
       "2048Wh LiFePO4 battery with 3000W output. Expandable to 10kWh. Powers an entire camp — fridges, lights, tools, medical devices. Smart app control and 0-80% recharge in 64 minutes.",
     features: [
@@ -1308,7 +1308,7 @@ const products: Product[] = [
     price: "$1,399",
     rating: 4.6,
     reviewCount: 800,
-    image: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/EcoFlow_WAVE_3_Portable_AC.jpeg",
     description:
       "Portable AC and heater with built-in 1024Wh LFP battery. 6100 BTU cooling and 6800 BTU heating. Runs 8 hours cordless, charges in 75 minutes, and fits in your RTT or tent. IPX4 water resistant.",
     features: [
@@ -1339,7 +1339,7 @@ const products: Product[] = [
     price: "$1,099",
     rating: 4.4,
     reviewCount: 2400,
-    image: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/EcoFlow_WAVE_2_Portable_AC.jpeg",
     description:
       "5100 BTU cooling and 6100 BTU heating in a portable package. Runs on AC, solar, car charger, or optional add-on battery. Proven previous-gen model with thousands of real-world reviews.",
     features: [
@@ -1370,7 +1370,7 @@ const products: Product[] = [
     price: "$1,299",
     rating: 4.5,
     reviewCount: 600,
-    image: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Zero_Breeze_Mark_3_Portable_AC.jpeg",
     description:
       "5280 BTU cooling and 5800 BTU heating at just 22 lbs. Suitcase-style design built specifically for overlanding and tent camping. Battery sold separately with solar/AC/DC charging options.",
     features: [
@@ -1401,7 +1401,7 @@ const products: Product[] = [
     price: "$1,200",
     rating: 4.3,
     reviewCount: 1800,
-    image: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Zero_Breeze_Mark_2_Portable_AC.jpeg",
     description:
       "2300 BTU battery-powered portable AC that draws only 240W. The ultra-low power draw means even a small power station can run it all night. Cooling only — no heat mode. The original overlanding AC.",
     features: [
@@ -1432,7 +1432,7 @@ const products: Product[] = [
     price: "$499",
     rating: 4.6,
     reviewCount: 890,
-    image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Goose_Gear_CampKing_Plate_System.jpeg",
     description:
       "Modular vehicle storage and sleeping platform. CNC-machined aluminum for truck beds, SUVs, and vans. Configure drawers, fridge slides, and sleeping platforms in any combination.",
     features: [
@@ -1465,7 +1465,7 @@ const products: Product[] = [
     price: "$450",
     rating: 4.8,
     reviewCount: 4600,
-    image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Big_Agnes_Copper_Spur_HV_UL2_Tent.jpeg",
     description:
       "The gold standard ultralight 2-person backpacking tent. 2 lbs 12 oz packed weight with high-volume architecture that feels spacious despite the ultralight design. Three-season freestanding.",
     features: [
@@ -1498,7 +1498,7 @@ const products: Product[] = [
     price: "$115",
     rating: 4.7,
     reviewCount: 12800,
-    image: "https://images.unsplash.com/photo-1510672981848-a1c4f1cb5ccf?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Jetboil_Flash_Cooking_System.jpeg",
     description:
       "Boils 2 cups of water in 100 seconds. Integrated 1-liter cooking cup with insulating cozy, push-button igniter, and color-changing heat indicator. The fastest camp stove on the market.",
     features: [
@@ -1530,7 +1530,7 @@ const products: Product[] = [
     price: "$210",
     rating: 4.7,
     reviewCount: 3900,
-    image: "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Therm-a-Rest_NeoAir_XLite_NXT_Sleeping_Pad.jpeg",
     description:
       "R-value 4.5 ultralight inflatable sleeping pad. Weighs just 12.5 oz for the regular size. WingLock valve inflates fast and won't accidentally open. The backpacker's choice for three seasons.",
     features: [
@@ -1592,7 +1592,7 @@ const products: Product[] = [
     price: "$300",
     rating: 4.8,
     reviewCount: 7200,
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Osprey_Atmos_AG_65_Backpack.jpeg",
     description:
       "Anti-Gravity suspension system distributes weight like no other pack. 65-liter capacity for multi-day trips. Fits like a second skin with the adjustable harness and hipbelt. The most comfortable backpacking pack made.",
     features: [
@@ -1625,7 +1625,7 @@ const products: Product[] = [
     price: "$130",
     rating: 4.6,
     reviewCount: 1800,
-    image: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/GSI_Pinnacle_Camper_Cookset.jpeg",
     description:
       "Complete camp kitchen in a nesting package. Includes 2 pots, frypan, strainer lids, cutting board, and 4 insulated mugs/bowls/plates. Teflon-coated for easy cleanup. Feeds 4 comfortably.",
     features: [
@@ -1656,7 +1656,7 @@ const products: Product[] = [
     price: "$70",
     rating: 4.7,
     reviewCount: 8400,
-    image: "https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Petzl_Actik_Core_Headlamp.jpeg",
     description:
       "450-lumen rechargeable headlamp with red light mode for preserving night vision. USB-C rechargeable core battery included, also accepts AAA batteries as backup. The camper's essential light.",
     features: [
@@ -1687,7 +1687,7 @@ const products: Product[] = [
     price: "$45",
     rating: 4.5,
     reviewCount: 5600,
-    image: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=600&q=80",
+    image: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/Katadyn_BeFree_Water_Filter.jpeg",
     description:
       "Ultralight collapsible water filter. Squeeze or drink directly — 2 liters per minute flow rate. EZ-Clean membrane maintains flow with a simple shake. 2 oz when empty.",
     features: [
