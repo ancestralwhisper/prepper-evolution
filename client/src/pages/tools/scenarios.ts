@@ -121,6 +121,26 @@ const GEAR = {
     name: "Survival Tabs 15-Day Supply",
     url: "https://www.amazon.com/dp/B008DEYAZ6?tag=prepperevo-20",
   },
+  aquamiraDrops: {
+    name: "Aquamira Water Treatment Drops",
+    url: "https://www.amazon.com/dp/B0078SA5SE?tag=prepperevo-20",
+  },
+  baofengUV5R: {
+    name: "Baofeng UV-5R Ham Radio",
+    url: "https://www.amazon.com/dp/B074XPB313?tag=prepperevo-20",
+  },
+  dakotaAlert: {
+    name: "Dakota Alert MURS Wireless Motion Sensor",
+    url: "https://www.amazon.com/dp/B003CLKIV4?tag=prepperevo-20",
+  },
+  reliance5gal: {
+    name: "Reliance Aqua-Tainer 7-Gallon Water Container",
+    url: "https://www.amazon.com/dp/B001QC31G6?tag=prepperevo-20",
+  },
+  luciLight: {
+    name: "Luci Solar Inflatable Lantern",
+    url: "https://www.amazon.com/dp/B00BXUKM4W?tag=prepperevo-20",
+  },
 };
 
 // ═══════════════════════════════════════════════════════
@@ -2066,12 +2086,350 @@ const wildfireEvacuation: Scenario = {
 };
 
 // ─── Export all scenarios ───
+// ═══════════════════════════════════════════════════════
+// SCENARIO 6: COORDINATED INFRASTRUCTURE ATTACK
+// ═══════════════════════════════════════════════════════
+const infrastructureAttack: Scenario = {
+  id: "infrastructure-attack",
+  name: "Coordinated Infrastructure Attack",
+  icon: "shield-alert",
+  difficulty: "Extreme",
+  description:
+    "A coordinated attack on critical infrastructure hits your region over six days. Water, fuel, communications, and emergency services go down in sequence. This is not a single event — it is a cascading failure designed to overwhelm. Each day gets worse. How long can you hold?",
+  startingNodeId: "ia-1",
+  totalNodes: 6,
+  nodes: [
+    {
+      id: "ia-1",
+      emoji: "🚰",
+      situation:
+        "Day 1. You turn on the kitchen faucet and get a brownish trickle. By afternoon, nothing comes out at all. Your neighbor is already on the phone with the water company — busy signal. Local news says municipal pump stations lost power in an apparent cyberattack. There is no timeline for restoration. You have a family of four, two dogs, and whatever water is in your house right now. The grocery store still has bottled water but the lines are growing.",
+      choices: [
+        {
+          text: "Inventory every drop of water in the house, fill bathtubs and every container you own, and start rationing immediately",
+          consequence:
+            "Good instincts. You find 6 gallons of bottled water, fill both bathtubs (about 80 gallons each), fill every pot, pitcher, and bucket. You set a strict ration: 1 gallon per person per day for drinking and cooking, bathtub water reserved for flushing and hygiene. You also pull the water heater drain — another 40 gallons of clean water most people forget about. You just bought your family 10+ days.",
+          scoreImpact: 25,
+          nextNodeId: "ia-2a",
+        },
+        {
+          text: "Drive to the store and buy as much bottled water as you can get",
+          consequence:
+            "You are not the only one with this idea. The store is packed, tempers are short, and there is a two-case limit. You get 4 gallons after waiting 45 minutes. Meanwhile, your bathtubs are sitting empty and your water heater has 40 gallons you never thought about. The store run was not wrong, but it should not have been step one.",
+          scoreImpact: 5,
+          nextNodeId: "ia-2b",
+        },
+        {
+          text: "This will be fixed in a day or two — use what you have and do not overreact",
+          consequence:
+            "Maybe. But this is not a water main break. This is a deliberate attack on pump infrastructure. By evening, social media is full of reports that multiple pump stations across the region were hit simultaneously. This is coordinated. And you just burned a full day without filling a single container. The bathtubs are dry, the water heater is still sealed, and your stored water is whatever was in the fridge. You are already behind.",
+          scoreImpact: -10,
+          nextNodeId: "ia-2b",
+        },
+      ],
+    },
+    {
+      id: "ia-2a",
+      emoji: "⛽",
+      situation:
+        "Day 3. You wake up to a new problem. Overnight, someone hit a bridge on the main freight corridor and a rail switching station 40 miles south. Diesel is not flowing. Gas stations are running dry. The grocery store got its last delivery yesterday. Your neighbor — a single mom with two kids — knocks on your door. She saw you filling containers on Day 1. She is asking if you can spare some water. Her kids are thirsty.",
+      choices: [
+        {
+          text: "Give her 2 gallons and help her identify water sources she can filter — build the alliance",
+          consequence:
+            "Two gallons is not going to break your supply, and you just gained something more valuable: a trusted neighbor. You show her how to drain her water heater, and lend her a filter bottle. She has skills too — she is an ER nurse. In a prolonged crisis, that is worth more than 100 gallons. Communities survive. Lone wolves do not.",
+          scoreImpact: 20,
+          nextNodeId: "ia-3a",
+        },
+        {
+          text: "Tell her you are sorry but you barely have enough for your own family",
+          consequence:
+            "Not unreasonable. Your first responsibility is your family. But she leaves upset and now she knows you have supplies and you are not sharing. That information spreads fast in a neighborhood under stress. You have not made an enemy, but you have not made an ally either. Two gallons would have been cheap insurance.",
+          scoreImpact: 5,
+          nextNodeId: "ia-3b",
+        },
+        {
+          text: "Pretend you are not home",
+          consequence:
+            "She saw your car in the driveway and your lights on last night. She knows you are home. Now she also knows you are the kind of person who hides from a mom with thirsty kids. That reputation travels fast on a block with no internet to distract people. Trust is a survival resource and you just burned yours.",
+          scoreImpact: -10,
+          nextNodeId: "ia-3b",
+        },
+      ],
+    },
+    {
+      id: "ia-2b",
+      emoji: "⛽",
+      situation:
+        "Day 3. Bad news stacking on bad news. A bridge on the main freight route was physically sabotaged overnight, and a rail switching station 40 miles south is destroyed. Diesel supply is cut. Gas stations are running out. The grocery store shelves are thinning fast. Your water situation is already tight, and now you are watching the fuel gauge in your car drop toward half a tank.",
+      choices: [
+        {
+          text: "Conserve fuel — do not drive unless it is an emergency. Focus on water: drain the water heater, filter what you can, and lock down food rationing",
+          consequence:
+            "You are thinking in terms of days now, not hours. Good. You drain 40 gallons from the water heater — clean, drinkable water that most people have no idea is sitting in their house. You set food rationing to stretch what you have. The car stays parked — that half tank might be your evacuation ticket later.",
+          scoreImpact: 15,
+          nextNodeId: "ia-3b",
+        },
+        {
+          text: "Take the car and drive out of the area while you still have fuel — this is only going to get worse",
+          consequence:
+            "Not a bad read on the situation, but where are you going? The attacks hit regionally — the next county over has the same problems. You drive 60 miles before you see the same gas lines and empty shelves. You turn around, now with a quarter tank and nothing to show for it. Sometimes the best move is to hold your position.",
+          scoreImpact: -5,
+          nextNodeId: "ia-3b",
+        },
+      ],
+    },
+    {
+      id: "ia-3a",
+      emoji: "📡",
+      situation:
+        "Day 4. Cell service is gone. Not spotty — gone. The towers are either down or the backup generators ran out of diesel. AM radio is a mess of conflicting reports and rumors. Your brother is 200 miles away and you have no way to tell him your family is okay. The isolation is getting to people. You hear a domestic argument three houses down that never would have happened with working internet and TV.",
+      choices: [
+        {
+          text: "Break out the ham radio or GMRS radios and reach out on local frequencies to build an information network",
+          consequence:
+            "If you have a Baofeng or GMRS radio, this is its moment. You scan local frequencies and find a ham operator 8 miles away who has been aggregating real information: the attacks are regional, not national. FEMA is staging but 3-5 days out. National Guard is mobilizing. Just knowing that help is coming changes your mental state entirely. Information is oxygen in a crisis.",
+          scoreImpact: 25,
+          nextNodeId: "ia-4a",
+        },
+        {
+          text: "Walk the neighborhood and check on people — face-to-face communication and information sharing",
+          consequence:
+            "Old school and effective. You knock on doors and share what you know. The retired guy two blocks over has a weather radio picking up NOAA alerts. The family on the corner has a generator and is charging phones for anyone who needs it. You organize a nightly meeting at the end of the cul-de-sac to share information. No radio, but you built a network anyway.",
+          scoreImpact: 15,
+          nextNodeId: "ia-4a",
+        },
+        {
+          text: "Stay home and conserve energy — going out is a risk now",
+          consequence:
+            "The logic is not wrong — conserving resources matters. But information deprivation in a crisis leads to bad decisions. Without knowing what is happening, your mind fills in the worst case. By Day 5, you are making choices based on fear instead of facts. Your neighbor with the radio knows help is 3 days out. You do not. That gap in knowledge will cost you.",
+          scoreImpact: 0,
+          nextNodeId: "ia-4b",
+        },
+      ],
+    },
+    {
+      id: "ia-3b",
+      emoji: "📡",
+      situation:
+        "Day 4. You pick up your phone out of habit and it hits you — no signal at all. Not one bar. Not searching. Dead. Cell towers are either destroyed or out of fuel. AM radio is a mess of panicked callers and conflicting reports. Your parents are 150 miles away and have no idea if you are alive. The neighborhood feels like an island.",
+      choices: [
+        {
+          text: "Try to find anyone with a ham radio, CB, or GMRS radio — information is survival",
+          consequence:
+            "Smart priority. You walk the block asking if anyone has a radio. Three houses down, a guy has a CB that reaches about 10 miles. A trucker 8 miles out confirms the attacks are regional, National Guard is mobilizing, and FEMA is staging. Knowing that help exists — even if it is days away — changes everything.",
+          scoreImpact: 15,
+          nextNodeId: "ia-4b",
+        },
+        {
+          text: "Hunker down and wait — someone will come eventually",
+          consequence:
+            "Eventually is doing a lot of heavy lifting in that sentence. Day 4 turns into Day 5 with zero new information. You do not know if help is coming in hours or weeks. That uncertainty eats at your morale and your decision-making. When you finally hear from a neighbor that the National Guard is 48 hours out, you have already spent two days making fear-based choices.",
+          scoreImpact: -5,
+          nextNodeId: "ia-4b",
+        },
+      ],
+    },
+    {
+      id: "ia-4a",
+      emoji: "🔥",
+      situation:
+        "Day 5. 2 AM. You smell smoke. Through the window, you can see flames in the industrial park half a mile away. Then another fire starts at the strip mall. This is arson — coordinated, deliberate. You dial 911 — busy signal. You are your own first responder now. The fires are not heading your way yet, but the wind could shift.",
+      choices: [
+        {
+          text: "Organize 4-hour security watch rotations with neighbors, set up a fire watch, and prepare evacuation kits in case the wind shifts",
+          consequence:
+            "This is leadership when it matters. You split the block into 2-person watch teams, 4 hours on, 8 hours off. One watches the fire line, one watches the street. Everyone has a walkie-talkie or whistle. You designate a rally point if evacuation becomes necessary. Cars are backed in, go-bags are by the door. You are not reacting anymore. You are managing a security operation.",
+          scoreImpact: 25,
+          nextNodeId: "ia-5a",
+        },
+        {
+          text: "Load the car and evacuate right now — fires mean it is time to go",
+          consequence:
+            "The instinct to run from fire is natural. But where? The roads are dark, gas stations are dry, and you do not know what is burning or where. You drive 10 miles in the dark and find another neighborhood in the same situation. The fires were contained to the industrial area. You left a prepared position for an unknown one. Sometimes holding is harder than running, but it is the right call.",
+          scoreImpact: -5,
+          nextNodeId: "ia-5b",
+        },
+      ],
+    },
+    {
+      id: "ia-4b",
+      emoji: "🔥",
+      situation:
+        "Day 5. The smell of smoke wakes you at 3 AM. Two fires are burning — one at the industrial park, one at a warehouse complex. The glow is visible from your windows. You hear a single fire truck siren, then nothing. 911 is a busy signal. The fires are not close enough to threaten your house yet, but you have no way to know if they will spread. The wind is picking up.",
+      choices: [
+        {
+          text: "Stay alert but stay put — monitor the fires from your roof and prepare to leave if they get closer",
+          consequence:
+            "Level-headed. You post up on the second floor with binoculars and a radio. The fires are burning hot but not spreading toward residential areas — the wind is pushing them east into empty lots. You stay dressed with shoes on and the car loaded just in case. By dawn, the fires are burning themselves out. You held your nerve when panic would have burned fuel and exposed your family to dark roads.",
+          scoreImpact: 10,
+          nextNodeId: "ia-5b",
+        },
+        {
+          text: "Pack the car and drive away from the fires — anywhere is better than here",
+          consequence:
+            "You are driving blind on dark roads with no cell service and almost no fuel. You pass two other fires on the way out. You end up parked in a school parking lot 15 miles away, scared, tired, and with an eighth of a tank. The fires near your house burned out by morning. You left a defensible position, burned critical fuel, and spent the night in a car. Fear made the decision for you.",
+          scoreImpact: -10,
+          nextNodeId: "ia-5b",
+        },
+      ],
+    },
+    {
+      id: "ia-5a",
+      emoji: "🦠",
+      situation:
+        "Day 6. Six days without running water. The toilet stopped being an option on Day 3. People are using storm drains and backyards. The smell is getting bad. A kid on the next block has diarrhea and a fever — probably waterborne. Your stored water is holding but it will not last forever. This is the quiet killer no one talks about in prepping.",
+      choices: [
+        {
+          text: "Set up a designated sanitation area, establish waste protocols for the block, and break out water treatment supplies",
+          consequence:
+            "This is the unsexy side of survival that saves lives. You designate a spot downwind and downhill from living areas for waste. You distribute trash bags for toilet liners and set up a lime or cat litter station. You teach neighbors how to use water treatment drops. The nurse neighbor confirms that controlling sanitation is the single most important thing you can do right now. Disease kills more people than violence in grid-down scenarios.",
+          scoreImpact: 25,
+          nextNodeId: "end",
+        },
+        {
+          text: "Focus on your own family's hygiene — you cannot manage the whole block",
+          consequence:
+            "Your family stays healthy with hand sanitizer, treated water, and a bucket toilet with bags. But the neighborhood sanitation situation is a time bomb. Flies are breeding in exposed waste. Two more people are sick by evening. Disease does not respect property lines. Your clean house sits in the middle of a public health crisis. Individual hygiene matters, but community sanitation is what prevents an outbreak.",
+          scoreImpact: 5,
+          nextNodeId: "end",
+        },
+      ],
+    },
+    {
+      id: "ia-5b",
+      emoji: "🦠",
+      situation:
+        "Day 6. No running water for almost a week. The sanitation situation is deteriorating fast. People are relieving themselves wherever they can. Three people on your block are sick — vomiting, diarrhea, fever. Classic waterborne illness. Flies are everywhere. Your water supply is getting low. This is how epidemics start.",
+      choices: [
+        {
+          text: "Boil or chemically treat every drop of water, set up a waste containment area, and help sick neighbors stay hydrated",
+          consequence:
+            "Better late than never. You set up a rolling boil station using your camp stove — any water that touches your lips has been at a rolling boil for at least one minute. You dig a latrine trench in the backyard, away from any water collection points. You bring treated water to the sick neighbors — dehydration from diarrhea kills faster than most people realize. It is grim, unglamorous work. But this is real survival.",
+          scoreImpact: 10,
+          nextNodeId: "end",
+        },
+        {
+          text: "Seal up the house and avoid contact with anyone who is sick",
+          consequence:
+            "Isolation has limits when you share a water table and a storm drain system with 30 other houses. You stay healthy for another day, but the contamination is spreading through groundwater and flies. By Day 7, someone in your family has symptoms. You do not have oral rehydration salts, you do not have enough clean water, and the nearest hospital has no power. Sanitation infrastructure is invisible until it fails, and when it fails, it becomes the primary threat.",
+          scoreImpact: -5,
+          nextNodeId: "end",
+        },
+      ],
+    },
+  ],
+  endResults: [
+    {
+      id: "ia-thrived",
+      finalScore: 90,
+      rating: "Thrived",
+      summary:
+        "Six days of cascading infrastructure failure and you held it together. Water stockpiled before the panic, community built when it mattered, communications maintained through radios, security organized against the arson threat, and sanitation managed before disease could spread. You did not just survive this — you kept your block alive.",
+      didRight: [
+        "Secured water immediately — bathtubs, water heater, rationing from Day 1",
+        "Built neighborhood alliances instead of going it alone",
+        "Maintained communication through radio when cell networks died",
+        "Organized security watches during the arson phase",
+        "Addressed sanitation before disease spread",
+      ],
+      couldImprove: [
+        "Pre-staged water storage containers would have made Day 1 easier",
+        "A ham radio license and equipment should be in place before an event",
+        "Motion sensors and perimeter alerts reduce the human cost of 24-hour watches",
+      ],
+      gearRecommendations: [
+        { name: GEAR.reliance5gal.name, reason: "Stackable, durable, 7 gallons of clean water. Four of these gives a family a week of drinking water without touching the bathtub supply.", url: GEAR.reliance5gal.url },
+        { name: GEAR.baofengUV5R.name, reason: "When cell towers die, this is your connection to the outside world. Dual-band, programmable, and under $30. Get your ham license before you need it.", url: GEAR.baofengUV5R.url },
+        { name: GEAR.dakotaAlert.name, reason: "Wireless motion sensors on your perimeter mean you sleep while technology watches. MURS frequency, half-mile range, no subscription.", url: GEAR.dakotaAlert.url },
+        { name: GEAR.aquamiraDrops.name, reason: "Two-part chemical water treatment that kills what filters miss — viruses, bacteria, protozoa. Treats 60 gallons with a 5-year shelf life.", url: GEAR.aquamiraDrops.url },
+        { name: GEAR.ecoflowDelta3.name, reason: "Power for radios, medical devices, lights, and communication gear. Solar recharge keeps it running indefinitely.", url: GEAR.ecoflowDelta3.url },
+      ],
+    },
+    {
+      id: "ia-survived",
+      finalScore: 50,
+      rating: "Survived",
+      summary:
+        "You made it through six days of infrastructure collapse. Some decisions were solid, some cost you. The water situation got tight, communication was spotty, and the arson night was rough. But your family is alive and you learned what matters: water storage, community, radios, and sanitation.",
+      didRight: [
+        "Recognized the severity of the situation before it was too late",
+        "Made efforts to connect with neighbors and share information",
+        "Kept your family safe through the worst nights",
+      ],
+      couldImprove: [
+        "Water storage should be in place before an event — bathtubs are a backup, not a plan",
+        "A GMRS or ham radio eliminates the communication blackout entirely",
+        "Security is a community job — organize watch rotations before threats arrive",
+        "Sanitation planning is not optional — disease kills more than violence in grid-down events",
+      ],
+      gearRecommendations: [
+        { name: GEAR.sawyerSqueeze.name, reason: "Filters 100,000 gallons from any freshwater source. When the taps stop, this turns creek water, rainwater, and pool water into drinking water.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.midlandGXT1000.name, reason: "GMRS radios with 36-mile range. No license hassle, rechargeable, and they work when everything else is dead.", url: GEAR.midlandGXT1000.url },
+        { name: GEAR.reliance5gal.name, reason: "Pre-filled water storage ready before the crisis hits. Stack four in the garage and your family has drinking water for a week.", url: GEAR.reliance5gal.url },
+        { name: GEAR.mountainHouse.name, reason: "14 days of food that requires only boiled water. When supply chains collapse, this keeps your family fed.", url: GEAR.mountainHouse.url },
+        { name: GEAR.renogy200w.name, reason: "Solar panel that recharges your power station indefinitely. When diesel stops flowing, solar is the only power source that does not run out.", url: GEAR.renogy200w.url },
+      ],
+    },
+    {
+      id: "ia-barely",
+      finalScore: 15,
+      rating: "Barely Made It",
+      summary:
+        "Six days of chaos and you scraped through by the skin of your teeth. Water ran low, you were flying blind without communications, the arson night nearly broke you, and the sanitation situation put your family at risk. You made it, but barely. Every gap in your preparation was a gap that almost killed you.",
+      didRight: [
+        "You kept going when things got dark — mental toughness counts",
+        "You recognized mistakes and adapted, even if it was late",
+      ],
+      couldImprove: [
+        "Water storage and filtration are the foundation — you had neither ready",
+        "Community relationships need to be built before the crisis, not during it",
+        "A radio is not a luxury — it is a survival tool",
+        "Sanitation is the number one killer in grid-down scenarios — plan for it",
+        "Do not burn fuel on panic drives — assess, then act",
+      ],
+      gearRecommendations: [
+        { name: GEAR.reliance5gal.name, reason: "Start here. Fill four and store them in the garage. That is 28 gallons of clean water ready before anything happens.", url: GEAR.reliance5gal.url },
+        { name: GEAR.aquamiraDrops.name, reason: "Chemical water treatment that kills pathogens filters can miss. Weighs 3 ounces and treats 60 gallons.", url: GEAR.aquamiraDrops.url },
+        { name: GEAR.baofengUV5R.name, reason: "A $25 radio that connects you to the world when cell towers die. Get the radio, get the license, learn the local repeater frequencies.", url: GEAR.baofengUV5R.url },
+        { name: GEAR.luciLight.name, reason: "Solar-charged inflatable lantern. No batteries, no fuel, no noise. Charge it in a window during the day, light your room at night.", url: GEAR.luciLight.url },
+        { name: GEAR.katadynBeFree.name, reason: "Fast-flow water filter you can drink from directly. Pair it with chemical treatment drops for a two-stage system.", url: GEAR.katadynBeFree.url },
+      ],
+    },
+    {
+      id: "ia-didnt",
+      finalScore: 0,
+      rating: "Didn't Make It",
+      summary:
+        "This went bad early and never recovered. No water stored, no community built, no communications, no security plan, and sanitation turned into a health crisis. In a simulation, you get to try again. In real life, every single failure point here is fixable right now, today, before it matters.",
+      didRight: [
+        "You ran the simulation — that puts you ahead of 95% of people who never think about this",
+      ],
+      couldImprove: [
+        "Store water NOW — 1 gallon per person per day, minimum 2 weeks",
+        "Get a water filter AND chemical treatment drops — two-stage purification",
+        "Buy a radio and learn to use it before cell towers are the only thing you rely on",
+        "Meet your neighbors — in a real crisis, the block survives together or not at all",
+        "Sanitation planning: bucket toilet, trash bags, lime, hand sanitizer — unsexy but life-saving",
+      ],
+      gearRecommendations: [
+        { name: GEAR.sawyerSqueeze.name, reason: "Step one. This $30 filter turns any freshwater source into drinking water. 100,000 gallon capacity. Put it in your kit today.", url: GEAR.sawyerSqueeze.url },
+        { name: GEAR.reliance5gal.name, reason: "Step two. Buy four, fill them, store them. That is 28 gallons of clean water ready before anything happens.", url: GEAR.reliance5gal.url },
+        { name: GEAR.midlandT77.name, reason: "GMRS radio that works when cell towers do not. Rechargeable, weather alerts built in.", url: GEAR.midlandT77.url },
+        { name: GEAR.readyWise.name, reason: "Emergency food supply that lasts 25 years on the shelf. When grocery stores are empty, this stands between your family and hunger.", url: GEAR.readyWise.url },
+        { name: GEAR.jackery1000.name, reason: "Portable power for radios, lights, medical devices, and phone charging. Pair with a solar panel for indefinite power.", url: GEAR.jackery1000.url },
+      ],
+    },
+  ],
+};
+
 export const scenarios: Scenario[] = [
   powerGridFailure,
   hurricaneEvacuation,
   civilUnrest,
   winterStorm,
   wildfireEvacuation,
+  infrastructureAttack,
 ];
 
 // ─── Helper to determine end result based on accumulated score ───
