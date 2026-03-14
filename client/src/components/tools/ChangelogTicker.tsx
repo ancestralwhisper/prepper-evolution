@@ -23,14 +23,14 @@ export default function ChangelogTicker() {
           aria-label="Recent tool updates"
         >
           {items.map((entry, i) => (
-            <span key={i} className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="text-muted/40 font-mono">{entry.date}</span>
-              <span className="text-primary/60 font-bold">{entry.tool}</span>
+            <span key={i} className="inline-flex items-center gap-2 text-xs">
+              <span className="text-muted-foreground/70 font-mono">{entry.date}</span>
+              <span className="text-primary font-bold">{entry.tool}</span>
               {entry.version && (
-                <span className="text-[10px] font-mono text-muted/30">{entry.version}</span>
+                <span className="text-[10px] font-mono text-muted-foreground/50">{entry.version}</span>
               )}
-              <span className="text-muted/70">{entry.summary}</span>
-              <span className="text-card-border mx-2">|</span>
+              <span className="text-foreground/80">{entry.summary}</span>
+              <span className="text-muted-foreground/30 mx-2">|</span>
             </span>
           ))}
         </div>
