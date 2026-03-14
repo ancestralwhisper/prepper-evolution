@@ -159,7 +159,30 @@ export default function Home() {
           className="relative z-10 max-w-[1200px] mx-auto px-4 md:px-6 flex flex-col items-center text-center"
         >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold uppercase tracking-tight text-white drop-shadow-sm mb-6" data-testid="text-hero-headline">
-            Adapt. Prepare. <span className="text-primary">Evolve.</span>
+            <motion.span
+              initial={{ opacity: 0, filter: "blur(8px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+              className="inline-block"
+            >
+              Adapt.
+            </motion.span>{" "}
+            <motion.span
+              initial={{ opacity: 0, filter: "blur(8px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 0.6, delay: 0.9, ease: "easeOut" }}
+              className="inline-block"
+            >
+              Prepare.
+            </motion.span>{" "}
+            <motion.span
+              initial={{ opacity: 0, filter: "blur(8px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 0.6, delay: 1.5, ease: "easeOut" }}
+              className="inline-block text-primary"
+            >
+              Evolve.
+            </motion.span>
           </h1>
           <p className="max-w-2xl text-lg md:text-xl text-white/90 mb-10 drop-shadow-md" data-testid="text-hero-subheadline">
             Expert gear reviews, field-tested guides, and strategies that actually work — for preppers, overlanders, and anyone who refuses to be caught off guard.
