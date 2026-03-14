@@ -349,9 +349,9 @@ export default function ToolsIndex() {
 
         {/* ─── Showcase: Deadstock ──────────────────────────────── */}
         <FeatureShowcase
-          label="New Tool"
-          title="Know Your Exact"
-          titleAccent="Survival Timeline"
+          label="New Tool — Deadstock"
+          title="Deadstock:"
+          titleAccent="Know Your Exact Survival Timeline"
           description="Most people guess how long they could last without outside help. Deadstock replaces that guess with a real number — your Autonomy Clock. Enter your household and supplies, and see the exact date your household hits Day Zero."
           features={[
             { highlight: "Autonomy Clock", text: "— the exact number of days your household can survive, updated in real-time as you add or consume supplies" },
@@ -381,9 +381,9 @@ export default function ToolsIndex() {
 
         {/* ─── Showcase: SHTF Simulator ─────────────────────────── */}
         <FeatureShowcase
-          label="Hardline Tools"
-          title="Survive the Scenario."
-          titleAccent="Learn the Lesson."
+          label="Hardline Tools — SHTF Simulator"
+          title="SHTF Simulator:"
+          titleAccent="Survive the Scenario. Learn the Lesson."
           description="The SHTF Simulator drops you into realistic emergency scenarios using choice-based gameplay. Every decision matters — wrong call and you don't make it. Right call and you learn what gear would have saved you."
           features={[
             { highlight: "Branching scenarios", text: "— your choices create different outcomes, not a linear quiz" },
@@ -418,9 +418,9 @@ export default function ToolsIndex() {
 
         {/* ─── Showcase: Ops Deck Ecosystem ─────────────────────── */}
         <FeatureShowcase
-          label="Ops Deck"
-          title="Your Rig. Your Data."
-          titleAccent="One Ecosystem."
+          label="Ops Deck — Vehicle Profile & Fuel Planner"
+          title="Ops Deck:"
+          titleAccent="Your Rig. Your Data. One Ecosystem."
           description="Build your Vehicle Profile once and every Ops Deck tool reads from it automatically. Your MPG, payload, fuel capacity, and mod penalties flow into the Fuel Planner, RigSafe, and every tool that follows. Change a tire size once — your range, stability, and safety numbers update everywhere."
           features={[
             { highlight: "40+ real vehicles", text: "— manufacturer specs, NHTSA data, and EPA ratings. Not forum guesses." },
