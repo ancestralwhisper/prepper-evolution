@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { ArrowRight, Check } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface Feature {
   text: string;
@@ -61,6 +62,26 @@ export default function FeatureShowcase({
   variant = "default",
 }: FeatureShowcaseProps) {
   const c = colors[variant];
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const el = titleRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setRevealed(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="py-16 sm:py-20 border-t border-border">
@@ -90,7 +111,16 @@ export default function FeatureShowcase({
           >
             {label}
           </p>
-          <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">
+          <h2
+            ref={titleRef}
+            className="text-2xl sm:text-3xl font-extrabold mb-4"
+            style={{
+              filter: revealed ? "blur(0px)" : "blur(8px)",
+              opacity: revealed ? 1 : 0.4,
+              transform: revealed ? "translateY(0)" : "translateY(8px)",
+              transition: "filter 0.8s ease-out, opacity 0.8s ease-out, transform 0.8s ease-out",
+            }}
+          >
             {title} <span className={c.accent}>{titleAccent}</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed mb-6">
