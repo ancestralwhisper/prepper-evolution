@@ -1,9 +1,33 @@
 [
   {
+    "date": "Mar 14, 2026",
+    "tool": "Barter & Trade Value Estimator",
+    "version": "v1.0",
+    "summary": "New tool: 80 goods + 38 skills with trade values at Day 7/30/90. Based on real collapse data from Venezuela, Argentina, Yugoslavia, and post-Katrina. Timeline slider, skill dependencies, ROI stockpile list."
+  },
+  {
+    "date": "Mar 14, 2026",
+    "tool": "SHTF Simulator",
+    "version": "v1.1",
+    "summary": "Added 6 new scenarios (11 total): Coordinated Infrastructure Attack, EMP Strike, Economic Collapse, Severe Pandemic, Cascading Natural Disaster, Supply Chain Siege"
+  },
+  {
+    "date": "Mar 13, 2026",
+    "tool": "Tools Page",
+    "version": "",
+    "summary": "Added feature showcase sections with AI-generated product images, blur-to-sharp reveal animations on tool names, and tool name labels on each showcase"
+  },
+  {
+    "date": "Mar 13, 2026",
+    "tool": "Homepage",
+    "version": "",
+    "summary": "Staggered blur-to-sharp fade-in on 'Adapt. Prepare. Evolve.' hero headline — each word reveals sequentially"
+  },
+  {
     "date": "Mar 13, 2026",
     "tool": "Deadstock",
     "version": "v1.0",
-    "summary": "New Ops Deck tool: Supply Lifecycle Manager calculates your exact autonomy days across 6 categories. 100% private — all data stays on your device."
+    "summary": "New Ops Deck tool: Supply Lifecycle Manager calculates your exact autonomy days across 6 categories. Autonomy Clock, Last Day date, weakest link detection, shareable score. 100% private."
   },
   {
     "date": "Mar 13, 2026",
