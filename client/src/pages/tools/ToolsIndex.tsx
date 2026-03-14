@@ -202,9 +202,11 @@ const opsDeckTools: Tool[] = [
     slug: "barter-value-estimator",
     name: "Barter & Trade Value Estimator",
     description:
-      "Estimate post-collapse trade values for 100+ items across 6 scarcity tiers. Find the best ROI gear to stockpile and build optimized barter kits by budget.",
+      "Estimate post-collapse trade values for 100+ items and 30+ skills across 3 timeline phases. Based on real data from Venezuela, Yugoslavia, Argentina, and post-Katrina economies. Find the best ROI gear to stockpile now.",
     icon: Repeat,
-    status: "coming-soon",
+    status: "live",
+    badge: "New",
+    version: "v1.0",
     cta: "Estimate Values",
   },
 ];
