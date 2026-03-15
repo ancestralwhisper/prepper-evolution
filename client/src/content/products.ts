@@ -43,6 +43,7 @@ export const productArticleMap: Record<string, string> = {
   "arb-elements-60l": "arb-classic-series-ii-fridge-review",
   "jackery-explorer-1000-v2": "jackery-explorer-1000-v2-review",
   "ecoflow-delta-2-max": "best-portable-power-stations-2026",
+  "ecoflow-delta-3-ultra": "best-portable-power-stations-2026",
   "ecoflow-delta-3-max-plus": "best-portable-power-stations-2026",
   "ecoflow-wave-3": "best-portable-power-stations-2026",
   "bigblue-28w-solar-charger": "renogy-200w-solar-panel-review",
