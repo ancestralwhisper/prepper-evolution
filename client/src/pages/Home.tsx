@@ -271,7 +271,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {(featuredProducts.length > 0 ? featuredProducts : [
               { slug: "esee-4", name: "ESEE 4", category: "Survival Tools & Knives", imageUrl: "/images/product-esee4.png", price: "134.95", onSale: false, salePrice: null } as Product,
-              { slug: "ecoflow-delta-3-ultra", name: "EcoFlow DELTA 3 Ultra", category: "Power & Energy", imageUrl: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/EcoFlow_DELTA_3_Ultra_Power_Station.jpeg", price: "2699.00", onSale: false, salePrice: null } as Product,
+              { slug: "ecoflow-delta-3-ultra", name: "EcoFlow DELTA 3 Ultra", category: "Power & Energy", imageUrl: "https://wp.prepperevolution.com/wp-content/uploads/2026/03/ecoflow-delta-3-ultra.jpg", price: "2699.00", onSale: false, salePrice: null } as Product,
               { slug: "lifestraw-personal-water-filter", name: "LifeStraw Personal Water Filter", category: "Water Purification", imageUrl: "/images/product-lifestraw.png", price: "17.97", onSale: false, salePrice: null } as Product,
             ]).map((item, i) => (
               <Link key={i} href={productArticleMap[item.slug] ? `/articles/${productArticleMap[item.slug]}` : `/products/${item.slug}`}>
