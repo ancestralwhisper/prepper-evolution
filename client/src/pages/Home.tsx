@@ -111,7 +111,7 @@ export default function Home() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const featuredSlugs = ["esee-4", "ecoflow-delta-3-max-plus", "lifestraw-personal-water-filter"];
+  const featuredSlugs = ["esee-4", "ecoflow-delta-2-max", "lifestraw-personal-water-filter"];
   const featuredProducts = featuredSlugs
     .map(s => allProducts.find(p => p.slug === s))
     .filter((p): p is Product => !!p);
@@ -271,7 +271,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {(featuredProducts.length > 0 ? featuredProducts : [
               { slug: "esee-4", name: "ESEE 4", category: "Survival Tools & Knives", imageUrl: "/images/product-esee4.png", price: "134.95", onSale: false, salePrice: null } as Product,
-              { slug: "ecoflow-delta-3-max-plus", name: "EcoFlow DELTA 3 Max Plus", category: "Power & Energy", imageUrl: "/images/product-ecoflow.png", price: "2099.00", onSale: false, salePrice: null } as Product,
+              { slug: "ecoflow-delta-2-max", name: "EcoFlow DELTA 2 Max", category: "Power & Energy", imageUrl: "/images/product-ecoflow.png", price: "1599.00", onSale: false, salePrice: null } as Product,
               { slug: "lifestraw-personal-water-filter", name: "LifeStraw Personal Water Filter", category: "Water Purification", imageUrl: "/images/product-lifestraw.png", price: "17.97", onSale: false, salePrice: null } as Product,
             ]).map((item, i) => (
               <Link key={i} href={productArticleMap[item.slug] ? `/articles/${productArticleMap[item.slug]}` : `/products/${item.slug}`}>
