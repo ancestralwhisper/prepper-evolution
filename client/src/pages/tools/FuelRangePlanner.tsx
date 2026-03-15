@@ -5,7 +5,8 @@ import {
   AlertTriangle, Gauge, Route, Mountain, Truck,
   ArrowDown, Info, GripVertical, Copy, RotateCcw,
   Printer, Download, DollarSign, Package, RefreshCw,
-  Repeat, BookOpen, ChevronRight,
+  Repeat, BookOpen, ChevronRight, Settings2, Wind,
+  Thermometer, Timer,
 } from "lucide-react";
 import { computeVehicle } from "./vehicle-compute";
 import type { VehicleProfile as VehicleProfileType, VehicleComputed } from "./vehicle-types";
@@ -14,8 +15,14 @@ import {
   computeTrip, terrainLabels, terrainDefaultSpeed,
   terrainMpgMultiplier, terrainIcons, formatTime, fuelPct,
   auxFuelMpgPenalty, JERRY_CAN_GAL, JERRY_CAN_WEIGHT_LBS,
+  calculateRigPenalty, IDLE_GPH,
 } from "./fuel-compute";
-import type { TerrainType, TripSegment, TripResult } from "./fuel-types";
+import type {
+  TerrainType, TripSegment, TripResult,
+  RigConditions, LiftHeight, TireTypeOption, HeadwindLevel,
+  DriveMode, FuelTypeOption, AltitudeBand, AeroDragMods,
+} from "./fuel-types";
+import { DEFAULT_RIG_CONDITIONS } from "./fuel-types";
 import { tripPresets } from "./fuel-presets";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
@@ -30,6 +37,7 @@ import { trackEvent } from "@/lib/analytics";
 import { useSEO } from "@/hooks/useSEO";
 
 const TRIP_STORAGE_KEY = "pe-fuel-range-trip";
+const RIG_CONDITIONS_KEY = "pe-fuel-rig-conditions";
 
 const TERRAIN_OPTIONS: TerrainType[] = [
   "highway", "city", "gravel", "dirt", "sand", "mud", "rock-crawl", "snow",
@@ -59,6 +67,7 @@ function defaultSegment(index: number): TripSegment {
     elevationGainFt: 0,
     speedMph: terrainDefaultSpeed.highway,
     isFuelStop: false,
+    idleMinutes: 0,
   };
 }
 
@@ -221,8 +230,7 @@ function SegmentEditor({
             inputMode="numeric"
             value={segment.elevationGainFt || ""}
             onChange={(e) => onChange(segment.id, "elevationGainFt", parseInt(e.target.value) || 0)}
-            placeholder="0"
-            min="0"
+            placeholder="0 (negative = descent)"
             className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 outline-none transition-colors"
             data-testid={`input-elevation-${index}`}
           />
@@ -245,6 +253,24 @@ function SegmentEditor({
           />
         </div>
 
+        <div>
+          <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+            <Timer className="w-3 h-3 inline -mt-0.5 mr-0.5" />
+            Idle Time (min)
+          </label>
+          <input
+            type="number"
+            inputMode="numeric"
+            value={segment.idleMinutes || ""}
+            onChange={(e) => onChange(segment.id, "idleMinutes", Math.max(0, parseInt(e.target.value) || 0))}
+            placeholder="0"
+            min="0"
+            max="480"
+            className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 outline-none transition-colors"
+            data-testid={`input-idle-${index}`}
+          />
+        </div>
+
         <div className="col-span-2 sm:col-span-1">
           <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
             Terrain Impact
@@ -259,6 +285,498 @@ function SegmentEditor({
     </div>
   );
 }
+
+// ─── Rig & Conditions Panel ──────────────────────────────────────────
+
+const LIFT_OPTIONS: { value: LiftHeight; label: string }[] = [
+  { value: "0", label: "Stock (0\")" },
+  { value: "1", label: "1\"" },
+  { value: "2", label: "2\"" },
+  { value: "2.5", label: "2.5\"" },
+  { value: "3", label: "3\"" },
+  { value: "4", label: "4\"" },
+  { value: "5", label: "5\"" },
+  { value: "6", label: "6\"" },
+];
+
+const TIRE_TYPE_OPTIONS: { value: TireTypeOption; label: string }[] = [
+  { value: "highway", label: "Highway (H/T)" },
+  { value: "all-terrain", label: "All-Terrain (A/T)" },
+  { value: "mud-terrain", label: "Mud-Terrain (M/T)" },
+  { value: "hybrid", label: "Hybrid / Rugged A/T" },
+];
+
+const HEADWIND_OPTIONS: { value: HeadwindLevel; label: string }[] = [
+  { value: "none", label: "None / Calm" },
+  { value: "light", label: "Light (5-10 mph)" },
+  { value: "moderate", label: "Moderate (15-20 mph)" },
+  { value: "strong", label: "Strong (25+ mph)" },
+];
+
+const DRIVE_MODE_OPTIONS: { value: DriveMode; label: string }[] = [
+  { value: "2wd", label: "2WD / 2H" },
+  { value: "4h", label: "4WD High" },
+  { value: "4l", label: "4WD Low" },
+];
+
+const FUEL_TYPE_OPTIONS: { value: FuelTypeOption; label: string }[] = [
+  { value: "e10", label: "Regular E10" },
+  { value: "premium", label: "Premium" },
+  { value: "e85", label: "E85 Flex Fuel" },
+];
+
+const ALTITUDE_OPTIONS: { value: AltitudeBand; label: string }[] = [
+  { value: "below-3000", label: "Below 3,000 ft" },
+  { value: "3000-5000", label: "3,000 - 5,000 ft" },
+  { value: "5000-7000", label: "5,000 - 7,000 ft" },
+  { value: "7000-9000", label: "7,000 - 9,000 ft" },
+  { value: "9000-plus", label: "9,000+ ft" },
+];
+
+const AERO_DRAG_ITEMS: { key: keyof AeroDragMods; label: string }[] = [
+  { key: "lightbar", label: "Light bar" },
+  { key: "bullBar", label: "Bull bar / Bumper" },
+  { key: "snorkel", label: "Snorkel" },
+  { key: "antenna", label: "CB / Ham antenna" },
+  { key: "awning", label: "Awning" },
+  { key: "rtt", label: "Roof-top tent (RTT)" },
+];
+
+interface RigConditionsPanelProps {
+  conditions: RigConditions;
+  onChange: (conditions: RigConditions) => void;
+  profileLinked: boolean;
+}
+
+function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditionsPanelProps) {
+  const [expanded, setExpanded] = useState(false);
+
+  const rigResult = useMemo(() => calculateRigPenalty(conditions), [conditions]);
+  const totalPenaltyPct = Math.round((1 - rigResult.multiplier) * 100);
+  const hasPenalty = totalPenaltyPct !== 0;
+
+  const updateField = <K extends keyof RigConditions>(key: K, value: RigConditions[K]) => {
+    onChange({ ...conditions, [key]: value });
+  };
+
+  const updateAero = (key: keyof AeroDragMods, checked: boolean) => {
+    onChange({
+      ...conditions,
+      aeroDrag: { ...conditions.aeroDrag, [key]: checked },
+      // If un-checking RTT, also disable fairing
+      ...(key === "rtt" && !checked ? { fairing: false } : {}),
+    });
+  };
+
+  return (
+    <div className="bg-card border border-border rounded-lg p-4" data-testid="rig-conditions-card">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors w-full"
+        data-testid="button-rig-conditions-toggle"
+      >
+        <Settings2 className="w-4 h-4 text-primary flex-shrink-0" />
+        <span>Rig & Conditions</span>
+        {hasPenalty && (
+          <span className={`ml-2 text-[9px] font-bold px-1.5 py-0.5 rounded ${totalPenaltyPct > 0 ? "text-red-400 bg-red-400/10" : "text-emerald-400 bg-emerald-400/10"}`}>
+            {totalPenaltyPct > 0 ? `-${totalPenaltyPct}%` : `+${Math.abs(totalPenaltyPct)}%`} MPG
+          </span>
+        )}
+        {profileLinked && (
+          <span className="text-[9px] font-bold text-blue-400 bg-blue-400/10 px-1.5 py-0.5 rounded">
+            Profile Linked
+          </span>
+        )}
+        <ChevronDown className={`w-3 h-3 ml-auto transition-transform ${expanded ? "rotate-180" : ""}`} />
+      </button>
+
+      {expanded && (
+        <div className="mt-4 pt-4 border-t border-border space-y-6">
+
+          {/* Suspension & Tires */}
+          <div>
+            <h4 className="text-[10px] font-bold uppercase tracking-wide text-primary mb-3">
+              Suspension & Tires
+            </h4>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  Lift Height
+                </label>
+                <select
+                  value={conditions.liftInches}
+                  onChange={(e) => updateField("liftInches", e.target.value as LiftHeight)}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary/50 outline-none transition-colors"
+                  data-testid="select-lift-height"
+                >
+                  {LIFT_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  Tire Type
+                </label>
+                <select
+                  value={conditions.tireType}
+                  onChange={(e) => updateField("tireType", e.target.value as TireTypeOption)}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary/50 outline-none transition-colors"
+                  data-testid="select-tire-type"
+                >
+                  {TIRE_TYPE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  Tire Size Over Stock (in)
+                </label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  step="0.5"
+                  value={conditions.tireSizeOverStock || ""}
+                  onChange={(e) => updateField("tireSizeOverStock", Math.max(0, Math.min(4, parseFloat(e.target.value) || 0)))}
+                  placeholder="0"
+                  min="0"
+                  max="4"
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 outline-none transition-colors"
+                  data-testid="input-tire-size-over"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  Aired Down
+                </label>
+                <button
+                  onClick={() => updateField("airedDown", !conditions.airedDown)}
+                  className={`w-full flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-bold border transition-colors ${
+                    conditions.airedDown
+                      ? "bg-amber-500/10 border-amber-500/50 text-amber-400"
+                      : "bg-muted border-border text-muted-foreground"
+                  }`}
+                  data-testid="button-aired-down"
+                >
+                  {conditions.airedDown ? "Yes" : "No"}
+                </button>
+                {conditions.airedDown && (
+                  <p className="text-[9px] text-amber-400/70 mt-1">Penalty on highway/city only</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Drivetrain & Engine */}
+          <div>
+            <h4 className="text-[10px] font-bold uppercase tracking-wide text-primary mb-3">
+              Drivetrain & Engine
+            </h4>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  4WD Engagement
+                </label>
+                <select
+                  value={conditions.driveMode}
+                  onChange={(e) => updateField("driveMode", e.target.value as DriveMode)}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary/50 outline-none transition-colors"
+                  data-testid="select-drive-mode"
+                >
+                  {DRIVE_MODE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  A/C Running
+                </label>
+                <button
+                  onClick={() => updateField("acOn", !conditions.acOn)}
+                  className={`w-full flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-bold border transition-colors ${
+                    conditions.acOn
+                      ? "bg-blue-500/10 border-blue-500/50 text-blue-400"
+                      : "bg-muted border-border text-muted-foreground"
+                  }`}
+                  data-testid="button-ac"
+                >
+                  <Thermometer className="w-3.5 h-3.5" />
+                  {conditions.acOn ? "On" : "Off"}
+                </button>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  Fuel Type
+                </label>
+                <select
+                  value={conditions.fuelType}
+                  onChange={(e) => updateField("fuelType", e.target.value as FuelTypeOption)}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary/50 outline-none transition-colors"
+                  data-testid="select-fuel-type"
+                >
+                  {FUEL_TYPE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  Turbo / Forced Induction
+                </label>
+                <button
+                  onClick={() => updateField("isTurbo", !conditions.isTurbo)}
+                  className={`w-full flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-bold border transition-colors ${
+                    conditions.isTurbo
+                      ? "bg-primary/10 border-primary/50 text-primary"
+                      : "bg-muted border-border text-muted-foreground"
+                  }`}
+                  data-testid="button-turbo"
+                >
+                  {conditions.isTurbo ? "Yes" : "No"}
+                </button>
+                {conditions.isTurbo && (
+                  <p className="text-[9px] text-primary/70 mt-1">Halves altitude penalty</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Aero & Load */}
+          <div>
+            <h4 className="text-[10px] font-bold uppercase tracking-wide text-primary mb-3">
+              Aero & Load
+            </h4>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  Trip Cargo (lbs)
+                </label>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  value={conditions.cargoWeightLbs || ""}
+                  onChange={(e) => updateField("cargoWeightLbs", Math.max(0, parseInt(e.target.value) || 0))}
+                  placeholder="0"
+                  min="0"
+                  max="5000"
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 outline-none transition-colors"
+                  data-testid="input-cargo-weight"
+                />
+                {conditions.cargoWeightLbs > 0 && (
+                  <p className="text-[9px] text-muted-foreground mt-1">
+                    -{Math.round(conditions.cargoWeightLbs / 100)}% MPG
+                  </p>
+                )}
+              </div>
+
+              <div className="col-span-2 sm:col-span-1">
+                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  Towing
+                </label>
+                <button
+                  onClick={() => updateField("towingEnabled", !conditions.towingEnabled)}
+                  className={`w-full flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-bold border transition-colors ${
+                    conditions.towingEnabled
+                      ? "bg-amber-500/10 border-amber-500/50 text-amber-400"
+                      : "bg-muted border-border text-muted-foreground"
+                  }`}
+                  data-testid="button-towing"
+                >
+                  <Truck className="w-3.5 h-3.5" />
+                  {conditions.towingEnabled ? "Yes" : "No"}
+                </button>
+              </div>
+
+              {conditions.towingEnabled && (
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                    Trailer Weight (lbs)
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={conditions.trailerWeightLbs || ""}
+                    onChange={(e) => updateField("trailerWeightLbs", Math.max(0, parseInt(e.target.value) || 0))}
+                    placeholder="0"
+                    min="0"
+                    max="15000"
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 outline-none transition-colors"
+                    data-testid="input-trailer-weight"
+                  />
+                  {conditions.trailerWeightLbs > 0 && (
+                    <p className="text-[9px] text-muted-foreground mt-1">
+                      -{Math.round(conditions.trailerWeightLbs / 200)}% MPG
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-2">
+                Aero Drag Mods
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {AERO_DRAG_ITEMS.map((item) => (
+                  <label
+                    key={item.key}
+                    className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm border cursor-pointer transition-colors ${
+                      conditions.aeroDrag[item.key]
+                        ? "bg-primary/5 border-primary/30 text-foreground"
+                        : "bg-muted border-border text-muted-foreground hover:border-border/80"
+                    }`}
+                    data-testid={`checkbox-aero-${item.key}`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={conditions.aeroDrag[item.key]}
+                      onChange={(e) => updateAero(item.key, e.target.checked)}
+                      className="sr-only"
+                    />
+                    <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center flex-shrink-0 ${
+                      conditions.aeroDrag[item.key]
+                        ? "bg-primary border-primary"
+                        : "border-border"
+                    }`}>
+                      {conditions.aeroDrag[item.key] && (
+                        <svg className="w-2.5 h-2.5 text-background" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M2 6l3 3 5-5" />
+                        </svg>
+                      )}
+                    </div>
+                    {item.label}
+                  </label>
+                ))}
+              </div>
+              {conditions.aeroDrag.rtt && (
+                <div className="mt-2">
+                  <label
+                    className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm border cursor-pointer transition-colors ${
+                      conditions.fairing
+                        ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                        : "bg-muted border-border text-muted-foreground hover:border-border/80"
+                    }`}
+                    data-testid="checkbox-fairing"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={conditions.fairing}
+                      onChange={(e) => updateField("fairing", e.target.checked)}
+                      className="sr-only"
+                    />
+                    <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center flex-shrink-0 ${
+                      conditions.fairing
+                        ? "bg-emerald-500 border-emerald-500"
+                        : "border-border"
+                    }`}>
+                      {conditions.fairing && (
+                        <svg className="w-2.5 h-2.5 text-background" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M2 6l3 3 5-5" />
+                        </svg>
+                      )}
+                    </div>
+                    Wind fairing (reduces RTT drag)
+                  </label>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Environment */}
+          <div>
+            <h4 className="text-[10px] font-bold uppercase tracking-wide text-primary mb-3">
+              Environment
+            </h4>
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  <Wind className="w-3 h-3 inline -mt-0.5 mr-0.5" />
+                  Headwind
+                </label>
+                <select
+                  value={conditions.headwind}
+                  onChange={(e) => updateField("headwind", e.target.value as HeadwindLevel)}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary/50 outline-none transition-colors"
+                  data-testid="select-headwind"
+                >
+                  {HEADWIND_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  <Mountain className="w-3 h-3 inline -mt-0.5 mr-0.5" />
+                  Sustained Altitude
+                </label>
+                <select
+                  value={conditions.altitude}
+                  onChange={(e) => updateField("altitude", e.target.value as AltitudeBand)}
+                  className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary/50 outline-none transition-colors"
+                  data-testid="select-altitude"
+                >
+                  {ALTITUDE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Rig Penalty Summary */}
+          {rigResult.breakdown.length > 0 && (
+            <div className="bg-muted rounded-lg p-3 border border-border">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                  Rig Adjustment Impact
+                </span>
+                <span className={`text-sm font-extrabold ${totalPenaltyPct > 0 ? "text-red-400" : "text-emerald-400"}`}>
+                  {totalPenaltyPct > 0 ? `-${totalPenaltyPct}%` : `+${Math.abs(totalPenaltyPct)}%`} base MPG
+                </span>
+              </div>
+              <div className="space-y-1">
+                {rigResult.breakdown.map((item, i) => {
+                  const pctChange = Math.round((1 - item.multiplier) * 100);
+                  return (
+                    <div key={i} className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">{item.label}</span>
+                      <span className={`font-bold ${pctChange > 0 ? "text-red-400" : "text-emerald-400"}`}>
+                        {pctChange > 0 ? `-${pctChange}%` : `+${Math.abs(pctChange)}%`}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Reset button */}
+          <div className="flex justify-end">
+            <button
+              onClick={() => onChange({ ...DEFAULT_RIG_CONDITIONS })}
+              className="text-[10px] font-bold uppercase tracking-wide text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
+              data-testid="button-reset-rig"
+            >
+              <RotateCcw className="w-3 h-3" />
+              Reset to Defaults
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Main Component ──────────────────────────────────────────────────
 
 export default function FuelRangePlanner() {
   useSEO({
@@ -281,6 +799,8 @@ export default function FuelRangePlanner() {
   const [showPresets, setShowPresets] = useState(false);
   const [showAuxFuel, setShowAuxFuel] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [rigConditions, setRigConditions] = useState<RigConditions>({ ...DEFAULT_RIG_CONDITIONS });
+  const [profileLinked, setProfileLinked] = useState(false);
 
   useEffect(() => {
     trackEvent("pe_tool_view", { tool: "fuel-range-planner" });
@@ -291,7 +811,63 @@ export default function FuelRangePlanner() {
         const p: VehicleProfileType = JSON.parse(saved);
         setProfile(p);
         setComputed(computeVehicle(p));
+
+        // Auto-populate rig conditions from vehicle profile
+        const savedRig = localStorage.getItem(RIG_CONDITIONS_KEY);
+        let rig: RigConditions;
+        if (savedRig) {
+          try {
+            rig = JSON.parse(savedRig);
+          } catch {
+            rig = { ...DEFAULT_RIG_CONDITIONS };
+          }
+        } else {
+          rig = { ...DEFAULT_RIG_CONDITIONS };
+        }
+
+        // Map vehicle profile fields to rig conditions (only for defaults)
+        if (!savedRig) {
+          const liftStr = String(p.lift?.inches ?? 0) as LiftHeight;
+          if (liftStr in { "0": 1, "1": 1, "2": 1, "2.5": 1, "3": 1, "4": 1, "5": 1, "6": 1 }) {
+            rig.liftInches = liftStr;
+          }
+          if (p.tires?.type) {
+            rig.tireType = p.tires.type as TireTypeOption;
+          }
+          if (p.tires?.diameter && p.stockTireDiameter) {
+            rig.tireSizeOverStock = Math.max(0, Math.round((p.tires.diameter - p.stockTireDiameter) * 10) / 10);
+          }
+          if (p.roof?.rtt) {
+            rig.aeroDrag = { ...rig.aeroDrag, rtt: true };
+          }
+          if (p.roof?.awning) {
+            rig.aeroDrag = { ...rig.aeroDrag, awning: true };
+          }
+          if (p.waterFording?.snorkel) {
+            rig.aeroDrag = { ...rig.aeroDrag, snorkel: true };
+          }
+          if (p.electrical?.radioType && p.electrical.radioType !== "none") {
+            rig.aeroDrag = { ...rig.aeroDrag, antenna: true };
+          }
+          if (p.frontBumper?.type && p.frontBumper.type !== "stock") {
+            rig.aeroDrag = { ...rig.aeroDrag, bullBar: true };
+          }
+          if (p.electrical?.lightBarWatts && p.electrical.lightBarWatts > 0) {
+            rig.aeroDrag = { ...rig.aeroDrag, lightbar: true };
+          }
+        }
+
+        setRigConditions(rig);
+        setProfileLinked(true);
       } catch { /* corrupted */ }
+    } else {
+      // No vehicle profile, load saved rig conditions if available
+      const savedRig = localStorage.getItem(RIG_CONDITIONS_KEY);
+      if (savedRig) {
+        try {
+          setRigConditions(JSON.parse(savedRig));
+        } catch { /* corrupted */ }
+      }
     }
 
     const savedTrip = localStorage.getItem(TRIP_STORAGE_KEY);
@@ -311,6 +887,7 @@ export default function FuelRangePlanner() {
     }
   }, []);
 
+  // Save trip data
   useEffect(() => {
     localStorage.setItem(
       TRIP_STORAGE_KEY,
@@ -318,14 +895,25 @@ export default function FuelRangePlanner() {
     );
   }, [tripName, segments, manualMpg, manualFuel, gasPrice, jerryCans, roundTrip]);
 
+  // Save rig conditions
+  useEffect(() => {
+    localStorage.setItem(RIG_CONDITIONS_KEY, JSON.stringify(rigConditions));
+  }, [rigConditions]);
+
   const rawBaseMpg = manualMpg ?? computed?.estimatedMpg ?? 20;
   const baseMpg = jerryCans > 0 ? auxFuelMpgPenalty(jerryCans, rawBaseMpg) : rawBaseMpg;
   const tankFuel = manualFuel ?? computed?.totalFuelGal ?? 24;
   const totalFuelGal = tankFuel + (jerryCans * JERRY_CAN_GAL);
 
+  const rigPenaltyResult = useMemo(() => calculateRigPenalty(rigConditions), [rigConditions]);
+  const rigAdjustedMpg = useMemo(
+    () => Math.round(baseMpg * rigPenaltyResult.multiplier * 10) / 10,
+    [baseMpg, rigPenaltyResult.multiplier],
+  );
+
   const effectiveSegments = useMemo(() => {
     if (!roundTrip) return segments;
-    const reversed = [...segments].reverse().map((seg, i) => ({
+    const reversed = [...segments].reverse().map((seg) => ({
       ...seg,
       id: makeId(),
       name: `${seg.name} (return)`,
@@ -335,10 +923,10 @@ export default function FuelRangePlanner() {
   }, [segments, roundTrip]);
 
   const tripResult: TripResult | null = useMemo(() => {
-    const validSegments = effectiveSegments.filter((s) => s.distanceMiles > 0);
+    const validSegments = effectiveSegments.filter((s) => s.distanceMiles > 0 || (s.idleMinutes ?? 0) > 0);
     if (validSegments.length === 0) return null;
-    return computeTrip(validSegments, baseMpg, totalFuelGal, climateZone, gasPrice);
-  }, [effectiveSegments, baseMpg, totalFuelGal, climateZone, gasPrice]);
+    return computeTrip(validSegments, baseMpg, totalFuelGal, climateZone, gasPrice, rigConditions);
+  }, [effectiveSegments, baseMpg, totalFuelGal, climateZone, gasPrice, rigConditions]);
 
   const terrainBreakdown = useMemo(() => {
     if (!tripResult) return [];
@@ -435,7 +1023,7 @@ export default function FuelRangePlanner() {
     const preset = tripPresets.find((p) => p.id === presetId);
     if (!preset) return;
     setTripName(preset.name);
-    setSegments(preset.segments.map((s) => ({ ...s, id: makeId() })));
+    setSegments(preset.segments.map((s) => ({ ...s, id: makeId(), idleMinutes: 0 })));
     setShowPresets(false);
     trackEvent("pe_tool_started", { tool: "fuel-range-planner" });
   }, []);
@@ -528,7 +1116,7 @@ export default function FuelRangePlanner() {
               </div>
               <div>
                 <span className="print-label">Est. MPG</span>
-                <span className="print-value">{baseMpg}{jerryCans > 0 ? ` (${rawBaseMpg} base - weight penalty)` : ""}</span>
+                <span className="print-value">{rigAdjustedMpg}{rigPenaltyResult.multiplier < 1 ? ` (${baseMpg} base - rig adj.)` : ""}{jerryCans > 0 ? ` (${rawBaseMpg} base - weight penalty)` : ""}</span>
               </div>
               <div>
                 <span className="print-label">Fuel Capacity</span>
@@ -669,10 +1257,10 @@ export default function FuelRangePlanner() {
                   <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
                     <div>
                       <span className="text-muted-foreground">MPG: </span>
-                      <span className="font-bold text-foreground">{baseMpg}</span>
-                      {(computed.mpgPenaltyPct > 0 || jerryCans > 0) && (
+                      <span className="font-bold text-foreground">{rigAdjustedMpg}</span>
+                      {(computed.mpgPenaltyPct > 0 || jerryCans > 0 || rigPenaltyResult.multiplier < 1) && (
                         <span className="text-red-400 text-xs ml-1">
-                          ({jerryCans > 0 ? `${rawBaseMpg} base - cargo` : `-${Math.round(computed.mpgPenaltyPct)}%`})
+                          ({baseMpg} base{rigPenaltyResult.multiplier < 1 ? ` x ${Math.round(rigPenaltyResult.multiplier * 100)}% rig` : ""}{jerryCans > 0 ? " - cargo" : ""})
                         </span>
                       )}
                     </div>
@@ -685,7 +1273,7 @@ export default function FuelRangePlanner() {
                     </div>
                     <div>
                       <span className="text-muted-foreground">Range: </span>
-                      <span className="font-bold text-foreground">{Math.round(baseMpg * totalFuelGal)} mi</span>
+                      <span className="font-bold text-foreground">{Math.round(rigAdjustedMpg * totalFuelGal)} mi</span>
                     </div>
                   </div>
                 </div>
@@ -850,6 +1438,13 @@ export default function FuelRangePlanner() {
               compact
             />
 
+            {/* ─── Rig & Conditions (between ZIP lookup and trip builder) ─── */}
+            <RigConditionsPanel
+              conditions={rigConditions}
+              onChange={setRigConditions}
+              profileLinked={profileLinked}
+            />
+
             <div className="bg-card border border-border rounded-lg p-4" data-testid="trip-planner-card">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -1001,7 +1596,7 @@ export default function FuelRangePlanner() {
                     </div>
                   </div>
 
-                  {(gasPrice > 0 || tripResult.refuelStopCount > 0) && (
+                  {(gasPrice > 0 || tripResult.refuelStopCount > 0 || tripResult.totalIdleFuelGal > 0 || rigPenaltyResult.multiplier < 1) && (
                     <div className="flex flex-wrap gap-x-6 gap-y-1 mb-4 text-sm">
                       {gasPrice > 0 && (
                         <div data-testid="text-fuel-cost">
@@ -1014,6 +1609,24 @@ export default function FuelRangePlanner() {
                         <div>
                           <span className="text-muted-foreground">Fuel Stops: </span>
                           <span className="font-bold text-blue-400">{tripResult.refuelStopCount}</span>
+                        </div>
+                      )}
+                      {tripResult.totalIdleFuelGal > 0 && (
+                        <div>
+                          <span className="text-muted-foreground">Idle Burn: </span>
+                          <span className="font-bold text-amber-400">{tripResult.totalIdleFuelGal} gal</span>
+                        </div>
+                      )}
+                      {rigPenaltyResult.multiplier < 1 && (
+                        <div>
+                          <span className="text-muted-foreground">Rig Penalty: </span>
+                          <span className="font-bold text-red-400">-{Math.round((1 - rigPenaltyResult.multiplier) * 100)}%</span>
+                        </div>
+                      )}
+                      {rigPenaltyResult.multiplier > 1 && (
+                        <div>
+                          <span className="text-muted-foreground">Rig Bonus: </span>
+                          <span className="font-bold text-emerald-400">+{Math.round((rigPenaltyResult.multiplier - 1) * 100)}%</span>
                         </div>
                       )}
                     </div>
@@ -1172,11 +1785,18 @@ export default function FuelRangePlanner() {
                               <span>
                                 -{res.fuelUsedGal} gal @ {res.adjustedMpg} MPG
                               </span>
-                              {res.segment.elevationGainFt > 0 && (
+                              {res.segment.elevationGainFt !== 0 && (
                                 <>
                                   <span>&middot;</span>
                                   <Mountain className="w-3 h-3 text-muted-foreground/50" />
-                                  <span>+{res.segment.elevationGainFt} ft</span>
+                                  <span>{res.segment.elevationGainFt > 0 ? "+" : ""}{res.segment.elevationGainFt} ft</span>
+                                </>
+                              )}
+                              {res.idleFuelGal > 0 && (
+                                <>
+                                  <span>&middot;</span>
+                                  <Timer className="w-3 h-3 text-muted-foreground/50" />
+                                  <span>{res.idleFuelGal} gal idle</span>
                                 </>
                               )}
                             </div>
@@ -1187,13 +1807,19 @@ export default function FuelRangePlanner() {
                                 {res.segment.elevationGainFt > 0 && (
                                   <div>Elevation penalty: -{Math.round((1 - res.elevationPenalty) * 100)}%</div>
                                 )}
+                                {res.descentRecovery > 1 && (
+                                  <div className="text-emerald-400/70">Descent recovery: +{Math.round((res.descentRecovery - 1) * 100)}%</div>
+                                )}
                                 <div>Speed efficiency: {Math.round(res.speedPenalty * 100)}%</div>
+                                {rigPenaltyResult.multiplier < 1 && (
+                                  <div>Rig penalty: -{Math.round((1 - rigPenaltyResult.multiplier) * 100)}%</div>
+                                )}
                               </div>
                             )}
 
                             {res.warnings.map((w, wi) => (
-                              <div key={wi} className="flex items-center gap-1 text-red-400 font-bold">
-                                <AlertTriangle className="w-3 h-3" />
+                              <div key={wi} className={`flex items-center gap-1 font-bold ${w.startsWith("Idle") ? "text-amber-400" : "text-red-400"}`}>
+                                {w.startsWith("Idle") ? <Timer className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
                                 {w}
                               </div>
                             ))}
@@ -1258,6 +1884,9 @@ export default function FuelRangePlanner() {
                               <td className="px-4 py-2 font-bold text-foreground">
                                 {res.didRefuel && <span className="text-blue-400 mr-1" title="Fuel stop">&#9981;</span>}
                                 {res.segment.name}
+                                {res.idleFuelGal > 0 && (
+                                  <span className="text-amber-400 text-[9px] ml-1" title="Includes idle fuel">+idle</span>
+                                )}
                               </td>
                               <td className="px-4 py-2 text-right text-muted-foreground">{res.segment.distanceMiles} mi</td>
                               <td className="px-4 py-2 text-muted-foreground">{terrainIcons[res.segment.terrain]} {terrainLabels[res.segment.terrain]}</td>
@@ -1349,7 +1978,7 @@ export default function FuelRangePlanner() {
               </div>
             )}
 
-            {!tripResult && segments.some((s) => s.distanceMiles === 0) && (
+            {!tripResult && segments.some((s) => s.distanceMiles === 0 && (s.idleMinutes ?? 0) === 0) && (
               <div className="bg-card border border-border rounded-lg p-6 text-center" data-testid="empty-state">
                 <Route className="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
                 <p className="text-sm text-muted-foreground">
@@ -1393,6 +2022,13 @@ export default function FuelRangePlanner() {
                 crawling by 70% &mdash; you're barely moving, but the engine is working hard.
                 Elevation gain adds ~15% fuel cost per 1,000 feet of climb. Speed matters too:
                 driving 5 mph in low range burns 60% more fuel per mile than cruising at 50.
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                The Rig & Conditions panel adds another layer of accuracy. Your lift height,
+                tire type, aero mods, towing load, altitude, headwind, and drive mode all
+                multiply against your base MPG before terrain is even factored in. Negative
+                elevation (descent) gives you a small fuel recovery bonus, capped at 15%.
+                Idle time burns fuel at ~{IDLE_GPH} gal/hr without adding miles.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 These multipliers come from controlled testing by Expedition Portal, ARB,
