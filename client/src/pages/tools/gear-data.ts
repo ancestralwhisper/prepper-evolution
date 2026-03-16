@@ -105,8 +105,13 @@ export const gearCategories: GearCategory[] = [
     items: [
       { id: "ferro-rod", name: "Ferro Rod + Striker", weightOz: 2, category: "fire", essential: true },
       { id: "bic-lighter", name: "BIC Lighters (2x)", weightOz: 1, category: "fire", essential: true },
-      { id: "storm-matches", name: "Stormproof Matches", weightOz: 2, category: "fire", essential: false },
+      { id: "storm-matches", name: "Stormproof Matches", weightOz: 2, category: "fire", essential: false, affiliateUrl: A("B00773VVHO"), affiliateNote: "UCO Stormproof — burn in wind/rain" },
+      { id: "regular-matches", name: "Waterproof Matches (2 boxes)", weightOz: 1, category: "fire", essential: false, affiliateUrl: A("B004I9B0V4"), affiliateNote: "Coghlans — cheap redundancy" },
       { id: "fire-tinder", name: "Commercial Fire Tinder", weightOz: 1, category: "fire", essential: false },
+      { id: "tumbleweed-starters", name: "Tumbleweed Fire Starters (12ct)", weightOz: 4, category: "fire", essential: false, affiliateUrl: A("B08QD1YG7C"), affiliateNote: "All-natural, burn 8+ min each" },
+      { id: "vaseline-cotton", name: "Petroleum Jelly Cotton Balls (DIY tinder, 10ct)", weightOz: 2, category: "fire", essential: false },
+      { id: "char-cloth", name: "Char Cloth (tin)", weightOz: 1, category: "fire", essential: false },
+      { id: "dryer-lint", name: "Dryer Lint (ziplock bag)", weightOz: 0.5, category: "fire", essential: false },
     ],
   },
   {
@@ -211,6 +216,11 @@ export const gearCategories: GearCategory[] = [
       { id: "streamlight", name: "Streamlight ProTac HL USB", weightOz: 5, category: "misc", essential: false, affiliateUrl: A("B00T8J9FGO"), affiliateNote: "$110 — 1000 lumens, rechargeable" },
       { id: "dry-sacks", name: "Sea to Summit Dry Sack Set (3pc)", weightOz: 4, category: "misc", essential: false, affiliateUrl: A("B0BZ5LF3KQ"), affiliateNote: "$30 — Keep gear dry" },
       { id: "trekking-poles", name: "Black Diamond Distance Carbon Z", weightOz: 18, category: "misc", essential: false, affiliateUrl: A("B078XMKSVX"), affiliateNote: "$190 — Carbon fiber, foldable" },
+      { id: "lip-balm", name: "Lip Balm / Chapstick (SPF)", weightOz: 0.5, category: "misc", essential: false },
+      { id: "wet-wipes", name: "Wet Wipes (travel pack 20ct)", weightOz: 3, category: "misc", essential: false },
+      { id: "toothbrush", name: "Travel Toothbrush + Toothpaste", weightOz: 2, category: "misc", essential: false },
+      { id: "hand-sanitizer", name: "Hand Sanitizer (travel size)", weightOz: 2, category: "misc", essential: false },
+      { id: "bandana", name: "Cotton Bandana", weightOz: 1, category: "misc", essential: false },
     ],
   },
 ];
