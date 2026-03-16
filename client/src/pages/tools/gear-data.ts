@@ -78,6 +78,8 @@ export const gearCategories: GearCategory[] = [
       { id: "platypus-softbottle", name: "Platypus SoftBottle 1L (Collapsible)", weightOz: 1.5, category: "water", essential: false, affiliateUrl: A("B09LR4WBJP"), affiliateNote: "$14 — Rolls up when empty" },
       { id: "sillcock-key", name: "4-Way Sillcock Key (Water Key)", weightOz: 2, category: "water", essential: false, affiliateUrl: A("B071JNZ772"), affiliateNote: "$7 — Urban water access from commercial spigots" },
       { id: "katadyn-micropur", name: "Katadyn Micropur MP1 Tablets (30ct)", weightOz: 1, category: "water", essential: false, stackable: true, maxQty: 3, affiliateUrl: A("B0007U017U"), affiliateNote: "$15 — Chlorine dioxide purification" },
+      { id: "cnoc-vesica", name: "CNOC Vesica 1L Collapsible Bottle (Sawyer compatible)", weightOz: 2.4, category: "water", essential: false, affiliateUrl: A("B08PDKHMN2"), affiliateNote: "$13 — 28mm thread, fits Sawyer Squeeze/Mini" },
+      { id: "evernew-carry", name: "Evernew Water Carry 2L (Sawyer compatible)", weightOz: 1.5, category: "water", essential: false, affiliateUrl: A("B000AQYY5Q"), affiliateNote: "$14 — 2L collapsible, ultralight" },
     ],
   },
   {
