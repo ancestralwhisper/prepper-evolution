@@ -459,7 +459,7 @@ export default function BugOutBagCalculator() {
                 <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
                 <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-3">
                   <p>
-                    Check off the gear you&apos;re packing, adjust quantities, and we&apos;ll track the total weight against your body weight in real time. Every item links straight to Amazon so you can price it out and buy in one shot. We&apos;ve loaded 80+ products across 11 categories &mdash; from shelter and fire to first aid and comms &mdash; so nothing gets forgotten.
+                    Check off the gear you&apos;re packing, adjust quantities, and we&apos;ll track the total weight against your body weight in real time. Every item links straight to Amazon so you can price it out and buy in one shot. We&apos;ve loaded 125+ products across 11 categories &mdash; from shelter and fire to first aid and comms &mdash; so nothing gets forgotten.
                   </p>
                   <p>
                     <strong className="text-foreground">Bottom line:</strong> the number one bug out bag mistake is overpacking. This tool keeps you honest with a live weight gauge so you can prioritize what actually matters and ditch the dead weight before it slows you down.
@@ -1019,7 +1019,7 @@ export default function BugOutBagCalculator() {
 
                 <div className="bg-muted rounded-lg p-4 no-print">
                   <p className="text-[11px] text-muted-foreground leading-relaxed text-center">
-                    <span className="font-bold text-foreground">80+ products</span> and counting.
+                    <span className="font-bold text-foreground">125+ products</span> and counting.
                     We add new gear every week based on community requests and field testing.
                     Your input shapes this tool.
                   </p>
