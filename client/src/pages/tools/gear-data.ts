@@ -167,6 +167,9 @@ export const gearCategories: GearCategory[] = [
       { id: "whistle", name: "Emergency Whistle", weightOz: 1, category: "communication", essential: true },
       { id: "signal-mirror", name: "Signal Mirror", weightOz: 2, category: "communication", essential: false },
       { id: "crank-radio", name: "Midland ER310 Crank Weather Radio", weightOz: 13, category: "communication", essential: false, affiliateUrl: A("B015QIC1PW"), affiliateNote: "$65 — Solar + hand crank + NOAA" },
+      { id: "retekess-v112", name: "Retekess V112 Pocket AM/FM Radio", weightOz: 1.6, category: "communication", essential: false, affiliateUrl: A("B0DK4KMPCT"), affiliateNote: "$15 — Lightest pocket radio, rechargeable" },
+      { id: "fiio-rr11", name: "FiiO RR11 Pocket FM Radio", weightOz: 3, category: "communication", essential: false, affiliateUrl: A("B0F18RG7CM"), affiliateNote: "$30 — Premium metal build, Hi-Res audio" },
+      { id: "prunus-j908", name: "PRUNUS J-908 Pocket AM/FM Radio", weightOz: 4.5, category: "communication", essential: false, affiliateUrl: A("B078RL6X85"), affiliateNote: "$18 — LED flashlight + MP3 player" },
     ],
   },
   {
