@@ -48,6 +48,7 @@ export default function BugOutBagCalculator() {
   const [requestWeight, setRequestWeight] = useState("");
   const [requestUrl, setRequestUrl] = useState("");
   const [requestCat, setRequestCat] = useState("misc");
+  const [requestEmail, setRequestEmail] = useState("");
   const [requestStatus, setRequestStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   useSEO({
@@ -276,6 +277,7 @@ export default function BugOutBagCalculator() {
           weightOz: requestWeight ? parseFloat(requestWeight) : undefined,
           category: requestCat,
           amazonUrl: requestUrl.trim() || undefined,
+          email: requestEmail.trim() || undefined,
         }),
       });
 
@@ -285,6 +287,7 @@ export default function BugOutBagCalculator() {
         setRequestBrand("");
         setRequestWeight("");
         setRequestUrl("");
+        setRequestEmail("");
         setTimeout(() => {
           setRequestStatus("idle");
           setShowRequestForm(false);
@@ -682,9 +685,10 @@ export default function BugOutBagCalculator() {
                   <div>
                     <h3 className="text-sm font-bold uppercase tracking-wide mb-1">Community Driven</h3>
                     <p className="text-xs text-muted-foreground leading-relaxed">
-                      This calculator is built by preppers, for preppers. We&apos;re constantly updating our gear
-                      database based on what the community actually carries. New products, better alternatives,
-                      field-tested favorites &mdash; if it belongs in a pack, we want it here.
+                      This calculator is community-driven. We&apos;re constantly adding gear based on what real preppers use.
+                      If your gear isn&apos;t listed, let us know and we&apos;ll add it. If you&apos;d like to know when it&apos;s been added,
+                      just drop your email and I&apos;ll send you a quick note letting you know it&apos;s live and what category it was added to.
+                      Your email will not be added to any subscription list or anything like that &mdash; strictly to let you know it was added.
                     </p>
                   </div>
                 </div>
@@ -714,7 +718,7 @@ export default function BugOutBagCalculator() {
                       <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 text-center">
                         <CheckCircle className="w-6 h-6 text-green-500 mx-auto mb-2" />
                         <p className="text-sm font-bold text-green-500">Request Submitted!</p>
-                        <p className="text-xs text-muted-foreground mt-1">We&apos;ll review it and add it if it fits. Thanks for helping us improve.</p>
+                        <p className="text-xs text-muted-foreground mt-1">We&apos;ll review it and add it if it fits. {requestEmail ? "We\u2019ll email you when it\u2019s live." : ""} Thanks for helping us improve.</p>
                       </div>
                     ) : (
                       <>
@@ -759,6 +763,16 @@ export default function BugOutBagCalculator() {
                           maxLength={200}
                           className="w-full bg-background border border-border rounded px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary"
                           data-testid="input-request-url"
+                        />
+
+                        <input
+                          type="email"
+                          value={requestEmail}
+                          onChange={(e) => setRequestEmail(e.target.value)}
+                          placeholder="Your email (optional — only to notify you when added)"
+                          maxLength={100}
+                          className="w-full bg-background border border-border rounded px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary"
+                          data-testid="input-request-email"
                         />
 
                         <select
