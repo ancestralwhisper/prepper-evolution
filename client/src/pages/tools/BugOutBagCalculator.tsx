@@ -437,7 +437,7 @@ export default function BugOutBagCalculator() {
               Bug Out Bag <span className="text-primary">Weight Calculator</span>
             </h1>
             <p className="text-muted-foreground text-lg leading-relaxed">
-              Build your BOB from 40+ pre-loaded gear items, add your own custom gear,
+              Build your BOB from 125+ pre-loaded gear items, add your own custom gear,
               and see your total pack weight in real time. Warnings trigger when you exceed
               safe carry limits based on US Army load guidelines.
             </p>

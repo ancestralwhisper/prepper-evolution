@@ -26,7 +26,7 @@ const calculators: Tool[] = [
     slug: "bug-out-bag-calculator",
     name: "Bug Out Bag Weight Calculator",
     description:
-      "Build your BOB from 40+ gear items, track total weight vs. body weight limits, and get personalized recommendations for missing essentials.",
+      "Build your BOB from 125+ gear items, track total weight vs. body weight limits, and get personalized recommendations for missing essentials.",
     icon: Backpack,
     status: "live",
     badge: "Popular",
