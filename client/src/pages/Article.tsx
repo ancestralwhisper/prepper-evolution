@@ -153,7 +153,7 @@ export default function Article() {
       <div className="h-[40vh] md:h-[60vh] relative overflow-hidden">
         <img src={featuredImage} alt={article.title.rendered} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-        <div className="absolute bottom-0 w-full p-6 md:p-12 max-w-[800px] mx-auto left-0 right-0">
+        <div className="absolute bottom-0 w-full p-6 md:p-12 max-w-[920px] mx-auto left-0 right-0">
           <Button 
             variant="ghost" 
             className="text-primary hover:text-primary/80 hover:bg-transparent px-0 mb-6 font-medium"
@@ -170,7 +170,7 @@ export default function Article() {
         </div>
       </div>
 
-      <div className="max-w-[1000px] mx-auto px-6 mt-12 grid grid-cols-1 lg:grid-cols-4 gap-12">
+      <div className="max-w-[1150px] mx-auto px-6 mt-12 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10">
         {/* Table of Contents (Desktop Sidebar) */}
         {headings.length > 0 && (
           <div className="hidden lg:block col-span-1">
@@ -189,7 +189,7 @@ export default function Article() {
           </div>
         )}
 
-        <div className="col-span-1 lg:col-span-3">
+        <div className="col-span-1">
           <div className="text-xl md:text-2xl font-medium text-foreground/90 border-l-4 border-primary pl-6 mb-12" dangerouslySetInnerHTML={{ __html: article.excerpt.rendered }} />
           <div className="wp-article-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
         </div>
@@ -197,7 +197,7 @@ export default function Article() {
 
       {/* Related Articles */}
       {related.length > 0 && (
-        <div className="max-w-[1000px] mx-auto px-6 mt-24 border-t border-border pt-16">
+        <div className="max-w-[1150px] mx-auto px-6 mt-24 border-t border-border pt-16">
           <h2 className="text-3xl font-display font-bold mb-8">Related Intel</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {related.map(post => {
