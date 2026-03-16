@@ -36,6 +36,11 @@ export const gearCategories: GearCategory[] = [
       { id: "kelty-redwing", name: "Kelty Redwing 50", weightOz: 56, category: "pack", essential: false, affiliateUrl: A("B0DT2FZGYV"), affiliateNote: "$200" },
       { id: "maxpedition-falcon", name: "Maxpedition Falcon-II", weightOz: 64, category: "pack", essential: false, affiliateUrl: A("B0013AXY54"), affiliateNote: "$167" },
       { id: "vertx-gamut", name: "Vertx Gamut 22L Sling", weightOz: 44, category: "pack", essential: false, affiliateUrl: A("B0G2MY4814"), affiliateNote: "$230 — Gray man EDC" },
+      { id: "helikon-bandicoot", name: "Helikon-Tex Bandicoot Waist Pack", weightOz: 8, category: "pack", essential: false, affiliateUrl: A("B014PNPLDI"), affiliateNote: "$35 — Quick grab fanny pack, MOLLE" },
+      { id: "511-lv6", name: "5.11 LV6 Waist Pack (3L)", weightOz: 10, category: "pack", essential: false, affiliateUrl: A("B084MC5VQW"), affiliateNote: "$60 — EDC crossbody, CCW capable" },
+      { id: "hpg-recon", name: "Hill People Gear Heavy Recon Kit Bag", weightOz: 12, category: "pack", essential: false, affiliateUrl: A("B07CGD8J99"), affiliateNote: "$115 — Chest rig, concealed carry" },
+      { id: "vanquest-dendrite", name: "Vanquest DENDRITE Small Waist Pack", weightOz: 7, category: "pack", essential: false, affiliateUrl: A("B09S53QTVL"), affiliateNote: "$65 — Belt/sling EDC, water-resistant" },
+      { id: "maxpedition-mini", name: "Maxpedition Mini Pocket Organizer", weightOz: 4, category: "pack", essential: false, affiliateUrl: A("B005CSYU6K"), affiliateNote: "$22 — Ultra compact MOLLE pouch" },
     ],
   },
   {
