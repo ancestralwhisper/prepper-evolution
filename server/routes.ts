@@ -53,6 +53,23 @@ export async function registerRoutes(
     });
   }
 
+  // --- Legacy URL redirects (fix GSC 404s and soft 404s) ---
+  const legacyRedirects: Record<string, string> = {
+    "/best-rooftop-tents": "/articles/best-rooftop-tents-compared-2026",
+    "/best-of": "/articles/best-rooftop-tents-compared-2026",
+    "/how-to-start-fire": "/articles/fire-starting-guide-matches-to-bow-drill",
+    "/power-calculator": "/tools/solar-power-calculator",
+    "/ecoflow-delta-2-max-review": "/articles/best-portable-power-stations-2026",
+    "/emergency-communication-grid-down": "/articles/emergency-communication-grid-down",
+    "/articles/emergency-communication-grid-down": "/articles/best-emergency-communication-devices",
+  };
+
+  for (const [oldPath, newPath] of Object.entries(legacyRedirects)) {
+    app.get(oldPath, (_req, res) => {
+      res.redirect(301, newPath);
+    });
+  }
+
   // --- Products ---
   app.get("/api/products", async (_req, res) => {
     try {
