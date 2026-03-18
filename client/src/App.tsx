@@ -36,6 +36,7 @@ import PowerStationRuntimeCalculator from "@/pages/tools/PowerStationRuntimeCalc
 import FuelRangePlanner from "@/pages/tools/FuelRangePlanner";
 import Deadstock from "@/pages/tools/Deadstock";
 import BarterEstimator from "@/pages/tools/BarterEstimator";
+import TentFinder from "@/pages/tools/TentFinder";
 import Quiz from "@/pages/Quiz";
 import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
@@ -92,6 +93,7 @@ function Router() {
             <Route path="/tools/fuel-range-planner" component={FuelRangePlanner} />
             <Route path="/tools/deadstock" component={Deadstock} />
             <Route path="/tools/barter-value-estimator" component={BarterEstimator} />
+            <Route path="/tools/tent-finder" component={TentFinder} />
             <Route path="/quiz" component={Quiz} />
             <Route path="/contact" component={Contact} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />

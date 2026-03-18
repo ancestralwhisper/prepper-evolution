@@ -3,7 +3,7 @@ import {
   Backpack, Droplets, UtensilsCrossed, Zap, ClipboardList, Map,
   ArrowRight, FolderOpen, Shield, Target, Crosshair,
   Siren, Skull, Truck, Fuel, Weight, Brain, Wrench, Radar, BatteryCharging,
-  AlertTriangle, BarChart3, Repeat, Package,
+  AlertTriangle, BarChart3, Repeat, Package, Tent, Search,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import ChangelogTicker from "@/components/tools/ChangelogTicker";
@@ -77,6 +77,20 @@ const calculators: Tool[] = [
     icon: ClipboardList,
     status: "live",
     version: "v1.2",
+  },
+];
+
+const gearFinders: Tool[] = [
+  {
+    slug: "tent-finder",
+    name: "Backpacking Tent Finder",
+    description:
+      "Compare 50+ ultralight backpacking tents side by side. Filter by weight, price, setup type, wind rating, capacity, and more. Every spec is sourced from manufacturer data.",
+    icon: Tent,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Find Tents",
   },
 ];
 
@@ -376,6 +390,23 @@ export default function ToolsIndex() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up-delay-1">
             {calculators.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
+          </div>
+        </div>
+
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+              <Search className="w-4 h-4 text-blue-500" />
+            </div>
+            <h2 className="text-xl font-extrabold">Gear Finders</h2>
+          </div>
+          <p className="text-sm text-muted-foreground mb-6 ml-11">
+            Compare real specs side by side. Filter, sort, and find the right gear for your trip.
+          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up-delay-1">
+            {gearFinders.map((tool) => (
               <ToolCard key={tool.slug} tool={tool} />
             ))}
           </div>
