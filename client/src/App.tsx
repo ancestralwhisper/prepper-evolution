@@ -1,4 +1,4 @@
-import { Switch, Route, useLocation } from "wouter";
+import { Switch, Route, useLocation, Redirect } from "wouter";
 import { useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -39,6 +39,7 @@ import BarterEstimator from "@/pages/tools/BarterEstimator";
 import TentFinder from "@/pages/tools/TentFinder";
 import GearFinder from "@/pages/tools/GearFinder";
 import SkillsAnalyzer from "@/pages/tools/SkillsAnalyzer";
+import ReadinessDashboard from "@/pages/tools/ReadinessDashboard";
 import Quiz from "@/pages/Quiz";
 import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
@@ -98,6 +99,8 @@ function Router() {
             <Route path="/tools/tent-finder" component={TentFinder} />
             <Route path="/tools/gear-finder" component={GearFinder} />
             <Route path="/tools/skills-tracker" component={SkillsAnalyzer} />
+            <Route path="/tools/readiness-dashboard" component={ReadinessDashboard} />
+            <Route path="/readiness">{() => <Redirect href="/tools/readiness-dashboard" />}</Route>
             <Route path="/quiz" component={Quiz} />
             <Route path="/contact" component={Contact} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />

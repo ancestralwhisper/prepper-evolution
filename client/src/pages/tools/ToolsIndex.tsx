@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { useState, useEffect } from "react";
 import {
   Backpack, Droplets, UtensilsCrossed, Zap, ClipboardList, Map,
   ArrowRight, FolderOpen, Shield, Target, Crosshair,
@@ -237,6 +238,99 @@ const opsDeckTools: Tool[] = [
   },
 ];
 
+function ReadinessBanner() {
+  const [score, setScore] = useState<number | null>(null);
+  const [assessed, setAssessed] = useState(0);
+
+  useEffect(() => {
+    // Quick check: count how many tool keys have data
+    const keys = [
+      "pe-deadstock-result", "pe-bob-calculator", "pe-water-calculator",
+      "pe-solar-calculator", "pe-vehicle-profile", "pe-skills-assessment",
+      "pe-barter-portfolio", "pe-readiness-financial",
+    ];
+    let count = 0;
+    keys.forEach((k) => { if (localStorage.getItem(k)) count++; });
+    setAssessed(count);
+
+    // Load cached score from history
+    try {
+      const hist = localStorage.getItem("pe-readiness-history");
+      if (hist) {
+        const entries = JSON.parse(hist);
+        if (Array.isArray(entries) && entries.length > 0) {
+          setScore(entries[entries.length - 1].score);
+        }
+      }
+    } catch { /* ignore */ }
+  }, []);
+
+  const hasScore = score !== null && assessed > 0;
+  const color = !hasScore ? "#6B7280" : score <= 25 ? "#EF4444" : score <= 50 ? "#F97316" : score <= 75 ? "#EAB308" : "#22C55E";
+
+  return (
+    <div className="mb-8 animate-fade-in-up">
+      <Link href="/tools/readiness-dashboard" className="block group">
+        <div className="relative overflow-hidden rounded-xl border-2 border-primary/40 hover:border-primary/70 transition-all hover:shadow-xl bg-gradient-to-r from-card via-card to-primary/5">
+          <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary" />
+          <div className="absolute top-0 right-0 w-64 h-64 opacity-[0.03] pointer-events-none" style={{
+            background: "radial-gradient(circle, currentColor 0%, transparent 70%)",
+          }} />
+          <div className="relative z-10 p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6">
+            {/* Score Circle */}
+            <div className="flex-shrink-0">
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28">
+                <svg viewBox="0 0 120 120" className="w-full h-full">
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" strokeWidth="8" opacity="0.3" />
+                  {hasScore && (
+                    <circle
+                      cx="60" cy="60" r="50" fill="none"
+                      stroke={color}
+                      strokeWidth="8"
+                      strokeDasharray={`${(score / 100) * 314} 314`}
+                      strokeLinecap="round"
+                      transform="rotate(-90 60 60)"
+                      className="transition-all duration-700"
+                    />
+                  )}
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-3xl sm:text-4xl font-black" style={{ color }}>
+                    {hasScore ? score : "?"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Text */}
+            <div className="flex-1 text-center sm:text-left">
+              <div className="flex items-center justify-center sm:justify-start gap-3 mb-1">
+                <h2 className="text-lg sm:text-xl font-extrabold group-hover:text-primary transition-colors">
+                  {hasScore ? "Your Readiness Score" : "Unified Readiness Dashboard"}
+                </h2>
+                <span className="text-xs font-bold uppercase tracking-wide bg-primary text-primary-foreground px-2 py-1 rounded">
+                  New
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {hasScore
+                  ? `Scoring ${assessed}/8 categories. Open your dashboard to see pillar breakdowns, critical alerts, and actions to improve your score.`
+                  : "One score across 8 readiness categories. Pulls from every PE tool you have completed. See where you are strong, where you have gaps, and what to do next."
+                }
+              </p>
+            </div>
+
+            {/* CTA */}
+            <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wide flex-shrink-0">
+              {hasScore ? "Open Dashboard" : "Check Your Score"} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+}
+
 function ToolCard({ tool }: { tool: Tool }) {
   const Icon = tool.icon;
   const isLive = tool.status === "live";
@@ -334,6 +428,9 @@ export default function ToolsIndex() {
       <ChangelogTicker />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+
+        {/* ─── Readiness Dashboard Banner ─────────────────────── */}
+        <ReadinessBanner />
 
         <div className="mb-8 animate-fade-in-up">
           <Link
