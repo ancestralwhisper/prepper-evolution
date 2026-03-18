@@ -82,13 +82,23 @@ const calculators: Tool[] = [
 
 const gearFinders: Tool[] = [
   {
+    slug: "gear-finder",
+    name: "Ultralight Gear Finder",
+    description:
+      "Compare 150+ ultralight backpacking products across 11 categories: tents, sleeping bags, pads, packs, stoves, cookware, rain gear, insulation, trekking poles, headlamps, and accessories. Filter by weight, price, and category-specific specs.",
+    icon: Search,
+    status: "live",
+    badge: "Updated",
+    version: "v2.0",
+    cta: "Find Gear",
+  },
+  {
     slug: "tent-finder",
     name: "Backpacking Tent Finder",
     description:
       "Compare 50+ ultralight backpacking tents side by side. Filter by weight, price, setup type, wind rating, capacity, and more. Every spec is sourced from manufacturer data.",
     icon: Tent,
     status: "live",
-    badge: "New",
     version: "v1.0",
     cta: "Find Tents",
   },
