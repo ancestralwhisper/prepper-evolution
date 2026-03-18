@@ -6,6 +6,8 @@ import {
   BarChart3, Target, AlertTriangle, Trophy, BookOpen, Clock,
   ExternalLink, Printer, RotateCcw, Check, Info, Star,
   Video, BookOpenCheck, GraduationCap,
+  Users, UserPlus, Award, Calendar, TrendingUp, Link2, Siren,
+  Plus, Trash2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
@@ -20,6 +22,9 @@ import {
   SKILLS_STORAGE_KEY,
   SKILL_LEVEL_LABELS,
   SKILL_LEVEL_COLORS,
+  PREDEFINED_CERTIFICATIONS,
+  SCENARIO_DOMAIN_MAP,
+  DOMAIN_BARTER_VALUES,
   calculateReadinessScore,
   calculateDomainScores,
   getCriticalGaps,
@@ -27,11 +32,17 @@ import {
   getTrainingRoadmap,
   countRatedSkills,
   getTotalSkillCount,
+  getUnmetPrerequisites,
+  getPrerequisiteSuggestions,
+  getWeakestScenarios,
+  generateTrainingPlan,
   type SkillLevel,
   type Skill,
   type SkillDomain,
   type SkillsAssessmentData,
   type LearningResource,
+  type FamilyMember,
+  type Certification,
 } from "./skills-data";
 
 const DOMAIN_ICONS: Record<string, React.ElementType> = {
@@ -62,6 +73,7 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 const MIN_SKILLS_FOR_RESULTS = 10;
 
 type View = "landing" | "assess" | "results";
+type ResultTab = "overview" | "gaps" | "roadmap" | "strengths" | "scenarios" | "family" | "certs" | "training" | "barter" | "dependencies";
 
 // ─── LEVEL BUTTON GROUP ─────────────────────────────────────────────
 function LevelSelector({
@@ -106,13 +118,18 @@ function SkillCard({
   rating,
   onRate,
   onOpenDetail,
+  ratings,
 }: {
   skill: Skill;
   domain: SkillDomain;
   rating: SkillLevel | undefined;
   onRate: (level: SkillLevel) => void;
   onOpenDetail: () => void;
+  ratings: Record<string, SkillLevel>;
 }) {
+  const unmetPrereqs = useMemo(() => getUnmetPrerequisites(skill.id, ratings), [skill.id, ratings]);
+  const hasUnmetPrereqs = unmetPrereqs.length > 0;
+
   return (
     <div className="bg-card border border-border rounded-lg p-4 space-y-3">
       <div className="flex items-start justify-between gap-2">
@@ -122,8 +139,19 @@ function SkillCard({
             <span className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded border ${DIFFICULTY_COLORS[skill.difficulty]}`}>
               {skill.difficulty}
             </span>
+            {hasUnmetPrereqs && (
+              <span className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded border bg-amber-500/20 text-amber-400 border-amber-500/30 flex items-center gap-1" title={`Prerequisites not met: ${unmetPrereqs.map(p => p.skill.name).join(", ")}`}>
+                <Link2 className="w-2.5 h-2.5" />
+                Prereq
+              </span>
+            )}
           </div>
           <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">{skill.description}</p>
+          {hasUnmetPrereqs && (
+            <p className="text-[10px] text-amber-400 mt-1">
+              Learn first: {unmetPrereqs.map(p => p.skill.name).join(", ")}
+            </p>
+          )}
         </div>
         <button
           onClick={onOpenDetail}
@@ -211,6 +239,24 @@ function SkillDetailModal({
           <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Why It Matters</h4>
           <p className="text-sm text-foreground leading-relaxed">{skill.whyItMatters}</p>
         </div>
+
+        {/* Prerequisites */}
+        {skill.prerequisites && skill.prerequisites.length > 0 && (
+          <div>
+            <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Prerequisites</h4>
+            <div className="flex flex-wrap gap-2">
+              {skill.prerequisites.map((prereqId) => {
+                const prereqSkill = SKILL_DOMAINS.flatMap(d => d.skills).find(s => s.id === prereqId);
+                return prereqSkill ? (
+                  <span key={prereqId} className="text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded px-2 py-1 flex items-center gap-1">
+                    <Link2 className="w-3 h-3" />
+                    {prereqSkill.name}
+                  </span>
+                ) : null;
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Practice Frequency */}
         <div className="flex items-center gap-2 bg-primary/5 border border-primary/20 rounded-lg px-3 py-2">
@@ -413,6 +459,31 @@ function DomainScoreCard({ domain, score }: { domain: SkillDomain; score: number
   );
 }
 
+// ─── CERT EXPIRATION HELPERS ────────────────────────────────────────
+function getDaysUntilExpiration(expirationDate: string): number {
+  const now = new Date();
+  const exp = new Date(expirationDate);
+  return Math.ceil((exp.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+function getCertStatusColor(expirationDate?: string): string {
+  if (!expirationDate) return "text-muted-foreground";
+  const days = getDaysUntilExpiration(expirationDate);
+  if (days < 0) return "text-gray-500 line-through";
+  if (days <= 30) return "text-red-500";
+  if (days <= 90) return "text-amber-500";
+  return "text-green-500";
+}
+
+function getCertStatusBg(expirationDate?: string): string {
+  if (!expirationDate) return "border-border";
+  const days = getDaysUntilExpiration(expirationDate);
+  if (days < 0) return "border-gray-500/30 bg-gray-500/5";
+  if (days <= 30) return "border-red-500/30 bg-red-500/5";
+  if (days <= 90) return "border-amber-500/30 bg-amber-500/5";
+  return "border-green-500/30 bg-green-500/5";
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════
@@ -430,8 +501,22 @@ export default function SkillsAnalyzer() {
   const [lastAssessed, setLastAssessed] = useState<string | null>(null);
   const [expandedDomain, setExpandedDomain] = useState<string | null>(null);
   const [detailSkill, setDetailSkill] = useState<{ skill: Skill; domain: SkillDomain } | null>(null);
-  const [activeResultTab, setActiveResultTab] = useState<"overview" | "gaps" | "roadmap" | "strengths">("overview");
+  const [activeResultTab, setActiveResultTab] = useState<ResultTab>("overview");
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Family assessment state
+  const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
+  const [showAddFamily, setShowAddFamily] = useState(false);
+  const [newFamilyName, setNewFamilyName] = useState("");
+  const [newFamilyRole, setNewFamilyRole] = useState<FamilyMember["role"]>("Spouse");
+
+  // Certification state
+  const [certifications, setCertifications] = useState<Certification[]>([]);
+  const [showAddCert, setShowAddCert] = useState(false);
+  const [newCertName, setNewCertName] = useState("");
+  const [newCertDate, setNewCertDate] = useState("");
+  const [newCertExpiration, setNewCertExpiration] = useState("");
+  const [newCertIsCustom, setNewCertIsCustom] = useState(false);
 
   const totalSkills = useMemo(() => getTotalSkillCount(), []);
   const ratedCount = useMemo(() => countRatedSkills(ratings), [ratings]);
@@ -444,6 +529,8 @@ export default function SkillsAnalyzer() {
         const data: SkillsAssessmentData = JSON.parse(stored);
         setRatings(data.ratings || {});
         setLastAssessed(data.lastAssessed || null);
+        if (data.familyMembers) setFamilyMembers(data.familyMembers);
+        if (data.certifications) setCertifications(data.certifications);
         // If they have existing ratings, skip the landing
         if (Object.keys(data.ratings || {}).length > 0) {
           setView("assess");
@@ -455,17 +542,22 @@ export default function SkillsAnalyzer() {
   }, []);
 
   const persist = useCallback(
-    (newRatings: Record<string, SkillLevel>) => {
+    (newRatings: Record<string, SkillLevel>, newFamily?: FamilyMember[], newCerts?: Certification[]) => {
       const now = new Date().toISOString();
       setLastAssessed(now);
-      const data: SkillsAssessmentData = { ratings: newRatings, lastAssessed: now };
+      const data: SkillsAssessmentData = {
+        ratings: newRatings,
+        lastAssessed: now,
+        familyMembers: newFamily ?? familyMembers,
+        certifications: newCerts ?? certifications,
+      };
       try {
         localStorage.setItem(SKILLS_STORAGE_KEY, JSON.stringify(data));
       } catch {
         // storage full — silently fail
       }
     },
-    [],
+    [familyMembers, certifications],
   );
 
   // ─── HANDLERS ─────────────────────────────────────────────────────
@@ -483,6 +575,8 @@ export default function SkillsAnalyzer() {
     if (!confirm("Reset all ratings? This cannot be undone.")) return;
     setRatings({});
     setLastAssessed(null);
+    setFamilyMembers([]);
+    setCertifications([]);
     localStorage.removeItem(SKILLS_STORAGE_KEY);
     setView("landing");
     trackEvent("pe_deadstock_reset", {});
@@ -499,12 +593,73 @@ export default function SkillsAnalyzer() {
     setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
   }, []);
 
+  // Family member handlers
+  const handleAddFamilyMember = useCallback(() => {
+    if (!newFamilyName.trim()) return;
+    const member: FamilyMember = {
+      id: `fam-${Date.now()}`,
+      name: newFamilyName.trim(),
+      role: newFamilyRole,
+      domainRatings: {},
+    };
+    const updated = [...familyMembers, member];
+    setFamilyMembers(updated);
+    persist(ratings, updated);
+    setNewFamilyName("");
+    setShowAddFamily(false);
+    trackEvent("pe_gear_added", { tool: "skills-analyzer", item: "family-member", category: newFamilyRole });
+  }, [newFamilyName, newFamilyRole, familyMembers, ratings, persist]);
+
+  const handleRemoveFamilyMember = useCallback((id: string) => {
+    const updated = familyMembers.filter(m => m.id !== id);
+    setFamilyMembers(updated);
+    persist(ratings, updated);
+  }, [familyMembers, ratings, persist]);
+
+  const handleFamilyDomainRate = useCallback((memberId: string, domainId: string, level: SkillLevel) => {
+    const updated = familyMembers.map(m =>
+      m.id === memberId ? { ...m, domainRatings: { ...m.domainRatings, [domainId]: level } } : m
+    );
+    setFamilyMembers(updated);
+    persist(ratings, updated);
+  }, [familyMembers, ratings, persist]);
+
+  // Certification handlers
+  const handleAddCertification = useCallback(() => {
+    if (!newCertName.trim() || !newCertDate) return;
+    const cert: Certification = {
+      id: `cert-${Date.now()}`,
+      name: newCertName.trim(),
+      dateObtained: newCertDate,
+      expirationDate: newCertExpiration || undefined,
+      isCustom: newCertIsCustom,
+    };
+    const updated = [...certifications, cert];
+    setCertifications(updated);
+    persist(ratings, undefined, updated);
+    setNewCertName("");
+    setNewCertDate("");
+    setNewCertExpiration("");
+    setNewCertIsCustom(false);
+    setShowAddCert(false);
+    trackEvent("pe_gear_added", { tool: "skills-analyzer", item: "certification", category: newCertName });
+  }, [newCertName, newCertDate, newCertExpiration, newCertIsCustom, certifications, ratings, persist]);
+
+  const handleRemoveCertification = useCallback((id: string) => {
+    const updated = certifications.filter(c => c.id !== id);
+    setCertifications(updated);
+    persist(ratings, undefined, updated);
+  }, [certifications, ratings, persist]);
+
   // ─── COMPUTED ─────────────────────────────────────────────────────
   const readinessScore = useMemo(() => calculateReadinessScore(ratings), [ratings]);
   const domainScores = useMemo(() => calculateDomainScores(ratings), [ratings]);
   const criticalGaps = useMemo(() => getCriticalGaps(ratings), [ratings]);
   const strongestSkills = useMemo(() => getStrongestSkills(ratings), [ratings]);
   const trainingRoadmap = useMemo(() => getTrainingRoadmap(ratings), [ratings]);
+  const weakestScenarios = useMemo(() => getWeakestScenarios(ratings), [ratings]);
+  const prereqSuggestions = useMemo(() => getPrerequisiteSuggestions(ratings), [ratings]);
+  const trainingPlan = useMemo(() => generateTrainingPlan(ratings), [ratings]);
 
   const donutSegments = useMemo(
     () =>
@@ -515,6 +670,80 @@ export default function SkillsAnalyzer() {
       })),
     [domainScores],
   );
+
+  // Barter value computations
+  const barterInsights = useMemo(() => {
+    const entries = Object.entries(DOMAIN_BARTER_VALUES).map(([domainId, info]) => ({
+      domainId,
+      ...info,
+      userScore: domainScores[domainId] || 0,
+      domain: SKILL_DOMAINS.find(d => d.id === domainId)!,
+    })).filter(e => e.domain);
+
+    const strongest = entries
+      .filter(e => e.userScore >= 2)
+      .sort((a, b) => b.userScore - a.userScore)[0];
+
+    const weakestHighValue = entries
+      .filter(e => e.tradeValue >= 7 && e.userScore < 2)
+      .sort((a, b) => b.tradeValue - a.tradeValue)[0];
+
+    return { entries, strongest, weakestHighValue };
+  }, [domainScores]);
+
+  // Family household analysis
+  const householdAnalysis = useMemo(() => {
+    if (familyMembers.length === 0) return null;
+
+    const allMembers = [
+      { name: "You", domainRatings: Object.fromEntries(SKILL_DOMAINS.map(d => [d.id, domainScores[d.id] || 0])) as Record<string, number> },
+      ...familyMembers.map(m => ({
+        name: m.name,
+        domainRatings: Object.fromEntries(SKILL_DOMAINS.map(d => [d.id, (m.domainRatings[d.id] ?? 0)])) as Record<string, number>,
+      })),
+    ];
+
+    // Who covers what best
+    const bestCoverage: Record<string, { name: string; score: number }> = {};
+    for (const domain of SKILL_DOMAINS) {
+      let bestName = "";
+      let bestScore = -1;
+      for (const member of allMembers) {
+        const score = member.domainRatings[domain.id] || 0;
+        if (score > bestScore) {
+          bestScore = score;
+          bestName = member.name;
+        }
+      }
+      bestCoverage[domain.id] = { name: bestName, score: bestScore };
+    }
+
+    // Critical household gaps (nobody above Basic)
+    const householdGaps = SKILL_DOMAINS.filter(domain => {
+      const maxScore = Math.max(...allMembers.map(m => m.domainRatings[domain.id] || 0));
+      return maxScore < 2;
+    });
+
+    // Aggregate household score
+    const aggregateScore = SKILL_DOMAINS.reduce((sum, domain) => {
+      const maxScore = Math.max(...allMembers.map(m => m.domainRatings[domain.id] || 0));
+      return sum + maxScore;
+    }, 0) / SKILL_DOMAINS.length;
+
+    return { allMembers, bestCoverage, householdGaps, aggregateScore };
+  }, [familyMembers, domainScores]);
+
+  // Cert alerts
+  const certAlerts = useMemo(() => {
+    return certifications
+      .filter(c => c.expirationDate)
+      .map(c => {
+        const days = getDaysUntilExpiration(c.expirationDate!);
+        return { cert: c, days };
+      })
+      .filter(a => a.days <= 90)
+      .sort((a, b) => a.days - b.days);
+  }, [certifications]);
 
   // ─── TOOL VIEW TRACKING ──────────────────────────────────────────
   useEffect(() => {
@@ -529,6 +758,20 @@ export default function SkillsAnalyzer() {
     const diff = Date.now() - new Date(lastAssessed).getTime();
     return Math.floor(diff / (1000 * 60 * 60 * 24));
   }, [lastAssessed]);
+
+  // ─── RESULT TABS CONFIG ───────────────────────────────────────────
+  const resultTabs: { id: ResultTab; label: string; icon: React.ElementType; shortLabel?: string }[] = [
+    { id: "overview", label: "Overview", icon: BarChart3 },
+    { id: "gaps", label: `Gaps (${criticalGaps.length})`, icon: AlertTriangle, shortLabel: "Gaps" },
+    { id: "roadmap", label: "Roadmap", icon: Target },
+    { id: "strengths", label: "Strengths", icon: Trophy },
+    { id: "scenarios", label: "Scenarios", icon: Siren },
+    { id: "family", label: "Family", icon: Users },
+    { id: "certs", label: "Certs", icon: Award },
+    { id: "training", label: "3-Mo Plan", icon: Calendar },
+    { id: "barter", label: "Barter", icon: TrendingUp },
+    { id: "dependencies", label: "Skill Tree", icon: Link2 },
+  ];
 
   // ─── LANDING VIEW ────────────────────────────────────────────────
   if (view === "landing") {
@@ -663,6 +906,16 @@ export default function SkillsAnalyzer() {
               )}
             </p>
           )}
+          {/* Cert alerts in header */}
+          {certAlerts.length > 0 && view === "assess" && (
+            <div className="mt-2 space-y-1">
+              {certAlerts.slice(0, 2).map(({ cert, days }) => (
+                <p key={cert.id} className={`text-xs font-semibold ${days < 0 ? "text-gray-500" : days <= 30 ? "text-red-500" : "text-amber-500"}`}>
+                  {days < 0 ? `${cert.name} expired ${Math.abs(days)} days ago` : `${cert.name} expires in ${days} days`}
+                </p>
+              ))}
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-2 no-print">
           {ratedCount >= MIN_SKILLS_FOR_RESULTS && (
@@ -771,6 +1024,7 @@ export default function SkillsAnalyzer() {
                             rating={ratings[skill.id]}
                             onRate={(level) => handleRate(skill.id, level)}
                             onOpenDetail={() => setDetailSkill({ skill, domain })}
+                            ratings={ratings}
                           />
                         ))}
                       </div>
@@ -812,27 +1066,25 @@ export default function SkillsAnalyzer() {
             </p>
           </div>
 
-          {/* Result Tabs */}
-          <div className="flex gap-1 bg-muted rounded-lg p-1 no-print">
-            {([
-              { id: "overview" as const, label: "Overview", icon: BarChart3 },
-              { id: "gaps" as const, label: `Gaps (${criticalGaps.length})`, icon: AlertTriangle },
-              { id: "roadmap" as const, label: "Roadmap", icon: Target },
-              { id: "strengths" as const, label: "Strengths", icon: Trophy },
-            ]).map(({ id, label, icon: TabIcon }) => (
-              <button
-                key={id}
-                onClick={() => setActiveResultTab(id)}
-                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-md text-xs font-bold transition-all ${
-                  activeResultTab === id
-                    ? "bg-card text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <TabIcon className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">{label}</span>
-              </button>
-            ))}
+          {/* Result Tabs — scrollable on mobile */}
+          <div className="overflow-x-auto no-print">
+            <div className="flex gap-1 bg-muted rounded-lg p-1 min-w-max">
+              {resultTabs.map(({ id, label, icon: TabIcon, shortLabel }) => (
+                <button
+                  key={id}
+                  onClick={() => setActiveResultTab(id)}
+                  className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-md text-xs font-bold transition-all whitespace-nowrap ${
+                    activeResultTab === id
+                      ? "bg-card text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <TabIcon className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">{label}</span>
+                  <span className="sm:hidden">{shortLabel || label}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* ── OVERVIEW TAB ─────────────────────────────────────── */}
@@ -1094,6 +1346,698 @@ export default function SkillsAnalyzer() {
                   })}
                 </>
               )}
+            </div>
+          )}
+
+          {/* ── SCENARIOS TAB ────────────────────────────────────── */}
+          {activeResultTab === "scenarios" && (
+            <div className="space-y-4">
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <Siren className="w-4 h-4 text-red-500" />
+                  <h3 className="text-sm font-bold text-foreground">Your Weakest Scenarios</h3>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Based on your domain scores, these SHTF scenarios would expose your biggest skill gaps.
+                  Run them in the SHTF Simulator to see how your gaps play out in practice.
+                </p>
+              </div>
+
+              {weakestScenarios.length === 0 ? (
+                <div className="bg-card border border-border rounded-lg p-8 text-center">
+                  <Check className="w-10 h-10 text-green-500 mx-auto mb-3" />
+                  <h3 className="text-lg font-bold text-foreground">No Major Scenario Vulnerabilities</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Your domain scores are solid enough that no single scenario type poses an outsized risk. Keep training.
+                  </p>
+                </div>
+              ) : (
+                weakestScenarios.map((scenario) => {
+                  const domain = SKILL_DOMAINS.find(d => d.id === scenario.domainId);
+                  if (!domain) return null;
+                  const DomainIcon = DOMAIN_ICONS[domain.icon] || Brain;
+                  const score = domainScores[scenario.domainId] || 0;
+
+                  return (
+                    <div key={scenario.domainId} className="bg-card border border-red-500/20 rounded-lg p-5 space-y-3">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0">
+                          <Siren className="w-5 h-5 text-red-500" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-base font-bold text-foreground">{scenario.scenarioName}</h4>
+                          <div className="flex items-center gap-2 mt-1">
+                            <DomainIcon className="w-3.5 h-3.5" style={{ color: domain.color }} />
+                            <span className="text-xs text-muted-foreground">
+                              {domain.name} gap triggers this scenario — your score: <span className="font-bold" style={{ color: domain.color }}>{score.toFixed(1)}/5</span>
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                            {scenario.description}
+                          </p>
+                        </div>
+                      </div>
+                      <Link
+                        href={scenario.scenarioUrl}
+                        className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg px-4 py-2.5 transition-colors"
+                      >
+                        <Siren className="w-4 h-4 text-red-500" />
+                        <span className="text-sm font-bold text-foreground">Run this scenario to see how your gaps play out</span>
+                        <ArrowRight className="w-4 h-4 text-red-500 ml-auto" />
+                      </Link>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          )}
+
+          {/* ── FAMILY TAB ───────────────────────────────────────── */}
+          {activeResultTab === "family" && (
+            <div className="space-y-4">
+              <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <Users className="w-4 h-4 text-blue-500" />
+                  <h3 className="text-sm font-bold text-foreground">Family Assessment</h3>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Assess your household members at the domain level. See who covers what and where your family has critical gaps.
+                </p>
+              </div>
+
+              {/* Add Family Member */}
+              {showAddFamily ? (
+                <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+                  <h4 className="text-sm font-bold text-foreground">Add Family Member</h4>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-semibold text-muted-foreground">Name</label>
+                      <input
+                        type="text"
+                        value={newFamilyName}
+                        onChange={(e) => setNewFamilyName(e.target.value)}
+                        placeholder="e.g. Sarah"
+                        className="w-full mt-1 bg-muted border border-border rounded-md px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-muted-foreground">Role</label>
+                      <select
+                        value={newFamilyRole}
+                        onChange={(e) => setNewFamilyRole(e.target.value as FamilyMember["role"])}
+                        className="w-full mt-1 bg-muted border border-border rounded-md px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      >
+                        <option value="Spouse">Spouse</option>
+                        <option value="Child">Child</option>
+                        <option value="Parent">Parent</option>
+                        <option value="Sibling">Sibling</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={handleAddFamilyMember} className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs rounded-lg px-4 py-2 transition-colors">
+                      Add Member
+                    </button>
+                    <button onClick={() => setShowAddFamily(false)} className="bg-muted hover:bg-muted/80 text-foreground font-semibold text-xs rounded-lg px-4 py-2 transition-colors">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowAddFamily(true)}
+                  className="w-full border-2 border-dashed border-border hover:border-primary/40 rounded-lg p-4 flex items-center justify-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  Add Family Member
+                </button>
+              )}
+
+              {/* Family Member Cards */}
+              {familyMembers.map((member) => (
+                <div key={member.id} className="bg-card border border-border rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-bold text-foreground">{member.name}</h4>
+                      <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">{member.role}</span>
+                    </div>
+                    <button
+                      onClick={() => handleRemoveFamilyMember(member.id)}
+                      className="w-7 h-7 flex items-center justify-center rounded-md border border-border hover:border-red-500/40 hover:bg-red-500/5 transition-colors"
+                      title="Remove member"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-red-500" />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {SKILL_DOMAINS.map((domain) => {
+                      const DomainIcon = DOMAIN_ICONS[domain.icon] || Brain;
+                      const memberLevel = member.domainRatings[domain.id] as SkillLevel | undefined;
+                      return (
+                        <div key={domain.id} className="space-y-1">
+                          <div className="flex items-center gap-1">
+                            <DomainIcon className="w-3 h-3" style={{ color: domain.color }} />
+                            <span className="text-[10px] font-semibold text-muted-foreground truncate">{domain.name}</span>
+                          </div>
+                          <div className="flex gap-0.5">
+                            {([0, 1, 2, 3, 4, 5] as SkillLevel[]).map((level) => (
+                              <button
+                                key={level}
+                                onClick={() => handleFamilyDomainRate(member.id, domain.id, level)}
+                                className={`w-5 h-5 rounded text-[9px] font-bold transition-all ${
+                                  memberLevel === level
+                                    ? "text-white scale-110"
+                                    : "bg-muted text-muted-foreground hover:text-foreground"
+                                }`}
+                                style={memberLevel === level ? { backgroundColor: SKILL_LEVEL_COLORS[level] } : undefined}
+                              >
+                                {level}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+
+              {/* Household Analysis */}
+              {householdAnalysis && (
+                <div className="space-y-4">
+                  {/* Household Aggregate Score */}
+                  <div className="bg-card border border-blue-500/20 rounded-lg p-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Household Aggregate Score</h4>
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl font-extrabold text-foreground">{householdAnalysis.aggregateScore.toFixed(1)}</span>
+                      <span className="text-sm text-muted-foreground">/5 — Best member's score per domain, averaged</span>
+                    </div>
+                  </div>
+
+                  {/* Skill Coverage */}
+                  <div className="bg-card border border-border rounded-lg p-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">Household Skill Coverage</h4>
+                    <div className="space-y-2">
+                      {SKILL_DOMAINS.map((domain) => {
+                        const DomainIcon = DOMAIN_ICONS[domain.icon] || Brain;
+                        const coverage = householdAnalysis.bestCoverage[domain.id];
+                        return (
+                          <div key={domain.id} className="flex items-center gap-2 text-sm">
+                            <DomainIcon className="w-4 h-4 shrink-0" style={{ color: domain.color }} />
+                            <span className="text-foreground font-medium flex-1">{domain.name}</span>
+                            <span className="text-muted-foreground text-xs">{coverage.name}</span>
+                            <span className="font-bold text-xs" style={{ color: domain.color }}>{coverage.score.toFixed(1)}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Household Gaps */}
+                  {householdAnalysis.householdGaps.length > 0 && (
+                    <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <AlertTriangle className="w-4 h-4 text-red-500" />
+                        <h4 className="text-sm font-bold text-foreground">Household Critical Gaps</h4>
+                      </div>
+                      <div className="space-y-1">
+                        {householdAnalysis.householdGaps.map((domain) => (
+                          <p key={domain.id} className="text-xs text-red-400">
+                            Nobody in your household rates above Basic in <span className="font-bold">{domain.name}</span> — critical gap
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── CERTS TAB ────────────────────────────────────────── */}
+          {activeResultTab === "certs" && (
+            <div className="space-y-4">
+              <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <Award className="w-4 h-4 text-amber-500" />
+                  <h3 className="text-sm font-bold text-foreground">Certification Tracker</h3>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Track your certifications and licenses. Get alerts when they're about to expire so you never lapse.
+                </p>
+              </div>
+
+              {/* Cert Alerts */}
+              {certAlerts.length > 0 && (
+                <div className="space-y-2">
+                  {certAlerts.map(({ cert, days }) => (
+                    <div key={cert.id} className={`border rounded-lg p-3 ${days < 0 ? "border-gray-500/30 bg-gray-500/5" : days <= 30 ? "border-red-500/30 bg-red-500/5" : "border-amber-500/30 bg-amber-500/5"}`}>
+                      <p className={`text-sm font-bold ${days < 0 ? "text-gray-500" : days <= 30 ? "text-red-500" : "text-amber-500"}`}>
+                        {days < 0
+                          ? `Your ${cert.name} expired ${Math.abs(days)} days ago`
+                          : `Your ${cert.name} expires in ${days} day${days !== 1 ? "s" : ""}`
+                        }
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Add Cert */}
+              {showAddCert ? (
+                <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+                  <h4 className="text-sm font-bold text-foreground">Add Certification</h4>
+
+                  {/* Predefined list */}
+                  {!newCertIsCustom && (
+                    <div>
+                      <label className="text-xs font-semibold text-muted-foreground">Select Certification</label>
+                      <select
+                        value={newCertName}
+                        onChange={(e) => setNewCertName(e.target.value)}
+                        className="w-full mt-1 bg-muted border border-border rounded-md px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      >
+                        <option value="">Choose...</option>
+                        {PREDEFINED_CERTIFICATIONS.filter(pc => !certifications.some(c => c.name === pc.name)).map((pc) => (
+                          <option key={pc.name} value={pc.name}>{pc.name}</option>
+                        ))}
+                      </select>
+                      <button
+                        onClick={() => { setNewCertIsCustom(true); setNewCertName(""); }}
+                        className="text-xs text-primary font-semibold mt-2 hover:underline"
+                      >
+                        + Add custom certification
+                      </button>
+                    </div>
+                  )}
+
+                  {newCertIsCustom && (
+                    <div>
+                      <label className="text-xs font-semibold text-muted-foreground">Certification Name</label>
+                      <input
+                        type="text"
+                        value={newCertName}
+                        onChange={(e) => setNewCertName(e.target.value)}
+                        placeholder="e.g. Advanced Wilderness First Aid"
+                        className="w-full mt-1 bg-muted border border-border rounded-md px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      />
+                      <button
+                        onClick={() => { setNewCertIsCustom(false); setNewCertName(""); }}
+                        className="text-xs text-primary font-semibold mt-2 hover:underline"
+                      >
+                        Choose from list instead
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-semibold text-muted-foreground">Date Obtained</label>
+                      <input
+                        type="date"
+                        value={newCertDate}
+                        onChange={(e) => setNewCertDate(e.target.value)}
+                        className="w-full mt-1 bg-muted border border-border rounded-md px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-muted-foreground">Expiration Date (optional)</label>
+                      <input
+                        type="date"
+                        value={newCertExpiration}
+                        onChange={(e) => setNewCertExpiration(e.target.value)}
+                        className="w-full mt-1 bg-muted border border-border rounded-md px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleAddCertification}
+                      disabled={!newCertName.trim() || !newCertDate}
+                      className="bg-primary hover:bg-primary/90 disabled:opacity-40 text-primary-foreground font-bold text-xs rounded-lg px-4 py-2 transition-colors"
+                    >
+                      Add Certification
+                    </button>
+                    <button onClick={() => { setShowAddCert(false); setNewCertIsCustom(false); setNewCertName(""); }} className="bg-muted hover:bg-muted/80 text-foreground font-semibold text-xs rounded-lg px-4 py-2 transition-colors">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowAddCert(true)}
+                  className="w-full border-2 border-dashed border-border hover:border-primary/40 rounded-lg p-4 flex items-center justify-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Certification
+                </button>
+              )}
+
+              {/* Cert List */}
+              {certifications.length > 0 && (
+                <div className="space-y-2">
+                  {certifications.map((cert) => {
+                    const statusColor = getCertStatusColor(cert.expirationDate);
+                    const statusBg = getCertStatusBg(cert.expirationDate);
+                    const days = cert.expirationDate ? getDaysUntilExpiration(cert.expirationDate) : null;
+
+                    return (
+                      <div key={cert.id} className={`border rounded-lg p-4 ${statusBg}`}>
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <h4 className={`text-sm font-bold ${days !== null && days < 0 ? "text-gray-500 line-through" : "text-foreground"}`}>
+                              {cert.name}
+                            </h4>
+                            <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                              <span>Obtained: {new Date(cert.dateObtained).toLocaleDateString()}</span>
+                              {cert.expirationDate && (
+                                <span className={statusColor}>
+                                  {days !== null && days < 0
+                                    ? `Expired ${Math.abs(days)} days ago`
+                                    : days !== null
+                                    ? `Expires in ${days} day${days !== 1 ? "s" : ""}`
+                                    : ""}
+                                </span>
+                              )}
+                              {!cert.expirationDate && (
+                                <span className="text-green-500">No expiration</span>
+                              )}
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => handleRemoveCertification(cert.id)}
+                            className="w-7 h-7 flex items-center justify-center rounded-md border border-border hover:border-red-500/40 hover:bg-red-500/5 transition-colors shrink-0"
+                            title="Remove certification"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 text-muted-foreground" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {certifications.length === 0 && !showAddCert && (
+                <div className="bg-card border border-border rounded-lg p-8 text-center">
+                  <Award className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+                  <h3 className="text-lg font-bold text-foreground">No Certifications Yet</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Track your training certifications and get expiration alerts.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── 3-MONTH TRAINING PLAN TAB ────────────────────────── */}
+          {activeResultTab === "training" && (
+            <div className="space-y-4">
+              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <Calendar className="w-4 h-4 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">3-Month Seasonal Training Plan</h3>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Based on your skill gaps, here's a structured plan. Priority gaps come first, then intermediate improvements. Print it out and check off each item.
+                </p>
+              </div>
+
+              {trainingPlan.every(m => m.skills.length === 0) ? (
+                <div className="bg-card border border-border rounded-lg p-8 text-center">
+                  <Star className="w-10 h-10 text-amber-500 mx-auto mb-3" />
+                  <h3 className="text-lg font-bold text-foreground">No Training Needed</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Your skills are well-developed. Keep practicing and re-assess quarterly.
+                  </p>
+                </div>
+              ) : (
+                trainingPlan.map((month) => (
+                  <div key={month.month} className="bg-card border border-border rounded-lg overflow-hidden">
+                    <div className="bg-primary/5 border-b border-border px-4 py-3">
+                      <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-extrabold text-primary">
+                          {month.month}
+                        </span>
+                        Month {month.month}: {month.monthLabel}
+                      </h4>
+                    </div>
+
+                    {month.skills.length === 0 ? (
+                      <div className="p-4 text-center">
+                        <p className="text-xs text-muted-foreground">No additional skills to prioritize this month.</p>
+                      </div>
+                    ) : (
+                      <div className="p-4 space-y-4">
+                        {month.skills.map(({ skill, domain, currentLevel, targetLevel, actionItems, estimatedTime, seasonalNote }) => {
+                          const DomainIcon = DOMAIN_ICONS[domain.icon] || Brain;
+                          return (
+                            <div key={skill.id} className="border border-border rounded-lg p-3 space-y-2">
+                              <div className="flex items-start gap-2">
+                                <DomainIcon className="w-4 h-4 shrink-0 mt-0.5" style={{ color: domain.color }} />
+                                <div className="flex-1">
+                                  <h5 className="text-sm font-bold text-foreground">{skill.name}</h5>
+                                  <div className="flex items-center gap-2 text-xs mt-0.5">
+                                    <span className="text-muted-foreground">Rated</span>
+                                    <span className="font-bold" style={{ color: SKILL_LEVEL_COLORS[currentLevel] }}>{currentLevel}</span>
+                                    <ArrowRight className="w-3 h-3 text-muted-foreground" />
+                                    <span className="text-muted-foreground">Target</span>
+                                    <span className="font-bold" style={{ color: SKILL_LEVEL_COLORS[targetLevel] }}>{targetLevel}</span>
+                                    <span className="text-muted-foreground ml-2 flex items-center gap-1">
+                                      <Clock className="w-3 h-3" />
+                                      {estimatedTime}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Action Items — print-friendly checkboxes */}
+                              <div className="space-y-1.5 ml-6">
+                                {actionItems.map((item, i) => (
+                                  <div key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                                    <div className="w-4 h-4 rounded border border-border mt-0.5 shrink-0 flex items-center justify-center print:border-gray-400">
+                                      {/* empty checkbox for print */}
+                                    </div>
+                                    <span>{item}</span>
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Seasonal Note */}
+                              {seasonalNote && (
+                                <div className="ml-6 flex items-start gap-1.5 text-[10px] text-amber-500 bg-amber-500/5 border border-amber-500/10 rounded px-2 py-1">
+                                  <Calendar className="w-3 h-3 shrink-0 mt-0.5" />
+                                  <span>{seasonalNote}</span>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+
+              {/* Print button for training plan */}
+              <button
+                onClick={() => window.print()}
+                className="w-full flex items-center justify-center gap-2 bg-muted hover:bg-muted/80 text-foreground font-semibold text-sm rounded-lg py-3 transition-colors no-print"
+              >
+                <Printer className="w-4 h-4" />
+                Print Training Plan
+              </button>
+            </div>
+          )}
+
+          {/* ── BARTER VALUE TAB ─────────────────────────────────── */}
+          {activeResultTab === "barter" && (
+            <div className="space-y-4">
+              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <TrendingUp className="w-4 h-4 text-emerald-500" />
+                  <h3 className="text-sm font-bold text-foreground">Skill Trade Value</h3>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  In a long-term disruption, skills become currency. Here's what your skill domains are worth in trade at Day 30.
+                </p>
+                <p className="text-xs text-emerald-500 font-semibold mt-2 italic">
+                  "Skills never run out. You can trade a can of beans once. You can trade electrical repair forever."
+                </p>
+              </div>
+
+              {/* Trade Value Grid */}
+              <div className="space-y-2">
+                {barterInsights.entries
+                  .sort((a, b) => b.tradeValue - a.tradeValue)
+                  .map((entry) => {
+                    const DomainIcon = DOMAIN_ICONS[entry.domain.icon] || Brain;
+                    return (
+                      <div key={entry.domainId} className="bg-card border border-border rounded-lg p-4">
+                        <div className="flex items-center gap-3">
+                          <DomainIcon className="w-5 h-5 shrink-0" style={{ color: entry.domain.color }} />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-bold text-foreground">{entry.domain.name}</span>
+                              <span className="text-xs text-muted-foreground">Your score: <span className="font-bold" style={{ color: entry.domain.color }}>{entry.userScore.toFixed(1)}</span></span>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground mt-0.5">{entry.description}</p>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <div className="text-lg font-extrabold text-foreground">{entry.tradeValue}/10</div>
+                            <span className="text-[10px] text-muted-foreground">Trade Value</span>
+                          </div>
+                        </div>
+                        {/* Trade value bar */}
+                        <div className="h-1.5 bg-muted rounded-full overflow-hidden mt-2">
+                          <div
+                            className="h-full rounded-full transition-all"
+                            style={{ width: `${entry.tradeValue * 10}%`, backgroundColor: entry.domain.color }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+
+              {/* Insights */}
+              <div className="space-y-3">
+                {barterInsights.strongest && (
+                  <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+                    <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                      <Trophy className="w-4 h-4 text-green-500" />
+                      Your Strongest Tradeable Skill
+                    </h4>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      <span className="font-bold text-foreground">{barterInsights.strongest.domain.name}</span> (rated {barterInsights.strongest.userScore.toFixed(1)}/5) — trade value at Day 30: <span className="font-bold text-green-500">{barterInsights.strongest.tradeValue}/10</span>
+                    </p>
+                  </div>
+                )}
+
+                {barterInsights.weakestHighValue && (
+                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
+                    <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-amber-500" />
+                      High-Value Skill Worth Investing In
+                    </h4>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      <span className="font-bold text-foreground">{barterInsights.weakestHighValue.domain.name}</span> has trade value <span className="font-bold text-amber-500">{barterInsights.weakestHighValue.tradeValue}/10</span> but you're only rated {barterInsights.weakestHighValue.userScore.toFixed(1)}/5 — worth investing in.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Link to barter estimator */}
+              <Link
+                href="/tools/barter-value-estimator"
+                className="flex items-center gap-2 bg-card border border-border hover:border-primary/40 rounded-lg px-4 py-3 transition-colors group"
+              >
+                <TrendingUp className="w-5 h-5 text-primary" />
+                <div className="flex-1">
+                  <span className="text-sm font-bold text-foreground group-hover:text-primary">Barter & Trade Value Estimator</span>
+                  <p className="text-xs text-muted-foreground">See what physical goods and supplies are worth in trade</p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
+              </Link>
+            </div>
+          )}
+
+          {/* ── SKILL DEPENDENCIES TAB ───────────────────────────── */}
+          {activeResultTab === "dependencies" && (
+            <div className="space-y-4">
+              <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <Link2 className="w-4 h-4 text-purple-500" />
+                  <h3 className="text-sm font-bold text-foreground">Skill Tree & Dependencies</h3>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Some skills build on others. This shows prerequisite chains — skills you should learn at a Basic level (2+) before moving to dependent skills.
+                </p>
+              </div>
+
+              {/* Prerequisite Suggestions */}
+              {prereqSuggestions.length > 0 && (
+                <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 space-y-2">
+                  <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <ArrowRight className="w-4 h-4 text-green-500" />
+                    Natural Next Steps
+                  </h4>
+                  {prereqSuggestions.map(({ skill, domain, prereqName }) => (
+                    <p key={skill.id} className="text-xs text-muted-foreground">
+                      You rated <span className="font-bold text-green-500">{prereqName}</span> as 3+ but <span className="font-bold text-foreground">{skill.name}</span> as 0 — {skill.name.toLowerCase()} is your natural next step.
+                    </p>
+                  ))}
+                </div>
+              )}
+
+              {/* Dependency Chains */}
+              {SKILL_DOMAINS.map((domain) => {
+                const DomainIcon = DOMAIN_ICONS[domain.icon] || Brain;
+                const skillsWithPrereqs = domain.skills.filter(s => s.prerequisites && s.prerequisites.length > 0);
+                if (skillsWithPrereqs.length === 0) return null;
+
+                return (
+                  <div key={domain.id} className="bg-card border border-border rounded-lg overflow-hidden">
+                    <div className="flex items-center gap-2 px-4 py-3 bg-muted/30 border-b border-border">
+                      <DomainIcon className="w-4 h-4" style={{ color: domain.color }} />
+                      <span className="text-sm font-bold text-foreground">{domain.name}</span>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      {skillsWithPrereqs.map((skill) => {
+                        const unmet = getUnmetPrerequisites(skill.id, ratings);
+                        const currentLevel = ratings[skill.id];
+                        const allMet = unmet.length === 0;
+
+                        return (
+                          <div key={skill.id} className={`border rounded-lg p-3 ${allMet ? "border-green-500/20" : "border-amber-500/20"}`}>
+                            <div className="flex items-center gap-2 mb-2">
+                              <h5 className="text-sm font-bold text-foreground">{skill.name}</h5>
+                              {currentLevel !== undefined && (
+                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white" style={{ backgroundColor: SKILL_LEVEL_COLORS[currentLevel] }}>
+                                  {currentLevel}
+                                </span>
+                              )}
+                              {allMet ? (
+                                <span className="text-[10px] font-semibold text-green-500 flex items-center gap-1">
+                                  <Check className="w-3 h-3" /> Prerequisites met
+                                </span>
+                              ) : (
+                                <span className="text-[10px] font-semibold text-amber-500 flex items-center gap-1">
+                                  <AlertTriangle className="w-3 h-3" /> {unmet.length} unmet
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              {skill.prerequisites!.map((prereqId) => {
+                                const prereqSkill = SKILL_DOMAINS.flatMap(d => d.skills).find(s => s.id === prereqId);
+                                const prereqLevel = ratings[prereqId];
+                                const met = prereqLevel !== undefined && prereqLevel >= 2;
+                                return prereqSkill ? (
+                                  <div key={prereqId} className="flex items-center gap-1">
+                                    <span className={`text-[10px] font-semibold px-2 py-1 rounded border flex items-center gap-1 ${
+                                      met
+                                        ? "bg-green-500/10 text-green-500 border-green-500/20"
+                                        : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                                    }`}>
+                                      {met ? <Check className="w-2.5 h-2.5" /> : <AlertTriangle className="w-2.5 h-2.5" />}
+                                      {prereqSkill.name}
+                                      {prereqLevel !== undefined && ` (${prereqLevel})`}
+                                    </span>
+                                    <ArrowRight className="w-3 h-3 text-muted-foreground" />
+                                  </div>
+                                ) : null;
+                              })}
+                              <span className="text-[10px] font-bold text-foreground">{skill.name}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
 

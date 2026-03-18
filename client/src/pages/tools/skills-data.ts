@@ -38,6 +38,8 @@ export interface Skill {
   practiceFrequency: string;
   /** Weight multiplier for readiness score (1 = normal, 1.5 = important, 2 = critical) */
   weight: number;
+  /** Skill IDs that should be rated 2+ before this skill is useful */
+  prerequisites?: string[];
 }
 
 export interface SkillDomain {
@@ -51,10 +53,77 @@ export interface SkillDomain {
 
 export const SKILLS_STORAGE_KEY = "pe-skills-assessment";
 
+export interface FamilyMember {
+  id: string;
+  name: string;
+  role: "Spouse" | "Child" | "Parent" | "Sibling" | "Other";
+  domainRatings: Record<string, SkillLevel>;
+}
+
+export interface Certification {
+  id: string;
+  name: string;
+  dateObtained: string; // ISO date
+  expirationDate?: string; // ISO date, optional — some don't expire
+  isCustom?: boolean;
+}
+
 export interface SkillsAssessmentData {
   ratings: Record<string, SkillLevel>;
   lastAssessed: string; // ISO date
+  familyMembers?: FamilyMember[];
+  certifications?: Certification[];
 }
+
+// ─── PREDEFINED CERTIFICATIONS ─────────────────────────────────────
+export const PREDEFINED_CERTIFICATIONS: { name: string; hasExpiration: boolean }[] = [
+  { name: "CPR / First Aid (American Red Cross)", hasExpiration: true },
+  { name: "Stop the Bleed", hasExpiration: true },
+  { name: "Wilderness First Aid (WFA)", hasExpiration: true },
+  { name: "Wilderness First Responder (WFR)", hasExpiration: true },
+  { name: "HAM Radio Technician License", hasExpiration: true },
+  { name: "HAM Radio General License", hasExpiration: true },
+  { name: "CERT (Community Emergency Response Team)", hasExpiration: false },
+  { name: "Hunter Safety", hasExpiration: false },
+  { name: "Concealed Carry Permit", hasExpiration: true },
+  { name: "Defensive Driving", hasExpiration: true },
+  { name: "FEMA ICS-100", hasExpiration: false },
+  { name: "FEMA IS-700", hasExpiration: false },
+  { name: "Lifeguard Certification", hasExpiration: true },
+  { name: "Food Handler's Permit", hasExpiration: true },
+  { name: "Fire Extinguisher Training", hasExpiration: true },
+];
+
+// ─── SCENARIO MAPPING ──────────────────────────────────────────────
+export interface ScenarioMatch {
+  domainId: string;
+  scenarioName: string;
+  scenarioUrl: string;
+  description: string;
+}
+
+export const SCENARIO_DOMAIN_MAP: ScenarioMatch[] = [
+  { domainId: "water", scenarioName: "Coordinated Infrastructure Attack", scenarioUrl: "/tools/shtf-simulator", description: "Water systems are prime targets in infrastructure attacks. Your water domain gaps leave you vulnerable." },
+  { domainId: "medical", scenarioName: "Severe Pandemic", scenarioUrl: "/tools/shtf-simulator", description: "Medical knowledge is the difference between life and death when hospitals are overwhelmed." },
+  { domainId: "power", scenarioName: "EMP Strike", scenarioUrl: "/tools/shtf-simulator", description: "An EMP takes out the grid indefinitely. Your power gaps mean darkness and no comms." },
+  { domainId: "food", scenarioName: "Supply Chain Siege", scenarioUrl: "/tools/shtf-simulator", description: "When grocery shelves empty and stay empty, food skills become survival skills." },
+  { domainId: "security", scenarioName: "Civil Unrest", scenarioUrl: "/tools/shtf-simulator", description: "Security gaps are exploited fastest when social order breaks down." },
+  { domainId: "nav-comm", scenarioName: "Power Grid Failure", scenarioUrl: "/tools/shtf-simulator", description: "No grid means no GPS, no cell service, no internet. Can you navigate and communicate analog?" },
+  { domainId: "vehicle", scenarioName: "Cascading Natural Disaster", scenarioUrl: "/tools/shtf-simulator", description: "Vehicle and mobility skills determine whether you evacuate or get stuck in the danger zone." },
+  { domainId: "shelter", scenarioName: "Winter Storm", scenarioUrl: "/tools/shtf-simulator", description: "Shelter and warmth gaps are lethal when temperatures drop and power stays off." },
+];
+
+// ─── BARTER TRADE VALUES ───────────────────────────────────────────
+export const DOMAIN_BARTER_VALUES: Record<string, { tradeValue: number; description: string }> = {
+  medical: { tradeValue: 9, description: "Highest demand skill in any crisis. People will trade anything to save a life." },
+  food: { tradeValue: 8, description: "Growing, preserving, and producing food is a renewable trade asset." },
+  power: { tradeValue: 8, description: "Electrical repair and solar setup skills keep communities running." },
+  water: { tradeValue: 7, description: "Water purification and well knowledge saves entire neighborhoods." },
+  shelter: { tradeValue: 7, description: "Construction and repair skills keep people warm and safe." },
+  vehicle: { tradeValue: 7, description: "Mechanical skills keep transportation and generators functional." },
+  security: { tradeValue: 6, description: "Security planning and community organization have situational value." },
+  "nav-comm": { tradeValue: 5, description: "Navigation and radio skills are valuable but less in constant demand." },
+};
 
 // ─── DOMAIN 1: WATER ────────────────────────────────────────────────
 const waterSkills: Skill[] = [
@@ -102,6 +171,7 @@ const waterSkills: Skill[] = [
     difficulty: "beginner",
     practiceFrequency: "Quarterly — practice different methods",
     weight: 2,
+    prerequisites: ["water-filtration"],
   },
   {
     id: "water-storage",
@@ -156,6 +226,7 @@ const waterSkills: Skill[] = [
     difficulty: "intermediate",
     practiceFrequency: "Quarterly — test your stored and sourced water",
     weight: 1,
+    prerequisites: ["water-filtration", "water-purification"],
   },
   {
     id: "greywater-management",
@@ -215,6 +286,7 @@ const foodSkills: Skill[] = [
     difficulty: "intermediate",
     practiceFrequency: "Seasonal — save seeds at end of growing season",
     weight: 1,
+    prerequisites: ["gardening"],
   },
   {
     id: "hunting",
@@ -283,6 +355,7 @@ const foodSkills: Skill[] = [
     difficulty: "beginner",
     practiceFrequency: "Monthly — cook at least one meal without power",
     weight: 1.5,
+    prerequisites: ["fire-starting", "fire-management"],
   },
   {
     id: "food-preservation-adv",
@@ -296,6 +369,7 @@ const foodSkills: Skill[] = [
     difficulty: "intermediate",
     practiceFrequency: "Monthly — practice different preservation methods",
     weight: 1,
+    prerequisites: ["hunting", "fishing"],
   },
 ];
 
@@ -356,6 +430,7 @@ const shelterSkills: Skill[] = [
     difficulty: "beginner",
     practiceFrequency: "Every camping trip",
     weight: 1,
+    prerequisites: ["fire-starting"],
   },
   {
     id: "insulation-layering",
@@ -441,6 +516,7 @@ const medicalSkills: Skill[] = [
     difficulty: "advanced",
     practiceFrequency: "Quarterly — practice on suture pads",
     weight: 1,
+    prerequisites: ["basic-first-aid"],
   },
   {
     id: "tourniquet",
@@ -455,6 +531,7 @@ const medicalSkills: Skill[] = [
     difficulty: "beginner",
     practiceFrequency: "Monthly — practice one-handed application",
     weight: 2,
+    prerequisites: ["basic-first-aid"],
   },
   {
     id: "cpr-aed",
@@ -468,6 +545,7 @@ const medicalSkills: Skill[] = [
     difficulty: "beginner",
     practiceFrequency: "Every 2 years — recertify",
     weight: 2,
+    prerequisites: ["basic-first-aid"],
   },
   {
     id: "splinting",
@@ -564,6 +642,7 @@ const navCommSkills: Skill[] = [
     difficulty: "intermediate",
     practiceFrequency: "Monthly — practice bearing and triangulation",
     weight: 1.5,
+    prerequisites: ["map-reading"],
   },
   {
     id: "gps-nav",
@@ -578,6 +657,7 @@ const navCommSkills: Skill[] = [
     difficulty: "beginner",
     practiceFrequency: "Every trip — download offline maps before going",
     weight: 1,
+    prerequisites: ["map-reading", "compass-nav"],
   },
   {
     id: "ham-radio",
@@ -592,6 +672,7 @@ const navCommSkills: Skill[] = [
     difficulty: "intermediate",
     practiceFrequency: "Weekly — get on the air and practice",
     weight: 1.5,
+    prerequisites: ["gmrs-frs"],
   },
   {
     id: "gmrs-frs",
@@ -631,6 +712,7 @@ const navCommSkills: Skill[] = [
     difficulty: "intermediate",
     practiceFrequency: "Weekly — 5 minutes of practice",
     weight: 0.5,
+    prerequisites: ["ham-radio"],
   },
   {
     id: "pace-planning",
@@ -674,6 +756,7 @@ const securitySkills: Skill[] = [
     difficulty: "intermediate",
     practiceFrequency: "Monthly — check battery and function",
     weight: 1,
+    prerequisites: ["home-security-assessment"],
   },
   {
     id: "situational-awareness",
@@ -700,6 +783,7 @@ const securitySkills: Skill[] = [
     difficulty: "intermediate",
     practiceFrequency: "Ongoing — practice in daily interactions",
     weight: 1.5,
+    prerequisites: ["situational-awareness"],
   },
   {
     id: "firearms-safety",
@@ -726,6 +810,7 @@ const securitySkills: Skill[] = [
     difficulty: "intermediate",
     practiceFrequency: "Weekly — consistency beats intensity",
     weight: 1,
+    prerequisites: ["situational-awareness", "conflict-deescalation"],
   },
   {
     id: "opsec",
@@ -752,6 +837,7 @@ const securitySkills: Skill[] = [
     difficulty: "intermediate",
     practiceFrequency: "Monthly — neighborhood meetings, quarterly drills",
     weight: 1,
+    prerequisites: ["home-security-assessment", "perimeter-monitoring"],
   },
   {
     id: "vehicle-security",
@@ -799,6 +885,7 @@ const powerSkills: Skill[] = [
     difficulty: "intermediate",
     practiceFrequency: "Monthly — check voltage, connections, and balance",
     weight: 1,
+    prerequisites: ["solar-setup"],
   },
   {
     id: "generator-ops",
@@ -842,6 +929,7 @@ const powerSkills: Skill[] = [
     difficulty: "beginner",
     practiceFrequency: "Once setup — test under actual load",
     weight: 0.75,
+    prerequisites: ["solar-setup", "battery-systems"],
   },
   {
     id: "emp-protection",
@@ -913,6 +1001,7 @@ const vehicleSkills: Skill[] = [
     difficulty: "beginner",
     practiceFrequency: "Quarterly — practice changing your spare",
     weight: 1.5,
+    prerequisites: ["basic-vehicle-maint"],
   },
   {
     id: "vehicle-recovery",
@@ -928,6 +1017,7 @@ const vehicleSkills: Skill[] = [
     difficulty: "intermediate",
     practiceFrequency: "Seasonal — practice rigging and recovery",
     weight: 1,
+    prerequisites: ["basic-vehicle-maint", "tire-change-repair"],
   },
   {
     id: "offroad-driving",
@@ -1213,4 +1303,160 @@ export function countRatedSkills(ratings: Record<string, SkillLevel>): number {
 /** Get total skill count */
 export function getTotalSkillCount(): number {
   return SKILL_DOMAINS.reduce((sum, d) => sum + d.skills.length, 0);
+}
+
+/** Find a skill by its ID across all domains */
+export function findSkillById(id: string): { skill: Skill; domain: SkillDomain } | null {
+  for (const domain of SKILL_DOMAINS) {
+    for (const skill of domain.skills) {
+      if (skill.id === id) return { skill, domain };
+    }
+  }
+  return null;
+}
+
+/** Get unmet prerequisites for a skill */
+export function getUnmetPrerequisites(skillId: string, ratings: Record<string, SkillLevel>): { skill: Skill; domain: SkillDomain; currentLevel: SkillLevel | undefined }[] {
+  const found = findSkillById(skillId);
+  if (!found || !found.skill.prerequisites) return [];
+
+  const unmet: { skill: Skill; domain: SkillDomain; currentLevel: SkillLevel | undefined }[] = [];
+  for (const prereqId of found.skill.prerequisites) {
+    const prereq = findSkillById(prereqId);
+    if (!prereq) continue;
+    const level = ratings[prereqId];
+    if (level === undefined || level < 2) {
+      unmet.push({ skill: prereq.skill, domain: prereq.domain, currentLevel: level });
+    }
+  }
+  return unmet;
+}
+
+/** Get prerequisite suggestions — skills where prereqs are met but skill is low */
+export function getPrerequisiteSuggestions(ratings: Record<string, SkillLevel>): { skill: Skill; domain: SkillDomain; prereqName: string }[] {
+  const suggestions: { skill: Skill; domain: SkillDomain; prereqName: string }[] = [];
+
+  for (const domain of SKILL_DOMAINS) {
+    for (const skill of domain.skills) {
+      if (!skill.prerequisites || skill.prerequisites.length === 0) continue;
+      const level = ratings[skill.id];
+      // Only suggest if this skill is rated low or unrated
+      if (level !== undefined && level >= 2) continue;
+
+      // Check if any prerequisite is well-rated (3+) but this skill is 0
+      for (const prereqId of skill.prerequisites) {
+        const prereqLevel = ratings[prereqId];
+        if (prereqLevel !== undefined && prereqLevel >= 3 && (level === undefined || level <= 0)) {
+          const prereq = findSkillById(prereqId);
+          if (prereq) {
+            suggestions.push({ skill, domain, prereqName: prereq.skill.name });
+          }
+        }
+      }
+    }
+  }
+
+  return suggestions.slice(0, 5);
+}
+
+/** Get weakest scenarios based on domain scores */
+export function getWeakestScenarios(ratings: Record<string, SkillLevel>): ScenarioMatch[] {
+  const domainScores = calculateDomainScores(ratings);
+
+  // Get domains with scores below 2.5 (below "Basic" average)
+  const weakDomains = SCENARIO_DOMAIN_MAP
+    .filter(s => {
+      const score = domainScores[s.domainId] || 0;
+      return score < 2.5;
+    })
+    .sort((a, b) => (domainScores[a.domainId] || 0) - (domainScores[b.domainId] || 0));
+
+  return weakDomains.slice(0, 3);
+}
+
+/** Generate a 3-month seasonal training plan based on gaps */
+export function generateTrainingPlan(ratings: Record<string, SkillLevel>): {
+  month: number;
+  monthLabel: string;
+  skills: {
+    skill: Skill;
+    domain: SkillDomain;
+    currentLevel: SkillLevel;
+    targetLevel: SkillLevel;
+    actionItems: string[];
+    estimatedTime: string;
+    seasonalNote?: string;
+  }[];
+}[] {
+  const now = new Date();
+  const currentMonth = now.getMonth(); // 0-11
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+  // Get the roadmap items and expand to 9 items
+  const roadmap = getTrainingRoadmap(ratings);
+
+  const plan: ReturnType<typeof generateTrainingPlan> = [];
+
+  for (let m = 0; m < 3; m++) {
+    const monthIndex = (currentMonth + m) % 12;
+    const monthLabel = monthNames[monthIndex];
+    const monthSkills = roadmap.slice(m * 3, m * 3 + 3);
+
+    const isColdMonth = monthIndex >= 10 || monthIndex <= 2; // Nov-Feb
+    const isWarmMonth = monthIndex >= 4 && monthIndex <= 8; // May-Sep
+
+    const skills = monthSkills.map(({ skill, domain, level }) => {
+      const targetLevel = Math.min(5, level + 2) as SkillLevel;
+      const actionItems: string[] = [];
+      let estimatedTime = "2-3 hours";
+      let seasonalNote: string | undefined;
+
+      // Generate action items based on skill difficulty and level
+      if (level <= 1) {
+        actionItems.push(`Research ${skill.name.toLowerCase()} fundamentals online or through the resources below`);
+        if (skill.learningResources.find(r => r.type === "course")) {
+          actionItems.push("Enroll in a structured course for hands-on training");
+        } else if (skill.learningResources.find(r => r.type === "video")) {
+          actionItems.push("Watch instructional videos and take notes on key techniques");
+        }
+        actionItems.push(`Practice ${skill.name.toLowerCase()} in a safe, controlled environment`);
+        estimatedTime = skill.difficulty === "beginner" ? "2-3 hours" : "4-6 hours";
+      } else if (level === 2) {
+        actionItems.push(`Advance your ${skill.name.toLowerCase()} skills with more challenging scenarios`);
+        actionItems.push("Practice with a partner or group for accountability and feedback");
+        if (skill.learningResources.find(r => r.type === "book")) {
+          actionItems.push("Read a deep-dive book to fill knowledge gaps");
+        }
+        estimatedTime = "3-5 hours";
+      } else {
+        actionItems.push(`Teach ${skill.name.toLowerCase()} to a family member or friend — teaching locks in mastery`);
+        actionItems.push("Practice under realistic stress conditions (time pressure, weather, fatigue)");
+        actionItems.push("Develop a checklist or SOP others can follow");
+        estimatedTime = "2-4 hours";
+      }
+
+      // Seasonal notes
+      if (skill.id.includes("fire") && isColdMonth) {
+        seasonalNote = "Great time to practice — cold weather fire starting builds real confidence";
+      } else if (skill.id.includes("fire") && isWarmMonth) {
+        seasonalNote = "Check local fire restrictions before outdoor practice";
+      } else if (skill.id.includes("garden") && isWarmMonth) {
+        seasonalNote = "Peak growing season — hands-on practice is most effective now";
+      } else if (skill.id.includes("garden") && isColdMonth) {
+        seasonalNote = "Plan your spring garden now — seed catalogs and indoor starts";
+      } else if (skill.id.includes("water") && isWarmMonth) {
+        seasonalNote = "Practice water sourcing and filtration on summer hikes and camping trips";
+      } else if ((skill.id.includes("shelter") || skill.id.includes("insulation") || skill.id.includes("heating") || skill.id.includes("weatherproofing")) && isColdMonth) {
+        seasonalNote = "Perfect timing — test your shelter and heating skills when it matters most";
+      } else if (skill.id.includes("solar") && isWarmMonth) {
+        seasonalNote = "Maximum sun hours — ideal for testing and optimizing solar setups";
+      }
+
+      return { skill, domain, currentLevel: level, targetLevel, actionItems, estimatedTime, seasonalNote };
+    });
+
+    plan.push({ month: m + 1, monthLabel, skills });
+  }
+
+  return plan;
 }
