@@ -38,6 +38,7 @@ import Deadstock from "@/pages/tools/Deadstock";
 import BarterEstimator from "@/pages/tools/BarterEstimator";
 import TentFinder from "@/pages/tools/TentFinder";
 import GearFinder from "@/pages/tools/GearFinder";
+import SkillsAnalyzer from "@/pages/tools/SkillsAnalyzer";
 import Quiz from "@/pages/Quiz";
 import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
@@ -96,6 +97,7 @@ function Router() {
             <Route path="/tools/barter-value-estimator" component={BarterEstimator} />
             <Route path="/tools/tent-finder" component={TentFinder} />
             <Route path="/tools/gear-finder" component={GearFinder} />
+            <Route path="/tools/skills-tracker" component={SkillsAnalyzer} />
             <Route path="/quiz" component={Quiz} />
             <Route path="/contact" component={Contact} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />

@@ -210,7 +210,9 @@ const opsDeckTools: Tool[] = [
     description:
       "Self-assess 60+ survival and overlanding skills across 8 domains. Get a personalized skill roadmap, priority training recommendations, and curated learning resources.",
     icon: Brain,
-    status: "coming-soon",
+    status: "live",
+    badge: "New",
+    version: "v1.0",
     cta: "Assess Skills",
   },
   {
