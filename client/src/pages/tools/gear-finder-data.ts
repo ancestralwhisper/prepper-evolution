@@ -21,7 +21,8 @@ export type GearCategory =
   | "insulation"
   | "trekking-poles"
   | "headlamps"
-  | "accessories";
+  | "accessories"
+  | "shelters";
 
 export interface GearProduct {
   id: string;
@@ -52,6 +53,7 @@ export const categoryMeta: Record<GearCategory, { label: string; shortLabel: str
   "trekking-poles": { label: "Trekking Poles",      shortLabel: "Poles",      icon: "ArrowUpDown" },
   headlamps:        { label: "Headlamps",           shortLabel: "Lamps",      icon: "Lightbulb" },
   accessories:      { label: "Accessories",         shortLabel: "Acc.",       icon: "Package" },
+  shelters:         { label: "Shelters & Canopies", shortLabel: "Shelters",   icon: "Warehouse" },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1753,6 +1755,240 @@ export const accessories: GearProduct[] = [
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════════
+//  SHELTERS & CANOPIES
+// ═══════════════════════════════════════════════════════════════════════════════
+export const shelters: GearProduct[] = [
+  // ─── Screen Room Shelters ────────────────────────────────────────────────────
+  {
+    id: "clam-escape",
+    category: "shelters",
+    brand: "Clam",
+    model: "Quick-Set Escape",
+    weightOz: 592, // 37 lbs
+    price: 350,
+    affiliateUrl: "https://www.amazon.com/dp/B00TMBENDS?tag=prepperevo-20",
+    description: "6-sided pop-up screen shelter with 94 sq ft of coverage and 90-inch center height. 210D poly-oxford fabric with taped seams and no-see-um mesh. Sets up in about 45 seconds flat.",
+    bestFor: "Camp living room — keeps bugs out while you eat, hang out, or play cards",
+    pros: ["45-second setup is no joke", "No-see-um mesh keeps even tiny bugs out", "Wind panels available separately for storm protection"],
+    cons: ["37 lbs is a lot to haul", "Wind panels sold separately", "Fiberglass poles flex hard in real wind"],
+    specs: { type: "screen-room", coverageSqFt: 94, peakHeight: 90, setupTime: "45 sec", windRating: "moderate", wallsIncluded: "mesh only", uvProtection: "UPF 50+" },
+  },
+  {
+    id: "clam-pavilion",
+    category: "shelters",
+    brand: "Clam",
+    model: "Quick-Set Pavilion",
+    weightOz: 656, // 41 lbs
+    price: 430,
+    affiliateUrl: "https://www.amazon.com/dp/B00TMBEN1K?tag=prepperevo-20",
+    description: "The big brother to the Escape — 150 sq ft of screened coverage with 93-inch center height. Same 45-second hub setup but sized for group camping. Fits a full table and chairs with room to spare.",
+    bestFor: "Group camping and family reunions where everyone needs a bug-free hangout",
+    pros: ["150 sq ft fits a real dining setup", "Built-in roll-up wind panels", "Same fast hub setup as the Escape"],
+    cons: ["41 lbs and bulky when packed", "Not freestanding in any wind without stakes", "Fiberglass poles won't survive storm gusts"],
+    specs: { type: "screen-room", coverageSqFt: 150, peakHeight: 93, setupTime: "45 sec", windRating: "moderate", wallsIncluded: "mesh + wind panels", uvProtection: "UPF 50+" },
+  },
+  {
+    id: "gazelle-t4-hub",
+    category: "shelters",
+    brand: "Gazelle",
+    model: "T4 Hub Tent",
+    weightOz: 512, // 32 lbs
+    price: 350,
+    affiliateUrl: "https://www.amazon.com/dp/B08B2FGLV8?tag=prepperevo-20",
+    description: "90-second hub tent with 61 sq ft interior, removable floor, and 2000mm waterproof rating. 210D Oxford shell with UV50+ protection. Can work as a screen room or a full tent — your call.",
+    bestFor: "The do-everything shelter that doubles as a real tent when weather turns",
+    pros: ["Truly waterproof — 2000mm HH shell, 5000mm floor", "Removable floor means screen room or tent mode", "Hub design handles wind better than pop-ups"],
+    cons: ["61 sq ft is tight for 4 adults", "32 lbs is tent weight, not canopy weight", "Screen-only ventilation can feel stuffy"],
+    specs: { type: "hub", coverageSqFt: 61, peakHeight: 78, setupTime: "90 sec", windRating: "high", wallsIncluded: "yes", uvProtection: "UPF 50+" },
+  },
+  {
+    id: "gazelle-t4-plus",
+    category: "shelters",
+    brand: "Gazelle",
+    model: "T4 Plus Hub Tent",
+    weightOz: 960, // 60 lbs
+    price: 600,
+    affiliateUrl: "https://www.amazon.com/dp/B0BWPH2GTL?tag=prepperevo-20",
+    description: "Extended version of the T4 with 110 sq ft of interior space and 78-inch center height. Same 90-second hub setup, same waterproof build, just way more room. Sleeps 4-8 or works as a massive screen room.",
+    bestFor: "Families who want one shelter that does everything — screen room, rain shelter, sleeping tent",
+    pros: ["110 sq ft is genuinely spacious", "Same bombproof waterproof construction as T4", "Convertible screen room / tent design"],
+    cons: ["60 lbs — you need two people to carry it", "Expensive for a screen room", "Overkill for solo or couple camping"],
+    specs: { type: "hub", coverageSqFt: 110, peakHeight: 78, setupTime: "90 sec", windRating: "high", wallsIncluded: "yes", uvProtection: "UPF 50+" },
+  },
+  {
+    id: "coleman-skylodge-10",
+    category: "shelters",
+    brand: "Coleman",
+    model: "Skylodge 10x10 Screen Tent",
+    weightOz: 238, // 14.9 lbs
+    price: 130,
+    affiliateUrl: "https://www.amazon.com/dp/B0DJ5VGHJ2?tag=prepperevo-20",
+    description: "Instant-setup screen canopy with telescoping poles — ready in about 60 seconds. 100 sq ft of coverage with UPF 50+ fabric and two mesh doorways. Light enough one person can handle it.",
+    bestFor: "Budget-friendly bug protection for car campers who want fast setup",
+    pros: ["Under 15 lbs — lightest screen shelter here", "60-second setup with pre-attached poles", "Hard to beat at this price"],
+    cons: ["Not waterproof — shade and bugs only", "No solid wall options", "Won't survive any real wind"],
+    specs: { type: "screen-room", coverageSqFt: 100, peakHeight: 84, setupTime: "60 sec", windRating: "low", wallsIncluded: "mesh only", uvProtection: "UPF 50+" },
+  },
+  {
+    id: "coleman-screen-15x13",
+    category: "shelters",
+    brand: "Coleman",
+    model: "Instant Screen House 15x13",
+    weightOz: 366, // 22.9 lbs
+    price: 180,
+    affiliateUrl: "https://www.amazon.com/dp/B07D7S46SB?tag=prepperevo-20",
+    description: "Hexagonal screen house with 195 sq ft of coverage and 84-inch center height. UVGuard material with UPF 50+ protection. Two large doors front and back. The camp pavilion for people on a budget.",
+    bestFor: "Large group shade shelter without breaking the bank",
+    pros: ["195 sq ft hexagonal footprint is huge", "60-second instant setup", "Two large doors for traffic flow"],
+    cons: ["Hexagon shape wastes some corner space", "Mesh only — no solid wind panels", "Frame flexes in moderate wind"],
+    specs: { type: "screen-room", coverageSqFt: 195, peakHeight: 84, setupTime: "60 sec", windRating: "low", wallsIncluded: "mesh only", uvProtection: "UPF 50+" },
+  },
+  // ─── Pop-Up Canopies ─────────────────────────────────────────────────────────
+  {
+    id: "abccanopy-10x10",
+    category: "shelters",
+    brand: "ABCCANOPY",
+    model: "S2 Premium 10x10 Pop-Up",
+    weightOz: 768, // 48 lbs
+    price: 170,
+    affiliateUrl: "https://www.amazon.com/dp/B01DTUV056?tag=prepperevo-20",
+    description: "Commercial-grade 10x10 pop-up canopy with steel frame, 100 sq ft of shade, and 150D polyester top. Rated to handle 30+ mph winds when properly staked. Includes 4 sandbags and roller bag.",
+    bestFor: "Tailgating, flea markets, campsite shade — the workhorse pop-up",
+    pros: ["Steel frame handles more abuse than aluminum", "Includes sandbags for hard surfaces", "Sidewalls available separately"],
+    cons: ["48 lbs is heavy for a pop-up", "No screen mesh — open sides", "Steel frame will rust if you don't dry it"],
+    specs: { type: "pop-up", coverageSqFt: 100, peakHeight: 114, setupTime: "60 sec", windRating: "moderate", wallsIncluded: "no", uvProtection: "UPF 50+" },
+  },
+  {
+    id: "ezup-envoy-10",
+    category: "shelters",
+    brand: "E-Z UP",
+    model: "Envoy 10x10 Instant Shelter",
+    weightOz: 528, // 33 lbs
+    price: 181,
+    affiliateUrl: "https://www.amazon.com/dp/B00M3PBA5E?tag=prepperevo-20",
+    description: "Straight-leg pop-up canopy with powder-coated steel frame and 100 sq ft of coverage. Cathedral ceiling design gives extra headroom. UV-resistant top blocks 99% of harmful UV rays.",
+    bestFor: "The name-brand pop-up that sets up in seconds and lasts for years",
+    pros: ["E-Z UP brand quality and warranty", "Cathedral ceiling adds headroom", "Roller bag included"],
+    cons: ["Steel frame adds weight", "Fair-weather use only — not for storms", "Sidewalls sold separately"],
+    specs: { type: "pop-up", coverageSqFt: 100, peakHeight: 114, setupTime: "30 sec", windRating: "low", wallsIncluded: "no", uvProtection: "99% UV block" },
+  },
+  {
+    id: "core-screen-10x10",
+    category: "shelters",
+    brand: "CORE",
+    model: "10x10 Instant Screen House",
+    weightOz: 432, // 27 lbs
+    price: 140,
+    affiliateUrl: "https://www.amazon.com/dp/B07DJZVQVJ?tag=prepperevo-20",
+    description: "Pop-up screen house with 4 mesh walls, 84-inch center height, and pre-attached poles that lock into place. 150D polyester with UV 50+ coating. Front and back doors for airflow.",
+    bestFor: "Budget screen house that splits the difference between canopy and screen room",
+    pros: ["Screen walls keep bugs out unlike open canopies", "60-second setup", "Good price for what you get"],
+    cons: ["27 lbs for a 10x10 is middle of the road", "150D fabric is thinner than competitors", "No solid wall options"],
+    specs: { type: "screen-room", coverageSqFt: 100, peakHeight: 84, setupTime: "60 sec", windRating: "low", wallsIncluded: "mesh only", uvProtection: "UPF 50+" },
+  },
+  // ─── Vehicle Awnings ──────────────────────────────────────────────────────────
+  {
+    id: "ovs-nomadic-270-lt",
+    category: "shelters",
+    brand: "OVS",
+    model: "Nomadic 270 LT Awning",
+    weightOz: 848, // 53 lbs
+    price: 650,
+    affiliateUrl: "https://www.amazon.com/dp/B08KY7QF9G?tag=prepperevo-20",
+    description: "270-degree vehicle awning with 80 sq ft of coverage. 600D poly-cotton ripstop, built-in aluminum rafters, and no poles needed for setup. Mounts to any crossbar-equipped roof rack.",
+    bestFor: "Overlanders who want serious shade coverage from their rig without the price of the HD",
+    pros: ["270-degree coverage wraps around your vehicle", "No poles needed — rafters are built in", "600D poly-cotton ripstop is bombproof"],
+    cons: ["53 lbs mounted on your roof", "Requires roof rack with crossbars", "No walls included — sold separately"],
+    specs: { type: "vehicle-awning", coverageSqFt: 80, peakHeight: 84, setupTime: "60 sec", windRating: "high", wallsIncluded: "no", uvProtection: "UPF 50+" },
+  },
+  {
+    id: "arb-2500-touring",
+    category: "shelters",
+    brand: "ARB",
+    model: "2500 Touring Awning",
+    weightOz: 560, // 35 lbs
+    price: 400,
+    affiliateUrl: "https://www.amazon.com/dp/B00K6L6CS2?tag=prepperevo-20",
+    description: "Retractable side awning with 67 sq ft of coverage (8.2 x 8.2 ft). 300gsm PU-coated poly-cotton ripstop canvas — fully waterproof with UPF 50+. Deploys in 30 seconds flat.",
+    bestFor: "Quick side shade for overlanding rigs — the Australian standard",
+    pros: ["30-second deploy time — fastest here", "Fully waterproof canvas", "Clean retractable design stores tight"],
+    cons: ["Single-side coverage only — no wrap", "Needs guy ropes in wind", "Aluminum case adds roof weight"],
+    specs: { type: "vehicle-awning", coverageSqFt: 67, peakHeight: 82, setupTime: "30 sec", windRating: "moderate", wallsIncluded: "no", uvProtection: "UPF 50+" },
+  },
+  {
+    id: "rhinorack-batwing",
+    category: "shelters",
+    brand: "Rhino-Rack",
+    model: "Batwing Awning",
+    weightOz: 752, // 47 lbs
+    price: 700,
+    affiliateUrl: "https://www.amazon.com/dp/B07BZHN66L?tag=prepperevo-20",
+    description: "Full-size 270-degree awning with 118 sq ft of coverage — the most shade of any vehicle awning here. Heavy-duty ripstop fabric rated UPF 50+. Includes poles, pegs, ropes, and fitting kit.",
+    bestFor: "Maximum shade coverage from a vehicle-mounted awning — nothing else comes close to 118 sq ft",
+    pros: ["118 sq ft is the biggest 270 awning available", "UPF 50+ heavy-duty ripstop", "Complete kit with everything included"],
+    cons: ["47 lbs on your roof rack", "Takes longer to deploy than side awnings", "Premium price point"],
+    specs: { type: "vehicle-awning", coverageSqFt: 118, peakHeight: 84, setupTime: "90 sec", windRating: "high", wallsIncluded: "no", uvProtection: "UPF 50+" },
+  },
+  {
+    id: "23zero-peregrine-270",
+    category: "shelters",
+    brand: "23Zero",
+    model: "Peregrine 270 Awning",
+    weightOz: 816, // 51 lbs
+    price: 750,
+    affiliateUrl: "https://www.amazon.com/dp/B0F2KNBM6R?tag=prepperevo-20",
+    description: "Freestanding 270-degree awning that spans nearly 20 ft along the vehicle. Optional walls expand coverage to 279 sq ft. One-person setup in under 60 seconds thanks to the freestanding rafter design.",
+    bestFor: "Overlanders who want the newest freestanding 270 tech with optional wall expansion",
+    pros: ["Freestanding design — no poles for basic setup", "Optional walls create a massive enclosed space", "20-ft span along vehicle length"],
+    cons: ["51 lbs is serious roof weight", "Walls sold separately", "Premium Australian pricing"],
+    specs: { type: "vehicle-awning", coverageSqFt: 100, peakHeight: 84, setupTime: "60 sec", windRating: "high", wallsIncluded: "optional", uvProtection: "UPF 50+" },
+  },
+  // ─── Car-Side Shelters ────────────────────────────────────────────────────────
+  {
+    id: "kelty-tailgater-ipa",
+    category: "shelters",
+    brand: "Kelty",
+    model: "Tailgater IPA Shade Shelter",
+    weightOz: 128, // 8 lbs
+    price: 150,
+    affiliateUrl: "https://www.amazon.com/dp/B009R8OQNS?tag=prepperevo-20",
+    description: "Lightweight car-side shelter that clips onto your SUV or wagon hatch. 46 sq ft of shade with 68D polyester fly rated to 450mm water resistance. Color-coded clip construction for fast setup.",
+    bestFor: "Quick tailgate shade without roof rack mounting — works with any SUV hatch",
+    pros: ["8 lbs — lightest vehicle shelter here", "No roof rack required", "Color-coded clips make setup obvious"],
+    cons: ["46 sq ft is small", "450mm WR is rain-resistant, not waterproof", "Only works with rear hatch vehicles"],
+    specs: { type: "car-side", coverageSqFt: 46, peakHeight: 80, setupTime: "3 min", windRating: "low", wallsIncluded: "no", uvProtection: "basic" },
+  },
+  {
+    id: "moonshade-awning",
+    category: "shelters",
+    brand: "MoonShade",
+    model: "Portable Vehicle Awning",
+    weightOz: 128, // 8 lbs
+    price: 200,
+    affiliateUrl: "https://www.amazon.com/dp/B08TQQ637N?tag=prepperevo-20",
+    description: "Suction-cup mounted portable awning with 63 sq ft of coverage (9x7 ft). No roof rack needed — attaches to any smooth vehicle surface. UV-blocking polyester with reflective underside. Packs down to yoga-mat size.",
+    bestFor: "Vehicle shade without permanent mounting — works on literally any vehicle with a smooth roof",
+    pros: ["No roof rack needed — suction cup mount", "8 lbs and packs like a yoga mat", "Works on any vehicle — cars, trucks, vans"],
+    cons: ["Suction cups can release in heat", "Not waterproof — shade only", "No walls or screen options"],
+    specs: { type: "car-side", coverageSqFt: 63, peakHeight: 84, setupTime: "5 min", windRating: "low", wallsIncluded: "no", uvProtection: "UV blocking" },
+  },
+  {
+    id: "rightline-suv-canopy",
+    category: "shelters",
+    brand: "Rightline Gear",
+    model: "SUV Tailgating Canopy",
+    weightOz: 176, // 11 lbs
+    price: 100,
+    affiliateUrl: "https://www.amazon.com/dp/B08VGVNP3Q?tag=prepperevo-20",
+    description: "Rear-hatch canopy that attaches to any SUV, minivan, or truck cap. 48 sq ft of coverage (8x6 ft) with 8.5 ft peak height. 2000mm PU-coated polyester with taped seams — actually waterproof.",
+    bestFor: "Budget-friendly waterproof tailgate shade for SUVs and trucks with caps",
+    pros: ["Actually waterproof at 2000mm PU", "Cheapest vehicle shelter option", "Includes sandbags for stability"],
+    cons: ["Requires open rear hatch to deploy", "48 sq ft is minimal", "Two-pole design can flex in wind"],
+    specs: { type: "car-side", coverageSqFt: 48, peakHeight: 102, setupTime: "5 min", windRating: "low", wallsIncluded: "no", uvProtection: "basic" },
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
 //  UNIFIED GEAR DATABASE — all non-tent products
 // ═══════════════════════════════════════════════════════════════════════════════
 export const allGear: GearProduct[] = [
@@ -1766,6 +2002,7 @@ export const allGear: GearProduct[] = [
   ...trekkingPoles,
   ...headlamps,
   ...accessories,
+  ...shelters,
 ];
 
 export function getGearByCategory(category: GearCategory): GearProduct[] {

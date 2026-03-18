@@ -4,7 +4,7 @@ import {
   ArrowUpDown, RotateCcw, Check, Mountain, Wind, Layers,
   Ruler, DoorOpen, Weight, Info, Tent, Moon, BedDouble, Backpack,
   Flame, CookingPot, Droplets, CloudRain, Thermometer, Lightbulb,
-  Package, ShoppingBag, Plus, Minus,
+  Package, ShoppingBag, Plus, Minus, Warehouse,
 } from "lucide-react";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
@@ -38,6 +38,7 @@ import {
   trekkingPoles,
   headlamps,
   accessories,
+  shelters,
 } from "./gear-finder-data";
 
 // ─── Tent Sort (kept from original) ──────────────────────────────────────────
@@ -89,16 +90,18 @@ const categoryIcons: Record<GearCategory | "tents", React.ElementType> = {
   "trekking-poles": ArrowUpDown,
   headlamps: Lightbulb,
   accessories: Package,
+  shelters: Warehouse,
 };
 
 // ─── Category tabs config ────────────────────────────────────────────────────
 const tabOrder: (GearCategory | "tents")[] = [
-  "tents", "sleeping-bags", "sleeping-pads", "packs", "stoves", "cookware",
+  "tents", "shelters", "sleeping-bags", "sleeping-pads", "packs", "stoves", "cookware",
   "rain-gear", "insulation", "trekking-poles", "headlamps", "accessories",
 ];
 
 const tabLabels: Record<string, string> = {
   tents: "Tents",
+  shelters: "Shelters",
   "sleeping-bags": "Sleep Bags",
   "sleeping-pads": "Pads",
   packs: "Packs",
@@ -123,6 +126,7 @@ const gearByCategory: Record<GearCategory, GearProduct[]> = {
   "trekking-poles": trekkingPoles,
   headlamps,
   accessories,
+  shelters,
   tents: [], // tents use BackpackingTent type
   "water-treatment": [], // covered under accessories
 };
@@ -280,6 +284,14 @@ function getSpecRows(category: GearCategory): { label: string; render: (g: GearP
       { label: "Burn (Hi)", render: (g) => `${g.specs.burnTimeHigh}h` },
       { label: "Burn (Lo)", render: (g) => `${g.specs.burnTimeLow}h` },
       { label: "Red Light", render: (g) => g.specs.redLight ? "Yes" : "No" },
+    ];
+    case "shelters": return [
+      { label: "Type", render: (g) => String(g.specs.type) },
+      { label: "Coverage", render: (g) => `${g.specs.coverageSqFt} sq ft` },
+      { label: "Peak Height", render: (g) => `${g.specs.peakHeight}"` },
+      { label: "Setup", render: (g) => String(g.specs.setupTime) },
+      { label: "Wind Rating", render: (g) => String(g.specs.windRating) },
+      { label: "Walls", render: (g) => String(g.specs.wallsIncluded) },
     ];
     default: return [];
   }
@@ -496,6 +508,7 @@ function getCardSpecs(gear: GearProduct, category: GearCategory): string[] {
     case "trekking-poles": return [String(gear.specs.material), String(gear.specs.gripMaterial)];
     case "headlamps": return [`${gear.specs.lumens}lm`, String(gear.specs.batteryType)];
     case "accessories": return [String(gear.specs.type)];
+    case "shelters": return [String(gear.specs.type), `${gear.specs.coverageSqFt} sq ft`, String(gear.specs.windRating)];
     default: return [];
   }
 }
@@ -1141,6 +1154,7 @@ function getFilterableSpecs(category: GearCategory | "tents"): string[] {
     case "insulation": return ["fillType", "hood"];
     case "trekking-poles": return ["material"];
     case "headlamps": return ["batteryType"];
+    case "shelters": return ["type", "windRating", "wallsIncluded"];
     default: return [];
   }
 }
