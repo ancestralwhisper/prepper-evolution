@@ -581,6 +581,24 @@ export const vehicleDatabase: StockVehicle[] = [
     overallHeightIn: 77.8, bedLengthIn: 67.0, bedWidthIn: 51.0,
     roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crew-cab-short",
   },
+  {
+    year: 2021, make: "Nissan", model: "Rogue Sport", trim: "SV AWD (2017-2022)",
+    curbWeightLbs: 3421, gvwrLbs: 4255, maxTowingLbs: 1000,
+    wheelbaseIn: 104.3, trackWidthIn: 59.4, groundClearanceIn: 8.1,
+    approachAngle: 18, departureAngle: 22, breakoverAngle: 17,
+    fuelTankGal: 13.3, stockTireSize: "225/55R17", stockTireDiameter: 26.7,
+    mpgCity: 25, mpgHighway: 32, mpgCombined: 27,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.32, frontWeightPct: 60, stockWadingDepthIn: 0,
+    stockRatio: 4.05, alternatorAmps: 120,
+    overallHeightIn: 64.5, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 165, roofStaticLbs: 495, bodyType: "crossover",
+    // ⚠ 75 kg / 165 lb dynamic roof limit — one of the tightest in class.
+    // Crossbars (10-20 lbs) + rack (20-30 lbs) eat 30-50 lbs before the tent.
+    // Net tent budget: ~115-135 lbs. Limits to solo-person softshell or lightest hard-shells.
+    // Naked roof on base trims — requires clamp-on or track system (Thule Evo, Yakima StreamLine).
+    // roofStaticLbs: 495 is a 3× dynamic estimate — Nissan does not publish a static rating.
+  },
 
   // ─── LAND ROVER ──────────────────────────────────────────────────
 
