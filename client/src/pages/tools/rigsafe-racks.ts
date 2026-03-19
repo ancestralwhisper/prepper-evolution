@@ -231,6 +231,35 @@ export const rackDatabase: RackEntry[] = [
   // ─── ROOF RACKS ─────────────────────────────────────────────────────
 
   {
+    id: "thule-wingbar-evo",
+    brand: "Thule",
+    model: "WingBar Evo + Evo Flush Feet",
+    type: "roof-rack",
+    weightLbs: 23,
+    staticLbs: 330,
+    onRoadDynamicLbs: 165,
+    offRoadDynamicLbs: 110,
+    tSlotRequired: false,
+    compatibleVehicles: ["crossover", "suv-5door", "suv-3door"],
+    affiliateUrl: "https://www.amazon.com/dp/B08MBQ12FY?tag=prepperevo-20",
+    notes: "Most popular naked-roof crossbar system. Evo Flush feet clamp to door frame — no factory rails needed. 165 lb dynamic total. Vehicle-specific fit kits sold separately (Thule Kit number varies by make/model/year).",
+  },
+  {
+    id: "yakima-streamline",
+    brand: "Yakima",
+    model: "StreamLine + TimberLine Towers",
+    type: "roof-rack",
+    weightLbs: 22,
+    staticLbs: 330,
+    onRoadDynamicLbs: 165,
+    offRoadDynamicLbs: 110,
+    tSlotRequired: false,
+    compatibleVehicles: ["crossover", "suv-5door", "suv-3door"],
+    affiliateUrl: "https://www.amazon.com/dp/B000BKRFUM?tag=prepperevo-20",
+    notes: "Yakima's answer to Thule WingBar Evo. TimberLine towers clamp to door frame on naked roofs. StreamLine bars have T-slot channel for accessories. 165 lb dynamic. Vehicle-specific landing pad kits required.",
+  },
+
+  {
     id: "frontrunner-slimline-roof",
     brand: "Front Runner",
     model: "Slimline II Roof Rack",

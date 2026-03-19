@@ -966,6 +966,30 @@ export const tentDatabase: TentEntry[] = [
     notes: "600D waterproof ripstop polyester oxford. Diamond plate aluminum base. 1\" thick aluminum poles. XL annex included.",
   },
 
+  // ─── iKAMPER MINI ─────────────────────────────────────────────────
+
+  {
+    id: "ikamper-skycamp-mini",
+    brand: "iKamper",
+    model: "Skycamp Mini",
+    type: "hardshell-clamshell",
+    openSide: "either",
+    closedWeightLbs: 105,
+    closedHeightIn: 9.5,
+    closedLengthIn: 74,
+    closedWidthIn: 44,
+    openLengthIn: 74,
+    openWidthIn: 88,
+    openHeadroomIn: 44,
+    mattressThicknessIn: 2.5,
+    sleepsMarketing: 2,
+    sleepsRealistic: 1,
+    staticRatingLbs: 660,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/dp/B0BN3HPFQ4?tag=prepperevo-20",
+    notes: "Designed specifically for compact vehicles and crossovers. Lightest iKamper hardshell at 105 lbs. 9.5\" closed profile. Best-fit RTT for crossovers with 165 lb roof ratings when paired with Thule/Yakima crossbars (~22 lbs).",
+  },
+
   // ─── TRUSTMADE ────────────────────────────────────────────────────
 
   {

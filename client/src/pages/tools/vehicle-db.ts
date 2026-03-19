@@ -205,6 +205,21 @@ export const vehicleDatabase: StockVehicle[] = [
     overallHeightIn: 72.6, bedLengthIn: null, bedWidthIn: null,
     roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "suv-5door",
   },
+  {
+    year: 2023, make: "Jeep", model: "Compass", trim: "Trailhawk 4x4",
+    curbWeightLbs: 3612, gvwrLbs: 4500, maxTowingLbs: 2000,
+    wheelbaseIn: 103.8, trackWidthIn: 62.0, groundClearanceIn: 8.6,
+    approachAngle: 29.5, departureAngle: 30.5, breakoverAngle: 20,
+    fuelTankGal: 13.5, stockTireSize: "225/55R18", stockTireDiameter: 27.7,
+    mpgCity: 22, mpgHighway: 30, mpgCombined: 25,
+    engineType: "gas", drivetrain: "4wd", transferCase: "selectable",
+    ssf: 1.28, frontWeightPct: 59, stockWadingDepthIn: 19,
+    stockRatio: 3.45, alternatorAmps: 130,
+    overallHeightIn: 65.0, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 150, roofStaticLbs: 450, bodyType: "crossover",
+    // Best off-road crossover for RTTs: Trailhawk has Active Drive Low (20:1 crawl) + 19" wading.
+    // 150 lb roof is tighter than truck platforms — factor rack weight carefully.
+  },
 
   // ─── FORD ────────────────────────────────────────────────────────
 
@@ -324,6 +339,22 @@ export const vehicleDatabase: StockVehicle[] = [
     stockRatio: 3.81, alternatorAmps: 150,
     overallHeightIn: 68.7, bedLengthIn: 54.4, bedWidthIn: 42.0,
     roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "mid-truck",
+  },
+  {
+    year: 2024, make: "Ford", model: "Escape", trim: "SE AWD",
+    curbWeightLbs: 3658, gvwrLbs: 4575, maxTowingLbs: 1500,
+    wheelbaseIn: 106.7, trackWidthIn: 61.6, groundClearanceIn: 7.9,
+    approachAngle: 18, departureAngle: 22, breakoverAngle: 16,
+    fuelTankGal: 14.8, stockTireSize: "235/45R19", stockTireDiameter: 27.3,
+    mpgCity: 27, mpgHighway: 33, mpgCombined: 29,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.30, frontWeightPct: 60, stockWadingDepthIn: 0,
+    stockRatio: 3.78, alternatorAmps: 120,
+    overallHeightIn: 65.2, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "crossover",
+    // ⚠ 100 lb / 45 kg dynamic roof limit — Ford's lowest-rated crossover.
+    // Crossbars alone eat 20-25 lbs. Net budget for tent: ~75 lbs max.
+    // Only the GFC SuperLite (80 lbs) is borderline feasible; most RTTs are over limit.
   },
 
   // ─── CHEVROLET / GMC ─────────────────────────────────────────────
@@ -599,6 +630,19 @@ export const vehicleDatabase: StockVehicle[] = [
     // Naked roof on base trims — requires clamp-on or track system (Thule Evo, Yakima StreamLine).
     // roofStaticLbs: 495 is a 3× dynamic estimate — Nissan does not publish a static rating.
   },
+  {
+    year: 2024, make: "Nissan", model: "Rogue", trim: "SV AWD",
+    curbWeightLbs: 3829, gvwrLbs: 4773, maxTowingLbs: 1350,
+    wheelbaseIn: 106.5, trackWidthIn: 60.8, groundClearanceIn: 8.2,
+    approachAngle: 18, departureAngle: 22, breakoverAngle: 17,
+    fuelTankGal: 14.5, stockTireSize: "225/65R17", stockTireDiameter: 28.5,
+    mpgCity: 27, mpgHighway: 35, mpgCombined: 30,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.33, frontWeightPct: 60, stockWadingDepthIn: 0,
+    stockRatio: 4.05, alternatorAmps: 120,
+    overallHeightIn: 66.7, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 165, roofStaticLbs: 495, bodyType: "crossover",
+  },
 
   // ─── LAND ROVER ──────────────────────────────────────────────────
 
@@ -712,6 +756,22 @@ export const vehicleDatabase: StockVehicle[] = [
     overallHeightIn: 63.6, bedLengthIn: null, bedWidthIn: null,
     roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "crossover",
   },
+  {
+    year: 2024, make: "Toyota", model: "Corolla Cross", trim: "XSE AWD",
+    curbWeightLbs: 3395, gvwrLbs: 4189, maxTowingLbs: 1500,
+    wheelbaseIn: 103.9, trackWidthIn: 58.9, groundClearanceIn: 8.1,
+    approachAngle: 17, departureAngle: 22, breakoverAngle: 17,
+    fuelTankGal: 13.2, stockTireSize: "225/50R18", stockTireDiameter: 26.9,
+    mpgCity: 28, mpgHighway: 32, mpgCombined: 30,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.38, frontWeightPct: 61, stockWadingDepthIn: 0,
+    stockRatio: 4.05, alternatorAmps: 120,
+    overallHeightIn: 62.7, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 110, roofStaticLbs: 330, bodyType: "crossover",
+    // ⚠ 110 lb / 50 kg dynamic limit — second-tightest in class after Ford Escape.
+    // Only realistically fits the GFC SuperLite (80 lbs) with lightweight crossbars.
+    // Not recommended for standard RTTs. Confirm with Toyota dealer before mounting.
+  },
 
   // ─── HONDA ───────────────────────────────────────────────────────
 
@@ -727,6 +787,19 @@ export const vehicleDatabase: StockVehicle[] = [
     stockRatio: 4.33, alternatorAmps: 180,
     overallHeightIn: 69.4, bedLengthIn: null, bedWidthIn: null,
     roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "crossover",
+  },
+  {
+    year: 2024, make: "Honda", model: "CR-V", trim: "Sport AWD",
+    curbWeightLbs: 3617, gvwrLbs: 4475, maxTowingLbs: 1500,
+    wheelbaseIn: 106.3, trackWidthIn: 62.8, groundClearanceIn: 8.2,
+    approachAngle: 18, departureAngle: 23, breakoverAngle: 17,
+    fuelTankGal: 14.0, stockTireSize: "235/60R18", stockTireDiameter: 29.1,
+    mpgCity: 27, mpgHighway: 32, mpgCombined: 29,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.32, frontWeightPct: 60, stockWadingDepthIn: 0,
+    stockRatio: 4.05, alternatorAmps: 130,
+    overallHeightIn: 65.0, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 165, roofStaticLbs: 495, bodyType: "crossover",
   },
 
   // ─── HYUNDAI / KIA ───────────────────────────────────────────────
@@ -756,6 +829,77 @@ export const vehicleDatabase: StockVehicle[] = [
     stockRatio: 3.51, alternatorAmps: 180,
     overallHeightIn: 68.9, bedLengthIn: null, bedWidthIn: null,
     roofDynamicLbs: 100, roofStaticLbs: 300, bodyType: "crossover",
+  },
+  {
+    year: 2024, make: "Hyundai", model: "Tucson", trim: "SEL AWD",
+    curbWeightLbs: 3779, gvwrLbs: 4630, maxTowingLbs: 1650,
+    wheelbaseIn: 108.5, trackWidthIn: 62.5, groundClearanceIn: 8.5,
+    approachAngle: 17, departureAngle: 21, breakoverAngle: 16,
+    fuelTankGal: 14.8, stockTireSize: "235/55R19", stockTireDiameter: 29.2,
+    mpgCity: 25, mpgHighway: 28, mpgCombined: 26,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.30, frontWeightPct: 59, stockWadingDepthIn: 0,
+    stockRatio: 3.81, alternatorAmps: 130,
+    overallHeightIn: 64.8, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 165, roofStaticLbs: 495, bodyType: "crossover",
+  },
+  {
+    year: 2024, make: "Hyundai", model: "Santa Fe", trim: "SEL AWD",
+    curbWeightLbs: 4012, gvwrLbs: 5000, maxTowingLbs: 3500,
+    wheelbaseIn: 111.0, trackWidthIn: 64.0, groundClearanceIn: 8.3,
+    approachAngle: 19, departureAngle: 21, breakoverAngle: 16,
+    fuelTankGal: 18.8, stockTireSize: "235/55R19", stockTireDiameter: 29.2,
+    mpgCity: 22, mpgHighway: 28, mpgCombined: 25,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.25, frontWeightPct: 58, stockWadingDepthIn: 0,
+    stockRatio: 3.81, alternatorAmps: 150,
+    overallHeightIn: 67.2, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 165, roofStaticLbs: 495, bodyType: "crossover",
+  },
+  {
+    year: 2024, make: "Kia", model: "Sportage", trim: "X-Line AWD",
+    curbWeightLbs: 3781, gvwrLbs: 4630, maxTowingLbs: 1650,
+    wheelbaseIn: 108.5, trackWidthIn: 63.0, groundClearanceIn: 8.3,
+    approachAngle: 18, departureAngle: 22, breakoverAngle: 17,
+    fuelTankGal: 14.3, stockTireSize: "235/55R19", stockTireDiameter: 29.2,
+    mpgCity: 26, mpgHighway: 29, mpgCombined: 27,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.30, frontWeightPct: 59, stockWadingDepthIn: 0,
+    stockRatio: 4.05, alternatorAmps: 130,
+    overallHeightIn: 65.2, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 165, roofStaticLbs: 495, bodyType: "crossover",
+  },
+
+  // ─── MAZDA ───────────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Mazda", model: "CX-5", trim: "2.5 Turbo AWD",
+    curbWeightLbs: 3958, gvwrLbs: 4762, maxTowingLbs: 2000,
+    wheelbaseIn: 106.3, trackWidthIn: 62.0, groundClearanceIn: 8.5,
+    approachAngle: 19, departureAngle: 22, breakoverAngle: 17,
+    fuelTankGal: 14.8, stockTireSize: "225/65R17", stockTireDiameter: 28.5,
+    mpgCity: 22, mpgHighway: 27, mpgCombined: 24,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.29, frontWeightPct: 59, stockWadingDepthIn: 0,
+    stockRatio: 4.31, alternatorAmps: 130,
+    overallHeightIn: 65.3, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 165, roofStaticLbs: 495, bodyType: "crossover",
+  },
+
+  // ─── VOLKSWAGEN ──────────────────────────────────────────────────
+
+  {
+    year: 2024, make: "Volkswagen", model: "Tiguan", trim: "SE AWD",
+    curbWeightLbs: 4100, gvwrLbs: 5115, maxTowingLbs: 1500,
+    wheelbaseIn: 110.5, trackWidthIn: 62.7, groundClearanceIn: 7.8,
+    approachAngle: 17, departureAngle: 21, breakoverAngle: 15,
+    fuelTankGal: 16.9, stockTireSize: "235/50R19", stockTireDiameter: 28.3,
+    mpgCity: 23, mpgHighway: 28, mpgCombined: 25,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.30, frontWeightPct: 58, stockWadingDepthIn: 0,
+    stockRatio: 4.31, alternatorAmps: 130,
+    overallHeightIn: 66.3, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 165, roofStaticLbs: 495, bodyType: "crossover",
   },
 
   // ─── RIVIAN ──────────────────────────────────────────────────────
