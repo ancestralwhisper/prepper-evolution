@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { ChevronLeft, Zap, TreePine, Mountain, Users } from "lucide-react";
+import { ChevronLeft, Zap, TreePine, Mountain, Users, Wrench } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { motion } from "framer-motion";
 
@@ -41,44 +41,78 @@ export default function About() {
           className="space-y-5 text-muted-foreground text-lg leading-relaxed"
         >
           <p>
-            Mike here — just your average guy from New Jersey who's been working in the
-            electrical trade for 21 years. Part of my job involves mutual aid deployments —
+            Mike here — just your average guy from New Jersey who's been working as an
+            electrical lineman for 21 years. Part of my job involves mutual aid deployments —
             when major storms knock out power, I get sent wherever the damage is. I've
             worked storm restoration in California, Texas, Florida, Long Island, New York,
-            New Jersey, and Maine. You see a lot
-            when the grid goes down for real: people without water, without food, without a
-            plan. That experience is a big part of why this site exists.
+            New Jersey, and Maine. You see a lot when the grid goes down for real: people
+            without water, without food, without a plan. That experience is a big part of
+            why this site exists.
           </p>
 
           <p>
-            When I'm not working, I'm outside. I have a cabin in Pennsylvania —
-            just a tank of gas away — that I get to as often as I can. Solo, with family,
-            or with friends. We hike, fly fish,
-            find swimming holes, kayak, ice fish in the winter, and practice the kind of outdoor
-            skills that most people only read about. The Pine Barrens, the Poconos, Delaware Water
-            Gap, PA state forests — that's my home turf.
+            I appreciate you taking a moment out of your time to actually read what I'm about.
+          </p>
+
+          <p>
+            When I'm not working, I'm outside. I have a cabin in Pennsylvania which is just
+            a tank of gas away that I get to as often as I can. Whether it be solo, with family,
+            or with friends. We hike, fly fish, find swimming holes, kayak, ice fish in the
+            winter, and practice the kind of outdoor skills that most people only read about.
+            The Pine Barrens, the Poconos, Delaware Water Gap, PA state forests — that's my
+            home turf.
           </p>
 
           <p>
             I also get out West when I can. SxS and off-roading in Utah and Nevada, trail riding
             in West Virginia, Pennsylvania, and Tennessee. There's something about running
             trails with a great group of friends (I consider family) in big open country that
-            makes you appreciate being prepared and self-reliant in a way that sitting at home
+            makes me appreciate being prepared and self-reliant in a way that sitting at home
             never will.
           </p>
 
           <p>
             I'm a family guy with a family of five. The gear I test has to work for
             solo cabin weekends and family camping trips with kids. That's a different
-            standard than what most gear reviewers use, and it keeps my recommendations honest.
+            standard than what most gear reviewers use, and it keeps my recommendations
+            brutally honest.
           </p>
 
           <p>
             I built Prepper Evolution because most prepping content online is either
-            fear-mongering nonsense or robotic product lists written by people who've
-            never left their desk. I wanted a site with real experience, honest opinions, and
-            practical advice from someone who actually uses this stuff — not because the world
-            is ending, but because being prepared is just smart living.
+            fear-mongering nonsense or robotic product lists written by people who might not
+            have any idea about a product or adventure they may experience. I wanted a site
+            with real experience, honest opinions, and practical advice from someone who
+            actually uses this stuff — and not because the world is ending, but because being
+            prepared is just smarter living.
+          </p>
+
+          <p>
+            I wanted to start this website over 10 years ago and I never really pulled the
+            trigger on it, until recently. I've been prepping my whole life. Taking notes,
+            building strategies, going outdoors. I love nature. I've been camping since I was
+            a little kid and wanted my children to experience that too. I got into overlanding
+            because it's really a way of life. The life of being totally prepared and self-reliant,
+            which goes hand in hand with being a prepper. The two mesh together well and I think
+            that trend will grow stronger together as time moves on.
+          </p>
+
+          <p>
+            Among finally starting Prepper Evolution I have taken my notes in combination of
+            problems and questions I've had and decided to build that out into a vision based on
+            tools. These tools actually help people figure out the exact things that I have done
+            research on to find answers I have been searching for. As I grow and learn and
+            understand more, these tools breathe with me in my journey and I am very pleased to
+            be able to share them with you for free.
+          </p>
+
+          <p>
+            Right now I'm building out a 2025 GMC Sierra 1500 from scratch as my overlanding
+            rig — roof rack, rooftop tent, Starlink, MOLLE panels, the works. Every mod gets
+            tested, documented, and run through the same tools on this site. If it doesn't
+            pass the math, it doesn't go on the truck. Prepper Evolution LLC is now a
+            registered business in New Jersey, and I'm committed to making this the most
+            useful preparedness and overlanding resource on the internet.
           </p>
 
           <p className="text-foreground font-medium italic border-l-4 border-primary pl-5 py-2 bg-primary/5 rounded-r-lg">
@@ -98,7 +132,7 @@ export default function About() {
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.4 }}
         >
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-10">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mt-10">
             <div className="bg-card border border-border rounded-lg p-4 text-center">
               <Zap className="w-6 h-6 text-primary mx-auto mb-2" />
               <p className="text-2xl font-extrabold">21</p>
@@ -108,6 +142,11 @@ export default function About() {
               <Users className="w-6 h-6 text-primary mx-auto mb-2" />
               <p className="text-2xl font-extrabold">5</p>
               <p className="text-xs text-muted-foreground uppercase tracking-wide">Family Members</p>
+            </div>
+            <div className="bg-card border border-border rounded-lg p-4 text-center">
+              <Wrench className="w-6 h-6 text-primary mx-auto mb-2" />
+              <p className="text-2xl font-extrabold">18+</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Free Tools Built</p>
             </div>
             <div className="bg-card border border-border rounded-lg p-4 text-center">
               <TreePine className="w-6 h-6 text-primary mx-auto mb-2" />
