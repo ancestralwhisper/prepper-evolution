@@ -18,7 +18,8 @@ export interface RackEntry {
   staticLbs: number;
   onRoadDynamicLbs: number;
   offRoadDynamicLbs: number;
-  heightSettings?: number[];     // inches above bed rail or roof
+  heightSettings?: number[];           // inches above bed rail or roof
+  crossbarHeightAboveRoofIn?: number;  // roof racks only: how high crossbar sits above roof surface
   tSlotRequired: boolean;
   compatibleVehicles?: string[]; // "all" or specific body types
   affiliateUrl: string;
@@ -67,11 +68,11 @@ export const rackDatabase: RackEntry[] = [
     staticLbs: 750,
     onRoadDynamicLbs: 500,
     offRoadDynamicLbs: 250,
-    heightSettings: [19, 23, 27],
+    heightSettings: [19, 23, 27.25],
     tSlotRequired: true,
     compatibleVehicles: ["crew-cab-short", "crew-cab-standard", "mid-truck"],
     affiliateUrl: "https://www.amazon.com/dp/B0DFJK5RY7?tag=prepperevo-20",
-    notes: "Compact version. Shorter crossbars (67\") than TS/FS (76\"). Heights: 19/23/27.25 in.",
+    notes: "Compact version. Shorter crossbars (67\") than TS/FS (76\"). Heights: 19/23/27.25 in. RealTruck explicitly labels 27.25\" as the 'Maximum Cab Clearance' setting. Requires Elevate TS rails or T-slot tonneau (e.g. BAKFlip MX4 TS). Part #1118570.",
   },
   {
     id: "cbi-bed-rack",
@@ -231,6 +232,21 @@ export const rackDatabase: RackEntry[] = [
   // ─── ROOF RACKS ─────────────────────────────────────────────────────
 
   {
+    id: "ceros-low-profile",
+    brand: "Go Rhino / RealTruck",
+    model: "CEROS Low Profile Roof Rack",
+    type: "roof-rack",
+    weightLbs: 55,
+    staticLbs: 500,
+    onRoadDynamicLbs: 165,
+    offRoadDynamicLbs: 110,
+    crossbarHeightAboveRoofIn: 3,
+    tSlotRequired: false,
+    compatibleVehicles: ["crew-cab-short", "crew-cab-standard", "mid-truck", "suv-5door"],
+    affiliateUrl: "https://www.amazon.com/dp/B0DFJGLRN9?tag=prepperevo-20",
+    notes: "Part GRH-5933110T. Rack length 70\" (front-to-back), surface width 54.5\". Front fairing peaks at ~6\" but angles down toward rear — crossbar/rail height at rear (tent clearance zone) is ~3\". Does NOT extend over the bed — cab section only.",
+  },
+  {
     id: "thule-wingbar-evo",
     brand: "Thule",
     model: "WingBar Evo + Evo Flush Feet",
@@ -239,6 +255,7 @@ export const rackDatabase: RackEntry[] = [
     staticLbs: 330,
     onRoadDynamicLbs: 165,
     offRoadDynamicLbs: 110,
+    crossbarHeightAboveRoofIn: 2.5,
     tSlotRequired: false,
     compatibleVehicles: ["crossover", "suv-5door", "suv-3door"],
     affiliateUrl: "https://www.amazon.com/dp/B08MBQ12FY?tag=prepperevo-20",
@@ -253,12 +270,12 @@ export const rackDatabase: RackEntry[] = [
     staticLbs: 330,
     onRoadDynamicLbs: 165,
     offRoadDynamicLbs: 110,
+    crossbarHeightAboveRoofIn: 3,
     tSlotRequired: false,
     compatibleVehicles: ["crossover", "suv-5door", "suv-3door"],
     affiliateUrl: "https://www.amazon.com/dp/B000BKRFUM?tag=prepperevo-20",
     notes: "Yakima's answer to Thule WingBar Evo. TimberLine towers clamp to door frame on naked roofs. StreamLine bars have T-slot channel for accessories. 165 lb dynamic. Vehicle-specific landing pad kits required.",
   },
-
   {
     id: "frontrunner-slimline-roof",
     brand: "Front Runner",
@@ -268,6 +285,7 @@ export const rackDatabase: RackEntry[] = [
     staticLbs: 660,
     onRoadDynamicLbs: 440,
     offRoadDynamicLbs: 220,
+    crossbarHeightAboveRoofIn: 4,
     tSlotRequired: false,
     compatibleVehicles: ["suv-5door", "suv-3door", "crossover"],
     affiliateUrl: "https://www.amazon.com/dp/B07NQBJK3C?tag=prepperevo-20",
@@ -282,6 +300,7 @@ export const rackDatabase: RackEntry[] = [
     staticLbs: 1000,
     onRoadDynamicLbs: 600,
     offRoadDynamicLbs: 300,
+    crossbarHeightAboveRoofIn: 3,
     tSlotRequired: false,
     compatibleVehicles: ["suv-5door"],
     affiliateUrl: "https://www.amazon.com/dp/B0762TRK7X?tag=prepperevo-20",
@@ -296,6 +315,7 @@ export const rackDatabase: RackEntry[] = [
     staticLbs: 660,
     onRoadDynamicLbs: 440,
     offRoadDynamicLbs: 220,
+    crossbarHeightAboveRoofIn: 4.5,
     tSlotRequired: false,
     compatibleVehicles: ["suv-5door", "suv-3door", "crossover", "van"],
     affiliateUrl: "https://www.amazon.com/dp/B07CSLZKV1?tag=prepperevo-20",
@@ -310,6 +330,7 @@ export const rackDatabase: RackEntry[] = [
     staticLbs: 660,
     onRoadDynamicLbs: 440,
     offRoadDynamicLbs: 220,
+    crossbarHeightAboveRoofIn: 3,
     tSlotRequired: false,
     compatibleVehicles: ["suv-5door", "suv-3door"],
     affiliateUrl: "https://www.amazon.com/dp/B08GKZZY8V?tag=prepperevo-20",
@@ -324,6 +345,7 @@ export const rackDatabase: RackEntry[] = [
     staticLbs: 800,
     onRoadDynamicLbs: 300,
     offRoadDynamicLbs: 150,
+    crossbarHeightAboveRoofIn: 4,
     tSlotRequired: false,
     compatibleVehicles: ["suv-5door", "suv-3door"],
     affiliateUrl: "https://www.amazon.com/dp/B001GM77WK?tag=prepperevo-20",

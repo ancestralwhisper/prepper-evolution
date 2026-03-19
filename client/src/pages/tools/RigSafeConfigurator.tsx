@@ -329,6 +329,9 @@ export default function RigSafeConfigurator() {
   // Cargo box selector state
   const [selCargoBoxBrand, setSelCargoBoxBrand] = useState("");
 
+  // Secondary rack (cab roof rack) selector state
+  const [selSecondaryRackBrand, setSelSecondaryRackBrand] = useState("");
+
   // Profile import banner
   const [profileAvailable, setProfileAvailable] = useState(false);
   const [profileImported, setProfileImported] = useState(false);
@@ -442,6 +445,13 @@ export default function RigSafeConfigurator() {
     setConfig((prev) => ({
       ...prev,
       manualAwning: { ...prev.manualAwning, [key]: value },
+    }));
+  }, []);
+
+  const updateManualSecondaryRack = useCallback((key: string, value: number) => {
+    setConfig((prev) => ({
+      ...prev,
+      manualSecondaryRack: { ...prev.manualSecondaryRack, [key]: value },
     }));
   }, []);
 
@@ -561,6 +571,9 @@ export default function RigSafeConfigurator() {
   const rackType = config.mountType;
   const filteredRackBrands = getRackBrands(rackType);
   const filteredRackModels = selRackBrand ? getRackModels(selRackBrand, rackType) : [];
+
+  const secondaryRackBrands = getRackBrands("roof-rack");
+  const secondaryRackModels = selSecondaryRackBrand ? getRackModels(selSecondaryRackBrand, "roof-rack") : [];
 
   const tentBrands = getTentBrands();
   const tentModels = selTentBrand ? getTentModels(selTentBrand) : [];
@@ -937,6 +950,86 @@ export default function RigSafeConfigurator() {
                 </div>
               )}
             </div>
+
+            {/* Secondary Rack (Cab Roof Rack) — trucks with bed rack only */}
+            {config.mountType === "bed-rack" && (
+              <div className="space-y-3 border-t border-border pt-4">
+                <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Secondary Rack (Cab Roof Rack)</h4>
+                <Toggle
+                  label="I have a cab roof rack installed"
+                  checked={config.hasSecondaryRack}
+                  onChange={(v) => update("hasSecondaryRack", v)}
+                  hint="Required for cab clearance calculation when using an RTT on a bed rack"
+                />
+
+                {config.hasSecondaryRack && (
+                  <div className="space-y-3">
+                    <Toggle
+                      label="Manual Entry"
+                      checked={config.useManualSecondaryRack}
+                      onChange={(v) => update("useManualSecondaryRack", v)}
+                    />
+
+                    {!config.useManualSecondaryRack ? (
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                            <select
+                              value={selSecondaryRackBrand}
+                              onChange={(e) => { setSelSecondaryRackBrand(e.target.value); update("secondaryRack", null); }}
+                              className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                            >
+                              <option value="">Select Brand</option>
+                              {secondaryRackBrands.map((b) => <option key={b} value={b}>{b}</option>)}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                            <select
+                              value={config.secondaryRack?.id || ""}
+                              onChange={(e) => {
+                                const r = findRack(e.target.value);
+                                update("secondaryRack", r || null);
+                              }}
+                              className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                              disabled={!selSecondaryRackBrand}
+                            >
+                              <option value="">Select Model</option>
+                              {secondaryRackModels.map((r) => (
+                                <option key={r.id} value={r.id}>{r.model} ({r.weightLbs} lbs)</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        {config.secondaryRack && (
+                          <p className="text-[10px] text-muted-foreground italic">
+                            Crossbar height: {(config.secondaryRack as any).crossbarHeightAboveRoofIn ?? 3}&quot; above roof surface
+                            {config.secondaryRack.notes && ` — ${config.secondaryRack.notes}`}
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-3">
+                        <NumberInput
+                          label="Rack Weight"
+                          value={config.manualSecondaryRack.weightLbs}
+                          onChange={(v) => updateManualSecondaryRack("weightLbs", v)}
+                          unit="lbs"
+                        />
+                        <NumberInput
+                          label="Crossbar Height Above Roof"
+                          value={config.manualSecondaryRack.heightIn}
+                          onChange={(v) => updateManualSecondaryRack("heightIn", v)}
+                          unit="in"
+                          hint="Vertical distance from cab roof surface to top of crossbar"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </Section>
 
@@ -2052,10 +2145,108 @@ export default function RigSafeConfigurator() {
             )}
 
             {/* Bed Fitment (trucks) */}
-            {!result.bedFitmentOk && (
+            {!result.bedFitmentOk && !result.cabClearance.applicable && (
               <div className="bg-yellow-500/5 border border-yellow-500/30 rounded-lg p-4">
                 <h4 className="text-[10px] font-bold uppercase tracking-wide text-yellow-500 mb-1">Bed Fitment</h4>
                 <p className="text-xs">Tent overhangs bed by {result.bedOverhangIn}&quot;. Check cab/tailgate clearance.</p>
+              </div>
+            )}
+
+            {/* Cab Clearance & Tent Positioning */}
+            {result.cabClearance.applicable && (
+              <div className="bg-card border border-border rounded-lg p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Cab Clearance & Tent Positioning</h4>
+                  <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${
+                    result.cabClearance.currentHeightStatus === "clear"
+                      ? "bg-green-500/10 text-green-500 border-green-500/30"
+                      : result.cabClearance.currentHeightStatus === "tight"
+                      ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/30"
+                      : result.cabClearance.currentHeightStatus === "conflict"
+                      ? "bg-red-500/10 text-red-500 border-red-500/30"
+                      : "bg-muted text-muted-foreground border-border"
+                  }`}>
+                    {result.cabClearance.currentHeightStatus === "clear" ? "Clear" :
+                     result.cabClearance.currentHeightStatus === "tight" ? "Tight" :
+                     result.cabClearance.currentHeightStatus === "conflict" ? "Conflict" : "—"}
+                  </span>
+                </div>
+
+                {/* Overhang summary */}
+                {!result.cabClearance.fitsInBed && (
+                  <div className="bg-muted rounded-lg p-3 text-xs space-y-1">
+                    <p>
+                      Tent overhangs bed by <span className="font-bold">{result.cabClearance.totalOverhangIn}&quot;</span>.
+                    </p>
+                    <p className="text-muted-foreground">
+                      Optimal mount: <span className="font-bold text-foreground">{result.cabClearance.optimalFrontOverhangIn}&quot; past cab</span> /&nbsp;
+                      <span className="font-bold text-foreground">{result.cabClearance.optimalRearOverhangIn}&quot; past tailgate</span> — balanced load on both mounting points.
+                    </p>
+                  </div>
+                )}
+
+                {/* Height matrix */}
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">Height Settings vs Cab Clearance</p>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs min-w-[320px]">
+                      <thead>
+                        <tr className="text-[10px] uppercase text-muted-foreground border-b border-border">
+                          <th className="text-left pb-1.5 font-bold">Rack Ht</th>
+                          <th className="text-right pb-1.5 font-bold">Tent Bottom</th>
+                          <th className="text-right pb-1.5 font-bold">Rack Top</th>
+                          <th className="text-right pb-1.5 font-bold">Gap</th>
+                          <th className="text-center pb-1.5 font-bold">Status</th>
+                          <th className="text-right pb-1.5 font-bold">Rig Ht</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {result.cabClearance.heightOptions.map((opt) => {
+                          const isCurrent = opt.heightIn === (config.rackHeightSetting ?? config.manualRack?.heightIn);
+                          const isRecommended = opt.heightIn === result.cabClearance.recommendedHeightIn;
+                          const statusColor = opt.status === "clear" ? "text-green-500" : opt.status === "tight" ? "text-yellow-500" : "text-red-500";
+                          return (
+                            <tr key={opt.heightIn} className={`border-b border-border/50 last:border-0 ${isCurrent ? "font-bold" : "text-muted-foreground"}`}>
+                              <td className="py-1.5">
+                                {opt.heightIn}&quot;
+                                {isCurrent && <span className="text-[9px] text-primary ml-1.5 font-bold">◀ active</span>}
+                                {isRecommended && !isCurrent && <span className="text-[9px] text-green-500 ml-1.5 font-bold">★ rec.</span>}
+                              </td>
+                              <td className="text-right py-1.5">{opt.tentBottomFromGroundIn}&quot;</td>
+                              <td className="text-right py-1.5">{opt.roofRackTopFromGroundIn}&quot;</td>
+                              <td className={`text-right py-1.5 font-bold ${statusColor}`}>
+                                {opt.clearanceIn >= 0 ? "+" : ""}{opt.clearanceIn}&quot;
+                              </td>
+                              <td className={`text-center py-1.5 font-bold uppercase text-[9px] tracking-wide ${statusColor}`}>
+                                {opt.status}
+                              </td>
+                              <td className="text-right py-1.5">
+                                {opt.totalVehicleHeightIn}&quot;
+                                {opt.garageWarning && <span className="text-yellow-500 ml-1" title="Over 7ft — check garage clearance">⚠</span>}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Recommended setting callout */}
+                {result.cabClearance.recommendedHeightIn !== null && (
+                  <div className="bg-green-500/5 border border-green-500/30 rounded-lg p-3">
+                    <p className="text-xs">
+                      <span className="font-bold text-green-500">Recommended: {result.cabClearance.recommendedHeightIn}&quot; setting</span>
+                      {" — "}lowest height that fully clears the cab rack (≥2&quot; gap).
+                    </p>
+                  </div>
+                )}
+
+                {result.cabClearance.recommendedHeightIn === null && result.cabClearance.heightOptions.length > 0 && (
+                  <div className="bg-red-500/5 border border-red-500/30 rounded-lg p-3">
+                    <p className="text-xs text-red-500 font-bold">No height setting achieves full clearance with this combination. Consider a different rack or tent.</p>
+                  </div>
+                )}
               </div>
             )}
 

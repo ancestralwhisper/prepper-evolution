@@ -305,6 +305,9 @@ export interface RigSafeResult {
   bedOverhangIn: number;
   bedFitmentOk: boolean;
 
+  // Cab / roof-rack clearance (bed rack + secondary cab rack combos)
+  cabClearance: CabClearanceResult;
+
   // Tonneau clearance
   tonneauClearanceIn: number;
   tonneauClearanceOk: boolean;
@@ -940,6 +943,131 @@ export function computeBedFitment(config: RigSafeConfig): {
   };
 }
 
+// ─── Compute: Cab / Roof-Rack Clearance ────────────────────────────
+// Only relevant when a bed rack + tent is combined with a secondary
+// cab roof rack on the same truck. Checks whether the tent bottom
+// clears the rear crossbar of the cab rack at each available height.
+
+export interface CabClearanceHeightOption {
+  heightIn: number;                  // rack height setting (e.g. 19, 23, 27.25)
+  tentBottomFromGroundIn: number;    // where tent bottom sits from ground
+  roofRackTopFromGroundIn: number;   // top of secondary rack crossbar from ground
+  clearanceIn: number;               // gap between tent bottom and rack top (positive = clear)
+  status: "clear" | "tight" | "conflict";  // clear ≥2", tight 0–2", conflict <0
+  totalVehicleHeightIn: number;      // ground to top of closed tent at this setting
+  garageWarning: boolean;            // total height >84" (7 ft)
+}
+
+export interface CabClearanceResult {
+  applicable: boolean;               // false if no secondary rack or no bed rack tent setup
+  totalOverhangIn: number;           // how much tent extends beyond bed (tent length - bed length)
+  fitsInBed: boolean;                // true if tent is shorter than or equal to bed
+  optimalFrontOverhangIn: number;    // recommended front overhang (toward cab) for weight balance
+  optimalRearOverhangIn: number;     // recommended rear overhang (toward tailgate)
+  heightOptions: CabClearanceHeightOption[];
+  recommendedHeightIn: number | null;  // lowest height setting that achieves "clear" status
+  minimumClearHeightIn: number | null; // same as above, for display
+  currentHeightStatus: "clear" | "tight" | "conflict" | "unknown";
+}
+
+export function computeCabClearance(config: RigSafeConfig): CabClearanceResult {
+  const NOT_APPLICABLE: CabClearanceResult = {
+    applicable: false,
+    totalOverhangIn: 0,
+    fitsInBed: true,
+    optimalFrontOverhangIn: 0,
+    optimalRearOverhangIn: 0,
+    heightOptions: [],
+    recommendedHeightIn: null,
+    minimumClearHeightIn: null,
+    currentHeightStatus: "unknown",
+  };
+
+  // Only applies: truck with bed rack + tent + secondary cab roof rack
+  if (!config.hasTent) return NOT_APPLICABLE;
+  if (config.mountType !== "bed-rack") return NOT_APPLICABLE;
+  if (!config.hasSecondaryRack) return NOT_APPLICABLE;
+
+  const vehicle = config.useManual ? config.manualVehicle : config.vehicle;
+  if (!vehicle) return NOT_APPLICABLE;
+
+  const tent = getTent(config);
+  if (!tent) return NOT_APPLICABLE;
+
+  // Get bed and cab dimensions from vehicle
+  const bedLengthIn = vehicle.bedLengthIn ?? null;
+  // bedRailHeightIn and cabRoofHeightIn are on StockVehicle only (not manualVehicle)
+  const bedRailHeightIn = !config.useManual && config.vehicle
+    ? (config.vehicle as any).bedRailHeightIn ?? null
+    : null;
+  const cabRoofHeightIn = !config.useManual && config.vehicle
+    ? (config.vehicle as any).cabRoofHeightIn ?? null
+    : null;
+
+  if (!bedRailHeightIn || !cabRoofHeightIn) return NOT_APPLICABLE;
+
+  // Secondary rack crossbar height above roof surface
+  const secRackCrossbarOffset = !config.useManualSecondaryRack && config.secondaryRack
+    ? (config.secondaryRack as any).crossbarHeightAboveRoofIn ?? 3
+    : config.manualSecondaryRack.heightIn ?? 3;
+
+  const roofRackTopFromGroundIn = cabRoofHeightIn + secRackCrossbarOffset;
+
+  // Overhang calculation
+  const totalOverhangIn = bedLengthIn
+    ? Math.max(0, tent.closedLengthIn - bedLengthIn)
+    : 0;
+  const fitsInBed = totalOverhangIn === 0;
+
+  // Optimal position: split overhang evenly front/rear
+  const optimalFrontOverhangIn = Math.round((totalOverhangIn / 2) * 10) / 10;
+  const optimalRearOverhangIn  = Math.round((totalOverhangIn / 2) * 10) / 10;
+
+  // Available height settings from the bed rack
+  const availableHeights: number[] = (() => {
+    if (!config.useManualRack && config.rack?.heightSettings?.length) {
+      return config.rack.heightSettings;
+    }
+    // Fall back to current setting only
+    const h = config.rackHeightSetting ?? config.manualRack.heightIn;
+    return [h];
+  })();
+
+  const currentHeight = config.rackHeightSetting ?? config.manualRack.heightIn;
+
+  const heightOptions: CabClearanceHeightOption[] = availableHeights.map((h) => {
+    const tentBottomFromGroundIn = bedRailHeightIn + h;
+    const clearanceIn = Math.round((tentBottomFromGroundIn - roofRackTopFromGroundIn) * 10) / 10;
+    const totalVehicleHeightIn = Math.round((tentBottomFromGroundIn + tent.closedHeightIn) * 10) / 10;
+    const status: "clear" | "tight" | "conflict" =
+      clearanceIn >= 2 ? "clear" : clearanceIn >= 0 ? "tight" : "conflict";
+    return {
+      heightIn: h,
+      tentBottomFromGroundIn: Math.round(tentBottomFromGroundIn * 10) / 10,
+      roofRackTopFromGroundIn: Math.round(roofRackTopFromGroundIn * 10) / 10,
+      clearanceIn,
+      status,
+      totalVehicleHeightIn,
+      garageWarning: totalVehicleHeightIn > 84,
+    };
+  });
+
+  const recommendedOpt = heightOptions.find((o) => o.status === "clear");
+  const currentOpt = heightOptions.find((o) => o.heightIn === currentHeight);
+
+  return {
+    applicable: true,
+    totalOverhangIn: Math.round(totalOverhangIn * 10) / 10,
+    fitsInBed,
+    optimalFrontOverhangIn,
+    optimalRearOverhangIn,
+    heightOptions,
+    recommendedHeightIn: recommendedOpt?.heightIn ?? null,
+    minimumClearHeightIn: recommendedOpt?.heightIn ?? null,
+    currentHeightStatus: currentOpt?.status ?? "unknown",
+  };
+}
+
 // ─── Compute: Tonneau Fold Clearance ───────────────────────────────
 
 export function computeTonneauClearance(config: RigSafeConfig): {
@@ -1073,6 +1201,50 @@ export function computeWarnings(config: RigSafeConfig, result: Omit<RigSafeResul
     w.push({ level: "info", message: `CG raised ~${result.cgRaiseIn}". ${result.stabilityNote}` });
   }
 
+  // Cab / roof-rack clearance
+  if (result.cabClearance.applicable) {
+    const cc = result.cabClearance;
+    const current = cc.heightOptions.find(o => o.heightIn === (config.rackHeightSetting ?? config.manualRack.heightIn));
+    if (current) {
+      if (current.status === "conflict") {
+        w.push({
+          level: "danger",
+          message: `Tent CONFLICTS with cab rack at ${current.heightIn}" rack height — tent bottom is ${Math.abs(current.clearanceIn)}" BELOW the roof rack crossbar. Raise bed rack to ${cc.recommendedHeightIn ?? "max"}" or higher.`,
+        });
+      } else if (current.status === "tight") {
+        w.push({
+          level: "warning",
+          message: `Only ${current.clearanceIn}" clearance between tent and cab rack at ${current.heightIn}" height. Minimum recommended is 2". Raise to ${cc.recommendedHeightIn ?? "max"}" for safe clearance.`,
+        });
+      } else {
+        // Clear — but flag if it's just barely clear
+        if (current.clearanceIn < 4) {
+          w.push({
+            level: "info",
+            message: `Tent clears cab rack at ${current.heightIn}" with ${current.clearanceIn}" gap. Technically clear but tight — double-check fit before securing tent.`,
+          });
+        }
+      }
+    }
+    // Overhang note
+    if (cc.totalOverhangIn > 0) {
+      w.push({
+        level: "info",
+        message: `Tent is ${cc.totalOverhangIn}" longer than your bed. Recommended: position ${cc.optimalFrontOverhangIn}" over cab + ${cc.optimalRearOverhangIn}" past tailgate for balanced weight distribution.`,
+      });
+    }
+    // Garage warning at recommended height
+    if (cc.recommendedHeightIn !== null) {
+      const recOpt = cc.heightOptions.find(o => o.heightIn === cc.recommendedHeightIn);
+      if (recOpt?.garageWarning) {
+        w.push({
+          level: "warning",
+          message: `At ${cc.recommendedHeightIn}" (minimum clearance height), total rig height is ${recOpt.totalVehicleHeightIn}" (${(recOpt.totalVehicleHeightIn / 12).toFixed(1)}ft). Many parking garages are posted at 7'0"–7'6". Measure your garage before pulling in.`,
+        });
+      }
+    }
+  }
+
   // Tonneau clearance
   if (!result.tonneauClearanceOk) {
     w.push({ level: "warning", message: `Tonneau fold clearance only ${result.tonneauClearanceIn}". May interfere with rack. Need 2"+ gap.` });
@@ -1186,6 +1358,7 @@ export function computeAll(config: RigSafeConfig): RigSafeResult {
   const sleeping = computeSleepingCapacity(config);
   const cg = computeCgImpact(config);
   const bedFit = computeBedFitment(config);
+  const cabClearance = computeCabClearance(config);
   const tonneauClear = computeTonneauClearance(config);
   const breakdown = computeWeightBreakdown(config);
   const vehicleModsWeightLbs = computeVehicleModsWeight(config);
@@ -1262,6 +1435,7 @@ export function computeAll(config: RigSafeConfig): RigSafeResult {
     stabilityNote: cg.stabilityNote,
     bedOverhangIn: bedFit.overhangIn,
     bedFitmentOk: bedFit.fits,
+    cabClearance,
     tonneauClearanceIn: tonneauClear.clearanceIn,
     tonneauClearanceOk: tonneauClear.ok,
     vehicleModsWeightLbs,

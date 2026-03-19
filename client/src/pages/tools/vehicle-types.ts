@@ -296,6 +296,8 @@ export interface StockVehicle {
   overallHeightIn: number;       // total vehicle height
   bedLengthIn: number | null;    // truck bed interior length (null for SUVs)
   bedWidthIn: number | null;     // truck bed width between wheel wells
+  bedRailHeightIn?: number;      // height of top of bed rail from ground (trucks only)
+  cabRoofHeightIn?: number;      // height of top of cab roof from ground (trucks only)
   roofDynamicLbs: number;        // manufacturer roof dynamic load rating
   roofStaticLbs: number;         // static (3x dynamic if not published)
   bodyType: BodyType;
