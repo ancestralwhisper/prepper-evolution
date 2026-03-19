@@ -946,6 +946,24 @@ export default function RigSafeConfigurator() {
                     <p className="text-[10px] text-muted-foreground italic">{config.rack.notes}</p>
                   )}
 
+                  {/* T-slot tonneau warning */}
+                  {config.rack.tSlotRequired && (
+                    <div className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
+                      <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
+                      <div className="space-y-1">
+                        <p className="text-xs font-semibold text-amber-300">T-Slot Tonneau Required</p>
+                        <p className="text-[11px] text-amber-200/80">
+                          This rack mounts to T-tracks in your tonneau cover (e.g. BAKFlip MX4 TS, ReTrax OneXT). Not all tonneaus have T-slots — verify yours does before ordering.
+                        </p>
+                        {!config.useManual && config.vehicle && config.vehicle.year < 2015 && (
+                          <p className="text-[11px] text-amber-200/80">
+                            Heads up: T-slot tonneaus are available aftermarket for your {config.vehicle.year} {config.vehicle.make} {config.vehicle.model} but were not factory-standard on this generation. Confirm you have one installed or budget for an upgrade (~$400–$900).
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   <p className="text-[10px] text-muted-foreground">Ratings shown are manufacturer-published values. Actual capacity may vary by installation, condition, and use.</p>
                 </div>
               )}
