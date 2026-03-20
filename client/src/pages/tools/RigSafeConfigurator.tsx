@@ -307,6 +307,7 @@ export default function RigSafeConfigurator() {
 
   // Tent selector state
   const [selTentBrand, setSelTentBrand] = useState("");
+  const [lightweightTentOnly, setLightweightTentOnly] = useState(false);
 
   // Awning selector state
   const [selAwningBrand, setSelAwningBrand] = useState("");
@@ -575,8 +576,13 @@ export default function RigSafeConfigurator() {
   const secondaryRackBrands = getRackBrands("roof-rack");
   const secondaryRackModels = selSecondaryRackBrand ? getRackModels(selSecondaryRackBrand, "roof-rack") : [];
 
-  const tentBrands = getTentBrands();
-  const tentModels = selTentBrand ? getTentModels(selTentBrand) : [];
+  const LIGHTWEIGHT_LBS = 100;
+  const tentBrands = lightweightTentOnly
+    ? getTentBrands().filter((b) => tentDatabase.some((t) => t.brand === b && t.closedWeightLbs > 0 && t.closedWeightLbs < LIGHTWEIGHT_LBS))
+    : getTentBrands();
+  const tentModels = selTentBrand
+    ? getTentModels(selTentBrand).filter((t) => !lightweightTentOnly || (t.closedWeightLbs > 0 && t.closedWeightLbs < LIGHTWEIGHT_LBS))
+    : [];
 
   const awningBrands = getAwningBrands();
   const awningModels = selAwningBrand ? getAwningModels(selAwningBrand) : [];
@@ -1076,6 +1082,21 @@ export default function RigSafeConfigurator() {
 
                 {!config.useManualTent ? (
                   <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setLightweightTentOnly(!lightweightTentOnly);
+                        setSelTentBrand("");
+                        update("tent", null);
+                      }}
+                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${
+                        lightweightTentOnly
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-muted text-muted-foreground border-border hover:border-primary"
+                      }`}
+                    >
+                      ⚡ Lightweight only (&lt;100 lbs)
+                    </button>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
