@@ -238,7 +238,7 @@ export const MASTER_ASIN_MAP: Record<CategoryKey, ProductEntry[]> = {
     p("B0F1MWF1GL", "Roofnest Galaxy Pro Rooftop Tent", "Rooftop Tents"),
     p("B0CJCWY2DN", "Roofnest Falcon 2 Rooftop Tent", "Rooftop Tents"),
     p("B001RDLGG6", "ARB Simpson III Rooftop Tent", "Rooftop Tents"),
-    p("B08LD2F6W4", "Smittybilt Overlander Rooftop Tent", "Rooftop Tents"),
+    p("B07BZQRN6K", "Tuff Stuff Ranger 3 Rooftop Tent", "Rooftop Tents"),
   ],
 
   // =========================================================================
