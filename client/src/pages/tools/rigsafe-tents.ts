@@ -200,57 +200,10 @@ export const tentDatabase: TentEntry[] = [
   },
 
   // ─── 23ZERO ─────────────────────────────────────────────────────────
-
-  {
-    id: "23zero-breezeway-72",
-    brand: "23Zero",
-    model: "Breezeway 72",
-    type: "softshell-foldout",
-    openSide: "either",
-    closedWeightLbs: 156,
-    closedHeightIn: 14,
-    closedLengthIn: 48,
-    closedWidthIn: 72,
-    openLengthIn: 96,
-    openWidthIn: 72,
-    openHeadroomIn: 49,
-    mattressThicknessIn: 3,
-    sleepsMarketing: 4,
-    sleepsRealistic: 2,
-    staticRatingLbs: 880,
-    hasAnnex: true,
-    annexName: "23Zero Breezeway 72 Annex",
-    annexWeightLbs: 20,
-    annexSleeps: 2,
-    annexAffiliateUrl: "https://www.amazon.com/dp/B0CG3LBWGN?tag=prepperevo-20",
-    affiliateUrl: "https://www.amazon.com/dp/B0CG3L5K7Q?tag=prepperevo-20",
-    notes: "Soft-shell fold-out. Australian brand. Excellent ventilation for hot climates.",
-  },
-  {
-    id: "23zero-walkabout-87",
-    brand: "23Zero",
-    model: "Walkabout 87",
-    type: "softshell-foldout",
-    openSide: "either",
-    closedWeightLbs: 198,
-    closedHeightIn: 14,
-    closedLengthIn: 88,
-    closedWidthIn: 48,
-    openLengthIn: 96,
-    openWidthIn: 87,
-    openHeadroomIn: 52,
-    mattressThicknessIn: 3,
-    sleepsMarketing: 6,
-    sleepsRealistic: 3,
-    staticRatingLbs: 1320,
-    hasAnnex: true,
-    annexName: "23Zero Walkabout 87 Annex",
-    annexWeightLbs: 25,
-    annexSleeps: 2,
-    annexAffiliateUrl: "https://www.amazon.com/dp/B0CG3M1RTK?tag=prepperevo-20",
-    affiliateUrl: "https://www.amazon.com/dp/B0CG3KVR1L?tag=prepperevo-20",
-    notes: "Soft-shell fold-out. Largest 23Zero tent. King-size platform. 1320 lb total load capacity.",
-  },
+  // NOTE: 23Zero refreshed their entire lineup to 2.0 generation (2025/2026).
+  // Breezeway and original Walkabout series discontinued — accessories only remain.
+  // Current lineup: Kabul series (wedge hardshell), Armadillo series (premium hardshell),
+  // Walkabout 2.0 series (softshell). Add entries once specs are verified from 23zero.com.
 
   // ─── OVS (Overland Vehicle Systems) ─────────────────────────────────
 
