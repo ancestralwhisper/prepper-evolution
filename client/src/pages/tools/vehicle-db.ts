@@ -655,6 +655,41 @@ export const vehicleDatabase: StockVehicle[] = [
     // roofStaticLbs: 495 is a 3× dynamic estimate — Nissan does not publish a static rating.
   },
   {
+    year: 2017, make: "Nissan", model: "Qashqai", trim: "1.6T AWD (J11, 2014-2021)",
+    curbWeightLbs: 3197, gvwrLbs: 4200, maxTowingLbs: 1500,
+    wheelbaseIn: 104.2, trackWidthIn: 61.8, groundClearanceIn: 7.9,
+    approachAngle: 18, departureAngle: 22, breakoverAngle: 17,
+    fuelTankGal: 14.5, stockTireSize: "225/55R18", stockTireDiameter: 27.7,
+    mpgCity: 25, mpgHighway: 33, mpgCombined: 28,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.33, frontWeightPct: 60, stockWadingDepthIn: 0,
+    stockRatio: 4.05, alternatorAmps: 120,
+    overallHeightIn: 62.6, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 165, roofStaticLbs: 495, bodyType: "crossover",
+    // International name for the Rogue Sport (J11 platform shared). Sold in UK/EU/AU/CA.
+    // ⚠ 75 kg / 165 lb dynamic roof limit — same as Rogue Sport. Very tight for RTT use.
+    // Rack + crossbars eat 30-50 lbs, leaving ~115-135 lbs net tent budget.
+    // Nissan does not publish a static rating — roofStaticLbs: 495 is a 3× dynamic estimate.
+    // MPG figures are US-equivalent estimates converted from EU combined cycle.
+  },
+  {
+    year: 2022, make: "Nissan", model: "Qashqai", trim: "1.3T AWD (J12, 2021+)",
+    curbWeightLbs: 3197, gvwrLbs: 4200, maxTowingLbs: 1500,
+    wheelbaseIn: 104.9, trackWidthIn: 61.8, groundClearanceIn: 7.1,
+    approachAngle: 17, departureAngle: 21, breakoverAngle: 16,
+    fuelTankGal: 14.5, stockTireSize: "225/55R18", stockTireDiameter: 27.7,
+    mpgCity: 26, mpgHighway: 34, mpgCombined: 29,
+    engineType: "gas", drivetrain: "awd", transferCase: "none",
+    ssf: 1.32, frontWeightPct: 60, stockWadingDepthIn: 0,
+    stockRatio: 4.05, alternatorAmps: 120,
+    overallHeightIn: 63.9, bedLengthIn: null, bedWidthIn: null,
+    roofDynamicLbs: 165, roofStaticLbs: 495, bodyType: "crossover",
+    // 3rd gen Qashqai (J12, CMF-C platform). Slightly taller and longer wheelbase than J11.
+    // ⚠ 75 kg / 165 lb dynamic roof limit unchanged from J11 — same tight budget.
+    // Nissan does not publish a static rating — roofStaticLbs: 495 is a 3× dynamic estimate.
+    // MPG figures are US-equivalent estimates converted from EU combined cycle.
+  },
+  {
     year: 2024, make: "Nissan", model: "Rogue", trim: "SV AWD",
     curbWeightLbs: 3829, gvwrLbs: 4773, maxTowingLbs: 1350,
     wheelbaseIn: 106.5, trackWidthIn: 60.8, groundClearanceIn: 8.2,
