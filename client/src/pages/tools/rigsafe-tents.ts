@@ -3189,6 +3189,158 @@ export const tentDatabase: TentEntry[] = [
     affiliateUrl: "https://www.amazon.com/dp/B09JKG6D2Z?tag=prepperevo-20",
     notes: "Budget-friendly hardshell. Stainless steel frame. Only 35\" headroom. Good entry-level RTT.",
   },
+
+  // ─── SAN HIMA ────────────────────────────────────────────────────────
+  //
+  // Source: Amazon product listings (verified March 2026)
+  // Australian-owned brand, budget/value tier — hardshell clamshells
+  // positioned as affordable alternatives to iKamper/Thule.
+  // Good "if you're on a budget" option: quick deploy, aluminum shell,
+  // LED strip, mattress included.
+  //
+  // Data limitations:
+  //   - Jervis, Jervis Loft, Hotham X: only package weight published
+  //     (includes ladder + accessories); tent-only weight estimated.
+  //   - Hotham standard: weight listed as approximate range only.
+  //   - Jervis / Jervis Loft: open dims not published.
+  //   - Kosci E-rise: open dims are exterior only, headroom not published.
+  //   - Static load ratings: listed as 661 lb where confirmed; others
+  //     not published (typical for this price tier).
+  //
+  // Accessories (weights unpublished unless noted):
+  //   Jervis Annex Room: ~$409.99 separate. Packed weight not published;
+  //     user reports estimate ~30–50 lb range.
+  //   Mattress topper: ~$120–$130 add-on, minimal weight.
+  //   Crossbars: ~$160 if not included, light metal add-on.
+
+  {
+    id: "sanhima-hotham-lite",
+    brand: "San Hima",
+    model: "Hotham Lite",
+    type: "hardshell-clamshell",
+    openSide: "either",
+    closedWeightLbs: 134.5,
+    closedLengthIn: 89,
+    closedWidthIn: 54.7,
+    closedHeightIn: 7.5,
+    openLengthIn: 81.5,
+    openWidthIn: 46,
+    openHeadroomIn: 56.5,
+    mattressThicknessIn: 2,
+    sleepsMarketing: 2,
+    sleepsRealistic: 1,
+    staticRatingLbs: 0,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/s?k=San+Hima+Hotham+Lite+rooftop+tent&tag=prepperevo-20",
+    notes: "Budget hardshell clamshell. 134.5 lbs with ladder removed (146.6 lbs with ladder attached). 7.5\" closed profile. Interior 81.5\"×46\"×56.5\"H. 420D ripstop fabric, waterproof, tri-color LED strip, gas struts, ~2\" mattress included. Available in Army Green, Khaki, Gray. Crossbars optional add-on (~$160). Static occupant rating not published.",
+  },
+  {
+    id: "sanhima-hotham",
+    brand: "San Hima",
+    model: "Hotham",
+    type: "hardshell-clamshell",
+    openSide: "either",
+    closedWeightLbs: 0,
+    closedLengthIn: 83.5,
+    closedWidthIn: 57.1,
+    closedHeightIn: 5.4,
+    openLengthIn: 78.7,
+    openWidthIn: 51.6,
+    openHeadroomIn: 58.3,
+    mattressThicknessIn: 2,
+    sleepsMarketing: 2,
+    sleepsRealistic: 1,
+    staticRatingLbs: 661,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/s?k=San+Hima+Hotham+rooftop+tent+hardshell&tag=prepperevo-20",
+    notes: "Standard Hotham series. Ultra-low 5.4\" closed profile. Interior 78.7\"×51.6\"×58.3\"H. Max load 661 lbs. Tent weight not explicitly published — estimated 150–170 lb range based on series. Ladder included.",
+  },
+  {
+    id: "sanhima-jervis",
+    brand: "San Hima",
+    model: "Jervis",
+    type: "hardshell-clamshell",
+    openSide: "either",
+    closedWeightLbs: 200,
+    closedLengthIn: 68.9,
+    closedWidthIn: 53.5,
+    closedHeightIn: 15,
+    openLengthIn: 0,
+    openWidthIn: 0,
+    openHeadroomIn: 0,
+    mattressThicknessIn: 2,
+    sleepsMarketing: 2,
+    sleepsRealistic: 1,
+    staticRatingLbs: 0,
+    hasAnnex: true,
+    annexName: "San Hima Jervis Annex Room",
+    annexAffiliateUrl: "https://www.amazon.com/s?k=San+Hima+Jervis+annex&tag=prepperevo-20",
+    affiliateUrl: "https://www.amazon.com/s?k=San+Hima+Jervis+rooftop+tent&tag=prepperevo-20",
+    notes: "Thicker 15\" closed profile — unusual for a hardshell, likely polycarbonate/ABS construction with more fabric volume. Package weight 199.52 lbs (tent + ladder + accessories); tent-only estimated ~200 lbs. Open dims not published. Annex available separately (~$409.99; packed weight ~30–50 lbs estimated, not officially confirmed). Bundle with annex ~$1,799.99.",
+  },
+  {
+    id: "sanhima-jervis-loft",
+    brand: "San Hima",
+    model: "Jervis Loft Pop Up",
+    type: "hardshell-clamshell",
+    openSide: "either",
+    closedWeightLbs: 212,
+    closedLengthIn: 89.4,
+    closedWidthIn: 53.5,
+    closedHeightIn: 15,
+    openLengthIn: 0,
+    openWidthIn: 0,
+    openHeadroomIn: 0,
+    mattressThicknessIn: 2,
+    sleepsMarketing: 2,
+    sleepsRealistic: 1,
+    staticRatingLbs: 0,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/s?k=San+Hima+Jervis+Loft+rooftop+tent&tag=prepperevo-20",
+    notes: "Pop-up hardshell variant. Same 15\" closed profile and width as Jervis but longer footprint (89.4\" vs 68.9\"). Package weight 211.64 lbs (tent + ladder + accessories); tent-only estimated ~212 lbs. Open dims not published. LED strip light included.",
+  },
+  {
+    id: "sanhima-hotham-x",
+    brand: "San Hima",
+    model: "Hotham X",
+    type: "hardshell-clamshell",
+    openSide: "either",
+    closedWeightLbs: 267,
+    closedLengthIn: 84.7,
+    closedWidthIn: 53.5,
+    closedHeightIn: 6.7,
+    openLengthIn: 79.1,
+    openWidthIn: 49.2,
+    openHeadroomIn: 54.5,
+    mattressThicknessIn: 2,
+    sleepsMarketing: 2,
+    sleepsRealistic: 1,
+    staticRatingLbs: 0,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/s?k=San+Hima+Hotham+X+rooftop+tent&tag=prepperevo-20",
+    notes: "Premium variant of the Hotham series. 6.7\" closed profile. Interior 79.1\"×49.2\"×54.5\"H. Package weight 267.2 lbs (tent + ladder + accessories) — heaviest San Hima short of the Kosci. Tent-only weight estimated ~252–255 lbs. Ladder included.",
+  },
+  {
+    id: "sanhima-kosci-e-rise",
+    brand: "San Hima",
+    model: "Kosci E-Rise",
+    type: "hardshell-clamshell",
+    openSide: "either",
+    closedWeightLbs: 275.6,
+    closedLengthIn: 68,
+    closedWidthIn: 55,
+    closedHeightIn: 11.4,
+    openLengthIn: 86.6,
+    openWidthIn: 68,
+    openHeadroomIn: 0,
+    mattressThicknessIn: 2,
+    sleepsMarketing: 2,
+    sleepsRealistic: 2,
+    staticRatingLbs: 661,
+    hasAnnex: false,
+    affiliateUrl: "https://www.amazon.com/s?k=San+Hima+Kosci+E-Rise+rooftop+tent&tag=prepperevo-20",
+    notes: "Electric auto-open hardshell — opens via USB-powered actuator. Heaviest San Hima at 275.6 lbs. Open dims (~86.6\"×68\") are exterior footprint when fully deployed; interior and peak headroom not published. 11.4\" closed profile. Max load 661 lbs. Adds setup complexity vs manual gas-strut models.",
+  },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────
