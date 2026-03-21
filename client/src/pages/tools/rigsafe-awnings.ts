@@ -550,11 +550,11 @@ export const awningDatabase: AwningEntry[] = [
     mountSide: "either",
     totalWeightLbs: 62,
     mountedBracketWeightLbs: 12,
-    deployedCoverageSqFt: 0,
+    deployedCoverageSqFt: 108,
     hasWallKit: false,
     wallKitCreatesSleeping: false,
     affiliateUrl: "https://www.amazon.com/dp/B0F43MP8YV?tag=prepperevo-20",
-    notes: "ASIN B0F43MP8YV. Mid-budget 270 with multi-color LED lighting. Stainless knuckle joints, waterproof/wind-resistant. Closest to mid-range quality in the budget 270 space. COVERAGE UNCONFIRMED. ~$500–$650.",
+    notes: "ASIN B0F43MP8YV. Mid-budget 270 with multi-color LED lighting. Stainless knuckle joints, waterproof/wind-resistant. Closest to mid-range quality in the budget 270 space. ~$500–$650.",
   },
 ];
 
