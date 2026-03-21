@@ -702,18 +702,18 @@ export default function VehicleProfileEditor() {
           <div className="mt-4 pt-4 border-t border-border">
             <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Stock Specs (auto-filled)</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 text-sm">
-              <div><span className="text-muted-foreground">Curb Weight:</span> <span className="font-bold">{profile.curbWeightLbs.toLocaleString()} lbs</span></div>
-              <div><span className="text-muted-foreground">GVWR:</span> <span className="font-bold">{profile.gvwrLbs.toLocaleString()} lbs</span></div>
-              <div><span className="text-muted-foreground">Max Tow:</span> <span className="font-bold">{profile.maxTowingLbs.toLocaleString()} lbs</span></div>
-              <div><span className="text-muted-foreground">Wheelbase:</span> <span className="font-bold">{profile.wheelbaseIn}"</span></div>
-              <div><span className="text-muted-foreground">Clearance:</span> <span className="font-bold">{profile.groundClearanceIn}"</span></div>
-              <div><span className="text-muted-foreground">Approach:</span> <span className="font-bold">{profile.approachAngle}°</span></div>
-              <div><span className="text-muted-foreground">Departure:</span> <span className="font-bold">{profile.departureAngle}°</span></div>
-              <div><span className="text-muted-foreground">Breakover:</span> <span className="font-bold">{profile.breakoverAngle}°</span></div>
-              <div><span className="text-muted-foreground">Fuel Tank:</span> <span className="font-bold">{profile.fuelTankGal} gal</span></div>
-              <div><span className="text-muted-foreground">Stock Tires:</span> <span className="font-bold">{profile.stockTireSize}</span></div>
-              <div><span className="text-muted-foreground">MPG:</span> <span className="font-bold">{profile.mpgCombined}</span></div>
-              <div><span className="text-muted-foreground">SSF:</span> <span className="font-bold">{profile.ssf}</span></div>
+              <div><span className="text-muted-foreground">Curb Weight:</span> <span className="font-bold text-foreground">{profile.curbWeightLbs.toLocaleString()} lbs</span></div>
+              <div><span className="text-muted-foreground">GVWR:</span> <span className="font-bold text-foreground">{profile.gvwrLbs.toLocaleString()} lbs</span></div>
+              <div><span className="text-muted-foreground">Max Tow:</span> <span className="font-bold text-foreground">{profile.maxTowingLbs.toLocaleString()} lbs</span></div>
+              <div><span className="text-muted-foreground">Wheelbase:</span> <span className="font-bold text-foreground">{profile.wheelbaseIn}"</span></div>
+              <div><span className="text-muted-foreground">Clearance:</span> <span className="font-bold text-foreground">{profile.groundClearanceIn}"</span></div>
+              <div><span className="text-muted-foreground">Approach:</span> <span className="font-bold text-foreground">{profile.approachAngle}°</span></div>
+              <div><span className="text-muted-foreground">Departure:</span> <span className="font-bold text-foreground">{profile.departureAngle}°</span></div>
+              <div><span className="text-muted-foreground">Breakover:</span> <span className="font-bold text-foreground">{profile.breakoverAngle}°</span></div>
+              <div><span className="text-muted-foreground">Fuel Tank:</span> <span className="font-bold text-foreground">{profile.fuelTankGal} gal</span></div>
+              <div><span className="text-muted-foreground">Stock Tires:</span> <span className="font-bold text-foreground">{profile.stockTireSize}</span></div>
+              <div><span className="text-muted-foreground">MPG:</span> <span className="font-bold text-foreground">{profile.mpgCombined}</span></div>
+              <div><span className="text-muted-foreground">SSF:</span> <span className="font-bold text-foreground">{profile.ssf}</span></div>
             </div>
           </div>
         )}
@@ -1066,12 +1066,12 @@ export default function VehicleProfileEditor() {
               <div className="grid sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-border">
                 <div className="text-sm">
                   <span className="text-muted-foreground">Modified CG Height: </span>
-                  <span className="font-bold">{computed.modifiedCgHeightIn}" </span>
+                  <span className="font-bold text-foreground">{computed.modifiedCgHeightIn}" </span>
                   <span className="text-muted-foreground">(stock {profile.cgHeightIn}")</span>
                 </div>
                 <div className="text-sm">
                   <span className="text-muted-foreground">Modified SSF: </span>
-                  <span className="font-bold">{computed.modifiedSsf} </span>
+                  <span className="font-bold text-foreground">{computed.modifiedSsf} </span>
                   <span className="text-muted-foreground">(stock {profile.ssf})</span>
                 </div>
               </div>
@@ -1107,7 +1107,7 @@ export default function VehicleProfileEditor() {
                 <div className="mt-4 pt-4 border-t border-border">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Total Fuel Capacity:</span>
-                    <span className="font-bold">{computed.totalFuelGal} gal</span>
+                    <span className="font-bold text-foreground">{computed.totalFuelGal} gal</span>
                   </div>
                   <div className="flex justify-between text-sm mt-1">
                     <span className="text-muted-foreground">Estimated Range:</span>

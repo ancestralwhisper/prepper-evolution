@@ -576,14 +576,14 @@ export default function RigRatedConfigurator() {
             {/* Machine spec summary */}
             {activeMachine && (
               <div className="bg-muted border border-border rounded-lg p-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                <div><span className="text-muted block text-[10px]">Dry Weight</span><span className="font-bold">{activeMachine.dryWeightLbs.toLocaleString()} lbs</span></div>
-                <div><span className="text-muted block text-[10px]">GVWR</span><span className="font-bold">{activeMachine.gvwrLbs.toLocaleString()} lbs</span></div>
-                <div><span className="text-muted block text-[10px]">Payload</span><span className="font-bold">{activeMachine.payloadCapacityLbs} lbs</span></div>
-                <div><span className="text-muted block text-[10px]">Clearance</span><span className="font-bold">{activeMachine.groundClearanceIn}"</span></div>
-                <div><span className="text-muted block text-[10px]">HP</span><span className="font-bold">{activeMachine.horsePower}</span></div>
-                <div><span className="text-muted block text-[10px]">Fuel</span><span className="font-bold">{activeMachine.fuelCapacityGal} gal</span></div>
-                <div><span className="text-muted block text-[10px]">Width</span><span className="font-bold">{activeMachine.overallWidthIn}"</span></div>
-                <div><span className="text-muted block text-[10px]">Tow Rating</span><span className="font-bold">{activeMachine.towingCapacityLbs.toLocaleString()} lbs</span></div>
+                <div><span className="text-muted-foreground block text-[10px]">Dry Weight</span><span className="font-bold text-foreground">{activeMachine.dryWeightLbs.toLocaleString()} lbs</span></div>
+                <div><span className="text-muted-foreground block text-[10px]">GVWR</span><span className="font-bold text-foreground">{activeMachine.gvwrLbs.toLocaleString()} lbs</span></div>
+                <div><span className="text-muted-foreground block text-[10px]">Payload</span><span className="font-bold text-foreground">{activeMachine.payloadCapacityLbs} lbs</span></div>
+                <div><span className="text-muted-foreground block text-[10px]">Clearance</span><span className="font-bold text-foreground">{activeMachine.groundClearanceIn}"</span></div>
+                <div><span className="text-muted-foreground block text-[10px]">HP</span><span className="font-bold text-foreground">{activeMachine.horsePower}</span></div>
+                <div><span className="text-muted-foreground block text-[10px]">Fuel</span><span className="font-bold text-foreground">{activeMachine.fuelCapacityGal} gal</span></div>
+                <div><span className="text-muted-foreground block text-[10px]">Width</span><span className="font-bold text-foreground">{activeMachine.overallWidthIn}"</span></div>
+                <div><span className="text-muted-foreground block text-[10px]">Tow Rating</span><span className="font-bold text-foreground">{activeMachine.towingCapacityLbs.toLocaleString()} lbs</span></div>
               </div>
             )}
 

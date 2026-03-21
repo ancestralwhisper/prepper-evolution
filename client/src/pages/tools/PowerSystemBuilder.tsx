@@ -981,7 +981,7 @@ export default function PowerSystemBuilder() {
               <p className="text-[9px] font-bold uppercase text-muted-foreground">Your Bank</p>
               <p className="text-2xl font-extrabold">{result.batteryBank.totalCapacityAh}Ah</p>
             </div>
-            <span className="text-muted text-xl">vs</span>
+            <span className="text-muted-foreground text-xl">vs</span>
             <div className="text-center">
               <p className="text-[9px] font-bold uppercase text-muted-foreground">Recommended</p>
               <p className="text-2xl font-extrabold text-primary">{result.recommendedBankAh}Ah</p>
@@ -1125,7 +1125,7 @@ export default function PowerSystemBuilder() {
                 >
                   {checkedItems.has(item.id) && <Check className="w-3 h-3 text-white" />}
                 </button>
-                <span className={`text-sm ${checkedItems.has(item.id) ? "text-muted line-through" : item.critical ? "text-red-400 font-bold" : "text-foreground"}`}>
+                <span className={`text-sm ${checkedItems.has(item.id) ? "text-muted-foreground line-through" : item.critical ? "text-red-400 font-bold" : "text-foreground"}`}>
                   {item.text}
                 </span>
               </label>
