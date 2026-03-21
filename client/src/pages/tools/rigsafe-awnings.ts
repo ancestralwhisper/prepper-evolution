@@ -363,7 +363,7 @@ export const awningDatabase: AwningEntry[] = [
     mountedBracketWeightLbs: 10,
     deployedCoverageSqFt: 85,
     hasWallKit: true,
-    wallKitWeightLbs: 0,
+    wallKitWeightLbs: 18,
     wallKitCreatesSleeping: false,
     affiliateUrl: "https://www.amazon.com/s?k=Smittybilt+2794+180+awning&tag=prepperevo-20",
     notes: "SKU 2794. 600D Oxford polyester, 1000D PVC cover. 85+ sq ft coverage. Wall kit #2894 sold separately. $599.99.",
