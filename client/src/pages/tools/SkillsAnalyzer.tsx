@@ -1186,6 +1186,32 @@ export default function SkillsAnalyzer() {
                             <ResourceLink key={i} resource={resource} skillId={skill.id} />
                           ))}
                         </div>
+                        {/* Article links + Search PE Articles */}
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1">
+                          {skill.learningResources
+                            .filter((r) => r.type === "article")
+                            .map((resource, i) => (
+                              <a
+                                key={i}
+                                href={resource.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                              >
+                                <ExternalLink className="w-3 h-3 shrink-0" />
+                                {resource.title}
+                              </a>
+                            ))}
+                          <a
+                            href={`https://prepperevolution.com/?s=${encodeURIComponent(skill.name)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                          >
+                            <ExternalLink className="w-3 h-3 shrink-0" />
+                            Search PE Articles
+                          </a>
+                        </div>
                         <button
                           onClick={() => setDetailSkill({ skill, domain })}
                           className="text-sm text-primary font-semibold hover:underline flex items-center gap-1"

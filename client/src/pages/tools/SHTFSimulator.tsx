@@ -4,7 +4,7 @@ import {
   Shield, Zap, CloudLightning, AlertTriangle, Snowflake, Flame,
   ArrowRight, RotateCcw, ChevronLeft, ExternalLink, Share2,
   CheckCircle, XCircle, TrendingUp, TrendingDown, Trophy, Skull,
-  Heart, Target,
+  Heart, Target, MapPin,
 } from "lucide-react";
 import {
   scenarios,
@@ -15,6 +15,8 @@ import {
   type EndResult,
 } from "./scenarios";
 import { useSEO } from "@/hooks/useSEO";
+import zipData from "./zip-data.json";
+import type { ZipPrefixData } from "./zip-types";
 
 const scenarioIcons: Record<string, React.ElementType> = {
   "zap-off": Zap,
@@ -172,6 +174,34 @@ export default function SHTFSimulator() {
     });
   };
 
+  // ZIP-based scenario suggestion
+  const zipSuggestion = useMemo(() => {
+    const hazardToScenario: Record<string, string> = {
+      wildfire: "wildfire-evacuation",
+      hurricane: "hurricane-evacuation",
+      "extreme-cold": "winter-storm",
+      tornado: "power-grid-failure",
+      flooding: "hurricane-evacuation",
+      earthquake: "infrastructure-attack",
+      "extreme-heat": "wildfire-evacuation",
+    };
+
+    try {
+      const savedZip = localStorage.getItem("pe-zip");
+      if (!savedZip) return null;
+      const { prefix } = JSON.parse(savedZip) as { prefix: string };
+      const entry = (zipData as Record<string, ZipPrefixData>)[prefix];
+      if (!entry || !entry.hz) return null;
+      const scenarioId = hazardToScenario[entry.hz];
+      if (!scenarioId) return null;
+      const scenario = scenarios.find((s) => s.id === scenarioId);
+      if (!scenario) return null;
+      return { hazard: entry.hz, scenario };
+    } catch {
+      return null;
+    }
+  }, []);
+
   if (phase === "select") {
     return (
       <div className="min-h-screen bg-background pt-24 pb-20">
@@ -199,6 +229,30 @@ export default function SHTFSimulator() {
                 </p>
               </div>
             </div>
+
+            {/* ZIP-Based Scenario Suggestion Banner */}
+            {zipSuggestion && (
+              <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
+                    <MapPin className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="text-sm leading-relaxed text-foreground">
+                    Based on your area&apos;s top hazard (
+                    <span className="font-bold text-primary">{zipSuggestion.hazard.replace(/-/g, " ")}</span>
+                    ), we suggest:{" "}
+                    <span className="font-bold">{zipSuggestion.scenario.name}</span>
+                  </p>
+                </div>
+                <button
+                  onClick={() => startScenario(zipSuggestion.scenario)}
+                  className="shrink-0 flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-4 py-2.5 text-sm font-bold uppercase tracking-wide transition-colors"
+                  data-testid="button-zip-suggested-scenario"
+                >
+                  Play This Scenario <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {scenarios.map((scenario) => {
