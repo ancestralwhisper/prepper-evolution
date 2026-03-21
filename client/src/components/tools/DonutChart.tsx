@@ -18,7 +18,7 @@ export default function DonutChart({ segments, totalLabel, totalValue, size = 20
   if (total === 0) {
     return (
       <div className="flex items-center justify-center" style={{ width: size, height: size }}>
-        <p className="text-muted text-sm">Add gear to see breakdown</p>
+        <p className="text-muted-foreground text-sm">Add gear to see breakdown</p>
       </div>
     );
   }
@@ -121,7 +121,7 @@ export function ChartLegend({ segments }: { segments: Segment[] }) {
             style={{ backgroundColor: s.color }}
             aria-hidden="true"
           />
-          <span className="text-muted truncate">{s.label}</span>
+          <span className="text-muted-foreground truncate">{s.label}</span>
           <span className="text-foreground font-medium ml-auto">
             {total > 0 ? `${((s.value / total) * 100).toFixed(0)}%` : "0%"}
           </span>

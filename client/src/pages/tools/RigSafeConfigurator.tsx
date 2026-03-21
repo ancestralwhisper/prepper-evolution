@@ -93,11 +93,11 @@ function GaugeArc({
             className="transition-all duration-700"
           />
         )}
-        <text x={center} y={center + 2} textAnchor="middle" className="fill-foreground text-lg font-extrabold" style={{ fontSize: size * 0.18 }}>
+        <text x={center} y={center + 2} textAnchor="middle" fontWeight="800" style={{ fontSize: size * 0.18, fill: 'var(--color-foreground)' }}>
           {value}
         </text>
         {unit && (
-          <text x={center} y={center + size * 0.15} textAnchor="middle" className="fill-muted-foreground" style={{ fontSize: size * 0.1 }}>
+          <text x={center} y={center + size * 0.15} textAnchor="middle" style={{ fontSize: size * 0.1, fill: 'var(--color-muted-foreground)' }}>
             {unit}
           </text>
         )}
@@ -769,34 +769,34 @@ export default function RigSafeConfigurator() {
                 {config.vehicle && (
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-xs uppercase">Curb Weight</span>
-                      <span className="font-bold">{config.vehicle.curbWeightLbs.toLocaleString()} lbs</span>
+                      <span className="text-muted-foreground block text-xs uppercase">Curb Weight</span>
+                      <span className="font-bold text-foreground">{config.vehicle.curbWeightLbs.toLocaleString()} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-xs uppercase">GVWR</span>
-                      <span className="font-bold">{config.vehicle.gvwrLbs.toLocaleString()} lbs</span>
+                      <span className="text-muted-foreground block text-xs uppercase">GVWR</span>
+                      <span className="font-bold text-foreground">{config.vehicle.gvwrLbs.toLocaleString()} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-xs uppercase">Payload</span>
-                      <span className="font-bold">{(config.vehicle.gvwrLbs - config.vehicle.curbWeightLbs).toLocaleString()} lbs</span>
+                      <span className="text-muted-foreground block text-xs uppercase">Payload</span>
+                      <span className="font-bold text-foreground">{(config.vehicle.gvwrLbs - config.vehicle.curbWeightLbs).toLocaleString()} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-xs uppercase">Roof Dynamic</span>
-                      <span className="font-bold">{config.vehicle.roofDynamicLbs} lbs</span>
+                      <span className="text-muted-foreground block text-xs uppercase">Roof Dynamic</span>
+                      <span className="font-bold text-foreground">{config.vehicle.roofDynamicLbs} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-xs uppercase">Height</span>
-                      <span className="font-bold">{config.vehicle.overallHeightIn}&quot;</span>
+                      <span className="text-muted-foreground block text-xs uppercase">Height</span>
+                      <span className="font-bold text-foreground">{config.vehicle.overallHeightIn}&quot;</span>
                     </div>
                     {config.vehicle.bedLengthIn && (
                       <div className="bg-muted rounded-lg p-2">
-                        <span className="text-muted block text-xs uppercase">Bed Length</span>
-                        <span className="font-bold">{config.vehicle.bedLengthIn}&quot;</span>
+                        <span className="text-muted-foreground block text-xs uppercase">Bed Length</span>
+                        <span className="font-bold text-foreground">{config.vehicle.bedLengthIn}&quot;</span>
                       </div>
                     )}
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-xs uppercase">Body Type</span>
-                      <span className="font-bold">{config.vehicle.bodyType}</span>
+                      <span className="text-muted-foreground block text-xs uppercase">Body Type</span>
+                      <span className="font-bold text-foreground">{config.vehicle.bodyType}</span>
                     </div>
                   </div>
                 )}
@@ -1915,7 +1915,7 @@ export default function RigSafeConfigurator() {
                           className="accent-accent w-3.5 h-3.5"
                         />
                         <span className="flex-1 text-foreground">{preset.name}</span>
-                        <span className="text-muted font-mono text-xs">{preset.weightLbs} lbs</span>
+                        <span className="text-muted-foreground font-mono text-xs">{preset.weightLbs} lbs</span>
                       </label>
                       {checked && (
                         <div className="flex items-center gap-1.5 pl-5">
@@ -2281,18 +2281,18 @@ export default function RigSafeConfigurator() {
               <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Weakest Link Analysis</h4>
               <div className="grid grid-cols-3 gap-3 text-sm">
                 <div>
-                  <span className="text-muted block text-xs uppercase">Static Limit</span>
-                  <span className="font-bold">{result.weakestLink.staticLimit} lbs</span>
+                  <span className="text-muted-foreground block text-xs uppercase">Static Limit</span>
+                  <span className="font-bold text-foreground">{result.weakestLink.staticLimit} lbs</span>
                   <span className="block text-xs text-muted-foreground">({result.weakestLink.staticBottleneck})</span>
                 </div>
                 <div>
-                  <span className="text-muted block text-xs uppercase">Dynamic Limit</span>
-                  <span className="font-bold">{result.weakestLink.dynamicLimit} lbs</span>
+                  <span className="text-muted-foreground block text-xs uppercase">Dynamic Limit</span>
+                  <span className="font-bold text-foreground">{result.weakestLink.dynamicLimit} lbs</span>
                   <span className="block text-xs text-muted-foreground">({result.weakestLink.dynamicBottleneck})</span>
                 </div>
                 <div>
-                  <span className="text-muted block text-xs uppercase">Off-Road Limit</span>
-                  <span className="font-bold">{result.weakestLink.offRoadLimit} lbs</span>
+                  <span className="text-muted-foreground block text-xs uppercase">Off-Road Limit</span>
+                  <span className="font-bold text-foreground">{result.weakestLink.offRoadLimit} lbs</span>
                   <span className="block text-xs text-muted-foreground">({result.weakestLink.offRoadBottleneck})</span>
                 </div>
               </div>
@@ -2303,7 +2303,7 @@ export default function RigSafeConfigurator() {
             <div className="flex items-center gap-4 bg-card border border-border rounded-lg p-4">
               <div className="flex-1">
                 <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Garage Clearance</h4>
-                <p className="text-lg font-extrabold">{result.totalHeightIn}&quot;</p>
+                <p className="text-lg font-extrabold text-foreground">{result.totalHeightIn}&quot;</p>
                 <p className="text-sm text-muted-foreground">vs {result.garageHeightIn}&quot; garage</p>
               </div>
               <span className={`text-sm font-bold uppercase px-3 py-1 rounded-full ${
@@ -2320,27 +2320,27 @@ export default function RigSafeConfigurator() {
               <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Sleeping Capacity</h4>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
                 <div>
-                  <span className="text-muted block text-xs uppercase">Tent (Comfort)</span>
+                  <span className="text-muted-foreground block text-xs uppercase">Tent (Comfort)</span>
                   <span className="text-xl font-extrabold text-primary">{result.sleepingCapacity.tentComfort}</span>
                 </div>
                 <div>
-                  <span className="text-muted block text-xs uppercase">Tent (Tight)</span>
-                  <span className="text-xl font-extrabold">{result.sleepingCapacity.tentTight}</span>
+                  <span className="text-muted-foreground block text-xs uppercase">Tent (Tight)</span>
+                  <span className="text-xl font-extrabold text-foreground">{result.sleepingCapacity.tentTight}</span>
                 </div>
                 {result.sleepingCapacity.annexSleeps > 0 && (
                   <div>
-                    <span className="text-muted block text-xs uppercase">Annex</span>
-                    <span className="text-xl font-extrabold">{result.sleepingCapacity.annexSleeps}</span>
+                    <span className="text-muted-foreground block text-xs uppercase">Annex</span>
+                    <span className="text-xl font-extrabold text-foreground">{result.sleepingCapacity.annexSleeps}</span>
                   </div>
                 )}
                 {result.sleepingCapacity.wallKitSleeps > 0 && (
                   <div>
-                    <span className="text-muted block text-xs uppercase">Wall Kit</span>
-                    <span className="text-xl font-extrabold">{result.sleepingCapacity.wallKitSleeps}</span>
+                    <span className="text-muted-foreground block text-xs uppercase">Wall Kit</span>
+                    <span className="text-xl font-extrabold text-foreground">{result.sleepingCapacity.wallKitSleeps}</span>
                   </div>
                 )}
               </div>
-              <p className="text-sm font-bold">Total rig sleeping capacity: {result.sleepingCapacity.total}</p>
+              <p className="text-sm font-bold text-foreground">Total rig sleeping capacity: {result.sleepingCapacity.total}</p>
             </div>
 
             {/* CG Impact */}
@@ -2384,7 +2384,7 @@ export default function RigSafeConfigurator() {
                 {!result.cabClearance.fitsInBed && (
                   <div className="bg-muted rounded-lg p-3 text-sm space-y-1">
                     <p>
-                      Tent overhangs bed by <span className="font-bold">{result.cabClearance.totalOverhangIn}&quot;</span>.
+                      Tent overhangs bed by <span className="font-bold text-foreground">{result.cabClearance.totalOverhangIn}&quot;</span>.
                     </p>
                     <p className="text-muted-foreground">
                       Optimal mount: <span className="font-bold text-foreground">{result.cabClearance.optimalFrontOverhangIn}&quot; past cab</span> /&nbsp;
