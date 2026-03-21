@@ -1,11 +1,11 @@
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import {
   Truck, ChevronDown, ChevronRight, Weight, Fuel, Gauge, Shield,
   AlertTriangle, ArrowUp, ArrowDown, Mountain, Disc3, Wrench,
   Zap, Waves, Radio, Box, CircleDot, Settings, TriangleAlert,
   Check, X, TentTree, Wind, Battery, Compass, Package,
-  Save, RotateCcw, Info,
+  Save, RotateCcw, Info, Download, Upload, FolderOpen,
 } from "lucide-react";
 import {
   getUniqueMakes, getModelsForMake, getTrimsForModel, findVehicle,
@@ -249,6 +249,44 @@ function Toggle({
   );
 }
 
+// ─── Tire Size Parser ─────────────────────────────────────────────────
+// Supports metric (285/70R17) and inch (33x12.50R15) formats
+
+function parseTireSize(size: string): number | null {
+  const metric = size.match(/^(\d+)\/(\d+)[Rr](\d+(?:\.\d+)?)$/);
+  if (metric) {
+    const widthMm = parseInt(metric[1], 10);
+    const aspectPct = parseInt(metric[2], 10);
+    const rimIn = parseFloat(metric[3]);
+    const sidewallIn = (widthMm * (aspectPct / 100)) / 25.4;
+    return Math.round((rimIn + 2 * sidewallIn) * 10) / 10;
+  }
+  const inches = size.match(/^(\d+(?:\.\d+)?)[xX](\d+(?:\.\d+)?)[Rr](\d+(?:\.\d+)?)$/);
+  if (inches) return Math.round(parseFloat(inches[1]) * 10) / 10;
+  return null;
+}
+
+// ─── Terrain Range Data ───────────────────────────────────────────────
+
+const TERRAIN_RANGES = [
+  { label: "Highway", mult: 1.0, color: "#3B82F6" },
+  { label: "City / Suburban", mult: 0.82, color: "#6B7280" },
+  { label: "Gravel / Dirt Road", mult: 0.78, color: "#A3855A" },
+  { label: "Unmaintained Trail", mult: 0.68, color: "#84CC16" },
+  { label: "Sand (aired down)", mult: 0.50, color: "#F59E0B" },
+  { label: "Mud / Wet Trail", mult: 0.45, color: "#92400E" },
+  { label: "Rock Crawl / Technical", mult: 0.30, color: "#EF4444" },
+  { label: "Snow / Ice", mult: 0.60, color: "#93C5FD" },
+] as const;
+
+// ─── Multi-Profile Slot Keys ──────────────────────────────────────────
+
+const SLOT_KEYS = [
+  "pe-vehicle-profile-slot-1",
+  "pe-vehicle-profile-slot-2",
+  "pe-vehicle-profile-slot-3",
+] as const;
+
 // ─── Default Profile Factory ─────────────────────────────────────────
 
 function createDefaultProfile(): VehicleProfile {
@@ -442,6 +480,12 @@ export default function VehicleProfileEditor() {
   // Toast
   const [showSaved, setShowSaved] = useState(false);
 
+  // Multi-profile slots (3 named slots)
+  const [slotProfiles, setSlotProfiles] = useState<(VehicleProfile | null)[]>([null, null, null]);
+
+  // Import ref
+  const importRef = useRef<HTMLInputElement>(null);
+
   // ─── Computed values ────────────────────────────────────────────
   const computed = useMemo<VehicleComputed>(() => computeVehicle(profile), [profile]);
 
@@ -467,6 +511,14 @@ export default function VehicleProfileEditor() {
           setManualEntry(true);
         }
       }
+    } catch { /* ignore */ }
+    // Load saved slots
+    try {
+      const slots = SLOT_KEYS.map((key) => {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) as VehicleProfile : null;
+      });
+      setSlotProfiles(slots);
     } catch { /* ignore */ }
     setInitialized(true);
   }, []);
@@ -536,6 +588,82 @@ export default function VehicleProfileEditor() {
     localStorage.removeItem(VEHICLE_PROFILE_KEY);
   };
 
+  // ─── Export JSON ────────────────────────────────────────────────
+  const handleExport = useCallback(() => {
+    const blob = new Blob([JSON.stringify(profile, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `pe-vehicle-${profile.nickname || profile.make || "profile"}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    trackEvent("pe_tool_action", { tool: "vehicle-profile", action: "export" });
+  }, [profile]);
+
+  // ─── Import JSON ────────────────────────────────────────────────
+  const handleImport = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const parsed = JSON.parse(ev.target?.result as string) as VehicleProfile;
+        if (!parsed.curbWeightLbs && !parsed.make) {
+          alert("Invalid vehicle profile file.");
+          return;
+        }
+        setProfile({ ...parsed, updatedAt: Date.now() });
+        if (parsed.make) {
+          setSelMake(parsed.make);
+          setSelModel(parsed.model);
+          setSelTrim(`${parsed.year} ${parsed.trim}`);
+          setManualEntry(false);
+        }
+        trackEvent("pe_tool_action", { tool: "vehicle-profile", action: "import" });
+      } catch {
+        alert("Could not read file. Make sure it's a valid PE vehicle profile JSON.");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  }, []);
+
+  // ─── Slot management ────────────────────────────────────────────
+  const saveToSlot = useCallback((slotIdx: number) => {
+    const key = SLOT_KEYS[slotIdx];
+    localStorage.setItem(key, JSON.stringify(profile));
+    setSlotProfiles((prev) => {
+      const next = [...prev];
+      next[slotIdx] = profile;
+      return next;
+    });
+    setShowSaved(true);
+    setTimeout(() => setShowSaved(false), 1500);
+  }, [profile]);
+
+  const loadFromSlot = useCallback((slotIdx: number) => {
+    const slotProfile = slotProfiles[slotIdx];
+    if (!slotProfile) return;
+    if (profile.curbWeightLbs > 0 && !confirm(`Load "${slotProfile.nickname || `Slot ${slotIdx + 1}`}"? Your current profile will be replaced.`)) return;
+    setProfile(slotProfile);
+    if (slotProfile.make) {
+      setSelMake(slotProfile.make);
+      setSelModel(slotProfile.model);
+      setSelTrim(`${slotProfile.year} ${slotProfile.trim}`);
+      setManualEntry(false);
+    }
+  }, [slotProfiles, profile]);
+
+  const clearSlot = useCallback((slotIdx: number) => {
+    if (!confirm(`Clear slot ${slotIdx + 1}?`)) return;
+    localStorage.removeItem(SLOT_KEYS[slotIdx]);
+    setSlotProfiles((prev) => {
+      const next = [...prev];
+      next[slotIdx] = null;
+      return next;
+    });
+  }, []);
+
   // ─── Vehicle has been selected? ─────────────────────────────────
   const hasVehicle = profile.curbWeightLbs > 0;
 
@@ -549,6 +677,57 @@ export default function VehicleProfileEditor() {
       <div>
         <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Ops Deck</p>
         <h2 className="text-2xl sm:text-3xl font-extrabold">Unified Vehicle <span className="text-primary">Profile</span></h2>
+      </div>
+
+      {/* ─── PROFILE SLOTS ─────────────────────────────────────── */}
+      <div className="bg-card border border-border rounded-lg p-5">
+        <div className="flex items-center gap-2 mb-3">
+          <FolderOpen className="w-4 h-4 text-primary" />
+          <h2 className="text-sm font-extrabold">Saved Profile Slots</h2>
+          {showSaved && <span className="text-xs text-primary font-bold ml-2">Saved!</span>}
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          {[0, 1, 2].map((i) => {
+            const slot = slotProfiles[i];
+            return (
+              <div key={i} className="border border-border rounded-lg p-3 flex flex-col gap-2">
+                <p className="text-xs font-bold text-foreground truncate">
+                  {slot ? (slot.nickname || `${slot.year} ${slot.make} ${slot.model}`.trim() || `Slot ${i + 1}`) : <span className="text-muted-foreground">Empty</span>}
+                </p>
+                {slot && (
+                  <p className="text-[10px] text-muted-foreground truncate">
+                    {slot.curbWeightLbs > 0 ? `${slot.curbWeightLbs.toLocaleString()} lbs curb` : "Custom"}
+                  </p>
+                )}
+                <div className="flex gap-1.5">
+                  <button
+                    onClick={() => saveToSlot(i)}
+                    className="flex-1 text-[10px] font-bold uppercase tracking-wide bg-primary/10 text-primary rounded px-1.5 py-1 hover:bg-primary/20 transition-colors"
+                  >
+                    Save
+                  </button>
+                  {slot && (
+                    <>
+                      <button
+                        onClick={() => loadFromSlot(i)}
+                        className="flex-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground rounded px-1.5 py-1 hover:text-foreground transition-colors"
+                      >
+                        Load
+                      </button>
+                      <button
+                        onClick={() => clearSlot(i)}
+                        className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground rounded px-1.5 py-1 hover:text-danger transition-colors"
+                        title="Clear slot"
+                      >
+                        ×
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* How This Tool Works */}
@@ -742,8 +921,20 @@ export default function VehicleProfileEditor() {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Tire Size</label>
-                  <input type="text" value={profile.tires.size} onChange={(e) => updateNested("tires", { size: e.target.value })}
-                    placeholder="285/70R17" className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none" />
+                  <input
+                    type="text"
+                    value={profile.tires.size}
+                    onChange={(e) => {
+                      const size = e.target.value;
+                      const diameter = parseTireSize(size);
+                      updateNested("tires", diameter ? { size, diameter } : { size });
+                    }}
+                    placeholder="285/70R17"
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none"
+                  />
+                  {parseTireSize(profile.tires.size) && (
+                    <p className="text-xs text-primary mt-0.5">↳ {parseTireSize(profile.tires.size)}" diameter auto-calculated</p>
+                  )}
                 </div>
                 <NumberInput label="Total Diameter" value={profile.tires.diameter} onChange={(v) => updateNested("tires", { diameter: v })} unit="inches" step={0.1} hint={`Stock: ${profile.stockTireDiameter}"`} />
                 <SelectInput label="Tire Type" value={profile.tires.type} onChange={(v) => updateNested("tires", { type: v as TireType })}
@@ -1163,14 +1354,55 @@ export default function VehicleProfileEditor() {
               </div>
             </div>
 
+            {/* Terrain Range Table */}
+            {computed.estimatedMpg > 0 && computed.totalFuelGal > 0 && (
+              <div className="bg-card border border-border rounded-lg p-6">
+                <h3 className="text-sm font-extrabold mb-4">Terrain Range Estimate</h3>
+                <div className="space-y-2">
+                  {TERRAIN_RANGES.map(({ label, mult, color }) => {
+                    const mpg = Math.round(computed.estimatedMpg * mult * 10) / 10;
+                    const range = Math.round(computed.totalFuelGal * computed.estimatedMpg * mult);
+                    return (
+                      <div key={label} className="space-y-0.5">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-muted-foreground">{label}</span>
+                          <div className="flex items-center gap-3">
+                            <span className="text-xs text-muted-foreground">{mpg} mpg</span>
+                            <span className="text-sm font-bold text-foreground">{range.toLocaleString()} mi</span>
+                          </div>
+                        </div>
+                        <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{ width: `${Math.min(100, mult * 100)}%`, backgroundColor: color }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-muted-foreground mt-3">Based on {computed.estimatedMpg} mpg estimate × {computed.totalFuelGal} gal total fuel</p>
+              </div>
+            )}
+
             {/* Actions */}
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <button
                 onClick={handleReset}
                 className="flex items-center gap-2 bg-muted border border-border rounded-lg px-4 py-3 text-sm font-bold uppercase tracking-wide hover:border-danger/30 hover:text-danger transition-colors"
               >
                 <RotateCcw className="w-4 h-4" /> Reset Profile
               </button>
+              <button
+                onClick={handleExport}
+                className="flex items-center gap-2 bg-muted border border-border rounded-lg px-4 py-3 text-sm font-bold uppercase tracking-wide hover:border-primary/30 hover:text-primary transition-colors"
+              >
+                <Download className="w-4 h-4" /> Export JSON
+              </button>
+              <label className="flex items-center gap-2 bg-muted border border-border rounded-lg px-4 py-3 text-sm font-bold uppercase tracking-wide hover:border-primary/30 hover:text-primary transition-colors cursor-pointer">
+                <Upload className="w-4 h-4" /> Import JSON
+                <input ref={importRef} type="file" accept=".json" onChange={handleImport} className="hidden" />
+              </label>
             </div>
 
             {/* Privacy Notice */}

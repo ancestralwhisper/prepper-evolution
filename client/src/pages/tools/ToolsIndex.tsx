@@ -220,9 +220,11 @@ const opsDeckTools: Tool[] = [
     slug: "threat-risk-dashboard",
     name: "Threat-Specific Risk Dashboard",
     description:
-      "Enter your ZIP code and get FEMA-sourced risk scores for 18 hazard types. See probability bars, top 5 priority actions, and generate a custom preparedness PDF.",
+      "Enter your ZIP code and get FEMA-sourced risk scores for 18 hazard types. See probability bars, top 5 priority actions, and personalized prep recommendations.",
     icon: AlertTriangle,
-    status: "coming-soon",
+    status: "live",
+    badge: "New",
+    version: "v1.0",
     cta: "Check Threats",
   },
   {

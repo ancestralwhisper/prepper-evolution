@@ -39,6 +39,7 @@ import BarterEstimator from "@/pages/tools/BarterEstimator";
 import TentFinder from "@/pages/tools/TentFinder";
 import GearFinder from "@/pages/tools/GearFinder";
 import SkillsAnalyzer from "@/pages/tools/SkillsAnalyzer";
+import ThreatRiskDashboard from "@/pages/tools/ThreatRiskDashboard";
 import ReadinessDashboard from "@/pages/tools/ReadinessDashboard";
 import Quiz from "@/pages/Quiz";
 import Contact from "@/pages/Contact";
@@ -99,6 +100,7 @@ function Router() {
             <Route path="/tools/tent-finder" component={TentFinder} />
             <Route path="/tools/gear-finder" component={GearFinder} />
             <Route path="/tools/skills-tracker" component={SkillsAnalyzer} />
+            <Route path="/tools/threat-risk-dashboard" component={ThreatRiskDashboard} />
             <Route path="/tools/readiness-dashboard" component={ReadinessDashboard} />
             <Route path="/readiness">{() => <Redirect href="/tools/readiness-dashboard" />}</Route>
             <Route path="/quiz" component={Quiz} />
