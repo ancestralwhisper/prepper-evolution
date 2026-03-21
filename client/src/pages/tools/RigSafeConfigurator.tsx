@@ -34,7 +34,7 @@ import {
   computeAll, computeVehicleModsWeight, defaultRigSafeConfig, RIGSAFE_KEY,
   RACK_CARGO_PRESETS, RIGSAFE_VERSION, RIGSAFE_CHANGELOG,
   type RigSafeConfig, type RigSafeResult, type RigSafeWarning, type CargoItem, type CargoMountTarget,
-  computeBedRackBreakdown, computeCabRackBreakdown,
+  computeBedRackBreakdown, computeCabRackBreakdown, computeHitchBreakdown,
 } from "./rigsafe-compute";
 // import RigSafeSvg, { vehicleToSilhouetteId } from "./RigSafeSvg";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
@@ -1999,6 +1999,7 @@ export default function RigSafeConfigurator() {
                         <option value="cab_rack">{config.secondaryRack ? `${config.secondaryRack.brand} ${config.secondaryRack.model}` : "Cab Roof Rack"}</option>
                       )}
                       <option value="bed">Truck Bed</option>
+                      <option value="hitch">Hitch Carrier</option>
                     </select>
                   </div>
 
@@ -2073,6 +2074,7 @@ export default function RigSafeConfigurator() {
                         <option value="cab_rack">{config.secondaryRack ? `${config.secondaryRack.brand} ${config.secondaryRack.model}` : "Cab Roof Rack"}</option>
                       )}
                       <option value="bed">Truck Bed</option>
+                      <option value="hitch">Hitch Carrier</option>
                     </select>
                   </div>
                   <button
@@ -2416,15 +2418,18 @@ export default function RigSafeConfigurator() {
             {(() => {
               const bedSegs = computeBedRackBreakdown(config);
               const cabSegs = computeCabRackBreakdown(config);
+              const hitchSegs = computeHitchBreakdown(config);
               const bedUsed = bedSegs.filter(s => s.label !== "Remaining").reduce((s, i) => s + i.value, 0);
               const cabUsed = cabSegs.filter(s => s.label !== "Remaining").reduce((s, i) => s + i.value, 0);
               const bedRating = bedSegs.reduce((s, i) => s + i.value, 0);
               const cabRating = cabSegs.reduce((s, i) => s + i.value, 0);
-              if (bedSegs.length === 0 && cabSegs.length === 0) return null;
+              if (bedSegs.length === 0 && cabSegs.length === 0 && hitchSegs.length === 0) return null;
+              const activeCols = [bedSegs.length > 0, cabSegs.length > 0, hitchSegs.length > 0].filter(Boolean).length;
+              const gridClass = activeCols >= 3 ? "grid-cols-3" : activeCols === 2 ? "grid-cols-2" : "grid-cols-1 max-w-xs mx-auto";
               return (
                 <div className="bg-card border border-border rounded-lg p-4">
                   <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-4">Rack Load Breakdown</h4>
-                  <div className={`grid gap-6 ${cabSegs.length > 0 ? "grid-cols-2" : "grid-cols-1 max-w-xs mx-auto"}`}>
+                  <div className={`grid gap-6 ${gridClass}`}>
                     {bedSegs.length > 0 && (
                       <div className="flex flex-col items-center gap-2">
                         <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">
@@ -2451,6 +2456,13 @@ export default function RigSafeConfigurator() {
                           size={140}
                         />
                         <ChartLegend segments={cabSegs} />
+                      </div>
+                    )}
+                    {hitchSegs.length > 0 && (
+                      <div className="flex flex-col items-center gap-2">
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Hitch Carrier</p>
+                        <DonutChart segments={hitchSegs} totalLabel={`${hitchSegs.filter(s=>s.label!=="Remaining").reduce((s,i)=>s+i.value,0)} lbs`} totalValue="" size={140} />
+                        <ChartLegend segments={hitchSegs} />
                       </div>
                     )}
                   </div>

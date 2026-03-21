@@ -42,6 +42,7 @@ export default function BugOutBagCalculator() {
   const [showShareToast, setShowShareToast] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
+  const [showEssentialsOnly, setShowEssentialsOnly] = useState(false);
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestName, setRequestName] = useState("");
   const [requestBrand, setRequestBrand] = useState("");
@@ -504,10 +505,30 @@ export default function BugOutBagCalculator() {
                 </p>
               </div>
 
+              {/* Essentials filter */}
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  {showEssentialsOnly ? "Showing essentials only" : `${Object.keys(selected).length} items selected`}
+                </p>
+                <button
+                  onClick={() => setShowEssentialsOnly(v => !v)}
+                  className={`flex items-center gap-2 text-sm font-bold px-3 py-1.5 rounded-lg border transition-colors ${
+                    showEssentialsOnly
+                      ? "bg-primary/10 border-primary text-primary"
+                      : "bg-muted border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                  }`}
+                >
+                  <ShieldAlert className="w-3.5 h-3.5" />
+                  Essentials Only
+                </button>
+              </div>
+
               {gearCategories.map((cat) => {
                 const isExpanded = expandedCats.has(cat.id);
                 const catWeight = calculations.categoryWeights[cat.id] || 0;
                 const catCount = cat.items.filter((i) => selected[i.id]).length;
+                const visibleItems = showEssentialsOnly ? cat.items.filter((i) => i.essential) : cat.items;
+                if (showEssentialsOnly && visibleItems.length === 0) return null;
 
                 return (
                   <div key={cat.id} className="bg-card border border-border rounded-xl overflow-hidden">
@@ -520,9 +541,14 @@ export default function BugOutBagCalculator() {
                       <div className="flex items-center gap-3">
                         <span className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: cat.color }} />
                         <span className="font-bold text-sm uppercase tracking-wide">{cat.name}</span>
-                        {catCount > 0 && (
+                        {catCount > 0 && !showEssentialsOnly && (
                           <span className="bg-primary/15 text-primary text-sm font-bold px-2 py-0.5 rounded">
                             {catCount} item{catCount !== 1 ? "s" : ""} / {(catWeight / 16).toFixed(1)} lbs
+                          </span>
+                        )}
+                        {showEssentialsOnly && (
+                          <span className="bg-primary/15 text-primary text-sm font-bold px-2 py-0.5 rounded">
+                            {visibleItems.length} essential{visibleItems.length !== 1 ? "s" : ""}
                           </span>
                         )}
                       </div>
@@ -531,7 +557,7 @@ export default function BugOutBagCalculator() {
 
                     {isExpanded && (
                       <div className="border-t border-border">
-                        {cat.items.map((item) => {
+                        {visibleItems.map((item) => {
                           const isSelected = !!selected[item.id];
                           const qty = selected[item.id] || 0;
                           const maxQty = item.maxQty || 10;

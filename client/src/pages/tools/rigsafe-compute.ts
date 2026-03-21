@@ -60,7 +60,7 @@ export const WATER_LBS_PER_GALLON = 8.34;
 
 // ─── Configuration Interfaces ───────────────────────────────────────
 
-export type CargoMountTarget = "bed_rack" | "cab_rack" | "bed";
+export type CargoMountTarget = "bed_rack" | "cab_rack" | "bed" | "hitch";
 
 export interface CargoItem {
   id: string;
@@ -1195,6 +1195,15 @@ export function computeWeightBreakdown(config: RigSafeConfig): {
   }
   if (cabRackCargoWeight > 0) items.push({ label: "Cab Rack Cargo", value: cabRackCargoWeight, color: "#F97316" });
 
+  // Hitch cargo (counts payload only)
+  const hitchCargoWeight = config.cargoItems
+    .filter(i => i.mountTarget === "hitch")
+    .reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
+  if (config.hasCargoBox && config.cargoBoxMountTarget === "hitch") {
+    // cargo box on hitch - included in hitch weight
+  }
+  if (hitchCargoWeight > 0) items.push({ label: "Hitch Cargo", value: hitchCargoWeight, color: "#84CC16" });
+
   // Bed preset cargo (chairs, table, compressor, etc.)
   const bedPresetCargo = config.rackPresets.reduce((sum, id) => {
     const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
@@ -1292,6 +1301,24 @@ export function computeCabRackBreakdown(config: RigSafeConfig): BreakdownSegment
   const rating = secRack.onRoadDynamicLbs;
   const remaining = Math.max(0, rating - used);
   if (remaining > 0) items.push({ label: "Remaining", value: remaining, color: "#374151" });
+
+  return items;
+}
+
+export function computeHitchBreakdown(config: RigSafeConfig): BreakdownSegment[] {
+  const items: BreakdownSegment[] = [];
+
+  const customW = config.cargoItems
+    .filter(i => i.mountTarget === "hitch")
+    .reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
+  if (customW > 0) items.push({ label: "Hitch Cargo", value: customW, color: "#84CC16" });
+
+  let boxW = 0;
+  if (config.hasCargoBox && config.cargoBoxMountTarget === "hitch") {
+    boxW += config.useManualCargoBox ? config.manualCargoBoxWeightLbs : (config.cargoBox?.weightLbs ?? 0);
+    boxW += config.cargoBoxContentsLbs;
+  }
+  if (boxW > 0) items.push({ label: "Cargo Box", value: boxW, color: "#F97316" });
 
   return items;
 }
