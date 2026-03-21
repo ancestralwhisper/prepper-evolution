@@ -70,7 +70,7 @@ function sortTents(list: BackpackingTent[], key: TentSortKey): BackpackingTent[]
 // ─── Badge component ─────────────────────────────────────────────────────────
 function Badge({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <span className={`inline-flex items-center text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded border ${className}`}>
+    <span className={`inline-flex items-center text-xs font-bold uppercase tracking-wide px-1.5 py-0.5 rounded border ${className}`}>
       {children}
     </span>
   );
@@ -160,11 +160,11 @@ function TentComparisonTable({ compared, onRemove }: { compared: BackpackingTent
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border">
-              <th className="text-left p-3 min-w-[120px] text-muted-foreground text-xs font-bold uppercase tracking-wide">Spec</th>
+              <th className="text-left p-3 min-w-[120px] text-muted-foreground text-sm font-bold uppercase tracking-wide">Spec</th>
               {compared.map((t) => (
                 <th key={t.id} className="p-3 min-w-[160px]">
                   <div className="flex items-center justify-between gap-2">
-                    <div className="text-left"><div className="text-xs text-muted-foreground">{t.brand}</div><div className="text-sm font-bold">{t.model}</div></div>
+                    <div className="text-left"><div className="text-sm text-muted-foreground">{t.brand}</div><div className="text-sm font-bold">{t.model}</div></div>
                     <button onClick={() => onRemove(t.id)} className="text-muted-foreground hover:text-red-400 transition-colors" aria-label={`Remove ${t.model}`}><X className="w-3.5 h-3.5" /></button>
                   </div>
                 </th>
@@ -174,7 +174,7 @@ function TentComparisonTable({ compared, onRemove }: { compared: BackpackingTent
           <tbody>
             {rows.map((row, i) => (
               <tr key={row.label} className={i % 2 === 0 ? "bg-muted/30" : ""}>
-                <td className="p-3 text-xs font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">{row.label}</td>
+                <td className="p-3 text-sm font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">{row.label}</td>
                 {compared.map((t) => (<td key={t.id} className="p-3 text-sm">{row.render(t)}</td>))}
               </tr>
             ))}
@@ -203,11 +203,11 @@ function GearComparisonTable({ compared, category, onRemove }: { compared: GearP
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border">
-              <th className="text-left p-3 min-w-[120px] text-muted-foreground text-xs font-bold uppercase tracking-wide">Spec</th>
+              <th className="text-left p-3 min-w-[120px] text-muted-foreground text-sm font-bold uppercase tracking-wide">Spec</th>
               {compared.map((g) => (
                 <th key={g.id} className="p-3 min-w-[160px]">
                   <div className="flex items-center justify-between gap-2">
-                    <div className="text-left"><div className="text-xs text-muted-foreground">{g.brand}</div><div className="text-sm font-bold">{g.model}</div></div>
+                    <div className="text-left"><div className="text-sm text-muted-foreground">{g.brand}</div><div className="text-sm font-bold">{g.model}</div></div>
                     <button onClick={() => onRemove(g.id)} className="text-muted-foreground hover:text-red-400 transition-colors"><X className="w-3.5 h-3.5" /></button>
                   </div>
                 </th>
@@ -217,7 +217,7 @@ function GearComparisonTable({ compared, category, onRemove }: { compared: GearP
           <tbody>
             {allRows.map((row, i) => (
               <tr key={row.label} className={i % 2 === 0 ? "bg-muted/30" : ""}>
-                <td className="p-3 text-xs font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">{row.label}</td>
+                <td className="p-3 text-sm font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">{row.label}</td>
                 {compared.map((g) => (<td key={g.id} className="p-3 text-sm">{row.render(g)}</td>))}
               </tr>
             ))}
@@ -312,7 +312,7 @@ function GearModal({ gear, onClose }: { gear: GearProduct; onClose: () => void }
       <div className="bg-card border border-border rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between mb-4">
           <div>
-            <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">{gear.brand}</p>
+            <p className="text-sm text-muted-foreground font-bold uppercase tracking-wide">{gear.brand}</p>
             <h2 className="text-xl font-extrabold">{gear.model}</h2>
           </div>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground p-1"><X className="w-5 h-5" /></button>
@@ -322,16 +322,16 @@ function GearModal({ gear, onClose }: { gear: GearProduct; onClose: () => void }
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">
           <div className="bg-muted rounded-lg p-2.5">
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">Weight</p>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Weight</p>
             <p className="text-sm font-bold">{formatWeight(gear.weightOz)}</p>
           </div>
           <div className="bg-muted rounded-lg p-2.5">
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">Price</p>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Price</p>
             <p className="text-sm font-bold">${gear.price}</p>
           </div>
           {specEntries.map(([key, val]) => (
             <div key={key} className="bg-muted rounded-lg p-2.5">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">{key.replace(/([A-Z])/g, " $1").trim()}</p>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">{key.replace(/([A-Z])/g, " $1").trim()}</p>
               <p className="text-sm font-bold">{typeof val === "boolean" ? (val ? "Yes" : "No") : String(val)}</p>
             </div>
           ))}
@@ -339,7 +339,7 @@ function GearModal({ gear, onClose }: { gear: GearProduct; onClose: () => void }
 
         <div className="grid sm:grid-cols-2 gap-4 mb-5">
           <div>
-            <p className="text-xs font-bold text-green-400 uppercase tracking-wide mb-2">Pros</p>
+            <p className="text-sm font-bold text-green-400 uppercase tracking-wide mb-2">Pros</p>
             <ul className="space-y-1">
               {gear.pros.map((p, i) => (
                 <li key={i} className="flex gap-2 text-sm"><Check className="w-3.5 h-3.5 text-green-500 flex-shrink-0 mt-0.5" /><span>{p}</span></li>
@@ -347,7 +347,7 @@ function GearModal({ gear, onClose }: { gear: GearProduct; onClose: () => void }
             </ul>
           </div>
           <div>
-            <p className="text-xs font-bold text-red-400 uppercase tracking-wide mb-2">Cons</p>
+            <p className="text-sm font-bold text-red-400 uppercase tracking-wide mb-2">Cons</p>
             <ul className="space-y-1">
               {gear.cons.map((c, i) => (
                 <li key={i} className="flex gap-2 text-sm"><X className="w-3.5 h-3.5 text-red-500 flex-shrink-0 mt-0.5" /><span>{c}</span></li>
@@ -357,7 +357,7 @@ function GearModal({ gear, onClose }: { gear: GearProduct; onClose: () => void }
         </div>
 
         <div className="bg-muted rounded-lg p-3 mb-5">
-          <p className="text-xs font-bold text-primary uppercase tracking-wide mb-1">Best For</p>
+          <p className="text-sm font-bold text-primary uppercase tracking-wide mb-1">Best For</p>
           <p className="text-sm">{gear.bestFor}</p>
         </div>
 
@@ -384,7 +384,7 @@ function TentModal({ tent, onClose }: { tent: BackpackingTent; onClose: () => vo
       <div className="bg-card border border-border rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between mb-4">
           <div>
-            <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">{tent.brand}</p>
+            <p className="text-sm text-muted-foreground font-bold uppercase tracking-wide">{tent.brand}</p>
             <h2 className="text-xl font-extrabold">{tent.model}</h2>
           </div>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground p-1"><X className="w-5 h-5" /></button>
@@ -408,28 +408,28 @@ function TentModal({ tent, onClose }: { tent: BackpackingTent; onClose: () => vo
             { label: "Packed Size", value: tent.packedSize },
           ].map((item) => (
             <div key={item.label} className="bg-muted rounded-lg p-2.5">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">{item.label}</p>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">{item.label}</p>
               <p className="text-sm font-bold">{item.value}</p>
             </div>
           ))}
         </div>
         <div className="space-y-3 mb-5">
-          <div><p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">Fly Fabric</p><p className="text-sm">{tent.fabricFly}</p></div>
-          <div><p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">Floor Fabric</p><p className="text-sm">{tent.fabricFloor}</p></div>
-          <div><p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">Poles</p><p className="text-sm">{tent.poles}</p></div>
+          <div><p className="text-sm font-bold text-muted-foreground uppercase tracking-wide mb-1">Fly Fabric</p><p className="text-sm">{tent.fabricFly}</p></div>
+          <div><p className="text-sm font-bold text-muted-foreground uppercase tracking-wide mb-1">Floor Fabric</p><p className="text-sm">{tent.fabricFloor}</p></div>
+          <div><p className="text-sm font-bold text-muted-foreground uppercase tracking-wide mb-1">Poles</p><p className="text-sm">{tent.poles}</p></div>
         </div>
         <div className="grid sm:grid-cols-2 gap-4 mb-5">
           <div>
-            <p className="text-xs font-bold text-green-400 uppercase tracking-wide mb-2">Pros</p>
+            <p className="text-sm font-bold text-green-400 uppercase tracking-wide mb-2">Pros</p>
             <ul className="space-y-1">{tent.pros.map((p, i) => (<li key={i} className="flex gap-2 text-sm"><Check className="w-3.5 h-3.5 text-green-500 flex-shrink-0 mt-0.5" /><span>{p}</span></li>))}</ul>
           </div>
           <div>
-            <p className="text-xs font-bold text-red-400 uppercase tracking-wide mb-2">Cons</p>
+            <p className="text-sm font-bold text-red-400 uppercase tracking-wide mb-2">Cons</p>
             <ul className="space-y-1">{tent.cons.map((c, i) => (<li key={i} className="flex gap-2 text-sm"><X className="w-3.5 h-3.5 text-red-500 flex-shrink-0 mt-0.5" /><span>{c}</span></li>))}</ul>
           </div>
         </div>
         <div className="bg-muted rounded-lg p-3 mb-5">
-          <p className="text-xs font-bold text-primary uppercase tracking-wide mb-1">Best For</p>
+          <p className="text-sm font-bold text-primary uppercase tracking-wide mb-1">Best For</p>
           <p className="text-sm">{tent.bestFor}</p>
         </div>
         {tent.notes && (
@@ -461,7 +461,7 @@ function GearCard({ gear, category, isCompared, onToggleCompare, onClick }: {
     <div className="bg-card border border-border rounded-lg p-4 flex flex-col hover:border-primary/30 transition-colors cursor-pointer" onClick={onClick}>
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wide truncate">{gear.brand}</p>
+          <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide truncate">{gear.brand}</p>
           <h3 className="text-sm font-extrabold truncate">{gear.model}</h3>
         </div>
         <div className="text-right flex-shrink-0 ml-2">
@@ -471,16 +471,16 @@ function GearCard({ gear, category, isCompared, onToggleCompare, onClick }: {
       <div className="flex items-center gap-2 flex-wrap mb-3">
         <div className="flex items-center gap-1 bg-muted rounded px-2 py-1">
           <Weight className="w-3 h-3 text-primary" />
-          <span className="text-xs font-bold">{formatWeight(gear.weightOz)}</span>
+          <span className="text-sm font-bold">{formatWeight(gear.weightOz)}</span>
         </div>
         {specPills.map((pill) => (
           <Badge key={pill} className="bg-primary/10 text-primary border-primary/20">{pill}</Badge>
         ))}
       </div>
-      <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{gear.bestFor}</p>
+      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{gear.bestFor}</p>
       <div className="flex items-center justify-between mt-auto pt-3 border-t border-border">
         <button onClick={(e) => { e.stopPropagation(); onToggleCompare(); }}
-          className={`flex items-center gap-1.5 text-xs font-bold transition-colors ${isCompared ? "text-primary" : "text-muted-foreground hover:text-primary"}`}>
+          className={`flex items-center gap-1.5 text-sm font-bold transition-colors ${isCompared ? "text-primary" : "text-muted-foreground hover:text-primary"}`}>
           <div className={`w-4 h-4 rounded border flex items-center justify-center ${isCompared ? "bg-primary border-primary" : "border-border"}`}>
             {isCompared && <Check className="w-3 h-3 text-primary-foreground" />}
           </div>
@@ -488,7 +488,7 @@ function GearCard({ gear, category, isCompared, onToggleCompare, onClick }: {
         </button>
         <a href={gear.affiliateUrl} target="_blank" rel="noopener noreferrer"
           onClick={(e) => { e.stopPropagation(); trackEvent("pe_affiliate_click", { tool: "gear-finder", product: `${gear.brand} ${gear.model}`, url: gear.affiliateUrl }); }}
-          className="flex items-center gap-1 text-xs font-bold text-primary hover:underline">
+          className="flex items-center gap-1 text-sm font-bold text-primary hover:underline">
           Check Price <ExternalLink className="w-3 h-3" />
         </a>
       </div>
@@ -525,13 +525,13 @@ function PackBuilder({ items, onRemove }: { items: { id: string; name: string; w
           Pack Builder ({items.length} items)
         </h3>
         <div className="text-right">
-          <p className="text-xs text-muted-foreground">Total Weight</p>
+          <p className="text-sm text-muted-foreground">Total Weight</p>
           <p className="text-lg font-extrabold text-emerald-400">{formatWeight(totalOz)}</p>
         </div>
       </div>
       <div className="flex flex-wrap gap-2">
         {items.map((item) => (
-          <div key={item.id} className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1 text-xs">
+          <div key={item.id} className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1 text-sm">
             <span className="font-bold text-emerald-400">{item.name}</span>
             <span className="text-emerald-400/60">{formatWeight(item.weightOz)}</span>
             <button onClick={() => onRemove(item.id)} className="text-emerald-400/60 hover:text-red-400"><X className="w-3 h-3" /></button>
@@ -695,7 +695,7 @@ export default function GearFinder() {
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <Mountain className="w-5 h-5 text-primary" />
             </div>
-            <span className="text-[10px] font-mono font-bold text-muted-foreground/50 uppercase tracking-wider">v2.0</span>
+            <span className="text-xs font-mono font-bold text-muted-foreground/50 uppercase tracking-wider">v2.0</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold mb-2">Ultralight Gear Finder</h1>
           <p className="text-muted-foreground leading-relaxed max-w-2xl">
@@ -721,7 +721,7 @@ export default function GearFinder() {
                     setFiltersOpen(false);
                     trackEvent("pe_gear_finder_tab", { tab });
                   }}
-                  className={`flex items-center gap-1.5 px-3 sm:px-4 py-3 text-xs sm:text-sm font-bold whitespace-nowrap border-b-2 transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 sm:px-4 py-3 text-sm sm:text-sm font-bold whitespace-nowrap border-b-2 transition-colors ${
                     isActive
                       ? "border-primary text-primary"
                       : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
@@ -730,7 +730,7 @@ export default function GearFinder() {
                   <Icon className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">{tabLabels[tab]}</span>
                   <span className="sm:hidden">{tabLabels[tab]}</span>
-                  <span className={`text-[10px] rounded-full px-1.5 py-0.5 ${isActive ? "bg-primary/20" : "bg-muted"}`}>{count}</span>
+                  <span className={`text-xs rounded-full px-1.5 py-0.5 ${isActive ? "bg-primary/20" : "bg-muted"}`}>{count}</span>
                 </button>
               );
             })}
@@ -748,7 +748,7 @@ export default function GearFinder() {
           <div className="flex items-center gap-2 text-sm font-bold">
             <SlidersHorizontal className="w-4 h-4 text-primary" /> Filters
             {(activeTab === "tents" ? hasActiveTentFilters : hasActiveGearFilters) && (
-              <span className="bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded">Active</span>
+              <span className="bg-primary text-primary-foreground text-xs font-bold px-1.5 py-0.5 rounded">Active</span>
             )}
           </div>
           {filtersOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -762,19 +762,19 @@ export default function GearFinder() {
                 /* ─── TENT FILTERS ─── */
                 <div className="bg-card border border-border rounded-lg p-4 space-y-5">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Filters</h3>
+                    <h3 className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Filters</h3>
                     {hasActiveTentFilters && (
-                      <button onClick={resetTentFilters} className="flex items-center gap-1 text-[10px] font-bold text-primary uppercase tracking-wide hover:underline">
+                      <button onClick={resetTentFilters} className="flex items-center gap-1 text-xs font-bold text-primary uppercase tracking-wide hover:underline">
                         <RotateCcw className="w-3 h-3" /> Reset
                       </button>
                     )}
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-muted-foreground mb-2">Capacity</p>
+                    <p className="text-sm font-bold text-muted-foreground mb-2">Capacity</p>
                     <div className="flex gap-2">
                       {[1, 2, 3, 4].map((cap) => (
                         <button key={cap} onClick={() => toggleCapacity(cap)}
-                          className={`flex-1 py-1.5 text-xs font-bold rounded border transition-colors ${
+                          className={`flex-1 py-1.5 text-sm font-bold rounded border transition-colors ${
                             capacity.has(cap) ? "bg-primary text-primary-foreground border-primary" : "bg-muted text-muted-foreground border-border hover:border-primary/30"
                           }`}>{cap}P</button>
                       ))}
@@ -783,64 +783,64 @@ export default function GearFinder() {
                   <div>
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input type="checkbox" checked={freestandingOnly} onChange={(e) => setFreestandingOnly(e.target.checked)} className="rounded border-border text-primary focus:ring-primary" />
-                      <span className="text-xs font-bold text-muted-foreground">Freestanding only</span>
+                      <span className="text-sm font-bold text-muted-foreground">Freestanding only</span>
                     </label>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-muted-foreground mb-2">Price Range</p>
+                    <p className="text-sm font-bold text-muted-foreground mb-2">Price Range</p>
                     <div className="flex items-center gap-2">
-                      <input type="number" value={priceMin || ""} onChange={(e) => setPriceMin(parseInt(e.target.value) || 0)} placeholder="Min" className="w-full bg-muted border border-border rounded px-2 py-1.5 text-xs" />
-                      <span className="text-muted-foreground text-xs">to</span>
-                      <input type="number" value={priceMax === 1000 ? "" : priceMax} onChange={(e) => setPriceMax(parseInt(e.target.value) || 1000)} placeholder="Max" className="w-full bg-muted border border-border rounded px-2 py-1.5 text-xs" />
+                      <input type="number" value={priceMin || ""} onChange={(e) => setPriceMin(parseInt(e.target.value) || 0)} placeholder="Min" className="w-full bg-muted border border-border rounded px-2 py-1.5 text-sm" />
+                      <span className="text-muted-foreground text-sm">to</span>
+                      <input type="number" value={priceMax === 1000 ? "" : priceMax} onChange={(e) => setPriceMax(parseInt(e.target.value) || 1000)} placeholder="Max" className="w-full bg-muted border border-border rounded px-2 py-1.5 text-sm" />
                     </div>
                   </div>
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs font-bold text-muted-foreground">Max Trail Weight</p>
-                      <span className="text-xs font-mono text-muted-foreground">{weightMax >= 80 ? "Any" : `${(weightMax / 16).toFixed(1)} lbs`}</span>
+                      <p className="text-sm font-bold text-muted-foreground">Max Trail Weight</p>
+                      <span className="text-sm font-mono text-muted-foreground">{weightMax >= 80 ? "Any" : `${(weightMax / 16).toFixed(1)} lbs`}</span>
                     </div>
                     <input type="range" min={10} max={80} step={2} value={weightMax} onChange={(e) => setWeightMax(parseInt(e.target.value))} className="w-full accent-primary" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-muted-foreground mb-2">Setup Type</p>
+                    <p className="text-sm font-bold text-muted-foreground mb-2">Setup Type</p>
                     <div className="space-y-1.5">
                       {(Object.entries(setupLabels) as [BackpackingTent["setup"], string][]).map(([key, label]) => (
                         <label key={key} className="flex items-center gap-2 cursor-pointer">
                           <input type="checkbox" checked={setupFilter.has(key)} onChange={() => toggleSet(setSetupFilter, key)} className="rounded border-border text-primary focus:ring-primary" />
-                          <span className="text-xs text-muted-foreground">{label}</span>
+                          <span className="text-sm text-muted-foreground">{label}</span>
                         </label>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-muted-foreground mb-2">Wind Rating</p>
+                    <p className="text-sm font-bold text-muted-foreground mb-2">Wind Rating</p>
                     <div className="space-y-1.5">
                       {(Object.entries(windLabels) as [BackpackingTent["windRating"], string][]).map(([key, label]) => (
                         <label key={key} className="flex items-center gap-2 cursor-pointer">
                           <input type="checkbox" checked={windFilter.has(key)} onChange={() => toggleSet(setWindFilter, key)} className="rounded border-border text-primary focus:ring-primary" />
-                          <span className="text-xs text-muted-foreground"><Badge className={`${windColors[key]} mr-1`}>{label}</Badge></span>
+                          <span className="text-sm text-muted-foreground"><Badge className={`${windColors[key]} mr-1`}>{label}</Badge></span>
                         </label>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-muted-foreground mb-2">Season</p>
+                    <p className="text-sm font-bold text-muted-foreground mb-2">Season</p>
                     <div className="space-y-1.5">
                       {(Object.entries(seasonLabels) as [BackpackingTent["season"], string][]).map(([key, label]) => (
                         <label key={key} className="flex items-center gap-2 cursor-pointer">
                           <input type="checkbox" checked={seasonFilter.has(key)} onChange={() => toggleSet(setSeasonFilter, key)} className="rounded border-border text-primary focus:ring-primary" />
-                          <span className="text-xs text-muted-foreground">{label}</span>
+                          <span className="text-sm text-muted-foreground">{label}</span>
                         </label>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-muted-foreground mb-2">Wall Type</p>
+                    <p className="text-sm font-bold text-muted-foreground mb-2">Wall Type</p>
                     <div className="space-y-1.5">
                       {(["double", "single", "hybrid"] as const).map((w) => (
                         <label key={w} className="flex items-center gap-2 cursor-pointer">
                           <input type="checkbox" checked={wallFilter.has(w)} onChange={() => toggleSet(setWallFilter, w)} className="rounded border-border text-primary focus:ring-primary" />
-                          <span className="text-xs text-muted-foreground">{w === "double" ? "Double Wall" : w === "single" ? "Single Wall" : "Hybrid"}</span>
+                          <span className="text-sm text-muted-foreground">{w === "double" ? "Double Wall" : w === "single" ? "Single Wall" : "Hybrid"}</span>
                         </label>
                       ))}
                     </div>
@@ -850,32 +850,32 @@ export default function GearFinder() {
                 /* ─── GEAR FILTERS ─── */
                 <div className="bg-card border border-border rounded-lg p-4 space-y-5">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Filters</h3>
+                    <h3 className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Filters</h3>
                     {hasActiveGearFilters && (
-                      <button onClick={resetGearFilters} className="flex items-center gap-1 text-[10px] font-bold text-primary uppercase tracking-wide hover:underline">
+                      <button onClick={resetGearFilters} className="flex items-center gap-1 text-xs font-bold text-primary uppercase tracking-wide hover:underline">
                         <RotateCcw className="w-3 h-3" /> Reset
                       </button>
                     )}
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-muted-foreground mb-2">Price Range</p>
+                    <p className="text-sm font-bold text-muted-foreground mb-2">Price Range</p>
                     <div className="flex items-center gap-2">
-                      <input type="number" value={gearPriceMin || ""} onChange={(e) => setGearPriceMin(parseInt(e.target.value) || 0)} placeholder="Min" className="w-full bg-muted border border-border rounded px-2 py-1.5 text-xs" />
-                      <span className="text-muted-foreground text-xs">to</span>
-                      <input type="number" value={gearPriceMax >= 2000 ? "" : gearPriceMax} onChange={(e) => setGearPriceMax(parseInt(e.target.value) || 2000)} placeholder="Max" className="w-full bg-muted border border-border rounded px-2 py-1.5 text-xs" />
+                      <input type="number" value={gearPriceMin || ""} onChange={(e) => setGearPriceMin(parseInt(e.target.value) || 0)} placeholder="Min" className="w-full bg-muted border border-border rounded px-2 py-1.5 text-sm" />
+                      <span className="text-muted-foreground text-sm">to</span>
+                      <input type="number" value={gearPriceMax >= 2000 ? "" : gearPriceMax} onChange={(e) => setGearPriceMax(parseInt(e.target.value) || 2000)} placeholder="Max" className="w-full bg-muted border border-border rounded px-2 py-1.5 text-sm" />
                     </div>
                   </div>
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs font-bold text-muted-foreground">Max Weight</p>
-                      <span className="text-xs font-mono text-muted-foreground">{gearWeightMax >= 100 ? "Any" : `${(gearWeightMax / 16).toFixed(1)} lbs`}</span>
+                      <p className="text-sm font-bold text-muted-foreground">Max Weight</p>
+                      <span className="text-sm font-mono text-muted-foreground">{gearWeightMax >= 100 ? "Any" : `${(gearWeightMax / 16).toFixed(1)} lbs`}</span>
                     </div>
                     <input type="range" min={1} max={100} step={1} value={gearWeightMax} onChange={(e) => setGearWeightMax(parseInt(e.target.value))} className="w-full accent-primary" />
                   </div>
                   {/* Dynamic spec filters */}
                   {Object.entries(specFilterOptions).map(([specKey, values]) => (
                     <div key={specKey}>
-                      <p className="text-xs font-bold text-muted-foreground mb-2 capitalize">{specKey.replace(/([A-Z])/g, " $1").trim()}</p>
+                      <p className="text-sm font-bold text-muted-foreground mb-2 capitalize">{specKey.replace(/([A-Z])/g, " $1").trim()}</p>
                       <div className="space-y-1.5">
                         {Array.from(values).sort().map((val) => {
                           const current = gearSpecFilter[specKey] || new Set<string>();
@@ -892,7 +892,7 @@ export default function GearFinder() {
                                   });
                                 }}
                                 className="rounded border-border text-primary focus:ring-primary" />
-                              <span className="text-xs text-muted-foreground capitalize">{val}</span>
+                              <span className="text-sm text-muted-foreground capitalize">{val}</span>
                             </label>
                           );
                         })}
@@ -917,13 +917,13 @@ export default function GearFinder() {
                   <div className="flex items-center gap-2">
                     <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground" />
                     <select value={tentSortKey} onChange={(e) => setTentSortKey(e.target.value as TentSortKey)}
-                      className="bg-muted border border-border rounded px-3 py-1.5 text-xs font-bold">
+                      className="bg-muted border border-border rounded px-3 py-1.5 text-sm font-bold">
                       {tentSortOptions.map((opt) => (<option key={opt.key} value={opt.key}>{opt.label}</option>))}
                     </select>
                   </div>
                 </div>
                 {compareIds.size > 0 && compareIds.size < 2 && (
-                  <div className="bg-primary/10 border border-primary/20 rounded-lg px-4 py-2 mb-4 text-xs text-primary font-bold">
+                  <div className="bg-primary/10 border border-primary/20 rounded-lg px-4 py-2 mb-4 text-sm text-primary font-bold">
                     Select {2 - compareIds.size} more tent{2 - compareIds.size > 1 ? "s" : ""} to compare (max 4)
                   </div>
                 )}
@@ -939,7 +939,7 @@ export default function GearFinder() {
                       <div key={tent.id} className="bg-card border border-border rounded-lg p-4 flex flex-col hover:border-primary/30 transition-colors cursor-pointer" onClick={() => setModalTent(tent)}>
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1 min-w-0">
-                            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wide truncate">{tent.brand}</p>
+                            <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide truncate">{tent.brand}</p>
                             <h3 className="text-sm font-extrabold truncate">{tent.model}</h3>
                           </div>
                           <div className="text-right flex-shrink-0 ml-2"><p className="text-lg font-extrabold text-primary">${tent.price}</p></div>
@@ -947,7 +947,7 @@ export default function GearFinder() {
                         <div className="flex items-center gap-2 flex-wrap mb-3">
                           <div className="flex items-center gap-1 bg-muted rounded px-2 py-1">
                             <Weight className="w-3 h-3 text-primary" />
-                            <span className="text-xs font-bold">{formatWeight(tent.weightOz)}</span>
+                            <span className="text-sm font-bold">{formatWeight(tent.weightOz)}</span>
                           </div>
                           <Badge className="bg-primary/10 text-primary border-primary/20">{tent.capacity}P</Badge>
                           <Badge className="bg-primary/10 text-primary border-primary/20">{setupLabels[tent.setup]}</Badge>
@@ -959,23 +959,23 @@ export default function GearFinder() {
                         <div className="grid grid-cols-3 gap-2 text-center mb-3">
                           <div className="bg-muted/50 rounded p-1.5">
                             <Layers className="w-3 h-3 text-muted-foreground mx-auto mb-0.5" />
-                            <p className="text-[10px] text-muted-foreground">Floor</p>
-                            <p className="text-xs font-bold">{sqInToSqFt(tent.floorArea)} ft</p>
+                            <p className="text-xs text-muted-foreground">Floor</p>
+                            <p className="text-sm font-bold">{sqInToSqFt(tent.floorArea)} ft</p>
                           </div>
                           <div className="bg-muted/50 rounded p-1.5">
                             <Ruler className="w-3 h-3 text-muted-foreground mx-auto mb-0.5" />
-                            <p className="text-[10px] text-muted-foreground">Peak</p>
-                            <p className="text-xs font-bold">{tent.peakHeight}"</p>
+                            <p className="text-xs text-muted-foreground">Peak</p>
+                            <p className="text-sm font-bold">{tent.peakHeight}"</p>
                           </div>
                           <div className="bg-muted/50 rounded p-1.5">
                             <DoorOpen className="w-3 h-3 text-muted-foreground mx-auto mb-0.5" />
-                            <p className="text-[10px] text-muted-foreground">Doors</p>
-                            <p className="text-xs font-bold">{tent.doors}</p>
+                            <p className="text-xs text-muted-foreground">Doors</p>
+                            <p className="text-sm font-bold">{tent.doors}</p>
                           </div>
                         </div>
                         <div className="flex items-center justify-between mt-auto pt-3 border-t border-border">
                           <button onClick={(e) => { e.stopPropagation(); toggleCompare(tent.id); }}
-                            className={`flex items-center gap-1.5 text-xs font-bold transition-colors ${compareIds.has(tent.id) ? "text-primary" : "text-muted-foreground hover:text-primary"}`}>
+                            className={`flex items-center gap-1.5 text-sm font-bold transition-colors ${compareIds.has(tent.id) ? "text-primary" : "text-muted-foreground hover:text-primary"}`}>
                             <div className={`w-4 h-4 rounded border flex items-center justify-center ${compareIds.has(tent.id) ? "bg-primary border-primary" : "border-border"}`}>
                               {compareIds.has(tent.id) && <Check className="w-3 h-3 text-primary-foreground" />}
                             </div>
@@ -983,12 +983,12 @@ export default function GearFinder() {
                           </button>
                           <div className="flex items-center gap-3">
                             <button onClick={(e) => { e.stopPropagation(); togglePackItem(tent.id, `${tent.brand} ${tent.model}`, tent.weightOz); }}
-                              className={`text-xs font-bold transition-colors ${packItems.find(p => p.id === tent.id) ? "text-emerald-400" : "text-muted-foreground hover:text-emerald-400"}`}>
+                              className={`text-sm font-bold transition-colors ${packItems.find(p => p.id === tent.id) ? "text-emerald-400" : "text-muted-foreground hover:text-emerald-400"}`}>
                               {packItems.find(p => p.id === tent.id) ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
                             </button>
                             <a href={tent.affiliateUrl} target="_blank" rel="noopener noreferrer"
                               onClick={(e) => { e.stopPropagation(); trackEvent("pe_affiliate_click", { tool: "gear-finder", product: `${tent.brand} ${tent.model}`, url: tent.affiliateUrl }); }}
-                              className="flex items-center gap-1 text-xs font-bold text-primary hover:underline">
+                              className="flex items-center gap-1 text-sm font-bold text-primary hover:underline">
                               Check Price <ExternalLink className="w-3 h-3" />
                             </a>
                           </div>
@@ -1009,13 +1009,13 @@ export default function GearFinder() {
                   <div className="flex items-center gap-2">
                     <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground" />
                     <select value={gearSortKey} onChange={(e) => setGearSortKey(e.target.value as GearSortKey)}
-                      className="bg-muted border border-border rounded px-3 py-1.5 text-xs font-bold">
+                      className="bg-muted border border-border rounded px-3 py-1.5 text-sm font-bold">
                       {gearSortOptions.map((opt) => (<option key={opt.key} value={opt.key}>{opt.label}</option>))}
                     </select>
                   </div>
                 </div>
                 {compareIds.size > 0 && compareIds.size < 2 && (
-                  <div className="bg-primary/10 border border-primary/20 rounded-lg px-4 py-2 mb-4 text-xs text-primary font-bold">
+                  <div className="bg-primary/10 border border-primary/20 rounded-lg px-4 py-2 mb-4 text-sm text-primary font-bold">
                     Select {2 - compareIds.size} more to compare (max 4)
                   </div>
                 )}

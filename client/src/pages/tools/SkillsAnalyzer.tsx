@@ -94,7 +94,7 @@ function LevelSelector({
             key={level}
             onClick={() => onChange(level)}
             className={`
-              px-2.5 py-1.5 rounded-md text-xs font-semibold border transition-all
+              px-2.5 py-1.5 rounded-md text-sm font-semibold border transition-all
               ${isSelected
                 ? "border-transparent text-white shadow-sm scale-105"
                 : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground"
@@ -136,19 +136,19 @@ function SkillCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <h4 className="text-sm font-bold text-foreground">{skill.name}</h4>
-            <span className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded border ${DIFFICULTY_COLORS[skill.difficulty]}`}>
+            <span className={`text-xs font-semibold uppercase px-1.5 py-0.5 rounded border ${DIFFICULTY_COLORS[skill.difficulty]}`}>
               {skill.difficulty}
             </span>
             {hasUnmetPrereqs && (
-              <span className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded border bg-amber-500/20 text-amber-400 border-amber-500/30 flex items-center gap-1" title={`Prerequisites not met: ${unmetPrereqs.map(p => p.skill.name).join(", ")}`}>
+              <span className="text-xs font-semibold uppercase px-1.5 py-0.5 rounded border bg-amber-500/20 text-amber-400 border-amber-500/30 flex items-center gap-1" title={`Prerequisites not met: ${unmetPrereqs.map(p => p.skill.name).join(", ")}`}>
                 <Link2 className="w-2.5 h-2.5" />
                 Prereq
               </span>
             )}
           </div>
-          <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">{skill.description}</p>
+          <p className="text-sm text-muted-foreground mt-1 leading-relaxed line-clamp-2">{skill.description}</p>
           {hasUnmetPrereqs && (
-            <p className="text-[10px] text-amber-400 mt-1">
+            <p className="text-xs text-amber-400 mt-1">
               Learn first: {unmetPrereqs.map(p => p.skill.name).join(", ")}
             </p>
           )}
@@ -166,7 +166,7 @@ function SkillCard({
         <LevelSelector value={rating} onChange={onRate} />
         {rating !== undefined && (
           <span
-            className="text-[10px] font-bold uppercase tracking-wide shrink-0"
+            className="text-xs font-bold uppercase tracking-wide shrink-0"
             style={{ color: SKILL_LEVEL_COLORS[rating] }}
           >
             {SKILL_LEVEL_LABELS[rating]}
@@ -210,8 +210,8 @@ function SkillDetailModal({
         <div>
           <div className="flex items-center gap-2 mb-2">
             <DomainIcon className="w-4 h-4" style={{ color: domain.color }} />
-            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{domain.name}</span>
-            <span className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded border ${DIFFICULTY_COLORS[skill.difficulty]}`}>
+            <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{domain.name}</span>
+            <span className={`text-xs font-semibold uppercase px-1.5 py-0.5 rounded border ${DIFFICULTY_COLORS[skill.difficulty]}`}>
               {skill.difficulty}
             </span>
           </div>
@@ -221,7 +221,7 @@ function SkillDetailModal({
         {/* Current Level */}
         {rating !== undefined && (
           <div className="flex items-center gap-2 bg-muted rounded-lg px-3 py-2">
-            <span className="text-xs text-muted-foreground">Your level:</span>
+            <span className="text-sm text-muted-foreground">Your level:</span>
             <span className="text-sm font-bold" style={{ color: SKILL_LEVEL_COLORS[rating] }}>
               {rating}/5 — {SKILL_LEVEL_LABELS[rating]}
             </span>
@@ -230,25 +230,25 @@ function SkillDetailModal({
 
         {/* Description */}
         <div>
-          <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">What It Is</h4>
+          <h4 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-1">What It Is</h4>
           <p className="text-sm text-foreground leading-relaxed">{skill.description}</p>
         </div>
 
         {/* Why It Matters */}
         <div>
-          <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Why It Matters</h4>
+          <h4 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-1">Why It Matters</h4>
           <p className="text-sm text-foreground leading-relaxed">{skill.whyItMatters}</p>
         </div>
 
         {/* Prerequisites */}
         {skill.prerequisites && skill.prerequisites.length > 0 && (
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Prerequisites</h4>
+            <h4 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-1">Prerequisites</h4>
             <div className="flex flex-wrap gap-2">
               {skill.prerequisites.map((prereqId) => {
                 const prereqSkill = SKILL_DOMAINS.flatMap(d => d.skills).find(s => s.id === prereqId);
                 return prereqSkill ? (
-                  <span key={prereqId} className="text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded px-2 py-1 flex items-center gap-1">
+                  <span key={prereqId} className="text-sm font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded px-2 py-1 flex items-center gap-1">
                     <Link2 className="w-3 h-3" />
                     {prereqSkill.name}
                   </span>
@@ -262,14 +262,14 @@ function SkillDetailModal({
         <div className="flex items-center gap-2 bg-primary/5 border border-primary/20 rounded-lg px-3 py-2">
           <Clock className="w-4 h-4 text-primary shrink-0" />
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Practice:</span>
+            <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Practice:</span>
             <span className="text-sm text-foreground ml-1">{skill.practiceFrequency}</span>
           </div>
         </div>
 
         {/* Learning Resources */}
         <div>
-          <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Learning Resources</h4>
+          <h4 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">Learning Resources</h4>
           <div className="space-y-2">
             {skill.learningResources.map((resource, i) => (
               <ResourceLink key={i} resource={resource} skillId={skill.id} />
@@ -280,13 +280,13 @@ function SkillDetailModal({
         {/* Related PE Tools */}
         {skill.relatedTools && skill.relatedTools.length > 0 && (
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Related PE Tools</h4>
+            <h4 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">Related PE Tools</h4>
             <div className="flex flex-wrap gap-2">
               {skill.relatedTools.map((slug) => (
                 <Link
                   key={slug}
                   href={`/tools/${slug}`}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary bg-primary/10 hover:bg-primary/20 rounded-md px-2.5 py-1.5 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary bg-primary/10 hover:bg-primary/20 rounded-md px-2.5 py-1.5 transition-colors"
                 >
                   <ArrowRight className="w-3 h-3" />
                   {slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
@@ -355,7 +355,7 @@ function ProgressBar({ rated, total }: { rated: number; total: number }) {
   const pct = total > 0 ? (rated / total) * 100 : 0;
   return (
     <div className="space-y-1.5">
-      <div className="flex items-center justify-between text-xs">
+      <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground">
           {rated} of {total} skills rated
         </span>
@@ -368,7 +368,7 @@ function ProgressBar({ rated, total }: { rated: number; total: number }) {
         />
       </div>
       {rated < MIN_SKILLS_FOR_RESULTS && (
-        <p className="text-[10px] text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           Rate at least {MIN_SKILLS_FOR_RESULTS} skills to see your results dashboard
         </p>
       )}
@@ -426,7 +426,7 @@ function ReadinessGauge({ score }: { score: number }) {
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-2">
           <span className="text-4xl font-extrabold text-foreground">{score}</span>
-          <span className="text-xs font-bold uppercase tracking-wide" style={{ color: getColor(score) }}>
+          <span className="text-sm font-bold uppercase tracking-wide" style={{ color: getColor(score) }}>
             {getLabel(score)}
           </span>
         </div>
@@ -779,11 +779,11 @@ export default function SkillsAnalyzer() {
       <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12 space-y-8">
         {/* Ops Deck Badge */}
         <div className="flex items-center gap-2">
-          <Link href="/tools" className="text-primary hover:underline text-xs font-bold uppercase tracking-wide">
+          <Link href="/tools" className="text-primary hover:underline text-sm font-bold uppercase tracking-wide">
             Ops Deck
           </Link>
           <ChevronRight className="w-3 h-3 text-muted-foreground" />
-          <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Skills Analyzer</span>
+          <span className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Skills Analyzer</span>
         </div>
 
         {/* Hero */}
@@ -823,24 +823,24 @@ export default function SkillsAnalyzer() {
             <div key={title} className="bg-card border border-border rounded-lg p-4 text-center space-y-2">
               <Icon className="w-6 h-6 text-primary mx-auto" />
               <h3 className="text-sm font-bold text-foreground">{title}</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
 
         {/* Skill Level Key */}
         <div className="bg-card border border-border rounded-lg p-5">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">Rating Scale</h3>
+          <h3 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-3">Rating Scale</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {([0, 1, 2, 3, 4, 5] as SkillLevel[]).map((level) => (
               <div key={level} className="flex items-center gap-2">
                 <span
-                  className="w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold text-white"
+                  className="w-6 h-6 rounded-md flex items-center justify-center text-sm font-bold text-white"
                   style={{ backgroundColor: SKILL_LEVEL_COLORS[level] }}
                 >
                   {level}
                 </span>
-                <span className="text-xs text-foreground">{SKILL_LEVEL_LABELS[level]}</span>
+                <span className="text-sm text-foreground">{SKILL_LEVEL_LABELS[level]}</span>
               </div>
             ))}
           </div>
@@ -848,7 +848,7 @@ export default function SkillsAnalyzer() {
 
         {/* 8 Domains Preview */}
         <div className="bg-card border border-border rounded-lg p-5">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">8 Skill Domains</h3>
+          <h3 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-3">8 Skill Domains</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {SKILL_DOMAINS.map((domain) => {
               const Icon = DOMAIN_ICONS[domain.icon] || Brain;
@@ -856,7 +856,7 @@ export default function SkillsAnalyzer() {
                 <div key={domain.id} className="flex items-center gap-2 text-sm">
                   <Icon className="w-4 h-4 shrink-0" style={{ color: domain.color }} />
                   <span className="text-foreground font-medium">{domain.name}</span>
-                  <span className="text-muted-foreground text-xs ml-auto">{domain.skills.length}</span>
+                  <span className="text-muted-foreground text-sm ml-auto">{domain.skills.length}</span>
                 </div>
               );
             })}
@@ -883,11 +883,11 @@ export default function SkillsAnalyzer() {
     <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12 space-y-8">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 no-print">
-        <Link href="/tools" className="text-primary hover:underline text-xs font-bold uppercase tracking-wide">
+        <Link href="/tools" className="text-primary hover:underline text-sm font-bold uppercase tracking-wide">
           Ops Deck
         </Link>
         <ChevronRight className="w-3 h-3 text-muted-foreground" />
-        <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Skills Analyzer</span>
+        <span className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Skills Analyzer</span>
       </div>
 
       {/* Header */}
@@ -898,7 +898,7 @@ export default function SkillsAnalyzer() {
             Skills Analyzer
           </h1>
           {daysSinceAssessment !== null && (
-            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+            <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
               <Clock className="w-3 h-3" />
               Last assessed {daysSinceAssessment === 0 ? "today" : `${daysSinceAssessment} day${daysSinceAssessment === 1 ? "" : "s"} ago`}
               {daysSinceAssessment > 90 && (
@@ -910,7 +910,7 @@ export default function SkillsAnalyzer() {
           {certAlerts.length > 0 && view === "assess" && (
             <div className="mt-2 space-y-1">
               {certAlerts.slice(0, 2).map(({ cert, days }) => (
-                <p key={cert.id} className={`text-xs font-semibold ${days < 0 ? "text-gray-500" : days <= 30 ? "text-red-500" : "text-amber-500"}`}>
+                <p key={cert.id} className={`text-sm font-semibold ${days < 0 ? "text-gray-500" : days <= 30 ? "text-red-500" : "text-amber-500"}`}>
                   {days < 0 ? `${cert.name} expired ${Math.abs(days)} days ago` : `${cert.name} expires in ${days} days`}
                 </p>
               ))}
@@ -921,7 +921,7 @@ export default function SkillsAnalyzer() {
           {ratedCount >= MIN_SKILLS_FOR_RESULTS && (
             <button
               onClick={() => setView(view === "results" ? "assess" : "results")}
-              className="flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs uppercase tracking-wide rounded-lg px-4 py-2.5 transition-colors"
+              className="flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm uppercase tracking-wide rounded-lg px-4 py-2.5 transition-colors"
             >
               <BarChart3 className="w-3.5 h-3.5" />
               {view === "results" ? "Edit Ratings" : "View Results"}
@@ -929,7 +929,7 @@ export default function SkillsAnalyzer() {
           )}
           <button
             onClick={handleReset}
-            className="flex items-center gap-1.5 bg-muted hover:bg-muted/80 text-muted-foreground font-semibold text-xs rounded-lg px-3 py-2.5 transition-colors"
+            className="flex items-center gap-1.5 bg-muted hover:bg-muted/80 text-muted-foreground font-semibold text-sm rounded-lg px-3 py-2.5 transition-colors"
             title="Reset all ratings"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -965,11 +965,11 @@ export default function SkillsAnalyzer() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h3 className="text-base font-bold text-foreground">{domain.name}</h3>
-                      <span className="text-[10px] font-semibold text-muted-foreground bg-muted rounded px-1.5 py-0.5">
+                      <span className="text-xs font-semibold text-muted-foreground bg-muted rounded px-1.5 py-0.5">
                         {domainRatedCount}/{domain.skills.length}
                       </span>
                     </div>
-                    <p className="text-xs text-muted-foreground truncate">{domain.description}</p>
+                    <p className="text-sm text-muted-foreground truncate">{domain.description}</p>
                   </div>
                   {domainRatedCount > 0 && (
                     <span className="text-sm font-extrabold shrink-0" style={{ color: domain.color }}>
@@ -997,7 +997,7 @@ export default function SkillsAnalyzer() {
                         {/* Quick-rate all unrated */}
                         {domainRatedCount < domain.skills.length && (
                           <div className="flex items-center justify-end gap-2 pt-2">
-                            <span className="text-[10px] text-muted-foreground">Rate all unrated as:</span>
+                            <span className="text-xs text-muted-foreground">Rate all unrated as:</span>
                             {([0, 1, 2] as SkillLevel[]).map((level) => (
                               <button
                                 key={level}
@@ -1009,7 +1009,7 @@ export default function SkillsAnalyzer() {
                                   setRatings(updated);
                                   persist(updated);
                                 }}
-                                className="text-[10px] font-bold px-2 py-1 rounded border border-border hover:border-primary/40 text-muted-foreground hover:text-foreground transition-colors"
+                                className="text-xs font-bold px-2 py-1 rounded border border-border hover:border-primary/40 text-muted-foreground hover:text-foreground transition-colors"
                               >
                                 {level} — {SKILL_LEVEL_LABELS[level]}
                               </button>
@@ -1054,7 +1054,7 @@ export default function SkillsAnalyzer() {
         <div ref={resultsRef} className="space-y-8" id="skills-results">
           {/* Overall Readiness Score */}
           <div className="bg-card border border-border rounded-xl p-6 text-center">
-            <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-4">
+            <h2 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-4">
               Overall Readiness Score
             </h2>
             <ReadinessGauge score={readinessScore} />
@@ -1073,7 +1073,7 @@ export default function SkillsAnalyzer() {
                 <button
                   key={id}
                   onClick={() => setActiveResultTab(id)}
-                  className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-md text-xs font-bold transition-all whitespace-nowrap ${
+                  className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-md text-sm font-bold transition-all whitespace-nowrap ${
                     activeResultTab === id
                       ? "bg-card text-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
@@ -1092,7 +1092,7 @@ export default function SkillsAnalyzer() {
             <div className="space-y-6">
               {/* Domain Donut */}
               <div className="bg-card border border-border rounded-lg p-6">
-                <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-4">
+                <h3 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-4">
                   Domain Breakdown
                 </h3>
                 <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -1149,7 +1149,7 @@ export default function SkillsAnalyzer() {
                         {criticalGaps.length} Critical Gap{criticalGaps.length !== 1 ? "s" : ""} Found
                       </h3>
                     </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       These are beginner and intermediate skills rated 0-1 that carry high importance.
                       Addressing these first gives you the biggest improvement per hour invested.
                     </p>
@@ -1166,12 +1166,12 @@ export default function SkillsAnalyzer() {
                           <div>
                             <div className="flex items-center gap-2 mb-1">
                               <DomainIcon className="w-3.5 h-3.5" style={{ color: domain.color }} />
-                              <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                              <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                                 {domain.name}
                               </span>
                             </div>
                             <h4 className="text-sm font-bold text-foreground">{skill.name}</h4>
-                            <p className="text-xs text-muted-foreground mt-1">{skill.whyItMatters}</p>
+                            <p className="text-sm text-muted-foreground mt-1">{skill.whyItMatters}</p>
                           </div>
                           <span
                             className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white"
@@ -1188,7 +1188,7 @@ export default function SkillsAnalyzer() {
                         </div>
                         <button
                           onClick={() => setDetailSkill({ skill, domain })}
-                          className="text-xs text-primary font-semibold hover:underline flex items-center gap-1"
+                          className="text-sm text-primary font-semibold hover:underline flex items-center gap-1"
                         >
                           View all resources
                           <ArrowRight className="w-3 h-3" />
@@ -1209,7 +1209,7 @@ export default function SkillsAnalyzer() {
                   <Target className="w-4 h-4 text-primary" />
                   <h3 className="text-sm font-bold text-foreground">Your Priority Training Roadmap</h3>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Ordered by impact — foundation skills you're missing come first, then high-value
                   skills worth leveling up, then weak spots in your strong domains.
                 </p>
@@ -1235,26 +1235,26 @@ export default function SkillsAnalyzer() {
                         <div className="flex items-start gap-3">
                           {/* Priority Number */}
                           <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-                            <span className="text-xs font-extrabold text-primary">{index + 1}</span>
+                            <span className="text-sm font-extrabold text-primary">{index + 1}</span>
                           </div>
 
                           <div className="flex-1 min-w-0 space-y-2">
                             <div>
                               <div className="flex items-center gap-2 mb-0.5">
                                 <DomainIcon className="w-3.5 h-3.5" style={{ color: domain.color }} />
-                                <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                                <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                                   {domain.name}
                                 </span>
-                                <span className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded border ${DIFFICULTY_COLORS[skill.difficulty]}`}>
+                                <span className={`text-xs font-semibold uppercase px-1.5 py-0.5 rounded border ${DIFFICULTY_COLORS[skill.difficulty]}`}>
                                   {skill.difficulty}
                                 </span>
                               </div>
                               <h4 className="text-sm font-bold text-foreground">{skill.name}</h4>
-                              <p className="text-xs text-primary/80 font-medium mt-0.5">{reason}</p>
+                              <p className="text-sm text-primary/80 font-medium mt-0.5">{reason}</p>
                             </div>
 
                             {/* Current level & target */}
-                            <div className="flex items-center gap-2 text-xs">
+                            <div className="flex items-center gap-2 text-sm">
                               <span className="text-muted-foreground">Current:</span>
                               <span className="font-bold" style={{ color: SKILL_LEVEL_COLORS[level] }}>
                                 {level} — {SKILL_LEVEL_LABELS[level]}
@@ -1273,7 +1273,7 @@ export default function SkillsAnalyzer() {
 
                             <button
                               onClick={() => setDetailSkill({ skill, domain })}
-                              className="text-xs text-primary font-semibold hover:underline flex items-center gap-1"
+                              className="text-sm text-primary font-semibold hover:underline flex items-center gap-1"
                             >
                               All resources & details
                               <ArrowRight className="w-3 h-3" />
@@ -1306,7 +1306,7 @@ export default function SkillsAnalyzer() {
                       <Trophy className="w-4 h-4 text-green-500" />
                       <h3 className="text-sm font-bold text-foreground">Your Top Skills</h3>
                     </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       These are skills where you're competent or beyond. Consider teaching
                       others — that's the fastest way to reach Expert level.
                     </p>
@@ -1323,12 +1323,12 @@ export default function SkillsAnalyzer() {
                           <div>
                             <div className="flex items-center gap-2 mb-1">
                               <DomainIcon className="w-3.5 h-3.5" style={{ color: domain.color }} />
-                              <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                              <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                                 {domain.name}
                               </span>
                             </div>
                             <h4 className="text-sm font-bold text-foreground">{skill.name}</h4>
-                            <p className="text-xs text-muted-foreground mt-1">{skill.description}</p>
+                            <p className="text-sm text-muted-foreground mt-1">{skill.description}</p>
                           </div>
                           <span
                             className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white"
@@ -1339,7 +1339,7 @@ export default function SkillsAnalyzer() {
                         </div>
                         <div className="mt-2 flex items-center gap-2">
                           <Clock className="w-3 h-3 text-muted-foreground" />
-                          <span className="text-[10px] text-muted-foreground">{skill.practiceFrequency}</span>
+                          <span className="text-xs text-muted-foreground">{skill.practiceFrequency}</span>
                         </div>
                       </div>
                     );
@@ -1357,7 +1357,7 @@ export default function SkillsAnalyzer() {
                   <Siren className="w-4 h-4 text-red-500" />
                   <h3 className="text-sm font-bold text-foreground">Your Weakest Scenarios</h3>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Based on your domain scores, these SHTF scenarios would expose your biggest skill gaps.
                   Run them in the SHTF Simulator to see how your gaps play out in practice.
                 </p>
@@ -1388,11 +1388,11 @@ export default function SkillsAnalyzer() {
                           <h4 className="text-base font-bold text-foreground">{scenario.scenarioName}</h4>
                           <div className="flex items-center gap-2 mt-1">
                             <DomainIcon className="w-3.5 h-3.5" style={{ color: domain.color }} />
-                            <span className="text-xs text-muted-foreground">
+                            <span className="text-sm text-muted-foreground">
                               {domain.name} gap triggers this scenario — your score: <span className="font-bold" style={{ color: domain.color }}>{score.toFixed(1)}/5</span>
                             </span>
                           </div>
-                          <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
                             {scenario.description}
                           </p>
                         </div>
@@ -1420,7 +1420,7 @@ export default function SkillsAnalyzer() {
                   <Users className="w-4 h-4 text-blue-500" />
                   <h3 className="text-sm font-bold text-foreground">Family Assessment</h3>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Assess your household members at the domain level. See who covers what and where your family has critical gaps.
                 </p>
               </div>
@@ -1431,7 +1431,7 @@ export default function SkillsAnalyzer() {
                   <h4 className="text-sm font-bold text-foreground">Add Family Member</h4>
                   <div className="grid sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="text-xs font-semibold text-muted-foreground">Name</label>
+                      <label className="text-sm font-semibold text-muted-foreground">Name</label>
                       <input
                         type="text"
                         value={newFamilyName}
@@ -1441,7 +1441,7 @@ export default function SkillsAnalyzer() {
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-semibold text-muted-foreground">Role</label>
+                      <label className="text-sm font-semibold text-muted-foreground">Role</label>
                       <select
                         value={newFamilyRole}
                         onChange={(e) => setNewFamilyRole(e.target.value as FamilyMember["role"])}
@@ -1456,10 +1456,10 @@ export default function SkillsAnalyzer() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={handleAddFamilyMember} className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs rounded-lg px-4 py-2 transition-colors">
+                    <button onClick={handleAddFamilyMember} className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm rounded-lg px-4 py-2 transition-colors">
                       Add Member
                     </button>
-                    <button onClick={() => setShowAddFamily(false)} className="bg-muted hover:bg-muted/80 text-foreground font-semibold text-xs rounded-lg px-4 py-2 transition-colors">
+                    <button onClick={() => setShowAddFamily(false)} className="bg-muted hover:bg-muted/80 text-foreground font-semibold text-sm rounded-lg px-4 py-2 transition-colors">
                       Cancel
                     </button>
                   </div>
@@ -1480,7 +1480,7 @@ export default function SkillsAnalyzer() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="text-sm font-bold text-foreground">{member.name}</h4>
-                      <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">{member.role}</span>
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{member.role}</span>
                     </div>
                     <button
                       onClick={() => handleRemoveFamilyMember(member.id)}
@@ -1498,7 +1498,7 @@ export default function SkillsAnalyzer() {
                         <div key={domain.id} className="space-y-1">
                           <div className="flex items-center gap-1">
                             <DomainIcon className="w-3 h-3" style={{ color: domain.color }} />
-                            <span className="text-[10px] font-semibold text-muted-foreground truncate">{domain.name}</span>
+                            <span className="text-xs font-semibold text-muted-foreground truncate">{domain.name}</span>
                           </div>
                           <div className="flex gap-0.5">
                             {([0, 1, 2, 3, 4, 5] as SkillLevel[]).map((level) => (
@@ -1528,7 +1528,7 @@ export default function SkillsAnalyzer() {
                 <div className="space-y-4">
                   {/* Household Aggregate Score */}
                   <div className="bg-card border border-blue-500/20 rounded-lg p-4">
-                    <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Household Aggregate Score</h4>
+                    <h4 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">Household Aggregate Score</h4>
                     <div className="flex items-center gap-3">
                       <span className="text-3xl font-extrabold text-foreground">{householdAnalysis.aggregateScore.toFixed(1)}</span>
                       <span className="text-sm text-muted-foreground">/5 — Best member's score per domain, averaged</span>
@@ -1537,7 +1537,7 @@ export default function SkillsAnalyzer() {
 
                   {/* Skill Coverage */}
                   <div className="bg-card border border-border rounded-lg p-4">
-                    <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">Household Skill Coverage</h4>
+                    <h4 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-3">Household Skill Coverage</h4>
                     <div className="space-y-2">
                       {SKILL_DOMAINS.map((domain) => {
                         const DomainIcon = DOMAIN_ICONS[domain.icon] || Brain;
@@ -1546,8 +1546,8 @@ export default function SkillsAnalyzer() {
                           <div key={domain.id} className="flex items-center gap-2 text-sm">
                             <DomainIcon className="w-4 h-4 shrink-0" style={{ color: domain.color }} />
                             <span className="text-foreground font-medium flex-1">{domain.name}</span>
-                            <span className="text-muted-foreground text-xs">{coverage.name}</span>
-                            <span className="font-bold text-xs" style={{ color: domain.color }}>{coverage.score.toFixed(1)}</span>
+                            <span className="text-muted-foreground text-sm">{coverage.name}</span>
+                            <span className="font-bold text-sm" style={{ color: domain.color }}>{coverage.score.toFixed(1)}</span>
                           </div>
                         );
                       })}
@@ -1563,7 +1563,7 @@ export default function SkillsAnalyzer() {
                       </div>
                       <div className="space-y-1">
                         {householdAnalysis.householdGaps.map((domain) => (
-                          <p key={domain.id} className="text-xs text-red-400">
+                          <p key={domain.id} className="text-sm text-red-400">
                             Nobody in your household rates above Basic in <span className="font-bold">{domain.name}</span> — critical gap
                           </p>
                         ))}
@@ -1583,7 +1583,7 @@ export default function SkillsAnalyzer() {
                   <Award className="w-4 h-4 text-amber-500" />
                   <h3 className="text-sm font-bold text-foreground">Certification Tracker</h3>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Track your certifications and licenses. Get alerts when they're about to expire so you never lapse.
                 </p>
               </div>
@@ -1612,7 +1612,7 @@ export default function SkillsAnalyzer() {
                   {/* Predefined list */}
                   {!newCertIsCustom && (
                     <div>
-                      <label className="text-xs font-semibold text-muted-foreground">Select Certification</label>
+                      <label className="text-sm font-semibold text-muted-foreground">Select Certification</label>
                       <select
                         value={newCertName}
                         onChange={(e) => setNewCertName(e.target.value)}
@@ -1625,7 +1625,7 @@ export default function SkillsAnalyzer() {
                       </select>
                       <button
                         onClick={() => { setNewCertIsCustom(true); setNewCertName(""); }}
-                        className="text-xs text-primary font-semibold mt-2 hover:underline"
+                        className="text-sm text-primary font-semibold mt-2 hover:underline"
                       >
                         + Add custom certification
                       </button>
@@ -1634,7 +1634,7 @@ export default function SkillsAnalyzer() {
 
                   {newCertIsCustom && (
                     <div>
-                      <label className="text-xs font-semibold text-muted-foreground">Certification Name</label>
+                      <label className="text-sm font-semibold text-muted-foreground">Certification Name</label>
                       <input
                         type="text"
                         value={newCertName}
@@ -1644,7 +1644,7 @@ export default function SkillsAnalyzer() {
                       />
                       <button
                         onClick={() => { setNewCertIsCustom(false); setNewCertName(""); }}
-                        className="text-xs text-primary font-semibold mt-2 hover:underline"
+                        className="text-sm text-primary font-semibold mt-2 hover:underline"
                       >
                         Choose from list instead
                       </button>
@@ -1653,7 +1653,7 @@ export default function SkillsAnalyzer() {
 
                   <div className="grid sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="text-xs font-semibold text-muted-foreground">Date Obtained</label>
+                      <label className="text-sm font-semibold text-muted-foreground">Date Obtained</label>
                       <input
                         type="date"
                         value={newCertDate}
@@ -1662,7 +1662,7 @@ export default function SkillsAnalyzer() {
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-semibold text-muted-foreground">Expiration Date (optional)</label>
+                      <label className="text-sm font-semibold text-muted-foreground">Expiration Date (optional)</label>
                       <input
                         type="date"
                         value={newCertExpiration}
@@ -1676,11 +1676,11 @@ export default function SkillsAnalyzer() {
                     <button
                       onClick={handleAddCertification}
                       disabled={!newCertName.trim() || !newCertDate}
-                      className="bg-primary hover:bg-primary/90 disabled:opacity-40 text-primary-foreground font-bold text-xs rounded-lg px-4 py-2 transition-colors"
+                      className="bg-primary hover:bg-primary/90 disabled:opacity-40 text-primary-foreground font-bold text-sm rounded-lg px-4 py-2 transition-colors"
                     >
                       Add Certification
                     </button>
-                    <button onClick={() => { setShowAddCert(false); setNewCertIsCustom(false); setNewCertName(""); }} className="bg-muted hover:bg-muted/80 text-foreground font-semibold text-xs rounded-lg px-4 py-2 transition-colors">
+                    <button onClick={() => { setShowAddCert(false); setNewCertIsCustom(false); setNewCertName(""); }} className="bg-muted hover:bg-muted/80 text-foreground font-semibold text-sm rounded-lg px-4 py-2 transition-colors">
                       Cancel
                     </button>
                   </div>
@@ -1710,7 +1710,7 @@ export default function SkillsAnalyzer() {
                             <h4 className={`text-sm font-bold ${days !== null && days < 0 ? "text-gray-500 line-through" : "text-foreground"}`}>
                               {cert.name}
                             </h4>
-                            <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                            <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
                               <span>Obtained: {new Date(cert.dateObtained).toLocaleDateString()}</span>
                               {cert.expirationDate && (
                                 <span className={statusColor}>
@@ -1760,7 +1760,7 @@ export default function SkillsAnalyzer() {
                   <Calendar className="w-4 h-4 text-primary" />
                   <h3 className="text-sm font-bold text-foreground">3-Month Seasonal Training Plan</h3>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Based on your skill gaps, here's a structured plan. Priority gaps come first, then intermediate improvements. Print it out and check off each item.
                 </p>
               </div>
@@ -1778,7 +1778,7 @@ export default function SkillsAnalyzer() {
                   <div key={month.month} className="bg-card border border-border rounded-lg overflow-hidden">
                     <div className="bg-primary/5 border-b border-border px-4 py-3">
                       <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-extrabold text-primary">
+                        <span className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-sm font-extrabold text-primary">
                           {month.month}
                         </span>
                         Month {month.month}: {month.monthLabel}
@@ -1787,7 +1787,7 @@ export default function SkillsAnalyzer() {
 
                     {month.skills.length === 0 ? (
                       <div className="p-4 text-center">
-                        <p className="text-xs text-muted-foreground">No additional skills to prioritize this month.</p>
+                        <p className="text-sm text-muted-foreground">No additional skills to prioritize this month.</p>
                       </div>
                     ) : (
                       <div className="p-4 space-y-4">
@@ -1799,7 +1799,7 @@ export default function SkillsAnalyzer() {
                                 <DomainIcon className="w-4 h-4 shrink-0 mt-0.5" style={{ color: domain.color }} />
                                 <div className="flex-1">
                                   <h5 className="text-sm font-bold text-foreground">{skill.name}</h5>
-                                  <div className="flex items-center gap-2 text-xs mt-0.5">
+                                  <div className="flex items-center gap-2 text-sm mt-0.5">
                                     <span className="text-muted-foreground">Rated</span>
                                     <span className="font-bold" style={{ color: SKILL_LEVEL_COLORS[currentLevel] }}>{currentLevel}</span>
                                     <ArrowRight className="w-3 h-3 text-muted-foreground" />
@@ -1816,7 +1816,7 @@ export default function SkillsAnalyzer() {
                               {/* Action Items — print-friendly checkboxes */}
                               <div className="space-y-1.5 ml-6">
                                 {actionItems.map((item, i) => (
-                                  <div key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                                  <div key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                                     <div className="w-4 h-4 rounded border border-border mt-0.5 shrink-0 flex items-center justify-center print:border-gray-400">
                                       {/* empty checkbox for print */}
                                     </div>
@@ -1827,7 +1827,7 @@ export default function SkillsAnalyzer() {
 
                               {/* Seasonal Note */}
                               {seasonalNote && (
-                                <div className="ml-6 flex items-start gap-1.5 text-[10px] text-amber-500 bg-amber-500/5 border border-amber-500/10 rounded px-2 py-1">
+                                <div className="ml-6 flex items-start gap-1.5 text-xs text-amber-500 bg-amber-500/5 border border-amber-500/10 rounded px-2 py-1">
                                   <Calendar className="w-3 h-3 shrink-0 mt-0.5" />
                                   <span>{seasonalNote}</span>
                                 </div>
@@ -1860,10 +1860,10 @@ export default function SkillsAnalyzer() {
                   <TrendingUp className="w-4 h-4 text-emerald-500" />
                   <h3 className="text-sm font-bold text-foreground">Skill Trade Value</h3>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   In a long-term disruption, skills become currency. Here's what your skill domains are worth in trade at Day 30.
                 </p>
-                <p className="text-xs text-emerald-500 font-semibold mt-2 italic">
+                <p className="text-sm text-emerald-500 font-semibold mt-2 italic">
                   "Skills never run out. You can trade a can of beans once. You can trade electrical repair forever."
                 </p>
               </div>
@@ -1881,13 +1881,13 @@ export default function SkillsAnalyzer() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-bold text-foreground">{entry.domain.name}</span>
-                              <span className="text-xs text-muted-foreground">Your score: <span className="font-bold" style={{ color: entry.domain.color }}>{entry.userScore.toFixed(1)}</span></span>
+                              <span className="text-sm text-muted-foreground">Your score: <span className="font-bold" style={{ color: entry.domain.color }}>{entry.userScore.toFixed(1)}</span></span>
                             </div>
-                            <p className="text-[10px] text-muted-foreground mt-0.5">{entry.description}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{entry.description}</p>
                           </div>
                           <div className="text-right shrink-0">
                             <div className="text-lg font-extrabold text-foreground">{entry.tradeValue}/10</div>
-                            <span className="text-[10px] text-muted-foreground">Trade Value</span>
+                            <span className="text-xs text-muted-foreground">Trade Value</span>
                           </div>
                         </div>
                         {/* Trade value bar */}
@@ -1910,7 +1910,7 @@ export default function SkillsAnalyzer() {
                       <Trophy className="w-4 h-4 text-green-500" />
                       Your Strongest Tradeable Skill
                     </h4>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                       <span className="font-bold text-foreground">{barterInsights.strongest.domain.name}</span> (rated {barterInsights.strongest.userScore.toFixed(1)}/5) — trade value at Day 30: <span className="font-bold text-green-500">{barterInsights.strongest.tradeValue}/10</span>
                     </p>
                   </div>
@@ -1922,7 +1922,7 @@ export default function SkillsAnalyzer() {
                       <AlertTriangle className="w-4 h-4 text-amber-500" />
                       High-Value Skill Worth Investing In
                     </h4>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                       <span className="font-bold text-foreground">{barterInsights.weakestHighValue.domain.name}</span> has trade value <span className="font-bold text-amber-500">{barterInsights.weakestHighValue.tradeValue}/10</span> but you're only rated {barterInsights.weakestHighValue.userScore.toFixed(1)}/5 — worth investing in.
                     </p>
                   </div>
@@ -1937,7 +1937,7 @@ export default function SkillsAnalyzer() {
                 <TrendingUp className="w-5 h-5 text-primary" />
                 <div className="flex-1">
                   <span className="text-sm font-bold text-foreground group-hover:text-primary">Barter & Trade Value Estimator</span>
-                  <p className="text-xs text-muted-foreground">See what physical goods and supplies are worth in trade</p>
+                  <p className="text-sm text-muted-foreground">See what physical goods and supplies are worth in trade</p>
                 </div>
                 <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
               </Link>
@@ -1952,7 +1952,7 @@ export default function SkillsAnalyzer() {
                   <Link2 className="w-4 h-4 text-purple-500" />
                   <h3 className="text-sm font-bold text-foreground">Skill Tree & Dependencies</h3>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Some skills build on others. This shows prerequisite chains — skills you should learn at a Basic level (2+) before moving to dependent skills.
                 </p>
               </div>
@@ -1965,7 +1965,7 @@ export default function SkillsAnalyzer() {
                     Natural Next Steps
                   </h4>
                   {prereqSuggestions.map(({ skill, domain, prereqName }) => (
-                    <p key={skill.id} className="text-xs text-muted-foreground">
+                    <p key={skill.id} className="text-sm text-muted-foreground">
                       You rated <span className="font-bold text-green-500">{prereqName}</span> as 3+ but <span className="font-bold text-foreground">{skill.name}</span> as 0 — {skill.name.toLowerCase()} is your natural next step.
                     </p>
                   ))}
@@ -1995,16 +1995,16 @@ export default function SkillsAnalyzer() {
                             <div className="flex items-center gap-2 mb-2">
                               <h5 className="text-sm font-bold text-foreground">{skill.name}</h5>
                               {currentLevel !== undefined && (
-                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white" style={{ backgroundColor: SKILL_LEVEL_COLORS[currentLevel] }}>
+                                <span className="text-xs font-bold px-1.5 py-0.5 rounded text-white" style={{ backgroundColor: SKILL_LEVEL_COLORS[currentLevel] }}>
                                   {currentLevel}
                                 </span>
                               )}
                               {allMet ? (
-                                <span className="text-[10px] font-semibold text-green-500 flex items-center gap-1">
+                                <span className="text-xs font-semibold text-green-500 flex items-center gap-1">
                                   <Check className="w-3 h-3" /> Prerequisites met
                                 </span>
                               ) : (
-                                <span className="text-[10px] font-semibold text-amber-500 flex items-center gap-1">
+                                <span className="text-xs font-semibold text-amber-500 flex items-center gap-1">
                                   <AlertTriangle className="w-3 h-3" /> {unmet.length} unmet
                                 </span>
                               )}
@@ -2016,7 +2016,7 @@ export default function SkillsAnalyzer() {
                                 const met = prereqLevel !== undefined && prereqLevel >= 2;
                                 return prereqSkill ? (
                                   <div key={prereqId} className="flex items-center gap-1">
-                                    <span className={`text-[10px] font-semibold px-2 py-1 rounded border flex items-center gap-1 ${
+                                    <span className={`text-xs font-semibold px-2 py-1 rounded border flex items-center gap-1 ${
                                       met
                                         ? "bg-green-500/10 text-green-500 border-green-500/20"
                                         : "bg-amber-500/10 text-amber-500 border-amber-500/20"
@@ -2029,7 +2029,7 @@ export default function SkillsAnalyzer() {
                                   </div>
                                 ) : null;
                               })}
-                              <span className="text-[10px] font-bold text-foreground">{skill.name}</span>
+                              <span className="text-xs font-bold text-foreground">{skill.name}</span>
                             </div>
                           </div>
                         );

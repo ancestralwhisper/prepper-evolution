@@ -499,7 +499,7 @@ export default function BugOutBagCalculator() {
                   />
                   <span className="text-muted-foreground text-sm">lbs</span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   US Army recommends keeping pack weight under 30% of body weight for extended movement.
                 </p>
               </div>
@@ -521,7 +521,7 @@ export default function BugOutBagCalculator() {
                         <span className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: cat.color }} />
                         <span className="font-bold text-sm uppercase tracking-wide">{cat.name}</span>
                         {catCount > 0 && (
-                          <span className="bg-primary/15 text-primary text-xs font-bold px-2 py-0.5 rounded">
+                          <span className="bg-primary/15 text-primary text-sm font-bold px-2 py-0.5 rounded">
                             {catCount} item{catCount !== 1 ? "s" : ""} / {(catWeight / 16).toFixed(1)} lbs
                           </span>
                         )}
@@ -585,12 +585,12 @@ export default function BugOutBagCalculator() {
                                     {item.name}
                                   </span>
                                   {item.essential && (
-                                    <span className="text-[10px] uppercase tracking-wider font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+                                    <span className="text-xs uppercase tracking-wider font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
                                       Essential
                                     </span>
                                   )}
                                   {item.stackable && !isSelected && (
-                                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                                    <span className="text-xs uppercase tracking-wider text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
                                       Qty
                                     </span>
                                   )}
@@ -600,7 +600,7 @@ export default function BugOutBagCalculator() {
                                     href={item.affiliateUrl}
                                     target="_blank"
                                     rel="noopener noreferrer nofollow"
-                                    className="text-xs text-primary hover:underline flex items-center gap-1 mt-0.5"
+                                    className="text-sm text-primary hover:underline flex items-center gap-1 mt-0.5"
                                   >
                                     {item.affiliateNote} <ExternalLink className="w-3 h-3" />
                                   </a>
@@ -610,7 +610,7 @@ export default function BugOutBagCalculator() {
                               <span className={`text-sm font-mono tabular-nums shrink-0 ${isSelected ? "text-foreground font-bold" : "text-muted-foreground"}`}>
                                 {isSelected && qty > 1 ? `${itemTotalOz} oz` : `${item.weightOz} oz`}
                                 {isSelected && qty > 1 && (
-                                  <span className="text-[10px] text-muted-foreground font-normal ml-1">({item.weightOz} ea)</span>
+                                  <span className="text-xs text-muted-foreground font-normal ml-1">({item.weightOz} ea)</span>
                                 )}
                               </span>
                             </div>
@@ -684,7 +684,7 @@ export default function BugOutBagCalculator() {
                   <Users className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                   <div>
                     <h3 className="text-sm font-bold uppercase tracking-wide mb-1">Community Driven</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       This calculator is community-driven. We&apos;re constantly adding gear based on what real preppers use.
                       If your gear isn&apos;t listed, let us know and we&apos;ll add it. If you&apos;d like to know when it&apos;s been added,
                       just drop your email and I&apos;ll send you a quick note letting you know it&apos;s live and what category it was added to.
@@ -705,7 +705,7 @@ export default function BugOutBagCalculator() {
                 ) : (
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase tracking-wide text-primary">Request a Product</h4>
+                      <h4 className="text-sm font-bold uppercase tracking-wide text-primary">Request a Product</h4>
                       <button
                         onClick={() => { setShowRequestForm(false); setRequestStatus("idle"); }}
                         className="text-muted-foreground hover:text-foreground transition-colors"
@@ -718,7 +718,7 @@ export default function BugOutBagCalculator() {
                       <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 text-center">
                         <CheckCircle className="w-6 h-6 text-green-500 mx-auto mb-2" />
                         <p className="text-sm font-bold text-green-500">Request Submitted!</p>
-                        <p className="text-xs text-muted-foreground mt-1">We&apos;ll review it and add it if it fits. {requestEmail ? "We\u2019ll email you when it\u2019s live." : ""} Thanks for helping us improve.</p>
+                        <p className="text-sm text-muted-foreground mt-1">We&apos;ll review it and add it if it fits. {requestEmail ? "We\u2019ll email you when it\u2019s live." : ""} Thanks for helping us improve.</p>
                       </div>
                     ) : (
                       <>
@@ -801,7 +801,7 @@ export default function BugOutBagCalculator() {
                           )}
                         </button>
 
-                        <p className="text-[10px] text-muted-foreground/50 text-center">
+                        <p className="text-xs text-muted-foreground/50 text-center">
                           All requests are reviewed before being added. We typically update weekly.
                         </p>
                       </>
@@ -811,10 +811,10 @@ export default function BugOutBagCalculator() {
               </div>
 
               <div className="bg-muted rounded-xl p-5">
-                <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">Data Sources & References</h3>
+                <h3 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-3">Data Sources & References</h3>
                 <ul className="space-y-1">
                   {dataSources.map((ds) => (
-                    <li key={ds.name} className="text-xs text-muted-foreground">
+                    <li key={ds.name} className="text-sm text-muted-foreground">
                       {ds.url ? (
                         <a href={ds.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{ds.name}</a>
                       ) : (
@@ -835,7 +835,7 @@ export default function BugOutBagCalculator() {
                 <div className="bg-card border border-border rounded-xl p-5">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-bold uppercase tracking-wide">Pack Weight</h3>
-                    <span className={`text-xs font-bold uppercase px-2 py-1 rounded ${getStatusColor()}`} data-testid="text-weight-status">
+                    <span className={`text-sm font-bold uppercase px-2 py-1 rounded ${getStatusColor()}`} data-testid="text-weight-status">
                       {getStatusLabel()}
                     </span>
                   </div>
@@ -853,25 +853,25 @@ export default function BugOutBagCalculator() {
 
                   <div className="grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-border">
                     <div>
-                      <p className="text-xs text-muted-foreground uppercase">Total Weight</p>
+                      <p className="text-sm text-muted-foreground uppercase">Total Weight</p>
                       <p className="text-lg font-display font-bold" data-testid="text-total-weight">{calculations.totalLbs.toFixed(1)} lbs</p>
-                      <p className="text-xs text-muted-foreground">{calculations.totalOz.toFixed(0)} oz</p>
+                      <p className="text-sm text-muted-foreground">{calculations.totalOz.toFixed(0)} oz</p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground uppercase">% Body Weight</p>
+                      <p className="text-sm text-muted-foreground uppercase">% Body Weight</p>
                       <p className={`text-lg font-display font-bold ${getStatusColor()}`} data-testid="text-pct-body-weight">
                         {calculations.pctBodyWeight.toFixed(1)}%
                       </p>
-                      <p className="text-xs text-muted-foreground">of {bodyWeight} lbs</p>
+                      <p className="text-sm text-muted-foreground">of {bodyWeight} lbs</p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground uppercase">Items</p>
+                      <p className="text-sm text-muted-foreground uppercase">Items</p>
                       <p className="text-lg font-display font-bold" data-testid="text-item-count">{calculations.itemCount}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground uppercase">Max Recommended</p>
+                      <p className="text-sm text-muted-foreground uppercase">Max Recommended</p>
                       <p className="text-lg font-display font-bold">{(bodyWeight * 0.25).toFixed(0)} lbs</p>
-                      <p className="text-xs text-muted-foreground">25% of body weight</p>
+                      <p className="text-sm text-muted-foreground">25% of body weight</p>
                     </div>
                   </div>
 
@@ -890,7 +890,7 @@ export default function BugOutBagCalculator() {
                         }}
                       />
                     </div>
-                    <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
                       <span>0%</span>
                       <span className="text-green-600">25%</span>
                       <span className="text-red-500">33%+</span>
@@ -913,7 +913,7 @@ export default function BugOutBagCalculator() {
                         <p className="text-sm font-bold mb-1">
                           {calculations.pctBodyWeight >= CRITICAL_PERCENT ? "Pack is dangerously heavy" : "Pack is getting heavy"}
                         </p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                           {calculations.pctBodyWeight >= CRITICAL_PERCENT
                             ? "Over 33% body weight increases injury risk and drastically slows movement. The US Army limits sustained march loads to 30%. Consider cutting non-essential items or switching to lighter alternatives."
                             : "At 25%+ body weight, endurance drops significantly. Consider lighter alternatives for your heaviest items or remove non-essentials for a 72-hour scenario."}
@@ -931,7 +931,7 @@ export default function BugOutBagCalculator() {
                         <p className="text-sm font-bold mb-2">Missing Essentials</p>
                         <ul className="space-y-1">
                           {calculations.missingEssentials.slice(0, 6).map((item) => (
-                            <li key={item.id} className="text-xs text-muted-foreground flex items-center gap-2">
+                            <li key={item.id} className="text-sm text-muted-foreground flex items-center gap-2">
                               <span className="w-1 h-1 rounded-full bg-primary shrink-0" />
                               {item.name}
                               {item.affiliateUrl && (
@@ -947,7 +947,7 @@ export default function BugOutBagCalculator() {
                             </li>
                           ))}
                           {calculations.missingEssentials.length > 6 && (
-                            <li className="text-xs text-muted-foreground">
+                            <li className="text-sm text-muted-foreground">
                               +{calculations.missingEssentials.length - 6} more
                             </li>
                           )}
@@ -980,12 +980,12 @@ export default function BugOutBagCalculator() {
                             <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-primary" />
                           </div>
                           {item.affiliateNote && (
-                            <p className="text-xs text-primary mt-0.5">{item.affiliateNote}</p>
+                            <p className="text-sm text-primary mt-0.5">{item.affiliateNote}</p>
                           )}
                         </a>
                       ))}
                     </div>
-                    <p className="text-[10px] text-muted-foreground/50 mt-3">
+                    <p className="text-xs text-muted-foreground/50 mt-3">
                       Affiliate links — we earn a commission at no extra cost to you.
                     </p>
                   </div>
@@ -997,7 +997,7 @@ export default function BugOutBagCalculator() {
                       <CheckCircle className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-sm font-bold mb-1 text-green-500">Pack looks solid</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                           All essentials covered and weight is within recommended limits. Your BOB is ready to go.
                         </p>
                       </div>

@@ -32,8 +32,9 @@ import { getRecoveryBrands, getRecoveryModels, findRecovery, recoveryDatabase } 
 import { getCargoBoxBrands, getCargoBoxModels, findCargoBox } from "./rigsafe-cargo-boxes";
 import {
   computeAll, computeVehicleModsWeight, defaultRigSafeConfig, RIGSAFE_KEY,
-  RACK_CARGO_PRESETS,
-  type RigSafeConfig, type RigSafeResult, type RigSafeWarning, type CargoItem,
+  RACK_CARGO_PRESETS, RIGSAFE_VERSION, RIGSAFE_CHANGELOG,
+  type RigSafeConfig, type RigSafeResult, type RigSafeWarning, type CargoItem, type CargoMountTarget,
+  computeBedRackBreakdown, computeCabRackBreakdown,
 } from "./rigsafe-compute";
 // import RigSafeSvg, { vehicleToSilhouetteId } from "./RigSafeSvg";
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
@@ -284,6 +285,7 @@ export default function RigSafeConfigurator() {
   // ─── State ─────────────────────────────────────────────────────
   const [config, setConfig] = useState<RigSafeConfig>(defaultRigSafeConfig);
   const [loaded, setLoaded] = useState(false);
+  const [showChangelog, setShowChangelog] = useState(false);
 
   // Section open state
   const [sections, setSections] = useState({
@@ -498,7 +500,7 @@ export default function RigSafeConfigurator() {
       ...prev,
       cargoItems: [
         ...prev.cargoItems,
-        { id: Date.now().toString(36), name: "", weightLbs: 0, qty: 1 },
+        { id: Date.now().toString(36), name: "", weightLbs: 0, qty: 1, mountTarget: "bed_rack" as const },
       ],
     }));
   }, []);
@@ -624,8 +626,38 @@ export default function RigSafeConfigurator() {
       {/* Tool Title */}
       <div>
         <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Ops Deck</p>
-        <h2 className="text-2xl sm:text-3xl font-extrabold">RigSafe Overland <span className="text-primary">Configurator</span></h2>
+        <div className="flex items-center gap-3 flex-wrap">
+          <h2 className="text-2xl sm:text-3xl font-extrabold">RigSafe Overland <span className="text-primary">Configurator</span></h2>
+          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">{RIGSAFE_VERSION}</span>
+        </div>
       </div>
+
+      {/* What's New */}
+      <div className="bg-card border border-border rounded-lg overflow-hidden">
+          <button
+            onClick={() => setShowChangelog(o => !o)}
+            className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-muted/40 transition-colors"
+          >
+            <span className="flex items-center gap-2">
+              <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-primary/10 text-primary">NEW</span>
+              <span className="text-sm font-bold">What&apos;s New in {RIGSAFE_CHANGELOG[0].version}</span>
+              <span className="text-xs text-muted-foreground">{RIGSAFE_CHANGELOG[0].date}</span>
+            </span>
+            {showChangelog ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
+          </button>
+          {showChangelog && (
+            <div className="border-t border-border px-4 py-3">
+              <ul className="space-y-1.5">
+                {RIGSAFE_CHANGELOG[0].changes.map((c, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <span className="text-primary mt-0.5 flex-shrink-0">▸</span>
+                    <span>{c}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
 
       {/* Safety Disclaimer */}
       <ToolSafetyDisclaimer level="safety-critical" />
@@ -1954,6 +1986,22 @@ export default function RigSafeConfigurator() {
                     </div>
                   </div>
 
+                  {/* Mount location */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Mounted on</label>
+                    <select
+                      value={config.cargoBoxMountTarget ?? "bed_rack"}
+                      onChange={(e) => update("cargoBoxMountTarget", e.target.value as CargoMountTarget)}
+                      className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                    >
+                      <option value="bed_rack">{config.rack ? `${config.rack.brand} ${config.rack.model}` : "Bed Rack"}</option>
+                      {config.hasSecondaryRack && (
+                        <option value="cab_rack">{config.secondaryRack ? `${config.secondaryRack.brand} ${config.secondaryRack.model}` : "Cab Roof Rack"}</option>
+                      )}
+                      <option value="bed">Truck Bed</option>
+                    </select>
+                  </div>
+
                   {/* Show selected box info */}
                   {!config.useManualCargoBox && config.cargoBox && (
                     <div className="bg-muted/50 rounded-lg p-2 text-xs text-muted-foreground space-y-0.5">
@@ -1988,8 +2036,8 @@ export default function RigSafeConfigurator() {
               )}
 
               {config.cargoItems.map((item) => (
-                <div key={item.id} className="flex gap-2 items-end">
-                  <div className="flex-1">
+                <div key={item.id} className="flex gap-2 items-end flex-wrap">
+                  <div className="flex-1 min-w-[120px]">
                     <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Item</label>
                     <input
                       type="text" value={item.name} placeholder="e.g. Pelican case"
@@ -2012,6 +2060,20 @@ export default function RigSafeConfigurator() {
                       onChange={(e) => updateCargoItem(item.id, "qty", Number(e.target.value))}
                       className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
                     />
+                  </div>
+                  <div className="w-36">
+                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Location</label>
+                    <select
+                      value={item.mountTarget ?? "bed_rack"}
+                      onChange={(e) => updateCargoItem(item.id, "mountTarget", e.target.value as CargoMountTarget)}
+                      className="w-full bg-muted border border-border rounded-lg px-2 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                    >
+                      <option value="bed_rack">{config.rack ? `${config.rack.brand} ${config.rack.model}` : "Bed Rack"}</option>
+                      {config.hasSecondaryRack && (
+                        <option value="cab_rack">{config.secondaryRack ? `${config.secondaryRack.brand} ${config.secondaryRack.model}` : "Cab Roof Rack"}</option>
+                      )}
+                      <option value="bed">Truck Bed</option>
+                    </select>
                   </div>
                   <button
                     onClick={() => removeCargoItem(item.id)}
@@ -2349,6 +2411,52 @@ export default function RigSafeConfigurator() {
                 )}
               </div>
             )}
+
+            {/* Per-Rack Load Donuts */}
+            {(() => {
+              const bedSegs = computeBedRackBreakdown(config);
+              const cabSegs = computeCabRackBreakdown(config);
+              const bedUsed = bedSegs.filter(s => s.label !== "Remaining").reduce((s, i) => s + i.value, 0);
+              const cabUsed = cabSegs.filter(s => s.label !== "Remaining").reduce((s, i) => s + i.value, 0);
+              const bedRating = bedSegs.reduce((s, i) => s + i.value, 0);
+              const cabRating = cabSegs.reduce((s, i) => s + i.value, 0);
+              if (bedSegs.length === 0 && cabSegs.length === 0) return null;
+              return (
+                <div className="bg-card border border-border rounded-lg p-4">
+                  <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-4">Rack Load Breakdown</h4>
+                  <div className={`grid gap-6 ${cabSegs.length > 0 ? "grid-cols-2" : "grid-cols-1 max-w-xs mx-auto"}`}>
+                    {bedSegs.length > 0 && (
+                      <div className="flex flex-col items-center gap-2">
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">
+                          {config.rack ? `${config.rack.brand} ${config.rack.model}` : "Bed Rack"}
+                        </p>
+                        <DonutChart
+                          segments={bedSegs}
+                          totalLabel={`${bedUsed} / ${bedRating} lbs`}
+                          totalValue=""
+                          size={140}
+                        />
+                        <ChartLegend segments={bedSegs} />
+                      </div>
+                    )}
+                    {cabSegs.length > 0 && (
+                      <div className="flex flex-col items-center gap-2">
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">
+                          {config.secondaryRack ? `${config.secondaryRack.brand} ${config.secondaryRack.model}` : "Cab Roof Rack"}
+                        </p>
+                        <DonutChart
+                          segments={cabSegs}
+                          totalLabel={`${cabUsed} / ${cabRating} lbs`}
+                          totalValue=""
+                          size={140}
+                        />
+                        <ChartLegend segments={cabSegs} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Weight Breakdown Donut */}
             {result.weightBreakdown.length > 0 && (

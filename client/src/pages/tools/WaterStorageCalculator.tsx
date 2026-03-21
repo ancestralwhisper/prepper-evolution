@@ -305,7 +305,7 @@ export default function WaterStorageCalculator() {
     min?: number;
   }) => (
     <div>
-      <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+      <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">
         {icon} {label}
       </label>
       <div className="flex items-center gap-2">
@@ -499,7 +499,7 @@ export default function WaterStorageCalculator() {
               </div>
 
               {state.nursingMothers > 0 && (
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                   <Info className="w-3 h-3 text-primary shrink-0" />
                   Nursing mothers are counted as adults with an extra 1 quart (0.25 gal) per day per CDC guidelines.
                 </p>
@@ -530,7 +530,7 @@ export default function WaterStorageCalculator() {
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+              <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                 <Info className="w-3 h-3 text-primary shrink-0" />
                 {calc.climateZone.note}
               </p>
@@ -558,7 +558,7 @@ export default function WaterStorageCalculator() {
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+              <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                 <Info className="w-3 h-3 text-primary shrink-0" />
                 {calc.activityLevel.note}
               </p>
@@ -587,13 +587,13 @@ export default function WaterStorageCalculator() {
                 ))}
               </div>
               {state.livingSituation === "apartment" && (
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                   <Info className="w-3 h-3 text-primary shrink-0" />
                   Showing portable, stackable containers only — 55-gallon drums and large fixed tanks are excluded.
                 </p>
               )}
               {state.livingSituation === "rv" && (
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                   <Info className="w-3 h-3 text-primary shrink-0" />
                   Showing portable containers 7 gallons or smaller for mobile storage.
                 </p>
@@ -604,7 +604,7 @@ export default function WaterStorageCalculator() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-bold uppercase tracking-wide mb-1">Water Filtration / Purification</h3>
-                  <p className="text-xs text-muted-foreground">Do you already have a water filter or purification method?</p>
+                  <p className="text-sm text-muted-foreground">Do you already have a water filter or purification method?</p>
                 </div>
                 <button
                   onClick={() => set("hasFiltration", !state.hasFiltration)}
@@ -635,13 +635,13 @@ export default function WaterStorageCalculator() {
                     />
                     <div>
                       <p className="text-sm font-bold">{usage.label}</p>
-                      <p className="text-xs text-muted-foreground">{usage.gallons} gal/person/day</p>
+                      <p className="text-sm text-muted-foreground">{usage.gallons} gal/person/day</p>
                       <p className="text-[11px] text-muted-foreground/70 mt-0.5">{usage.note}</p>
                     </div>
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground mt-4 pt-3 border-t border-border">
+              <p className="text-sm text-muted-foreground mt-4 pt-3 border-t border-border">
                 This is the FEMA minimum baseline. Climate and activity multipliers are applied on top of these values.
                 Your current multiplier: <strong className="text-foreground">{calc.combinedMultiplier.toFixed(2)}x</strong> ({calc.climateZone.name} + {calc.activityLevel.name}).
               </p>
@@ -652,7 +652,7 @@ export default function WaterStorageCalculator() {
                 <Users className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div>
                   <h3 className="text-sm font-bold uppercase tracking-wide mb-1">Community Driven</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     This calculator is community-driven. We're constantly adding products based on what
                     real preppers use. If your container or filter isn't listed, let us know.
                   </p>
@@ -671,7 +671,7 @@ export default function WaterStorageCalculator() {
               ) : (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-bold uppercase tracking-wide text-primary">Request a Product</h4>
+                    <h4 className="text-sm font-bold uppercase tracking-wide text-primary">Request a Product</h4>
                     <button
                       onClick={() => { setShowRequestForm(false); setRequestStatus("idle"); }}
                       className="text-muted-foreground hover:text-foreground transition-colors"
@@ -686,7 +686,7 @@ export default function WaterStorageCalculator() {
                     <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 text-center">
                       <CheckCircle className="w-6 h-6 text-green-500 mx-auto mb-2" />
                       <p className="text-sm font-bold text-green-500">Request Submitted!</p>
-                      <p className="text-xs text-muted-foreground mt-1">We'll review it and add it if it fits. Thanks for helping us improve.</p>
+                      <p className="text-sm text-muted-foreground mt-1">We'll review it and add it if it fits. Thanks for helping us improve.</p>
                     </div>
                   ) : (
                     <>
@@ -750,7 +750,7 @@ export default function WaterStorageCalculator() {
                         )}
                       </button>
 
-                      <p className="text-[10px] text-muted-foreground/50 text-center">
+                      <p className="text-xs text-muted-foreground/50 text-center">
                         All requests are reviewed before being added. We typically update weekly.
                       </p>
                     </>
@@ -760,10 +760,10 @@ export default function WaterStorageCalculator() {
             </div>
 
             <div className="bg-muted rounded-lg p-5">
-              <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">Data Sources &amp; References</h3>
+              <h3 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-3">Data Sources &amp; References</h3>
               <ul className="space-y-1">
                 {dataSources.map((ds) => (
-                  <li key={ds.name} className="text-xs text-muted-foreground">
+                  <li key={ds.name} className="text-sm text-muted-foreground">
                     {ds.url ? (
                       <a href={ds.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                         {ds.name}
@@ -802,53 +802,53 @@ export default function WaterStorageCalculator() {
 
                 <div className="grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-border">
                   <div>
-                    <p className="text-xs text-muted-foreground uppercase">Daily Need</p>
+                    <p className="text-sm text-muted-foreground uppercase">Daily Need</p>
                     <p className="text-lg font-extrabold" data-testid="text-daily-need">{fmtGal(calc.totalDailyGallons)} gal</p>
-                    <p className="text-xs text-muted-foreground">per day</p>
+                    <p className="text-sm text-muted-foreground">per day</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground uppercase">{state.days}-Day Total</p>
+                    <p className="text-sm text-muted-foreground uppercase">{state.days}-Day Total</p>
                     <p className="text-lg font-extrabold" data-testid="text-total-gallons">{fmtGal(calc.totalGallons)} gal</p>
-                    <p className="text-xs text-muted-foreground">full duration</p>
+                    <p className="text-sm text-muted-foreground">full duration</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground uppercase">Total Weight</p>
+                    <p className="text-sm text-muted-foreground uppercase">Total Weight</p>
                     <p className="text-lg font-extrabold text-primary" data-testid="text-total-weight">{Math.round(calc.totalWeightLbs)} lbs</p>
-                    <p className="text-xs text-muted-foreground">water only</p>
+                    <p className="text-sm text-muted-foreground">water only</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground uppercase">Multiplier</p>
+                    <p className="text-sm text-muted-foreground uppercase">Multiplier</p>
                     <p className="text-lg font-extrabold text-primary" data-testid="text-multiplier">{calc.combinedMultiplier.toFixed(2)}x</p>
-                    <p className="text-xs text-muted-foreground">climate + activity</p>
+                    <p className="text-sm text-muted-foreground">climate + activity</p>
                   </div>
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-border space-y-2">
-                  <p className="text-xs text-muted-foreground uppercase font-bold">Per-Person Daily</p>
-                  <div className="flex justify-between text-xs">
+                  <p className="text-sm text-muted-foreground uppercase font-bold">Per-Person Daily</p>
+                  <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Adult</span>
                     <span className="font-bold">{fmtGal(calc.gallonsPerAdultPerDay)} gal/day</span>
                   </div>
                   {state.children > 0 && (
-                    <div className="flex justify-between text-xs">
+                    <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Child (under 5)</span>
                       <span className="font-bold">{fmtGal(calc.gallonsPerChildPerDay)} gal/day</span>
                     </div>
                   )}
                   {state.nursingMothers > 0 && (
-                    <div className="flex justify-between text-xs">
+                    <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Nursing mother bonus</span>
                       <span className="font-bold">+{NURSING_MOTHER_EXTRA_GAL} gal/day each</span>
                     </div>
                   )}
                   {state.dogs > 0 && (
-                    <div className="flex justify-between text-xs">
+                    <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Dog</span>
                       <span className="font-bold">{PET_DOG_GAL_PER_DAY} gal/day each</span>
                     </div>
                   )}
                   {state.cats > 0 && (
-                    <div className="flex justify-between text-xs">
+                    <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Cat</span>
                       <span className="font-bold">{PET_CAT_GAL_PER_DAY} gal/day each</span>
                     </div>
@@ -862,7 +862,7 @@ export default function WaterStorageCalculator() {
                     <AlertTriangle className="w-5 h-5 text-[#EAB308] shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm font-bold mb-1">Heavy Load</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-sm text-muted-foreground">
                         {Math.round(calc.totalWeightLbs)} lbs of water is not portable. Consider a fixed storage
                         location with 55-gallon drums or a WaterBOB, plus a portable filter for resupply from
                         natural sources.
@@ -878,7 +878,7 @@ export default function WaterStorageCalculator() {
                     <AlertTriangle className="w-5 h-5 text-[#EAB308] shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm font-bold mb-1">No Filtration Method</p>
-                      <p className="text-xs text-muted-foreground mb-3">
+                      <p className="text-sm text-muted-foreground mb-3">
                         Stored water can run out. A backup filtration or purification method is critical for
                         extended emergencies. We strongly recommend adding one of these:
                       </p>
@@ -904,7 +904,7 @@ export default function WaterStorageCalculator() {
                           </a>
                         ))}
                       </div>
-                      <p className="text-[10px] text-muted-foreground/50 mt-2">
+                      <p className="text-xs text-muted-foreground/50 mt-2">
                         Affiliate links &mdash; we earn a commission at no extra cost to you.
                       </p>
                     </div>
@@ -918,7 +918,7 @@ export default function WaterStorageCalculator() {
                     <CheckCircle className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm font-bold mb-1 text-green-500">Filtration Covered</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-sm text-muted-foreground">
                         You have a backup water purification method. Even if stored water runs out, you can
                         source from natural water and treat it.
                       </p>
@@ -947,7 +947,7 @@ export default function WaterStorageCalculator() {
                           <span className="text-sm font-medium group-hover:text-primary transition-colors block">
                             {container.name}
                           </span>
-                          <span className="text-xs text-muted-foreground block mt-0.5">
+                          <span className="text-sm text-muted-foreground block mt-0.5">
                             {container.gallons} gal each &mdash; <strong className="text-foreground">{container.needed} needed</strong>
                             {container.portable && <span className="text-primary ml-1">(portable)</span>}
                           </span>
@@ -958,7 +958,7 @@ export default function WaterStorageCalculator() {
                     </a>
                   ))}
                 </div>
-                <p className="text-[10px] text-muted-foreground/50 mt-3">
+                <p className="text-xs text-muted-foreground/50 mt-3">
                   Affiliate links &mdash; we earn a commission at no extra cost to you.
                 </p>
               </div>
@@ -969,7 +969,7 @@ export default function WaterStorageCalculator() {
                     <Home className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm font-bold mb-1">Apartment Storage Note</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-sm text-muted-foreground">
                         Your {calc.totalGallons.toFixed(0)} gallons weighs approximately{" "}
                         <strong className="text-foreground">{Math.round(calc.totalWeightLbs)} lbs</strong>.
                         Focus on stackable containers (WaterBricks, Aqua-Tainers) that fit in closets
@@ -986,7 +986,7 @@ export default function WaterStorageCalculator() {
                 </h3>
                 <ul className="space-y-2">
                   {(state.livingSituation === "apartment" ? apartmentWaterTips : storageTips).slice(0, 6).map((tip, i) => (
-                    <li key={i} className="text-xs text-muted-foreground leading-relaxed flex gap-2">
+                    <li key={i} className="text-sm text-muted-foreground leading-relaxed flex gap-2">
                       <span className="text-primary shrink-0 mt-0.5">&bull;</span>
                       <span>{tip}</span>
                     </li>
@@ -1021,7 +1021,7 @@ export default function WaterStorageCalculator() {
               <ToolSocialShare url={getShareUrl()} toolName="Water Storage Calculator" />
 
               <div className="bg-muted rounded-lg p-4">
-                <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">How We Calculate</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">How We Calculate</h4>
                 <ul className="space-y-1 text-[11px] text-muted-foreground leading-relaxed">
                   <li>&bull; <strong className="text-foreground">1 gallon per person per day</strong> &mdash; FEMA minimum baseline</li>
                   <li>&bull; <strong className="text-foreground">Climate multiplier</strong> adjusts for heat, humidity, and cold</li>

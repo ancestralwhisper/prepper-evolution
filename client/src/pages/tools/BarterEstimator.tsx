@@ -91,7 +91,7 @@ function ValueBar({ value, maxValue = 10, color }: { value: number; maxValue?: n
           style={{ backgroundColor: barColor }}
         />
       </div>
-      <span className="text-xs font-bold tabular-nums w-6 text-right" style={{ color: barColor }}>
+      <span className="text-sm font-bold tabular-nums w-6 text-right" style={{ color: barColor }}>
         {value}
       </span>
     </div>
@@ -157,7 +157,7 @@ function SectionHeader({
         <div className="flex items-center gap-2">
           <h2 className="text-lg font-extrabold">{title}</h2>
           {badge && (
-            <span className="text-[10px] font-bold uppercase tracking-wide bg-primary/10 text-primary px-2 py-0.5 rounded">
+            <span className="text-xs font-bold uppercase tracking-wide bg-primary/10 text-primary px-2 py-0.5 rounded">
               {badge}
             </span>
           )}
@@ -193,7 +193,7 @@ function CollapsibleCategory({
           <span className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
           <span className="text-sm font-bold">{title}</span>
           {count !== undefined && count > 0 && (
-            <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded">
+            <span className="text-xs font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded">
               {count}
             </span>
           )}
@@ -415,7 +415,7 @@ export default function BarterEstimator() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
           <Link
             href="/tools"
-            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary mb-4 transition-colors"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary mb-4 transition-colors"
           >
             <ArrowRight className="w-3 h-3 rotate-180" /> All Tools
           </Link>
@@ -463,7 +463,7 @@ export default function BarterEstimator() {
                 </button>
               ))}
             </div>
-            <p className="text-xs text-muted-foreground mt-2 italic">
+            <p className="text-sm text-muted-foreground mt-2 italic">
               {TIMELINE_DESCRIPTIONS[timepoint]}
             </p>
           </div>
@@ -490,7 +490,7 @@ export default function BarterEstimator() {
               </div>
               <div className="text-sm font-bold text-muted-foreground mt-1">TRADE POWER SCORE</div>
               <div
-                className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                className="inline-block mt-2 px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wide"
                 style={{
                   backgroundColor: `${TIER_COLORS[portfolioScore.tier]}20`,
                   color: TIER_COLORS[portfolioScore.tier],
@@ -498,7 +498,7 @@ export default function BarterEstimator() {
               >
                 {TIER_LABELS[portfolioScore.tier]}
               </div>
-              <div className="flex justify-center gap-6 mt-4 text-xs text-muted-foreground">
+              <div className="flex justify-center gap-6 mt-4 text-sm text-muted-foreground">
                 <span>
                   Goods:{" "}
                   <strong className="text-foreground">{portfolioScore.goodsScore} pts</strong>
@@ -685,7 +685,7 @@ export default function BarterEstimator() {
                         {depStatus && depStatus.unmet.length > 0 && (
                           <div className="mt-1.5 ml-9 flex items-start gap-1.5">
                             <AlertTriangle className="w-3 h-3 text-amber-500 flex-shrink-0 mt-0.5" />
-                            <p className="text-[10px] text-amber-500">
+                            <p className="text-xs text-amber-500">
                               Needs: {depStatus.unmet.join(", ")}
                             </p>
                           </div>
@@ -729,7 +729,7 @@ export default function BarterEstimator() {
                         isOwned ? "bg-green-500/5 border border-green-500/20" : ""
                       }`}
                     >
-                      <span className="text-xs font-bold text-muted-foreground w-5 text-right">
+                      <span className="text-sm font-bold text-muted-foreground w-5 text-right">
                         {i + 1}.
                       </span>
                       <div className="flex-1 min-w-0">
@@ -778,7 +778,7 @@ export default function BarterEstimator() {
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-foreground">{suggestion}</p>
                       </div>
-                      <span className="text-xs font-bold text-primary whitespace-nowrap">{value}/10</span>
+                      <span className="text-sm font-bold text-primary whitespace-nowrap">{value}/10</span>
                     </div>
                   ))}
                 </div>
@@ -801,7 +801,7 @@ export default function BarterEstimator() {
                     >
                       <div className="flex items-center gap-2 mb-1">
                         <span
-                          className={`text-[10px] font-bold uppercase tracking-wide ${PRIORITY_COLORS[rec.priority]}`}
+                          className={`text-xs font-bold uppercase tracking-wide ${PRIORITY_COLORS[rec.priority]}`}
                         >
                           {rec.priority}
                         </span>
@@ -810,7 +810,7 @@ export default function BarterEstimator() {
                           ({rec.item.type})
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground">{rec.reason}</p>
+                      <p className="text-sm text-muted-foreground">{rec.reason}</p>
                       {rec.item.asin && (
                         <a
                           href={`https://www.amazon.com/dp/${rec.item.asin}?tag=prepperevo-20`}
@@ -859,7 +859,7 @@ export default function BarterEstimator() {
                           {dep.met.map((d) => (
                             <span
                               key={d}
-                              className="text-[10px] bg-green-500/10 text-green-500 px-1.5 py-0.5 rounded"
+                              className="text-xs bg-green-500/10 text-green-500 px-1.5 py-0.5 rounded"
                             >
                               <Check className="w-2.5 h-2.5 inline mr-0.5" />
                               {d}
@@ -872,7 +872,7 @@ export default function BarterEstimator() {
                           {dep.unmet.map((d) => (
                             <span
                               key={d}
-                              className="text-[10px] bg-red-500/10 text-red-500 px-1.5 py-0.5 rounded"
+                              className="text-xs bg-red-500/10 text-red-500 px-1.5 py-0.5 rounded"
                             >
                               <X className="w-2.5 h-2.5 inline mr-0.5" />
                               {d}
@@ -918,17 +918,17 @@ export default function BarterEstimator() {
                           key={roi.item.id}
                           className="flex items-center gap-3 p-2 bg-muted rounded-lg"
                         >
-                          <span className="text-xs font-bold text-primary w-5 text-right">
+                          <span className="text-sm font-bold text-primary w-5 text-right">
                             {i + 1}.
                           </span>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-medium truncate">{roi.item.name}</span>
-                              <span className="text-[10px] text-muted-foreground">
+                              <span className="text-xs text-muted-foreground">
                                 ~${roi.retailPrice}
                               </span>
                             </div>
-                            <div className="flex items-center gap-3 text-[10px] text-muted-foreground mt-0.5">
+                            <div className="flex items-center gap-3 text-xs text-muted-foreground mt-0.5">
                               <span>
                                 Day 30: <strong className="text-foreground">{roi.day30Value}/10</strong>
                               </span>
@@ -945,7 +945,7 @@ export default function BarterEstimator() {
                               href={`https://www.amazon.com/dp/${roi.item.asin}?tag=prepperevo-20`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-[10px] text-primary font-bold hover:underline whitespace-nowrap flex items-center gap-0.5"
+                              className="text-xs text-primary font-bold hover:underline whitespace-nowrap flex items-center gap-0.5"
                               onClick={() =>
                                 trackEvent("pe_affiliate_click", {
                                   tool: "barter-estimator",
@@ -960,7 +960,7 @@ export default function BarterEstimator() {
                         </div>
                       ))}
                     </div>
-                    <p className="text-[10px] text-muted-foreground mt-3 italic">
+                    <p className="text-xs text-muted-foreground mt-3 italic">
                       Prices are approximate and may vary. ROI score = (Day 30 value x Day 90 multiplier) / retail cost.
                       Higher = better investment for trade purposes.
                     </p>

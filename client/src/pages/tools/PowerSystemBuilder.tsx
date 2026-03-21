@@ -353,12 +353,12 @@ export default function PowerSystemBuilder() {
       {vehicleProfileLoaded && (
         <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-3 py-2">
           <Check className="w-4 h-4 text-emerald-500" />
-          <span className="text-xs font-bold text-emerald-500">Loaded from Vehicle Profile</span>
+          <span className="text-sm font-bold text-emerald-500">Loaded from Vehicle Profile</span>
         </div>
       )}
 
       <div>
-        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Vehicle Type</label>
+        <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">Vehicle Type</label>
         <select
           value={vehicleType}
           onChange={(e) => setVehicleType(e.target.value as VehicleType)}
@@ -371,14 +371,14 @@ export default function PowerSystemBuilder() {
       </div>
 
       <div>
-        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Alternator Amps</label>
+        <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">Alternator Amps</label>
         <input
           type="number" min={40} max={300} step={5}
           value={alternatorAmps}
           onChange={(e) => setAlternatorAmps(Number(e.target.value))}
           className="w-full bg-muted border border-border rounded-lg px-3 py-2.5 text-sm font-mono"
         />
-        <p className="text-[10px] text-muted-foreground mt-1">Check your owner&apos;s manual or alternator sticker for exact rating</p>
+        <p className="text-xs text-muted-foreground mt-1">Check your owner&apos;s manual or alternator sticker for exact rating</p>
       </div>
 
       <div className="flex items-center gap-3">
@@ -390,7 +390,7 @@ export default function PowerSystemBuilder() {
         </button>
         <div>
           <span className="text-sm font-bold">Smart Alternator</span>
-          <p className="text-[10px] text-muted-foreground">Most 2017+ vehicles have ECU-controlled alternators. Requires compatible DC-DC charger.</p>
+          <p className="text-xs text-muted-foreground">Most 2017+ vehicles have ECU-controlled alternators. Requires compatible DC-DC charger.</p>
         </div>
       </div>
     </div>
@@ -408,12 +408,12 @@ export default function PowerSystemBuilder() {
       {/* Running totals */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-muted border border-border rounded-lg p-3 text-center">
-          <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Daily Load</p>
-          <p className="text-xl font-extrabold text-primary">{totalDaily.toFixed(1)} <span className="text-xs text-muted-foreground">Ah</span></p>
+          <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Daily Load</p>
+          <p className="text-xl font-extrabold text-primary">{totalDaily.toFixed(1)} <span className="text-sm text-muted-foreground">Ah</span></p>
         </div>
         <div className="bg-muted border border-border rounded-lg p-3 text-center">
-          <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Peak Draw</p>
-          <p className="text-xl font-extrabold">{peakDraw.toFixed(1)} <span className="text-xs text-muted-foreground">A</span></p>
+          <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Peak Draw</p>
+          <p className="text-xl font-extrabold">{peakDraw.toFixed(1)} <span className="text-sm text-muted-foreground">A</span></p>
         </div>
       </div>
 
@@ -436,7 +436,7 @@ export default function PowerSystemBuilder() {
                 <span className="w-3 h-3 rounded-sm" style={{ backgroundColor: deviceCategoryColors[cat] }} />
                 <span className="text-sm font-bold">{deviceCategoryLabels[cat]}</span>
                 {selectedCount > 0 && (
-                  <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded">
+                  <span className="text-xs font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded">
                     {selectedCount}
                   </span>
                 )}
@@ -449,7 +449,7 @@ export default function PowerSystemBuilder() {
                 {catNote && (
                   <div className="flex items-start gap-2 bg-muted rounded-lg px-3 py-2">
                     <Info className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0 mt-0.5" />
-                    <p className="text-[10px] text-muted-foreground">{catNote}</p>
+                    <p className="text-xs text-muted-foreground">{catNote}</p>
                   </div>
                 )}
                 {devices.map((device) => {
@@ -464,7 +464,7 @@ export default function PowerSystemBuilder() {
                       <div className="flex items-center justify-between">
                         <button onClick={() => toggleDevice(device)} className="flex-1 text-left">
                           <span className="text-sm font-bold">{device.name}</span>
-                          <span className="text-xs text-muted-foreground ml-2">{device.watts}W / {device.amps12v}A</span>
+                          <span className="text-sm text-muted-foreground ml-2">{device.watts}W / {device.amps12v}A</span>
                           {device.invertRequired && <span className="text-[9px] text-warning ml-1">(inverter)</span>}
                         </button>
                         <button
@@ -476,7 +476,7 @@ export default function PowerSystemBuilder() {
                       </div>
 
                       {device.note && (
-                        <p className="text-[10px] text-muted-foreground mt-1">{device.note}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{device.note}</p>
                       )}
 
                       {isSelected && sel && (
@@ -505,7 +505,7 @@ export default function PowerSystemBuilder() {
                               onChange={(e) => updateSelection(device.id, { hoursPerDay: Number(e.target.value) })}
                               className="w-full mt-1 accent-accent"
                             />
-                            <span className="text-[10px] text-muted-foreground">{sel.hoursPerDay}h</span>
+                            <span className="text-xs text-muted-foreground">{sel.hoursPerDay}h</span>
                           </div>
                           {/* Duty */}
                           <div>
@@ -516,7 +516,7 @@ export default function PowerSystemBuilder() {
                               onChange={(e) => updateSelection(device.id, { dutyCyclePct: Number(e.target.value) })}
                               className="w-full mt-1 accent-accent"
                             />
-                            <span className="text-[10px] text-muted-foreground">{sel.dutyCyclePct}%</span>
+                            <span className="text-xs text-muted-foreground">{sel.dutyCyclePct}%</span>
                           </div>
                           {/* Daily Ah */}
                           <div>
@@ -539,7 +539,7 @@ export default function PowerSystemBuilder() {
       {/* Custom devices */}
       {customDevices.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Custom Devices</h4>
+          <h4 className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Custom Devices</h4>
           {customDevices.map((cd) => {
             const amps = (cd.invertRequired ? cd.watts * 1.15 : cd.watts) / 12;
             const dailyAh = amps * cd.hoursPerDay * (cd.dutyCyclePct / 100);
@@ -547,7 +547,7 @@ export default function PowerSystemBuilder() {
               <div key={cd.id} className="flex items-center justify-between bg-muted border border-border rounded-lg px-3 py-2">
                 <div>
                   <span className="text-sm font-bold">{cd.name}</span>
-                  <span className="text-xs text-muted-foreground ml-2">{cd.watts}W / {cd.hoursPerDay}h / {cd.dutyCyclePct}% duty</span>
+                  <span className="text-sm text-muted-foreground ml-2">{cd.watts}W / {cd.hoursPerDay}h / {cd.dutyCyclePct}% duty</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-bold text-primary">{dailyAh.toFixed(1)} Ah</span>
@@ -564,7 +564,7 @@ export default function PowerSystemBuilder() {
       {/* Add custom device */}
       {showCustomForm ? (
         <div className="bg-muted border border-border rounded-lg p-4 space-y-3">
-          <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Add Custom Device</h4>
+          <h4 className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Add Custom Device</h4>
           <input
             type="text" placeholder="Device name" value={customName}
             onChange={(e) => setCustomName(e.target.value)}
@@ -587,7 +587,7 @@ export default function PowerSystemBuilder() {
                 className="w-full bg-card border border-border rounded-lg px-2 py-1.5 text-sm font-mono" />
             </div>
             <div className="flex items-end gap-2">
-              <label className="flex items-center gap-1.5 text-xs">
+              <label className="flex items-center gap-1.5 text-sm">
                 <input type="checkbox" checked={customInvert} onChange={(e) => setCustomInvert(e.target.checked)} className="accent-accent" />
                 Inverter
               </label>
@@ -625,7 +625,7 @@ export default function PowerSystemBuilder() {
 
       {/* Chemistry */}
       <div className="space-y-2">
-        <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Chemistry</label>
+        <label className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Chemistry</label>
         <div className="grid grid-cols-3 gap-2">
           {(Object.keys(batterySpecs) as BatteryChemistry[]).map((chem) => {
             const s = batterySpecs[chem];
@@ -637,7 +637,7 @@ export default function PowerSystemBuilder() {
                   <span className="text-sm font-bold">{s.label}</span>
                   {chem === "lifepo4" && <span className="text-[8px] font-bold uppercase bg-primary/10 text-primary px-1 py-0.5 rounded">Recommended</span>}
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-1">{(s.dod * 100).toFixed(0)}% DOD / {s.lbsPerAh} lb/Ah / {s.cycleLifeMin.toLocaleString()}+ cycles</p>
+                <p className="text-xs text-muted-foreground mt-1">{(s.dod * 100).toFixed(0)}% DOD / {s.lbsPerAh} lb/Ah / {s.cycleLifeMin.toLocaleString()}+ cycles</p>
               </button>
             );
           })}
@@ -646,7 +646,7 @@ export default function PowerSystemBuilder() {
 
       {/* Capacity */}
       <div className="space-y-2">
-        <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Single Battery Capacity (Ah)</label>
+        <label className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Single Battery Capacity (Ah)</label>
         <div className="flex gap-2">
           {standardBatteryCapacities.map((cap) => (
             <button key={cap} onClick={() => setSingleCapacityAh(cap)}
@@ -662,7 +662,7 @@ export default function PowerSystemBuilder() {
 
       {/* Count */}
       <div className="space-y-2">
-        <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Battery Count</label>
+        <label className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Battery Count</label>
         <div className="flex items-center gap-3">
           <button onClick={() => setBatteryCount(Math.max(1, batteryCount - 1))}
             className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center">
@@ -678,7 +678,7 @@ export default function PowerSystemBuilder() {
 
       {/* Days of autonomy */}
       <div className="space-y-2">
-        <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Days of Autonomy Target</label>
+        <label className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Days of Autonomy Target</label>
         <input type="range" min={1} max={5} step={0.5} value={daysAutonomyTarget}
           onChange={(e) => setDaysAutonomyTarget(Number(e.target.value))}
           className="w-full accent-accent" />
@@ -692,26 +692,26 @@ export default function PowerSystemBuilder() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="bg-muted border border-border rounded-lg p-3 text-center">
           <p className="text-[9px] font-bold uppercase text-muted-foreground">Total</p>
-          <p className="text-lg font-extrabold">{totalBankAh} <span className="text-xs text-muted-foreground">Ah</span></p>
+          <p className="text-lg font-extrabold">{totalBankAh} <span className="text-sm text-muted-foreground">Ah</span></p>
         </div>
         <div className="bg-muted border border-border rounded-lg p-3 text-center">
           <p className="text-[9px] font-bold uppercase text-muted-foreground">Usable</p>
-          <p className="text-lg font-extrabold">{usableAh.toFixed(0)} <span className="text-xs text-muted-foreground">Ah</span></p>
+          <p className="text-lg font-extrabold">{usableAh.toFixed(0)} <span className="text-sm text-muted-foreground">Ah</span></p>
         </div>
         <div className="bg-muted border border-border rounded-lg p-3 text-center">
           <p className="text-[9px] font-bold uppercase text-muted-foreground">Cold Derated</p>
-          <p className="text-lg font-extrabold">{deratedAh.toFixed(0)} <span className="text-xs text-muted-foreground">Ah</span></p>
+          <p className="text-lg font-extrabold">{deratedAh.toFixed(0)} <span className="text-sm text-muted-foreground">Ah</span></p>
         </div>
         <div className="bg-muted border border-border rounded-lg p-3 text-center">
           <p className="text-[9px] font-bold uppercase text-muted-foreground">Weight</p>
-          <p className="text-lg font-extrabold">{bankWeight.toFixed(1)} <span className="text-xs text-muted-foreground">lbs</span></p>
+          <p className="text-lg font-extrabold">{bankWeight.toFixed(1)} <span className="text-sm text-muted-foreground">lbs</span></p>
         </div>
       </div>
 
       {/* Recommended comparison */}
       {recommendedAh > 0 && (
         <div className={`rounded-lg p-3 border ${totalBankAh >= recommendedAh ? "border-emerald-500/30 bg-emerald-500/5" : "border-amber-500/30 bg-amber-500/5"}`}>
-          <p className="text-xs">
+          <p className="text-sm">
             <span className="font-bold">Recommended:</span> {recommendedAh}Ah for {daysAutonomyTarget} days at {totalDaily.toFixed(1)} Ah/day
             {totalBankAh >= recommendedAh
               ? <span className="text-emerald-500 font-bold ml-2">Your bank meets the target</span>
@@ -726,7 +726,7 @@ export default function PowerSystemBuilder() {
         <div className="flex items-start gap-2 bg-red-500/10 border border-red-500/30 rounded-lg p-3">
           <Thermometer className="w-5 h-5 text-red-500 flex-shrink-0" />
           <div>
-            <p className="text-xs font-bold text-red-500">LiFePO4 Cold Charge Warning</p>
+            <p className="text-sm font-bold text-red-500">LiFePO4 Cold Charge Warning</p>
             <p className="text-[11px] text-red-400/80 mt-1">
               LiFePO4 batteries cannot be charged below 32F (0C). Charging below freezing causes permanent lithium plating.
               Use a battery with built-in heating or insulate and heat the battery enclosure.
@@ -761,7 +761,7 @@ export default function PowerSystemBuilder() {
 
       {/* DC-DC Charger */}
       <div className="space-y-3">
-        <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">DC-DC Charger</label>
+        <label className="text-sm font-bold uppercase tracking-wide text-muted-foreground">DC-DC Charger</label>
         <select value={dcDcChargerId} onChange={(e) => setDcDcChargerId(e.target.value)}
           className="w-full bg-muted border border-border rounded-lg px-3 py-2.5 text-sm">
           <option value="">None</option>
@@ -775,7 +775,7 @@ export default function PowerSystemBuilder() {
 
       {/* Drive time */}
       <div className="space-y-2">
-        <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Daily Drive Time</label>
+        <label className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Daily Drive Time</label>
         <input type="range" min={0} max={8} step={0.5} value={dailyDriveHours}
           onChange={(e) => setDailyDriveHours(Number(e.target.value))}
           className="w-full accent-accent" />
@@ -785,7 +785,7 @@ export default function PowerSystemBuilder() {
       {/* Alternator charge summary */}
       {dcDcCharger && (
         <div className="bg-muted border border-border rounded-lg p-3">
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Effective charge: min({dcDcCharger.dcAmps}A charger, {spareCapacity}A spare) = <span className="font-bold text-foreground">{effectiveDcAmps}A</span>
             {" "}x {dailyDriveHours}h = <span className="font-bold text-primary">{altAhPerDay.toFixed(1)} Ah/day</span>
           </p>
@@ -794,7 +794,7 @@ export default function PowerSystemBuilder() {
 
       {/* Solar */}
       <div className="space-y-2">
-        <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Solar (Watts)</label>
+        <label className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Solar (Watts)</label>
         <div className="flex gap-3 items-center">
           <input type="range" min={0} max={800} step={25} value={solarWatts}
             onChange={(e) => setSolarWatts(Number(e.target.value))}
@@ -804,7 +804,7 @@ export default function PowerSystemBuilder() {
             className="w-20 bg-muted border border-border rounded-lg px-2 py-1.5 text-sm font-mono text-center" />
         </div>
         {solarWatts > 0 && (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {solarWatts}W x {peakSunHours}h PSH x 80% = <span className="font-bold text-primary">{solarAhPerDay.toFixed(1)} Ah/day</span>
           </p>
         )}
@@ -812,31 +812,31 @@ export default function PowerSystemBuilder() {
 
       {/* Shore power */}
       <div className="space-y-2">
-        <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Shore Power Charger (Amps, optional)</label>
+        <label className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Shore Power Charger (Amps, optional)</label>
         <input type="number" min={0} max={50} step={5} value={shoreChargerAmps}
           onChange={(e) => setShoreChargerAmps(Number(e.target.value))}
           className="w-24 bg-muted border border-border rounded-lg px-3 py-2 text-sm font-mono" />
         {shoreChargerAmps > 0 && (
-          <p className="text-xs text-muted-foreground">{shoreChargerAmps}A x 8h = {(shoreChargerAmps * 8).toFixed(0)} Ah/day (assumed 8h plugged in)</p>
+          <p className="text-sm text-muted-foreground">{shoreChargerAmps}A x 8h = {(shoreChargerAmps * 8).toFixed(0)} Ah/day (assumed 8h plugged in)</p>
         )}
       </div>
 
       {/* Total charge summary */}
       <div className="bg-primary/5 border border-primary/30 rounded-lg p-4">
-        <p className="text-xs font-bold uppercase tracking-wide text-primary mb-2">Daily Charge Budget</p>
+        <p className="text-sm font-bold uppercase tracking-wide text-primary mb-2">Daily Charge Budget</p>
         <div className="grid grid-cols-3 gap-3 text-center">
           <div>
             <p className="text-[9px] text-muted-foreground uppercase">Alternator</p>
-            <p className="text-lg font-extrabold">{altAhPerDay.toFixed(1)} <span className="text-xs text-muted-foreground">Ah</span></p>
+            <p className="text-lg font-extrabold">{altAhPerDay.toFixed(1)} <span className="text-sm text-muted-foreground">Ah</span></p>
           </div>
           <div>
             <p className="text-[9px] text-muted-foreground uppercase">Solar</p>
-            <p className="text-lg font-extrabold">{solarAhPerDay.toFixed(1)} <span className="text-xs text-muted-foreground">Ah</span></p>
+            <p className="text-lg font-extrabold">{solarAhPerDay.toFixed(1)} <span className="text-sm text-muted-foreground">Ah</span></p>
           </div>
           <div>
             <p className="text-[9px] text-muted-foreground uppercase">Total</p>
             <p className="text-lg font-extrabold text-primary">
-              {(altAhPerDay + solarAhPerDay + (shoreChargerAmps * 8)).toFixed(1)} <span className="text-xs text-muted-foreground">Ah</span>
+              {(altAhPerDay + solarAhPerDay + (shoreChargerAmps * 8)).toFixed(1)} <span className="text-sm text-muted-foreground">Ah</span>
             </p>
           </div>
         </div>
@@ -878,7 +878,7 @@ export default function PowerSystemBuilder() {
                   className="w-16 bg-muted border border-border rounded px-2 py-1 text-sm font-mono text-center" />
               </div>
             </div>
-            <div className="flex flex-wrap gap-4 text-xs">
+            <div className="flex flex-wrap gap-4 text-sm">
               <span className="text-muted-foreground">{circuit.maxAmps}A max</span>
               <span className={`font-bold ${circuit.status === "fail" ? "text-red-500" : circuit.status === "warn" ? "text-amber-500" : "text-emerald-500"}`}>
                 {circuit.recommendedAwg} AWG
@@ -926,7 +926,7 @@ export default function PowerSystemBuilder() {
                   w.level === "warning" ? "text-amber-500" :
                   "text-blue-500"
                 }`} />
-                <p className={`text-xs ${
+                <p className={`text-sm ${
                   w.level === "critical" ? "text-red-400" :
                   w.level === "warning" ? "text-amber-400" :
                   "text-blue-400"
@@ -993,7 +993,7 @@ export default function PowerSystemBuilder() {
         {/* Wire Schedule */}
         <div className="bg-card border border-border rounded-lg p-6 overflow-x-auto">
           <h3 className="text-lg font-extrabold mb-4">Wire Gauge Schedule</h3>
-          <table className="w-full text-xs">
+          <table className="w-full text-sm">
             <thead>
               <tr className="text-[9px] font-bold uppercase text-muted-foreground border-b border-border">
                 <th className="text-left py-2 pr-3">Circuit</th>
@@ -1032,7 +1032,7 @@ export default function PowerSystemBuilder() {
         {/* Fuse Schedule */}
         <div className="bg-card border border-border rounded-lg p-6 overflow-x-auto">
           <h3 className="text-lg font-extrabold mb-4">Fuse Schedule</h3>
-          <table className="w-full text-xs">
+          <table className="w-full text-sm">
             <thead>
               <tr className="text-[9px] font-bold uppercase text-muted-foreground border-b border-border">
                 <th className="text-left py-2 pr-3">Circuit</th>
@@ -1078,12 +1078,12 @@ export default function PowerSystemBuilder() {
             }
             return Array.from(groups).map(([cat, items]) => (
               <div key={cat} className="mb-4">
-                <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">{cat}</h4>
+                <h4 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">{cat}</h4>
                 {items.map((item, i) => (
                   <div key={i} className="flex items-center justify-between py-2 border-b border-border/30 gap-3">
                     <div className="flex-1 min-w-0">
                       <span className="text-sm font-bold">{item.name}</span>
-                      <span className="text-xs text-muted-foreground ml-2">{item.spec}</span>
+                      <span className="text-sm text-muted-foreground ml-2">{item.spec}</span>
                     </div>
                     {item.url && (
                       <a
@@ -1091,7 +1091,7 @@ export default function PowerSystemBuilder() {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => trackEvent("pe_affiliate_click", { tool: "power-system-builder", product: item.name, url: item.url! })}
-                        className="flex-shrink-0 text-[10px] font-bold uppercase tracking-wide bg-primary/10 text-primary px-2.5 py-1 rounded hover:bg-primary/20 transition-colors"
+                        className="flex-shrink-0 text-xs font-bold uppercase tracking-wide bg-primary/10 text-primary px-2.5 py-1 rounded hover:bg-primary/20 transition-colors"
                       >
                         View on Amazon
                       </a>
@@ -1101,7 +1101,7 @@ export default function PowerSystemBuilder() {
               </div>
             ));
           })()}
-          <p className="text-[10px] text-muted/50 mt-3">
+          <p className="text-xs text-muted/50 mt-3">
             Affiliate links help support our free tools at no extra cost to you.
           </p>
         </div>
@@ -1177,7 +1177,7 @@ export default function PowerSystemBuilder() {
             const isPast = step > s.id;
             return (
               <button key={s.id} onClick={() => setStep(s.id)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-bold transition-colors whitespace-nowrap ${
                   isActive ? "bg-primary text-background" :
                   isPast ? "bg-primary/10 text-primary" :
                   "text-muted-foreground"

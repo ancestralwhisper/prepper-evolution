@@ -323,12 +323,12 @@ export default function Calculator() {
             {useCustom ? (
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Battery Capacity (Wh)</label>
+                  <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-1">Battery Capacity (Wh)</label>
                   <input type="number" value={customWh} onChange={(e) => setCustomWh(Math.max(50, parseInt(e.target.value) || 50))}
                     className="w-full px-3 py-2 rounded-md bg-muted border border-border text-foreground font-bold tabular-nums" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Max Output (W)</label>
+                  <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-1">Max Output (W)</label>
                   <input type="number" value={customMaxW} onChange={(e) => setCustomMaxW(Math.max(100, parseInt(e.target.value) || 100))}
                     className="w-full px-3 py-2 rounded-md bg-muted border border-border text-foreground font-bold tabular-nums" />
                 </div>
@@ -350,7 +350,7 @@ export default function Calculator() {
                     if (tierStations.length === 0) return null;
                     return (
                       <div key={tier.label}>
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">{tier.label}</p>
+                        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1.5">{tier.label}</p>
                         <div className="space-y-1">
                           {tierStations.map((s) => (
                             <button key={s.id} onClick={() => setStationId(s.id)}
@@ -373,11 +373,11 @@ export default function Calculator() {
               <div className="bg-primary/5 border border-primary/30 rounded-lg p-3 flex items-center justify-between">
                 <div>
                   <p className="font-bold text-sm">{station.name}</p>
-                  <p className="text-xs text-muted-foreground">{(station.capacityWh / 1000).toFixed(1)} kWh &middot; {station.maxOutputW}W max output</p>
+                  <p className="text-sm text-muted-foreground">{(station.capacityWh / 1000).toFixed(1)} kWh &middot; {station.maxOutputW}W max output</p>
                 </div>
                 {station.affiliateUrl && station.affiliateUrl !== "" && (
                   <a href={station.affiliateUrl} target="_blank" rel="noopener noreferrer"
-                    className="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+                    className="text-sm font-bold text-primary hover:underline flex items-center gap-1">
                     Amazon <ExternalLink className="w-3 h-3" />
                   </a>
                 )}
@@ -404,7 +404,7 @@ export default function Calculator() {
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold uppercase tracking-wide">Your Devices</h3>
               {Object.keys(selected).length > 0 && (
-                <button onClick={() => setSelected({})} className="text-xs text-muted-foreground hover:text-red-400 transition-colors">Clear All</button>
+                <button onClick={() => setSelected({})} className="text-sm text-muted-foreground hover:text-red-400 transition-colors">Clear All</button>
               )}
             </div>
 
@@ -419,7 +419,7 @@ export default function Calculator() {
                       <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
                       <span className="text-sm font-bold">{cat.name}</span>
                       {catSelectedCount > 0 && (
-                        <span className="text-[10px] font-bold bg-primary/15 text-primary px-1.5 py-0.5 rounded">{catSelectedCount}</span>
+                        <span className="text-xs font-bold bg-primary/15 text-primary px-1.5 py-0.5 rounded">{catSelectedCount}</span>
                       )}
                     </div>
                     {isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
@@ -434,10 +434,10 @@ export default function Calculator() {
                             <div className="flex items-center justify-between">
                               <button onClick={() => toggleDevice(device)} className="flex-1 text-left">
                                 <span className="text-sm font-semibold">{device.name}</span>
-                                <span className="text-xs text-muted-foreground ml-2">{device.watts}W</span>
+                                <span className="text-sm text-muted-foreground ml-2">{device.watts}W</span>
                               </button>
                               {!sel && (
-                                <button onClick={() => toggleDevice(device)} className="text-xs font-bold text-primary">+ Add</button>
+                                <button onClick={() => toggleDevice(device)} className="text-sm font-bold text-primary">+ Add</button>
                               )}
                             </div>
                             {device.note && !sel && <p className="text-[11px] text-muted-foreground mt-0.5">{device.note}</p>}
@@ -458,16 +458,16 @@ export default function Calculator() {
                                   <input type="number" value={sel.hours} step={0.5} min={0} max={24}
                                     onChange={(e) => setHours(device.id, parseFloat(e.target.value) || 0)}
                                     className="w-14 px-1.5 py-1 rounded bg-muted border border-border text-sm text-center font-bold tabular-nums" />
-                                  <span className="text-xs text-muted-foreground">hrs/day</span>
+                                  <span className="text-sm text-muted-foreground">hrs/day</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                   <Zap className="w-3 h-3 text-muted-foreground" />
                                   <input type="number" value={sel.watts ?? device.watts} min={1} max={5000}
                                     onChange={(e) => setDeviceWatts(device.id, parseInt(e.target.value) || 1)}
                                     className="w-16 px-1.5 py-1 rounded bg-muted border border-border text-sm text-center font-bold tabular-nums" />
-                                  <span className="text-xs text-muted-foreground">W</span>
+                                  <span className="text-sm text-muted-foreground">W</span>
                                 </div>
-                                <span className="text-xs text-primary font-bold ml-auto">{fmtWh((sel.watts ?? device.watts) * sel.qty * sel.hours)}/day</span>
+                                <span className="text-sm text-primary font-bold ml-auto">{fmtWh((sel.watts ?? device.watts) * sel.qty * sel.hours)}/day</span>
                                 <button onClick={() => toggleDevice(device)} className="text-muted-foreground hover:text-red-400"><X className="w-4 h-4" /></button>
                               </div>
                             )}
@@ -483,7 +483,7 @@ export default function Calculator() {
             {/* Request missing gear */}
             <div className="pt-2">
               <button onClick={() => setShowRequestForm(!showRequestForm)}
-                className="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+                className="text-sm font-bold text-primary hover:underline flex items-center gap-1">
                 <MessageSquarePlus className="w-3 h-3" /> Don&apos;t see your device? Request it
               </button>
               {showRequestForm && (
@@ -521,22 +521,22 @@ export default function Calculator() {
                 <Sun className="w-4 h-4 inline mr-1.5 text-yellow-500" /> Solar Panel Offset
               </h3>
               <button onClick={() => setSolarEnabled(!solarEnabled)}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${solarEnabled ? "bg-primary text-white" : "bg-muted border border-border text-muted-foreground"}`}>
+                className={`px-3 py-1 rounded-full text-sm font-bold transition-colors ${solarEnabled ? "bg-primary text-white" : "bg-muted border border-border text-muted-foreground"}`}>
                 {solarEnabled ? "ON" : "OFF"}
               </button>
             </div>
 
             {solarEnabled && (
               <div className="space-y-3">
-                <p className="text-xs text-muted-foreground">If you have solar panels, enter the total wattage and your region to see how much they extend your runtime.</p>
+                <p className="text-sm text-muted-foreground">If you have solar panels, enter the total wattage and your region to see how much they extend your runtime.</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Panel Wattage</label>
+                    <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-1">Panel Wattage</label>
                     <input type="number" value={solarWatts} onChange={(e) => setSolarWatts(Math.max(10, parseInt(e.target.value) || 10))}
                       className="w-full px-3 py-2 rounded-md bg-muted border border-border text-foreground font-bold tabular-nums" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
+                    <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-1">
                       <MapPin className="w-3 h-3 inline mr-1" /> Region
                     </label>
                     <select value={region} onChange={(e) => setRegion(e.target.value)}
@@ -567,16 +567,16 @@ export default function Calculator() {
               <>
                 {/* ─── Hero Runtime ─── */}
                 <div className="bg-card border-2 border-primary/30 rounded-lg p-6 text-center">
-                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">Estimated Runtime</p>
+                  <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-1">Estimated Runtime</p>
                   <p className="text-4xl sm:text-5xl font-extrabold text-primary tabular-nums">
                     {calculations.deviceCount === 0 ? "—" : fmtHours(calculations.runtimeHours)}
                   </p>
                   {calculations.deviceCount > 0 && (
-                    <p className="text-xs text-muted-foreground mt-1">Worst case (all at once): {fmtHours(calculations.worstCaseHours)}</p>
+                    <p className="text-sm text-muted-foreground mt-1">Worst case (all at once): {fmtHours(calculations.worstCaseHours)}</p>
                   )}
                   {solarEnabled && calculations.deviceCount > 0 && (
                     <div className="mt-3 pt-3 border-t border-border">
-                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">With Solar</p>
+                      <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-1">With Solar</p>
                       <p className="text-2xl font-extrabold text-yellow-500">
                         {calculations.solarFullyOffsets ? "Indefinite" : fmtHours(calculations.solarRuntimeHours)}
                       </p>
@@ -592,7 +592,7 @@ export default function Calculator() {
                       <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
                       <div>
                         <p className="text-sm font-bold text-red-500">Peak Load Exceeds Output</p>
-                        <p className="text-xs text-muted-foreground mt-1">
+                        <p className="text-sm text-muted-foreground mt-1">
                           Your devices draw <strong className="text-foreground">{calculations.peakWatts}W</strong> simultaneously, but your station maxes out at <strong className="text-foreground">{station.maxOutputW}W</strong>. Stagger high-draw devices or reduce your load.
                         </p>
                       </div>
@@ -610,7 +610,7 @@ export default function Calculator() {
                       { label: "Avg Draw", value: `${Math.round(calculations.avgDrawW)}W` },
                     ].map((stat) => (
                       <div key={stat.label} className="bg-card border border-border rounded-lg p-3 text-center">
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{stat.label}</p>
+                        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{stat.label}</p>
                         <p className={`text-lg font-extrabold tabular-nums ${stat.warn ? "text-red-500" : ""}`}>{stat.value}</p>
                       </div>
                     ))}
@@ -620,7 +620,7 @@ export default function Calculator() {
                 {/* ─── Donut Chart ─── */}
                 {calculations.deviceCount > 0 && (
                   <div className="bg-card border border-border rounded-lg p-5">
-                    <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">Usage Breakdown</h4>
+                    <h4 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-3">Usage Breakdown</h4>
                     <DonutChart segments={chartSegments} totalLabel="Total" totalValue={`${Math.round(calculations.totalDailyWh)} Wh`} size={180} />
                     <ChartLegend segments={chartSegments} />
                   </div>
@@ -629,7 +629,7 @@ export default function Calculator() {
                 {/* ─── Extend Runtime ─── */}
                 {calculations.deviceCount > 1 && (
                   <div className="bg-card border border-border rounded-lg p-5">
-                    <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">Extend Your Runtime</h4>
+                    <h4 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-3">Extend Your Runtime</h4>
                     <p className="text-[11px] text-muted-foreground mb-3">Remove a device to see how much runtime you gain.</p>
                     <div className="space-y-1.5">
                       {calculations.deviceGains.slice(0, 8).map((d) => (
@@ -638,7 +638,7 @@ export default function Calculator() {
                             <span className="font-semibold truncate block">{d.name}</span>
                             <span className="text-[11px] text-muted-foreground">{fmtWh(d.dailyWh)}/day</span>
                           </div>
-                          <span className="text-xs font-bold text-green-500 whitespace-nowrap ml-2">
+                          <span className="text-sm font-bold text-green-500 whitespace-nowrap ml-2">
                             +{isFinite(d.hoursGained) ? fmtHours(d.hoursGained) : "a lot"}
                           </span>
                         </div>

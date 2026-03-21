@@ -6,6 +6,31 @@
 //   Chain 2: Vehicle Payload Budget (GVWR - curb weight - everything)
 //   Chain 3: Weakest Link Identification (rack vs vehicle roof rating)
 //
+
+export const RIGSAFE_VERSION = "v2.0";
+
+export const RIGSAFE_CHANGELOG: { version: string; date: string; changes: string[] }[] = [
+  {
+    version: "v2.0",
+    date: "March 2026",
+    changes: [
+      "Per-item mount location — assign each cargo item to your bed rack, cab roof rack, or truck bed",
+      "Cargo box mount routing — place your cargo box on whichever rack it actually lives on",
+      "Per-rack load donuts — separate visual breakdown for each rack showing used vs remaining budget",
+      "Per-person occupant weights — set exact weight for each adult and child",
+      "Larger text throughout for better readability",
+    ],
+  },
+  {
+    version: "v1.0",
+    date: "February 2026",
+    changes: [
+      "Initial release — three-chain load calculation (static, on-road dynamic, off-road dynamic)",
+      "Vehicle payload budget, cab clearance analysis, and safety margin scoring",
+      "RTT, awning, rack, cargo box, tonneau, and full vehicle mods support",
+    ],
+  },
+];
 // Safety margin: 10-20% buffer recommended. Gauge colors reflect this:
 //   Green: 0-70% used (plenty of margin)
 //   Yellow: 70-85% used (within safety margin zone)
@@ -35,11 +60,14 @@ export const WATER_LBS_PER_GALLON = 8.34;
 
 // ─── Configuration Interfaces ───────────────────────────────────────
 
+export type CargoMountTarget = "bed_rack" | "cab_rack" | "bed";
+
 export interface CargoItem {
   id: string;
   name: string;
   weightLbs: number;
   qty: number;
+  mountTarget: CargoMountTarget; // which rack/location this item is physically on
 }
 
 export interface Occupant {
@@ -221,6 +249,7 @@ export interface RigSafeConfig {
   useManualCargoBox: boolean;
   hasCargoBox: boolean;
   cargoBoxContentsLbs: number; // slider 0-100 lbs for stuff inside the box
+  cargoBoxMountTarget: CargoMountTarget; // which rack the box sits on
 
   // Quick-add rack cargo presets
   rackPresets: string[]; // array of preset IDs that are toggled on
@@ -618,12 +647,14 @@ export function computeRackLoad(config: RigSafeConfig): {
   const tentWeight = tent?.weightLbs ?? 0;
   const awningBracketWeight = awning?.mountedBracketWeightLbs ?? 0;
 
-  // Cargo on rack (custom items)
-  const cargoWeight = config.cargoItems.reduce((sum, item) => sum + item.weightLbs * item.qty, 0);
+  // Cargo on bed rack only (items routed to cab_rack or bed are excluded)
+  const cargoWeight = config.cargoItems
+    .filter(item => (item.mountTarget ?? "bed_rack") === "bed_rack")
+    .reduce((sum, item) => sum + item.weightLbs * item.qty, 0);
 
-  // Cargo box on rack
+  // Cargo box on bed rack
   let cargoBoxWeight = 0;
-  if (config.hasCargoBox) {
+  if (config.hasCargoBox && (config.cargoBoxMountTarget ?? "bed_rack") === "bed_rack") {
     cargoBoxWeight += config.useManualCargoBox
       ? config.manualCargoBoxWeightLbs
       : (config.cargoBox?.weightLbs ?? 0);
@@ -693,6 +724,19 @@ export function computeSecondaryRackLoad(config: RigSafeConfig): {
   if (config.secondaryRackSolar) load += config.secondaryRackSolarWeightLbs;
   if (config.secondaryRackLightBar) load += config.secondaryRackLightBarWeightLbs;
   load += config.secondaryRackCargoLbs;
+
+  // Custom cargo items routed to cab rack
+  load += config.cargoItems
+    .filter(item => item.mountTarget === "cab_rack")
+    .reduce((sum, item) => sum + item.weightLbs * item.qty, 0);
+
+  // Cargo box on cab rack
+  if (config.hasCargoBox && config.cargoBoxMountTarget === "cab_rack") {
+    load += config.useManualCargoBox
+      ? config.manualCargoBoxWeightLbs
+      : (config.cargoBox?.weightLbs ?? 0);
+    load += config.cargoBoxContentsLbs;
+  }
 
   const mkBudget = (rating: number, used: number): RackBudget => ({
     rating,
@@ -1122,9 +1166,11 @@ export function computeWeightBreakdown(config: RigSafeConfig): {
   if (config.hasLightBar) miscModWeight += config.useManualLightBar ? config.manualLightBarWeightLbs : (config.lightBar?.weightLbs ?? 0);
   if (miscModWeight > 0) items.push({ label: "Solar / Lights", value: miscModWeight, color: "#FBBF24" });
 
-  // Rack cargo (custom items + cargo box + rack-location presets)
-  let rackCargoWeight = config.cargoItems.reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
-  if (config.hasCargoBox) {
+  // Bed rack cargo (custom items + cargo box + rack-location presets)
+  let rackCargoWeight = config.cargoItems
+    .filter(i => (i.mountTarget ?? "bed_rack") === "bed_rack")
+    .reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
+  if (config.hasCargoBox && (config.cargoBoxMountTarget ?? "bed_rack") === "bed_rack") {
     rackCargoWeight += config.useManualCargoBox
       ? config.manualCargoBoxWeightLbs
       : (config.cargoBox?.weightLbs ?? 0);
@@ -1136,6 +1182,18 @@ export function computeWeightBreakdown(config: RigSafeConfig): {
     return sum + preset.weightLbs;
   }, 0);
   if (rackCargoWeight > 0) items.push({ label: "Rack Cargo", value: rackCargoWeight, color: "#EF4444" });
+
+  // Cab rack cargo (custom items + cargo box on cab rack)
+  let cabRackCargoWeight = config.cargoItems
+    .filter(i => i.mountTarget === "cab_rack")
+    .reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
+  if (config.hasCargoBox && config.cargoBoxMountTarget === "cab_rack") {
+    cabRackCargoWeight += config.useManualCargoBox
+      ? config.manualCargoBoxWeightLbs
+      : (config.cargoBox?.weightLbs ?? 0);
+    cabRackCargoWeight += config.cargoBoxContentsLbs;
+  }
+  if (cabRackCargoWeight > 0) items.push({ label: "Cab Rack Cargo", value: cabRackCargoWeight, color: "#F97316" });
 
   // Bed preset cargo (chairs, table, compressor, etc.)
   const bedPresetCargo = config.rackPresets.reduce((sum, id) => {
@@ -1149,6 +1207,93 @@ export function computeWeightBreakdown(config: RigSafeConfig): {
   if (occupantWeight > 0) items.push({ label: "Occupants", value: occupantWeight, color: "#6366F1" });
 
   return items.filter((i) => i.value > 0).sort((a, b) => b.value - a.value);
+}
+
+// ─── Compute: Per-Rack Donut Breakdown ─────────────────────────────
+
+type BreakdownSegment = { label: string; value: number; color: string };
+
+export function computeBedRackBreakdown(config: RigSafeConfig): BreakdownSegment[] {
+  const items: BreakdownSegment[] = [];
+  const rack = getRack(config);
+  const tent = getTent(config);
+  const awning = getAwning(config);
+
+  const tentW = tent?.weightLbs ?? 0;
+  const awningW = awning?.mountedBracketWeightLbs ?? 0;
+
+  if (tentW > 0) items.push({ label: "Tent", value: tentW, color: "#3B82F6" });
+  if (awningW > 0) items.push({ label: "Awning Bracket", value: awningW, color: "#10B981" });
+
+  // Roof mods on bed rack
+  const roofModW = computeRoofMountedModWeight(config);
+  if (roofModW > 0) items.push({ label: "Solar / Lights", value: roofModW, color: "#FBBF24" });
+
+  // Rack preset items
+  const presetW = config.rackPresets.reduce((sum, id) => {
+    const p = RACK_CARGO_PRESETS.find(x => x.id === id);
+    if (!p || p.location === "bed") return sum;
+    return sum + p.weightLbs;
+  }, 0);
+  if (presetW > 0) items.push({ label: "Preset Cargo", value: presetW, color: "#8B5CF6" });
+
+  // Custom cargo on bed rack
+  const customW = config.cargoItems
+    .filter(i => (i.mountTarget ?? "bed_rack") === "bed_rack")
+    .reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
+  if (customW > 0) items.push({ label: "Custom Cargo", value: customW, color: "#EF4444" });
+
+  // Cargo box on bed rack
+  let boxW = 0;
+  if (config.hasCargoBox && (config.cargoBoxMountTarget ?? "bed_rack") === "bed_rack") {
+    boxW += config.useManualCargoBox ? config.manualCargoBoxWeightLbs : (config.cargoBox?.weightLbs ?? 0);
+    boxW += config.cargoBoxContentsLbs;
+  }
+  if (boxW > 0) items.push({ label: "Cargo Box", value: boxW, color: "#F97316" });
+
+  // Remaining budget (gray)
+  const used = items.reduce((s, i) => s + i.value, 0);
+  const rating = rack.onRoadDynamicLbs;
+  const remaining = Math.max(0, rating - used);
+  if (remaining > 0) items.push({ label: "Remaining", value: remaining, color: "#374151" });
+
+  return items;
+}
+
+export function computeCabRackBreakdown(config: RigSafeConfig): BreakdownSegment[] {
+  const secRack = getSecondaryRack(config);
+  if (!secRack) return [];
+
+  const items: BreakdownSegment[] = [];
+
+  if (config.secondaryRackSolar && config.secondaryRackSolarWeightLbs > 0)
+    items.push({ label: "Solar", value: config.secondaryRackSolarWeightLbs, color: "#FBBF24" });
+  if (config.secondaryRackLightBar && config.secondaryRackLightBarWeightLbs > 0)
+    items.push({ label: "Light Bar", value: config.secondaryRackLightBarWeightLbs, color: "#F59E0B" });
+  if (config.secondaryRackCargoLbs > 0)
+    items.push({ label: "Manual Cargo", value: config.secondaryRackCargoLbs, color: "#8B5CF6" });
+
+  // Custom cargo on cab rack
+  const customW = config.cargoItems
+    .filter(i => i.mountTarget === "cab_rack")
+    .reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
+  if (customW > 0) items.push({ label: "Custom Cargo", value: customW, color: "#EF4444" });
+
+  // Cargo box on cab rack
+  let boxW = 0;
+  if (config.hasCargoBox && config.cargoBoxMountTarget === "cab_rack") {
+    boxW += config.useManualCargoBox ? config.manualCargoBoxWeightLbs : (config.cargoBox?.weightLbs ?? 0);
+    boxW += config.cargoBoxContentsLbs;
+  }
+  if (boxW > 0) items.push({ label: "Cargo Box", value: boxW, color: "#F97316" });
+
+  // Remaining budget (gray)
+  const used = items.reduce((s, i) => s + i.value, 0);
+  const rating = secRack.onRoadDynamicLbs;
+  const remaining = Math.max(0, rating - used);
+  if (remaining > 0) items.push({ label: "Remaining", value: remaining, color: "#374151" });
+
+  return items;
 }
 
 // ─── Compute: Warnings ─────────────────────────────────────────────
@@ -1616,6 +1761,7 @@ export const defaultRigSafeConfig: RigSafeConfig = {
   useManualCargoBox: false,
   hasCargoBox: false,
   cargoBoxContentsLbs: 0,
+  cargoBoxMountTarget: "bed_rack" as CargoMountTarget,
   rackPresets: [],
 
   occupantList: [

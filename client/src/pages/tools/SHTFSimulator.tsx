@@ -217,7 +217,7 @@ export default function SHTFSimulator() {
                         <Icon className="w-6 h-6 text-primary" />
                       </div>
                       <span
-                        className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded border ${diffClass}`}
+                        className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded border ${diffClass}`}
                         data-testid={`text-difficulty-${scenario.id}`}
                       >
                         {scenario.difficulty}
@@ -257,13 +257,13 @@ export default function SHTFSimulator() {
               >
                 <ChevronLeft className="w-4 h-4" /> All Scenarios
               </button>
-              <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+              <span className="text-sm font-bold uppercase tracking-wide text-muted-foreground">
                 {selectedScenario.name}
               </span>
             </div>
 
             <div className="mb-8">
-              <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+              <div className="flex items-center justify-between text-sm text-muted-foreground mb-1">
                 <span>Progress</span>
                 <span>{progress}%</span>
               </div>
@@ -302,7 +302,7 @@ export default function SHTFSimulator() {
                       <ArrowRight className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
                     )}
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
+                      <p className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-1">
                         Result of your last choice
                         <span
                           className={`ml-2 ${
@@ -327,7 +327,7 @@ export default function SHTFSimulator() {
             )}
 
             <div className="space-y-3">
-              <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+              <p className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">
                 What do you do?
               </p>
               {currentNode.choices.map((choice, idx) => (
@@ -390,7 +390,7 @@ export default function SHTFSimulator() {
                       className="flex items-start gap-3 pb-3 border-b border-border/50 last:border-b-0 last:pb-0"
                     >
                       <span
-                        className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold ${
+                        className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${
                           h.impact > 0
                             ? "bg-green-500/15 text-green-500"
                             : h.impact < 0
@@ -402,7 +402,7 @@ export default function SHTFSimulator() {
                         {h.impact}
                       </span>
                       <div className="min-w-0">
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                           {node?.emoji} Decision {idx + 1}
                         </p>
                         <p className="text-sm text-foreground leading-relaxed">
@@ -476,7 +476,7 @@ export default function SHTFSimulator() {
                         <span className="text-sm font-bold group-hover:text-primary transition-colors block">
                           {gear.name}
                         </span>
-                        <p className="text-xs text-muted-foreground leading-relaxed mt-1">
+                        <p className="text-sm text-muted-foreground leading-relaxed mt-1">
                           {gear.reason}
                         </p>
                       </div>
@@ -485,7 +485,7 @@ export default function SHTFSimulator() {
                   </a>
                 ))}
               </div>
-              <p className="text-[10px] text-muted-foreground/50 mt-4">
+              <p className="text-xs text-muted-foreground/50 mt-4">
                 Affiliate links &mdash; we earn a commission at no extra cost to you.
               </p>
             </div>

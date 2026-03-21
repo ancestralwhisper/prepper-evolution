@@ -81,7 +81,7 @@ function GaugeArc({
           </text>
         )}
       </svg>
-      <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mt-1">{label}</span>
+      <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground mt-1">{label}</span>
     </div>
   );
 }
@@ -95,8 +95,8 @@ function ProgressBar({ value, max, color, label, showValue }: {
   return (
     <div className="space-y-1">
       <div className="flex justify-between items-center">
-        <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
-        <span className="text-xs font-bold text-foreground">{showValue || `${Math.round(value)}`}</span>
+        <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
+        <span className="text-sm font-bold text-foreground">{showValue || `${Math.round(value)}`}</span>
       </div>
       <div className="h-2 bg-muted rounded-full overflow-hidden">
         <div
@@ -125,7 +125,7 @@ function ScoreBadge({ score, label, size = "md" }: { score: number; label: strin
       <div className={`${sz} rounded-full border-4 flex items-center justify-center`} style={{ borderColor: color }}>
         <span className={`${textSz} font-extrabold`} style={{ color }}>{score}</span>
       </div>
-      <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground text-center">{label}</span>
+      <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground text-center">{label}</span>
     </div>
   );
 }
@@ -140,11 +140,11 @@ function StatCard({ icon: Icon, label, value, unit, accent, warning }: {
     <div className={`bg-card border rounded-lg p-3 ${warning ? "border-danger/50" : "border-border"}`}>
       <div className="flex items-center gap-2 mb-1">
         <Icon className={`w-3.5 h-3.5 ${accent ? "text-primary" : warning ? "text-danger" : "text-muted-foreground"}`} />
-        <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
+        <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
       </div>
       <div className="flex items-baseline gap-1">
         <span className={`text-lg font-extrabold ${warning ? "text-danger" : accent ? "text-primary" : ""}`}>{value}</span>
-        {unit && <span className="text-xs text-muted-foreground">{unit}</span>}
+        {unit && <span className="text-sm text-muted-foreground">{unit}</span>}
       </div>
     </div>
   );
@@ -183,7 +183,7 @@ function NumberInput({
 }) {
   return (
     <div>
-      <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">
+      <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
         {label} {unit && <span className="normal-case font-normal">({unit})</span>}
       </label>
       <input
@@ -193,7 +193,7 @@ function NumberInput({
         min={min} max={max} step={step || 1}
         className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
       />
-      {hint && <p className="text-[10px] text-muted-foreground mt-0.5">{hint}</p>}
+      {hint && <p className="text-xs text-muted-foreground mt-0.5">{hint}</p>}
     </div>
   );
 }
@@ -206,7 +206,7 @@ function SelectInput<T extends string>({
 }) {
   return (
     <div>
-      <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">{label}</label>
+      <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">{label}</label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
@@ -216,7 +216,7 @@ function SelectInput<T extends string>({
           <option key={o.value} value={o.value}>{o.label}</option>
         ))}
       </select>
-      {hint && <p className="text-[10px] text-muted-foreground mt-0.5">{hint}</p>}
+      {hint && <p className="text-xs text-muted-foreground mt-0.5">{hint}</p>}
     </div>
   );
 }
@@ -243,7 +243,7 @@ function Toggle({
       </div>
       <div>
         <span className="text-sm font-bold group-hover:text-primary transition-colors">{label}</span>
-        {hint && <p className="text-[10px] text-muted-foreground">{hint}</p>}
+        {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
       </div>
     </label>
   );
@@ -384,8 +384,8 @@ function WeightDonut({ segments, totalLbs }: { segments: { label: string; value:
         {arcs.map((seg) => (
           <div key={seg.label} className="flex items-center gap-1.5">
             <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: seg.color }} />
-            <span className="text-[10px] text-muted-foreground truncate">{seg.label}</span>
-            <span className="text-[10px] font-bold text-foreground ml-auto">{seg.value}</span>
+            <span className="text-xs text-muted-foreground truncate">{seg.label}</span>
+            <span className="text-xs font-bold text-foreground ml-auto">{seg.value}</span>
           </div>
         ))}
       </div>
@@ -402,8 +402,8 @@ function MpgBreakdownChart({ items }: { items: { label: string; penalty: number 
       {items.map((item) => (
         <div key={item.label} className="space-y-0.5">
           <div className="flex justify-between">
-            <span className="text-[10px] text-muted-foreground">{item.label}</span>
-            <span className={`text-[10px] font-bold ${item.penalty <= 0 ? "text-success" : "text-danger"}`}>
+            <span className="text-xs text-muted-foreground">{item.label}</span>
+            <span className={`text-xs font-bold ${item.penalty <= 0 ? "text-success" : "text-danger"}`}>
               {item.penalty > 0 ? `-${item.penalty}%` : `+${Math.abs(item.penalty)}%`}
             </span>
           </div>
@@ -572,13 +572,13 @@ export default function VehicleProfileEditor() {
           </div>
           <div>
             <h2 className="text-lg font-extrabold">Select Your Vehicle</h2>
-            <p className="text-[10px] text-muted-foreground">Choose from our database or enter specs manually</p>
+            <p className="text-xs text-muted-foreground">Choose from our database or enter specs manually</p>
           </div>
         </div>
 
         {/* Nickname */}
         <div className="mb-4">
-          <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Vehicle Nickname</label>
+          <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Vehicle Nickname</label>
           <input
             type="text"
             value={profile.nickname}
@@ -593,7 +593,7 @@ export default function VehicleProfileEditor() {
             <div className="grid sm:grid-cols-3 gap-4 mb-3">
               {/* Make */}
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Make</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Make</label>
                 <select
                   value={selMake}
                   onChange={(e) => handleMakeChange(e.target.value)}
@@ -605,7 +605,7 @@ export default function VehicleProfileEditor() {
               </div>
               {/* Model */}
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                 <select
                   value={selModel}
                   onChange={(e) => handleModelChange(e.target.value)}
@@ -618,7 +618,7 @@ export default function VehicleProfileEditor() {
               </div>
               {/* Trim / Year */}
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Year / Trim</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Year / Trim</label>
                 <select
                   value={selTrim}
                   onChange={(e) => handleTrimChange(e.target.value)}
@@ -632,7 +632,7 @@ export default function VehicleProfileEditor() {
             </div>
             <button
               onClick={() => setManualEntry(true)}
-              className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-wide"
+              className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-wide"
             >
               Vehicle not listed? Enter specs manually
             </button>
@@ -642,17 +642,17 @@ export default function VehicleProfileEditor() {
             <div className="grid sm:grid-cols-4 gap-4 mb-4">
               <NumberInput label="Year" value={profile.year} onChange={(v) => update("year", v)} min={1960} max={2030} />
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Make</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Make</label>
                 <input type="text" value={profile.make} onChange={(e) => update("make", e.target.value)} placeholder="Toyota"
                   className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none" />
               </div>
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                 <input type="text" value={profile.model} onChange={(e) => update("model", e.target.value)} placeholder="4Runner"
                   className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none" />
               </div>
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Trim</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Trim</label>
                 <input type="text" value={profile.trim} onChange={(e) => update("trim", e.target.value)} placeholder="TRD Off-Road"
                   className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none" />
               </div>
@@ -690,7 +690,7 @@ export default function VehicleProfileEditor() {
             </div>
             <button
               onClick={() => setManualEntry(false)}
-              className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-wide"
+              className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-wide"
             >
               Switch to database selection
             </button>
@@ -700,8 +700,8 @@ export default function VehicleProfileEditor() {
         {/* Stock specs summary (when vehicle is selected) */}
         {hasVehicle && !manualEntry && (
           <div className="mt-4 pt-4 border-t border-border">
-            <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">Stock Specs (auto-filled)</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 text-xs">
+            <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Stock Specs (auto-filled)</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 text-sm">
               <div><span className="text-muted-foreground">Curb Weight:</span> <span className="font-bold">{profile.curbWeightLbs.toLocaleString()} lbs</span></div>
               <div><span className="text-muted-foreground">GVWR:</span> <span className="font-bold">{profile.gvwrLbs.toLocaleString()} lbs</span></div>
               <div><span className="text-muted-foreground">Max Tow:</span> <span className="font-bold">{profile.maxTowingLbs.toLocaleString()} lbs</span></div>
@@ -741,7 +741,7 @@ export default function VehicleProfileEditor() {
             <Section title="Tires" icon={Disc3} open={openSections.has("tires")} onToggle={() => toggleSection("tires")}>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Tire Size</label>
+                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Tire Size</label>
                   <input type="text" value={profile.tires.size} onChange={(e) => updateNested("tires", { size: e.target.value })}
                     placeholder="285/70R17" className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none" />
                 </div>
@@ -759,7 +759,7 @@ export default function VehicleProfileEditor() {
 
             {/* Bumpers & Winch */}
             <Section title="Bumpers & Winch" icon={Shield} open={openSections.has("bumpers")} onToggle={() => toggleSection("bumpers")}>
-              <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">Front Bumper</p>
+              <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Front Bumper</p>
               <div className="grid sm:grid-cols-3 gap-4 mb-4">
                 <SelectInput label="Type" value={profile.frontBumper.type} onChange={(v) => updateNested("frontBumper", { type: v })}
                   options={[
@@ -770,7 +770,7 @@ export default function VehicleProfileEditor() {
                 <NumberInput label="Weight" value={profile.frontBumper.weightLbs} onChange={(v) => updateNested("frontBumper", { weightLbs: v })} unit="lbs" hint="Stock ~45 lbs" />
                 <div className="pt-5"><Toggle label="Has Winch Mount" checked={profile.frontBumper.hasWinchMount} onChange={(v) => updateNested("frontBumper", { hasWinchMount: v })} /></div>
               </div>
-              <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">Rear Bumper</p>
+              <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Rear Bumper</p>
               <div className="grid sm:grid-cols-3 gap-4 mb-4">
                 <SelectInput label="Type" value={profile.rearBumper.type} onChange={(v) => updateNested("rearBumper", { type: v })}
                   options={[
@@ -780,7 +780,7 @@ export default function VehicleProfileEditor() {
                   ]} />
                 <NumberInput label="Weight" value={profile.rearBumper.weightLbs} onChange={(v) => updateNested("rearBumper", { weightLbs: v })} unit="lbs" hint="Stock ~40 lbs" />
               </div>
-              <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">Winch</p>
+              <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Winch</p>
               <div className="grid sm:grid-cols-3 gap-4">
                 <div className="pt-1"><Toggle label="Winch Installed" checked={profile.winch.installed} onChange={(v) => updateNested("winch", { installed: v })} /></div>
                 {profile.winch.installed && (
@@ -977,7 +977,7 @@ export default function VehicleProfileEditor() {
                 <NumberInput label="Odometer" value={profile.odometerMiles} onChange={(v) => update("odometerMiles", v)} unit="miles" />
               </div>
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Notes</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Notes</label>
                 <textarea
                   value={profile.otherModsNotes}
                   onChange={(e) => update("otherModsNotes", e.target.value)}
@@ -1003,7 +1003,7 @@ export default function VehicleProfileEditor() {
                 </div>
                 <div className="space-y-2">
                   {computed.warnings.map((w, i) => (
-                    <p key={i} className="text-xs text-danger/80 leading-relaxed flex gap-2">
+                    <p key={i} className="text-sm text-danger/80 leading-relaxed flex gap-2">
                       <span className="text-danger font-bold flex-shrink-0">{i + 1}.</span> {w}
                     </p>
                   ))}
@@ -1064,12 +1064,12 @@ export default function VehicleProfileEditor() {
                 />
               </div>
               <div className="grid sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-border">
-                <div className="text-xs">
+                <div className="text-sm">
                   <span className="text-muted-foreground">Modified CG Height: </span>
                   <span className="font-bold">{computed.modifiedCgHeightIn}" </span>
                   <span className="text-muted-foreground">(stock {profile.cgHeightIn}")</span>
                 </div>
-                <div className="text-xs">
+                <div className="text-sm">
                   <span className="text-muted-foreground">Modified SSF: </span>
                   <span className="font-bold">{computed.modifiedSsf} </span>
                   <span className="text-muted-foreground">(stock {profile.ssf})</span>
@@ -1096,7 +1096,7 @@ export default function VehicleProfileEditor() {
                   <span className="text-2xl font-extrabold text-primary">{computed.estimatedMpg}</span>
                   <span className="text-sm text-muted-foreground">MPG</span>
                   {computed.mpgPenaltyPct > 0 && (
-                    <span className="text-xs text-danger font-bold">(-{computed.mpgPenaltyPct}% from stock {profile.mpgCombined})</span>
+                    <span className="text-sm text-danger font-bold">(-{computed.mpgPenaltyPct}% from stock {profile.mpgCombined})</span>
                   )}
                 </div>
                 {computed.mpgBreakdown.length > 0 ? (
@@ -1105,11 +1105,11 @@ export default function VehicleProfileEditor() {
                   <p className="text-sm text-muted-foreground text-center py-8">Stock configuration</p>
                 )}
                 <div className="mt-4 pt-4 border-t border-border">
-                  <div className="flex justify-between text-xs">
+                  <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Total Fuel Capacity:</span>
                     <span className="font-bold">{computed.totalFuelGal} gal</span>
                   </div>
-                  <div className="flex justify-between text-xs mt-1">
+                  <div className="flex justify-between text-sm mt-1">
                     <span className="text-muted-foreground">Estimated Range:</span>
                     <span className="font-bold text-primary">{computed.estimatedRangeMiles.toLocaleString()} miles</span>
                   </div>
@@ -1150,15 +1150,15 @@ export default function VehicleProfileEditor() {
               <div className="mt-4 pt-4 border-t border-border grid grid-cols-3 gap-4 text-center">
                 <div>
                   <p className="text-xl font-extrabold">{computed.totalFuelGal}</p>
-                  <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wide">Total Gallons</p>
+                  <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">Total Gallons</p>
                 </div>
                 <div>
                   <p className="text-xl font-extrabold text-primary">{computed.estimatedMpg}</p>
-                  <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wide">Est. MPG</p>
+                  <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">Est. MPG</p>
                 </div>
                 <div>
                   <p className="text-xl font-extrabold text-primary">{computed.estimatedRangeMiles.toLocaleString()}</p>
-                  <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wide">Est. Miles</p>
+                  <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">Est. Miles</p>
                 </div>
               </div>
             </div>

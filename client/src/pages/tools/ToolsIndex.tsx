@@ -168,8 +168,8 @@ const opsDeckTools: Tool[] = [
       "Design your rooftop tent and rack setup, then let the three-chain calculator tell you if it's safe. Validates static, on-road, and off-road dynamic ratings, vehicle payload, garage clearance, and sleeping capacity.",
     icon: Shield,
     status: "live",
-    badge: "New",
-    version: "v1.0",
+    badge: "Updated",
+    version: "v2.0",
     cta: "Configure Rig",
   },
   {

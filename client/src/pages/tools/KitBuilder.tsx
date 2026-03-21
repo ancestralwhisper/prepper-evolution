@@ -403,10 +403,10 @@ export default function KitBuilder() {
 
           <div className="mb-8">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground" data-testid="text-step-indicator">
+              <span className="text-sm font-bold uppercase tracking-wide text-muted-foreground" data-testid="text-step-indicator">
                 Step {step + 1} of {totalSteps}
               </span>
-              <span className="text-xs text-muted-foreground" data-testid="text-step-percent">
+              <span className="text-sm text-muted-foreground" data-testid="text-step-percent">
                 {Math.round(((step + 1) / totalSteps) * 100)}% complete
               </span>
             </div>
@@ -691,14 +691,14 @@ export default function KitBuilder() {
             <div className="flex items-center gap-3 shrink-0">
               <button
                 onClick={goBack}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wide bg-muted border border-border hover:bg-card transition-colors"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-bold uppercase tracking-wide bg-muted border border-border hover:bg-card transition-colors"
                 data-testid="button-edit-answers"
               >
                 <ArrowLeft className="w-3 h-3" /> Edit Answers
               </button>
               <button
                 onClick={startOver}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wide bg-muted border border-border hover:bg-card transition-colors"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-bold uppercase tracking-wide bg-muted border border-border hover:bg-card transition-colors"
                 data-testid="button-start-over"
               >
                 <RotateCcw className="w-3 h-3" /> Start Over
@@ -709,19 +709,19 @@ export default function KitBuilder() {
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           <div className="bg-card border border-border rounded-lg p-4 text-center" data-testid="stat-total-items">
-            <p className="text-xs text-muted-foreground uppercase tracking-wide">Total Items</p>
+            <p className="text-sm text-muted-foreground uppercase tracking-wide">Total Items</p>
             <p className="text-2xl font-extrabold">{itemCounts.total}</p>
           </div>
           <div className="bg-card border border-border rounded-lg p-4 text-center" data-testid="stat-essential">
-            <p className="text-xs text-muted-foreground uppercase tracking-wide">Essential</p>
+            <p className="text-sm text-muted-foreground uppercase tracking-wide">Essential</p>
             <p className="text-2xl font-extrabold text-red-400">{itemCounts.essential}</p>
           </div>
           <div className="bg-card border border-border rounded-lg p-4 text-center" data-testid="stat-checked">
-            <p className="text-xs text-muted-foreground uppercase tracking-wide">Checked Off</p>
+            <p className="text-sm text-muted-foreground uppercase tracking-wide">Checked Off</p>
             <p className="text-2xl font-extrabold text-green-400">{itemCounts.checkedCount}</p>
           </div>
           <div className="bg-card border border-border rounded-lg p-4 text-center" data-testid="stat-cost">
-            <p className="text-xs text-muted-foreground uppercase tracking-wide">Est. Cost</p>
+            <p className="text-sm text-muted-foreground uppercase tracking-wide">Est. Cost</p>
             <p className="text-2xl font-extrabold text-primary">{formatCurrency(totalCost)}</p>
           </div>
         </div>
@@ -729,8 +729,8 @@ export default function KitBuilder() {
         {itemCounts.total > 0 && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Kit Completion</span>
-              <span className="text-xs text-muted-foreground">{itemCounts.checkedCount} / {itemCounts.total} items</span>
+              <span className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Kit Completion</span>
+              <span className="text-sm text-muted-foreground">{itemCounts.checkedCount} / {itemCounts.total} items</span>
             </div>
             <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
               <div
@@ -765,7 +765,7 @@ export default function KitBuilder() {
                         style={{ backgroundColor: meta.color }}
                       />
                       <span className="font-bold text-sm uppercase tracking-wide">{meta.name}</span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-sm text-muted-foreground">
                         {catChecked}/{items.length}
                       </span>
                     </div>
@@ -812,11 +812,11 @@ export default function KitBuilder() {
                                     {item.name}
                                   </span>
                                   {qty > 1 && (
-                                    <span className="text-[10px] font-bold bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
+                                    <span className="text-xs font-bold bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
                                       x{qty}
                                     </span>
                                   )}
-                                  <span className={`text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded ${pColors.bg} ${pColors.text}`}>
+                                  <span className={`text-xs uppercase tracking-wider font-bold px-1.5 py-0.5 rounded ${pColors.bg} ${pColors.text}`}>
                                     {item.priority}
                                   </span>
                                 </div>
@@ -839,7 +839,7 @@ export default function KitBuilder() {
                                     </a>
                                   )}
                                   {item.affiliateNote && (
-                                    <span className="text-[10px] text-muted-foreground/50">{item.affiliateNote}</span>
+                                    <span className="text-xs text-muted-foreground/50">{item.affiliateNote}</span>
                                   )}
                                 </div>
                               </div>
@@ -900,7 +900,7 @@ export default function KitBuilder() {
                     const pct = totalCost > 0 ? (catCost / totalCost) * 100 : 0;
                     return (
                       <div key={cat}>
-                        <div className="flex items-center justify-between text-xs mb-0.5">
+                        <div className="flex items-center justify-between text-sm mb-0.5">
                           <div className="flex items-center gap-2">
                             <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: categoryMeta[cat].color }} />
                             <span className="text-muted-foreground">{categoryMeta[cat].name}</span>
@@ -918,7 +918,7 @@ export default function KitBuilder() {
                   })}
                 </div>
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
-                  <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Total</span>
+                  <span className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Total</span>
                   <span className="text-lg font-extrabold text-primary">{formatCurrency(totalCost)}</span>
                 </div>
               </div>
@@ -927,22 +927,22 @@ export default function KitBuilder() {
                 <h3 className="text-sm font-bold uppercase tracking-wide mb-3">Priority Guide</h3>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className={`text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded ${priorityColors.essential.bg} ${priorityColors.essential.text}`}>
+                    <span className={`text-xs uppercase tracking-wider font-bold px-1.5 py-0.5 rounded ${priorityColors.essential.bg} ${priorityColors.essential.text}`}>
                       Essential
                     </span>
-                    <span className="text-xs text-muted-foreground">Must-have items. Get these first.</span>
+                    <span className="text-sm text-muted-foreground">Must-have items. Get these first.</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded ${priorityColors.recommended.bg} ${priorityColors.recommended.text}`}>
+                    <span className={`text-xs uppercase tracking-wider font-bold px-1.5 py-0.5 rounded ${priorityColors.recommended.bg} ${priorityColors.recommended.text}`}>
                       Recommended
                     </span>
-                    <span className="text-xs text-muted-foreground">Significantly improves your kit.</span>
+                    <span className="text-sm text-muted-foreground">Significantly improves your kit.</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded ${priorityColors.optional.bg} ${priorityColors.optional.text}`}>
+                    <span className={`text-xs uppercase tracking-wider font-bold px-1.5 py-0.5 rounded ${priorityColors.optional.bg} ${priorityColors.optional.text}`}>
                       Optional
                     </span>
-                    <span className="text-xs text-muted-foreground">Nice to have when budget allows.</span>
+                    <span className="text-sm text-muted-foreground">Nice to have when budget allows.</span>
                   </div>
                 </div>
               </div>
@@ -957,7 +957,7 @@ export default function KitBuilder() {
                     {tips.map((tip, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <span className="text-primary font-bold mt-0.5 shrink-0">&bull;</span>
-                        <span className="text-xs text-muted-foreground leading-relaxed">{tip}</span>
+                        <span className="text-sm text-muted-foreground leading-relaxed">{tip}</span>
                       </li>
                     ))}
                   </ul>
@@ -965,7 +965,7 @@ export default function KitBuilder() {
               )}
 
               <div className="bg-muted rounded-lg p-4">
-                <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">Your Answers</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Your Answers</h4>
                 <ul className="space-y-1 text-[11px] text-muted-foreground leading-relaxed">
                   <li>&bull; <strong className="text-foreground">Region:</strong> {answers.region || "N/A"}</li>
                   <li>&bull; <strong className="text-foreground">Climate concern:</strong> {answers.climate || "N/A"}</li>
@@ -984,7 +984,7 @@ export default function KitBuilder() {
                   <Users className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                   <div>
                     <h3 className="text-sm font-bold uppercase tracking-wide mb-1">Community Driven</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       This calculator is community-driven. We&apos;re constantly adding products based on what
                       real preppers use.
                     </p>
@@ -1003,7 +1003,7 @@ export default function KitBuilder() {
                 ) : (
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase tracking-wide text-primary">Request a Product</h4>
+                      <h4 className="text-sm font-bold uppercase tracking-wide text-primary">Request a Product</h4>
                       <button
                         onClick={() => { setShowRequestForm(false); setRequestStatus("idle"); }}
                         className="text-muted-foreground hover:text-foreground transition-colors"
@@ -1018,7 +1018,7 @@ export default function KitBuilder() {
                       <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 text-center">
                         <CheckCircle className="w-6 h-6 text-green-500 mx-auto mb-2" />
                         <p className="text-sm font-bold text-green-500">Request Submitted!</p>
-                        <p className="text-xs text-muted-foreground mt-1">We&apos;ll review it and add it if it fits. Thanks for helping us improve.</p>
+                        <p className="text-sm text-muted-foreground mt-1">We&apos;ll review it and add it if it fits. Thanks for helping us improve.</p>
                       </div>
                     ) : (
                       <>
@@ -1083,7 +1083,7 @@ export default function KitBuilder() {
                           )}
                         </button>
 
-                        <p className="text-[10px] text-muted-foreground/50 text-center">
+                        <p className="text-xs text-muted-foreground/50 text-center">
                           All requests are reviewed before being added. We typically update weekly.
                         </p>
                       </>
@@ -1092,7 +1092,7 @@ export default function KitBuilder() {
                 )}
               </div>
 
-              <p className="text-[10px] text-muted-foreground/50 leading-relaxed">
+              <p className="text-xs text-muted-foreground/50 leading-relaxed">
                 Product links are affiliate links &mdash; we earn a commission at no extra cost to you.
                 Prices are estimated and may vary. Always verify current pricing before purchasing.
               </p>

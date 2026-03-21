@@ -363,7 +363,7 @@ export default function FoodStorageCalculator() {
                 <h3 className="text-sm font-bold uppercase tracking-wide">Your Household</h3>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Activity Level</label>
+                  <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">Activity Level</label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {activityLevels.map((level) => (
                       <button
@@ -384,7 +384,7 @@ export default function FoodStorageCalculator() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+                  <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">
                     <Home className="w-3 h-3 inline mr-1" /> Living Situation
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -408,7 +408,7 @@ export default function FoodStorageCalculator() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+                    <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">
                       <Users className="w-3 h-3 inline mr-1" /> Adult Males
                     </label>
                     <div className="flex items-center gap-2">
@@ -428,13 +428,13 @@ export default function FoodStorageCalculator() {
                         <Plus className="w-4 h-4" />
                       </button>
                     </div>
-                    <p className="text-[10px] text-muted-foreground mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {calculations.profile.maleCalories.toLocaleString()} cal/day each
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+                    <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">
                       <Users className="w-3 h-3 inline mr-1" /> Adult Females
                     </label>
                     <div className="flex items-center gap-2">
@@ -454,13 +454,13 @@ export default function FoodStorageCalculator() {
                         <Plus className="w-4 h-4" />
                       </button>
                     </div>
-                    <p className="text-[10px] text-muted-foreground mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {calculations.profile.femaleCalories.toLocaleString()} cal/day each
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+                    <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">
                       <Users className="w-3 h-3 inline mr-1" /> Children (5-12)
                     </label>
                     <div className="flex items-center gap-2">
@@ -480,14 +480,14 @@ export default function FoodStorageCalculator() {
                         <Plus className="w-4 h-4" />
                       </button>
                     </div>
-                    <p className="text-[10px] text-muted-foreground mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {calculations.profile.childCalories.toLocaleString()} cal/day each
                     </p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+                  <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">
                     <Clock className="w-3 h-3 inline mr-1" /> Storage Duration
                   </label>
                   <div className="flex flex-wrap gap-2 mb-3">
@@ -526,10 +526,10 @@ export default function FoodStorageCalculator() {
                         className="w-16 bg-background border border-border rounded px-2 py-1.5 text-sm text-center font-bold text-foreground focus:outline-none focus:border-primary"
                         data-testid="input-duration-number"
                       />
-                      <span className="text-xs text-muted-foreground">days</span>
+                      <span className="text-sm text-muted-foreground">days</span>
                     </div>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1.5">
+                  <p className="text-sm text-muted-foreground mt-1.5">
                     {durationLabel} of food storage for {calculations.totalPeople} {calculations.totalPeople === 1 ? "person" : "people"}
                   </p>
                 </div>
@@ -553,7 +553,7 @@ export default function FoodStorageCalculator() {
                           style={{ backgroundColor: cat.color }}
                         />
                         <span className="font-bold text-sm uppercase tracking-wide">{cat.name}</span>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-sm text-muted-foreground">
                           {itemCount} item{itemCount !== 1 ? "s" : ""}
                         </span>
                       </div>
@@ -562,7 +562,7 @@ export default function FoodStorageCalculator() {
 
                     {isExpanded && (
                       <div className="border-t border-border">
-                        <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] font-bold uppercase tracking-wide text-muted-foreground border-b border-border/50 bg-muted/30">
+                        <div className="grid grid-cols-12 gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground border-b border-border/50 bg-muted/30">
                           <div className="col-span-4">Item</div>
                           <div className="col-span-2 text-center">Cal/Serving</div>
                           <div className="col-span-2 text-center">Serving</div>
@@ -576,16 +576,16 @@ export default function FoodStorageCalculator() {
                           >
                             <div className="col-span-4">
                               <span className="text-foreground font-medium">{item.name}</span>
-                              <p className="text-[10px] text-muted-foreground mt-0.5">{item.shelfLifeNote}</p>
+                              <p className="text-xs text-muted-foreground mt-0.5">{item.shelfLifeNote}</p>
                             </div>
                             <div className="col-span-2 text-center font-mono tabular-nums text-foreground">
                               {item.caloriesPerServing}
                             </div>
-                            <div className="col-span-2 text-center text-muted-foreground text-xs">
+                            <div className="col-span-2 text-center text-muted-foreground text-sm">
                               {item.servingSize}
                             </div>
                             <div className="col-span-2 text-center">
-                              <span className={`text-xs font-bold ${
+                              <span className={`text-sm font-bold ${
                                 item.shelfLifeYears >= 20 ? "text-green-500" :
                                 item.shelfLifeYears >= 5 ? "text-blue-400" :
                                 item.shelfLifeYears >= 2 ? "text-yellow-500" :
@@ -607,7 +607,7 @@ export default function FoodStorageCalculator() {
 
               <div className="bg-card border border-border rounded-lg p-5">
                 <h3 className="text-sm font-bold uppercase tracking-wide mb-4">Shelf Life Timeline</h3>
-                <p className="text-xs text-muted-foreground mb-4">
+                <p className="text-sm text-muted-foreground mb-4">
                   Use First-In, First-Out (FIFO) rotation. Store in a cool, dry place (below 75F). Proper storage
                   with mylar bags and oxygen absorbers can dramatically extend shelf life.
                 </p>
@@ -615,7 +615,7 @@ export default function FoodStorageCalculator() {
                   {shelfLifeTiers.map((tier) => (
                     <div key={tier.label} className="flex items-start gap-3">
                       <div className="shrink-0 w-16 text-right">
-                        <span className="text-xs font-bold" style={{ color: tier.color }}>
+                        <span className="text-sm font-bold" style={{ color: tier.color }}>
                           {tier.years}
                         </span>
                       </div>
@@ -625,7 +625,7 @@ export default function FoodStorageCalculator() {
                       />
                       <div className="flex-1">
                         <span className="text-sm font-medium text-foreground">{tier.label}</span>
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-sm text-muted-foreground mt-0.5">
                           {tier.items.join(" / ")}
                         </p>
                       </div>
@@ -639,7 +639,7 @@ export default function FoodStorageCalculator() {
                   <Users className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                   <div>
                     <h3 className="text-sm font-bold uppercase tracking-wide mb-1">Community Driven</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       This calculator is community-driven. We&apos;re constantly adding products based on what
                       real preppers use. If a food product you rely on isn&apos;t listed, let us know.
                     </p>
@@ -658,7 +658,7 @@ export default function FoodStorageCalculator() {
                 ) : (
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase tracking-wide text-primary">Request a Product</h4>
+                      <h4 className="text-sm font-bold uppercase tracking-wide text-primary">Request a Product</h4>
                       <button
                         onClick={() => { setShowRequestForm(false); setRequestStatus("idle"); }}
                         className="text-muted-foreground hover:text-foreground transition-colors"
@@ -673,7 +673,7 @@ export default function FoodStorageCalculator() {
                       <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 text-center">
                         <CheckCircle className="w-6 h-6 text-green-500 mx-auto mb-2" />
                         <p className="text-sm font-bold text-green-500">Request Submitted!</p>
-                        <p className="text-xs text-muted-foreground mt-1">We&apos;ll review it and add it if it fits. Thanks for helping us improve.</p>
+                        <p className="text-sm text-muted-foreground mt-1">We&apos;ll review it and add it if it fits. Thanks for helping us improve.</p>
                       </div>
                     ) : (
                       <>
@@ -737,7 +737,7 @@ export default function FoodStorageCalculator() {
                           )}
                         </button>
 
-                        <p className="text-[10px] text-muted-foreground/50 text-center">
+                        <p className="text-xs text-muted-foreground/50 text-center">
                           All requests are reviewed before being added. We typically update weekly.
                         </p>
                       </>
@@ -747,10 +747,10 @@ export default function FoodStorageCalculator() {
               </div>
 
               <div className="bg-muted rounded-lg p-5">
-                <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">Data Sources &amp; References</h3>
+                <h3 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-3">Data Sources &amp; References</h3>
                 <ul className="space-y-1">
                   {dataSources.map((ds) => (
-                    <li key={ds.name} className="text-xs text-muted-foreground">
+                    <li key={ds.name} className="text-sm text-muted-foreground">
                       {ds.url ? (
                         <a href={ds.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                           {ds.name}
@@ -799,24 +799,24 @@ export default function FoodStorageCalculator() {
                   {calculations.totalPeople > 0 && (
                     <div className="grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-border">
                       <div>
-                        <p className="text-xs text-muted-foreground uppercase">Daily Need</p>
+                        <p className="text-sm text-muted-foreground uppercase">Daily Need</p>
                         <p className="text-lg font-extrabold" data-testid="text-daily-calories">{calculations.dailyTotalCals.toLocaleString()}</p>
-                        <p className="text-xs text-muted-foreground">calories/day</p>
+                        <p className="text-sm text-muted-foreground">calories/day</p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground uppercase">Duration</p>
+                        <p className="text-sm text-muted-foreground uppercase">Duration</p>
                         <p className="text-lg font-extrabold" data-testid="text-duration">{durationLabel}</p>
-                        <p className="text-xs text-muted-foreground">{calculations.totalPeople} {calculations.totalPeople === 1 ? "person" : "people"}</p>
+                        <p className="text-sm text-muted-foreground">{calculations.totalPeople} {calculations.totalPeople === 1 ? "person" : "people"}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground uppercase">Total Weight</p>
+                        <p className="text-sm text-muted-foreground uppercase">Total Weight</p>
                         <p className="text-lg font-extrabold text-primary" data-testid="text-total-weight">{calculations.totalLbs.toLocaleString()} lbs</p>
-                        <p className="text-xs text-muted-foreground">{calculations.totalCubicFt.toFixed(1)} cubic ft</p>
+                        <p className="text-sm text-muted-foreground">{calculations.totalCubicFt.toFixed(1)} cubic ft</p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground uppercase">Est. Cost</p>
+                        <p className="text-sm text-muted-foreground uppercase">Est. Cost</p>
                         <p className="text-lg font-extrabold text-primary" data-testid="text-est-cost">{fmtMoney(calculations.costLow)}-{fmtMoney(calculations.costHigh)}</p>
-                        <p className="text-xs text-muted-foreground">budget to premium</p>
+                        <p className="text-sm text-muted-foreground">budget to premium</p>
                       </div>
                     </div>
                   )}
@@ -832,7 +832,7 @@ export default function FoodStorageCalculator() {
                           : 0;
                         return (
                           <div key={item.name}>
-                            <div className="flex items-center justify-between text-xs mb-0.5">
+                            <div className="flex items-center justify-between text-sm mb-0.5">
                               <span className="text-foreground font-medium truncate">{item.name}</span>
                               <span className="font-bold tabular-nums ml-2 text-muted-foreground">{item.quantity}</span>
                             </div>
@@ -843,7 +843,7 @@ export default function FoodStorageCalculator() {
                                   style={{ width: `${pct}%` }}
                                 />
                               </div>
-                              <span className="text-[10px] text-muted-foreground tabular-nums whitespace-nowrap">
+                              <span className="text-xs text-muted-foreground tabular-nums whitespace-nowrap">
                                 ~${Math.round(item.costEstimate)}
                               </span>
                             </div>
@@ -851,7 +851,7 @@ export default function FoodStorageCalculator() {
                         );
                       })}
                     </div>
-                    <div className="mt-3 pt-3 border-t border-border flex justify-between text-xs font-bold">
+                    <div className="mt-3 pt-3 border-t border-border flex justify-between text-sm font-bold">
                       <span>Total Est. Cost</span>
                       <span className="text-primary" data-testid="text-total-cost">{fmtMoney(calculations.costLow)} - {fmtMoney(calculations.costHigh)}</span>
                     </div>
@@ -888,14 +888,14 @@ export default function FoodStorageCalculator() {
                       <Home className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                       <div>
                         <p className="text-sm font-bold mb-1">Apartment Storage Tips</p>
-                        <p className="text-xs text-muted-foreground mb-2">
+                        <p className="text-sm text-muted-foreground mb-2">
                           Your plan needs <strong className="text-foreground">{calculations.totalCubicFt.toFixed(1)} cu ft</strong> and{" "}
                           <strong className="text-foreground">{Math.round(calculations.totalLbs).toLocaleString()} lbs</strong> of food.
                           {calculations.totalCubicFt > 10 ? " That is a lot for an apartment — here is how to make it fit:" : " Here is how to optimize your space:"}
                         </p>
                         <ul className="space-y-1">
                           {apartmentFoodTips.slice(0, 5).map((tip, i) => (
-                            <li key={i} className="text-xs text-muted-foreground leading-relaxed flex gap-2">
+                            <li key={i} className="text-sm text-muted-foreground leading-relaxed flex gap-2">
                               <span className="text-primary shrink-0">&bull;</span>
                               <span>{tip}</span>
                             </li>
@@ -912,7 +912,7 @@ export default function FoodStorageCalculator() {
                       <AlertTriangle className="w-5 h-5 text-[#EAB308] shrink-0 mt-0.5" />
                       <div>
                         <p className="text-sm font-bold mb-1">Long-Term Storage Tips</p>
-                        <ul className="text-xs text-muted-foreground space-y-1">
+                        <ul className="text-sm text-muted-foreground space-y-1">
                           <li>&bull; Store in cool, dry, dark location (50-70F ideal)</li>
                           <li>&bull; Use mylar bags + oxygen absorbers for grains and beans</li>
                           <li>&bull; Rotate short shelf-life items every 6-12 months</li>
@@ -932,7 +932,7 @@ export default function FoodStorageCalculator() {
                         <p className="text-sm font-bold mb-1 text-green-500" data-testid="text-supply-label">
                           {durationDays <= 3 ? "72-Hour Kit" : durationDays <= 14 ? "2-Week Supply" : durationDays <= 30 ? "1-Month Supply" : durationDays <= 90 ? "3-Month Supply" : "Long-Term Storage"}
                         </p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                           {calculations.totalShoppingCals.toLocaleString()} total calories across {calculations.shoppingList.length} food categories.
                           That is {Math.round(calculations.totalShoppingCals / calculations.totalPeople / durationDays).toLocaleString()} cal/person/day.
                         </p>
@@ -966,7 +966,7 @@ export default function FoodStorageCalculator() {
                                 <span className="text-sm font-medium group-hover:text-primary transition-colors block">
                                   {product.name}
                                 </span>
-                                <span className="text-xs text-muted-foreground block mt-0.5">
+                                <span className="text-sm text-muted-foreground block mt-0.5">
                                   {product.desc} &mdash; {product.price}
                                 </span>
                               </div>
@@ -976,7 +976,7 @@ export default function FoodStorageCalculator() {
                           </a>
                         ))}
                     </div>
-                    <p className="text-[10px] text-muted-foreground/50 mt-3">
+                    <p className="text-xs text-muted-foreground/50 mt-3">
                       Affiliate links &mdash; we earn a commission at no extra cost to you.
                     </p>
                   </div>
@@ -1009,7 +1009,7 @@ export default function FoodStorageCalculator() {
                 <ToolSocialShare url={getShareUrl()} toolName="Food Storage Calculator" />
 
                 <div className="bg-muted rounded-lg p-4">
-                  <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">How We Calculate</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">How We Calculate</h4>
                   <ul className="space-y-1 text-[11px] text-muted-foreground leading-relaxed">
                     <li>&bull; <strong className="text-foreground">Male adults:</strong> {calculations.profile.maleCalories.toLocaleString()} cal/day ({activity} activity)</li>
                     <li>&bull; <strong className="text-foreground">Female adults:</strong> {calculations.profile.femaleCalories.toLocaleString()} cal/day ({activity} activity)</li>

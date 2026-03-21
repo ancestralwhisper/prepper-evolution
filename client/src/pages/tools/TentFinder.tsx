@@ -71,7 +71,7 @@ function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded border ${className}`}
+      className={`inline-flex items-center text-xs font-bold uppercase tracking-wide px-1.5 py-0.5 rounded border ${className}`}
     >
       {children}
     </span>
@@ -125,14 +125,14 @@ function ComparisonTable({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border">
-              <th className="text-left p-3 min-w-[120px] text-muted-foreground text-xs font-bold uppercase tracking-wide">
+              <th className="text-left p-3 min-w-[120px] text-muted-foreground text-sm font-bold uppercase tracking-wide">
                 Spec
               </th>
               {compared.map((t) => (
                 <th key={t.id} className="p-3 min-w-[160px]">
                   <div className="flex items-center justify-between gap-2">
                     <div className="text-left">
-                      <div className="text-xs text-muted-foreground">{t.brand}</div>
+                      <div className="text-sm text-muted-foreground">{t.brand}</div>
                       <div className="text-sm font-bold">{t.model}</div>
                     </div>
                     <button
@@ -153,7 +153,7 @@ function ComparisonTable({
                 key={row.label}
                 className={i % 2 === 0 ? "bg-muted/30" : ""}
               >
-                <td className="p-3 text-xs font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">
+                <td className="p-3 text-sm font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">
                   {row.label}
                 </td>
                 {compared.map((t) => (
@@ -197,7 +197,7 @@ function TentModal({
       >
         <div className="flex items-start justify-between mb-4">
           <div>
-            <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">
+            <p className="text-sm text-muted-foreground font-bold uppercase tracking-wide">
               {tent.brand}
             </p>
             <h2 className="text-xl font-extrabold">{tent.model}</h2>
@@ -241,7 +241,7 @@ function TentModal({
             { label: "Packed Size", value: tent.packedSize },
           ].map((item) => (
             <div key={item.label} className="bg-muted rounded-lg p-2.5">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">
                 {item.label}
               </p>
               <p className="text-sm font-bold">{item.value}</p>
@@ -251,25 +251,25 @@ function TentModal({
 
         <div className="space-y-3 mb-5">
           <div>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">
+            <p className="text-sm font-bold text-muted-foreground uppercase tracking-wide mb-1">
               Fly Fabric
             </p>
             <p className="text-sm">{tent.fabricFly}</p>
           </div>
           <div>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">
+            <p className="text-sm font-bold text-muted-foreground uppercase tracking-wide mb-1">
               Floor Fabric
             </p>
             <p className="text-sm">{tent.fabricFloor}</p>
           </div>
           <div>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">
+            <p className="text-sm font-bold text-muted-foreground uppercase tracking-wide mb-1">
               Poles
             </p>
             <p className="text-sm">{tent.poles}</p>
           </div>
           <div>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">
+            <p className="text-sm font-bold text-muted-foreground uppercase tracking-wide mb-1">
               Made In
             </p>
             <p className="text-sm">{tent.madeIn}</p>
@@ -278,7 +278,7 @@ function TentModal({
 
         <div className="grid sm:grid-cols-2 gap-4 mb-5">
           <div>
-            <p className="text-xs font-bold text-green-400 uppercase tracking-wide mb-2">
+            <p className="text-sm font-bold text-green-400 uppercase tracking-wide mb-2">
               Pros
             </p>
             <ul className="space-y-1">
@@ -291,7 +291,7 @@ function TentModal({
             </ul>
           </div>
           <div>
-            <p className="text-xs font-bold text-red-400 uppercase tracking-wide mb-2">
+            <p className="text-sm font-bold text-red-400 uppercase tracking-wide mb-2">
               Cons
             </p>
             <ul className="space-y-1">
@@ -306,7 +306,7 @@ function TentModal({
         </div>
 
         <div className="bg-muted rounded-lg p-3 mb-5">
-          <p className="text-xs font-bold text-primary uppercase tracking-wide mb-1">
+          <p className="text-sm font-bold text-primary uppercase tracking-wide mb-1">
             Best For
           </p>
           <p className="text-sm">{tent.bestFor}</p>
@@ -469,7 +469,7 @@ export default function TentFinder() {
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <Tent className="w-5 h-5 text-primary" />
             </div>
-            <span className="text-[10px] font-mono font-bold text-muted-foreground/50 uppercase tracking-wider">
+            <span className="text-xs font-mono font-bold text-muted-foreground/50 uppercase tracking-wider">
               v1.0
             </span>
           </div>
@@ -495,7 +495,7 @@ export default function TentFinder() {
             <SlidersHorizontal className="w-4 h-4 text-primary" />
             Filters
             {hasActiveFilters && (
-              <span className="bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded">
+              <span className="bg-primary text-primary-foreground text-xs font-bold px-1.5 py-0.5 rounded">
                 Active
               </span>
             )}
@@ -517,13 +517,13 @@ export default function TentFinder() {
             <div className="lg:sticky lg:top-4 space-y-5">
               <div className="bg-card border border-border rounded-lg p-4 space-y-5">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                  <h3 className="text-sm font-bold uppercase tracking-wide text-muted-foreground">
                     Filters
                   </h3>
                   {hasActiveFilters && (
                     <button
                       onClick={resetFilters}
-                      className="flex items-center gap-1 text-[10px] font-bold text-primary uppercase tracking-wide hover:underline"
+                      className="flex items-center gap-1 text-xs font-bold text-primary uppercase tracking-wide hover:underline"
                     >
                       <RotateCcw className="w-3 h-3" /> Reset
                     </button>
@@ -532,7 +532,7 @@ export default function TentFinder() {
 
                 {/* Capacity */}
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground mb-2">
+                  <p className="text-sm font-bold text-muted-foreground mb-2">
                     Capacity
                   </p>
                   <div className="flex gap-2">
@@ -540,7 +540,7 @@ export default function TentFinder() {
                       <button
                         key={cap}
                         onClick={() => toggleCapacity(cap)}
-                        className={`flex-1 py-1.5 text-xs font-bold rounded border transition-colors ${
+                        className={`flex-1 py-1.5 text-sm font-bold rounded border transition-colors ${
                           capacity.has(cap)
                             ? "bg-primary text-primary-foreground border-primary"
                             : "bg-muted text-muted-foreground border-border hover:border-primary/30"
@@ -561,7 +561,7 @@ export default function TentFinder() {
                       onChange={(e) => setFreestandingOnly(e.target.checked)}
                       className="rounded border-border text-primary focus:ring-primary"
                     />
-                    <span className="text-xs font-bold text-muted-foreground">
+                    <span className="text-sm font-bold text-muted-foreground">
                       Freestanding only (desert/slickrock)
                     </span>
                   </label>
@@ -569,7 +569,7 @@ export default function TentFinder() {
 
                 {/* Price Range */}
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground mb-2">
+                  <p className="text-sm font-bold text-muted-foreground mb-2">
                     Price Range
                   </p>
                   <div className="flex items-center gap-2">
@@ -581,10 +581,10 @@ export default function TentFinder() {
                           setPriceMin(parseInt(e.target.value) || 0)
                         }
                         placeholder="Min"
-                        className="w-full bg-muted border border-border rounded px-2 py-1.5 text-xs"
+                        className="w-full bg-muted border border-border rounded px-2 py-1.5 text-sm"
                       />
                     </div>
-                    <span className="text-muted-foreground text-xs">to</span>
+                    <span className="text-muted-foreground text-sm">to</span>
                     <div className="flex-1">
                       <input
                         type="number"
@@ -593,7 +593,7 @@ export default function TentFinder() {
                           setPriceMax(parseInt(e.target.value) || 1000)
                         }
                         placeholder="Max"
-                        className="w-full bg-muted border border-border rounded px-2 py-1.5 text-xs"
+                        className="w-full bg-muted border border-border rounded px-2 py-1.5 text-sm"
                       />
                     </div>
                   </div>
@@ -602,10 +602,10 @@ export default function TentFinder() {
                 {/* Weight Max */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-xs font-bold text-muted-foreground">
+                    <p className="text-sm font-bold text-muted-foreground">
                       Max Trail Weight
                     </p>
-                    <span className="text-xs font-mono text-muted-foreground">
+                    <span className="text-sm font-mono text-muted-foreground">
                       {weightMax >= 80
                         ? "Any"
                         : `${(weightMax / 16).toFixed(1)} lbs`}
@@ -620,7 +620,7 @@ export default function TentFinder() {
                     onChange={(e) => setWeightMax(parseInt(e.target.value))}
                     className="w-full accent-primary"
                   />
-                  <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-0.5">
+                  <div className="flex justify-between text-xs text-muted-foreground/60 mt-0.5">
                     <span>10 oz</span>
                     <span>5 lbs</span>
                   </div>
@@ -628,7 +628,7 @@ export default function TentFinder() {
 
                 {/* Setup Type */}
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground mb-2">
+                  <p className="text-sm font-bold text-muted-foreground mb-2">
                     Setup Type
                   </p>
                   <div className="space-y-1.5">
@@ -648,7 +648,7 @@ export default function TentFinder() {
                           onChange={() => toggleSet(setSetupFilter, key)}
                           className="rounded border-border text-primary focus:ring-primary"
                         />
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-sm text-muted-foreground">
                           {label}
                         </span>
                       </label>
@@ -658,7 +658,7 @@ export default function TentFinder() {
 
                 {/* Wind Rating */}
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground mb-2">
+                  <p className="text-sm font-bold text-muted-foreground mb-2">
                     Wind Rating
                   </p>
                   <div className="space-y-1.5">
@@ -678,7 +678,7 @@ export default function TentFinder() {
                           onChange={() => toggleSet(setWindFilter, key)}
                           className="rounded border-border text-primary focus:ring-primary"
                         />
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-sm text-muted-foreground">
                           <Badge className={`${windColors[key]} mr-1`}>
                             {label}
                           </Badge>
@@ -690,7 +690,7 @@ export default function TentFinder() {
 
                 {/* Season */}
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground mb-2">
+                  <p className="text-sm font-bold text-muted-foreground mb-2">
                     Season
                   </p>
                   <div className="space-y-1.5">
@@ -710,7 +710,7 @@ export default function TentFinder() {
                           onChange={() => toggleSet(setSeasonFilter, key)}
                           className="rounded border-border text-primary focus:ring-primary"
                         />
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-sm text-muted-foreground">
                           {label}
                         </span>
                       </label>
@@ -720,7 +720,7 @@ export default function TentFinder() {
 
                 {/* Wall Type */}
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground mb-2">
+                  <p className="text-sm font-bold text-muted-foreground mb-2">
                     Wall Type
                   </p>
                   <div className="space-y-1.5">
@@ -735,7 +735,7 @@ export default function TentFinder() {
                           onChange={() => toggleSet(setWallFilter, w)}
                           className="rounded border-border text-primary focus:ring-primary"
                         />
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-sm text-muted-foreground">
                           {w === "double"
                             ? "Double Wall"
                             : w === "single"
@@ -774,7 +774,7 @@ export default function TentFinder() {
                 <select
                   value={sortKey}
                   onChange={(e) => setSortKey(e.target.value as SortKey)}
-                  className="bg-muted border border-border rounded px-3 py-1.5 text-xs font-bold"
+                  className="bg-muted border border-border rounded px-3 py-1.5 text-sm font-bold"
                 >
                   {sortOptions.map((opt) => (
                     <option key={opt.key} value={opt.key}>
@@ -787,7 +787,7 @@ export default function TentFinder() {
 
             {/* Compare hint */}
             {compareIds.size > 0 && compareIds.size < 2 && (
-              <div className="bg-primary/10 border border-primary/20 rounded-lg px-4 py-2 mb-4 text-xs text-primary font-bold">
+              <div className="bg-primary/10 border border-primary/20 rounded-lg px-4 py-2 mb-4 text-sm text-primary font-bold">
                 Select {2 - compareIds.size} more tent
                 {2 - compareIds.size > 1 ? "s" : ""} to compare (max 4)
               </div>
@@ -818,7 +818,7 @@ export default function TentFinder() {
                     {/* Header */}
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1 min-w-0">
-                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wide truncate">
+                        <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide truncate">
                           {tent.brand}
                         </p>
                         <h3 className="text-sm font-extrabold truncate">
@@ -836,7 +836,7 @@ export default function TentFinder() {
                     <div className="flex items-center gap-2 flex-wrap mb-3">
                       <div className="flex items-center gap-1 bg-muted rounded px-2 py-1">
                         <Weight className="w-3 h-3 text-primary" />
-                        <span className="text-xs font-bold">
+                        <span className="text-sm font-bold">
                           {formatWeight(tent.weightOz)}
                         </span>
                       </div>
@@ -870,26 +870,26 @@ export default function TentFinder() {
                     <div className="grid grid-cols-3 gap-2 text-center mb-3">
                       <div className="bg-muted/50 rounded p-1.5">
                         <Layers className="w-3 h-3 text-muted-foreground mx-auto mb-0.5" />
-                        <p className="text-[10px] text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                           Floor
                         </p>
-                        <p className="text-xs font-bold">
+                        <p className="text-sm font-bold">
                           {sqInToSqFt(tent.floorArea)} ft
                         </p>
                       </div>
                       <div className="bg-muted/50 rounded p-1.5">
                         <Ruler className="w-3 h-3 text-muted-foreground mx-auto mb-0.5" />
-                        <p className="text-[10px] text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                           Peak
                         </p>
-                        <p className="text-xs font-bold">{tent.peakHeight}"</p>
+                        <p className="text-sm font-bold">{tent.peakHeight}"</p>
                       </div>
                       <div className="bg-muted/50 rounded p-1.5">
                         <DoorOpen className="w-3 h-3 text-muted-foreground mx-auto mb-0.5" />
-                        <p className="text-[10px] text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                           Doors
                         </p>
-                        <p className="text-xs font-bold">{tent.doors}</p>
+                        <p className="text-sm font-bold">{tent.doors}</p>
                       </div>
                     </div>
 
@@ -900,7 +900,7 @@ export default function TentFinder() {
                           e.stopPropagation();
                           toggleCompare(tent.id);
                         }}
-                        className={`flex items-center gap-1.5 text-xs font-bold transition-colors ${
+                        className={`flex items-center gap-1.5 text-sm font-bold transition-colors ${
                           compareIds.has(tent.id)
                             ? "text-primary"
                             : "text-muted-foreground hover:text-primary"
@@ -931,7 +931,7 @@ export default function TentFinder() {
                             url: tent.affiliateUrl,
                           });
                         }}
-                        className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
+                        className="flex items-center gap-1 text-sm font-bold text-primary hover:underline"
                       >
                         Check Price{" "}
                         <ExternalLink className="w-3 h-3" />

@@ -610,7 +610,7 @@ export default function SolarPowerCalculator() {
                 <h3 className="text-sm font-bold uppercase tracking-wide">Your Setup</h3>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Use Case <span className="font-normal normal-case">&mdash; pre-loads common devices</span></label>
+                  <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">Use Case <span className="font-normal normal-case">&mdash; pre-loads common devices</span></label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {(Object.keys(useCaseLabels) as UseCase[]).map((uc) => (
                       <button
@@ -631,7 +631,7 @@ export default function SolarPowerCalculator() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+                  <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">
                     <Home className="w-3 h-3 inline mr-1" /> Living Situation
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -655,7 +655,7 @@ export default function SolarPowerCalculator() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+                    <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">
                       <Users className="w-3 h-3 inline mr-1" /> People
                     </label>
                     <div className="flex items-center gap-2">
@@ -678,7 +678,7 @@ export default function SolarPowerCalculator() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+                    <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">
                       <Clock className="w-3 h-3 inline mr-1" /> Days Off-Grid
                     </label>
                     <div className="flex items-center gap-2">
@@ -703,7 +703,7 @@ export default function SolarPowerCalculator() {
                   <ZipLookup onResult={handleZipResult} showFields={["solar", "hazard"]} compact />
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+                    <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">
                       <MapPin className="w-3 h-3 inline mr-1" /> Solar Region
                     </label>
                     <select
@@ -722,7 +722,7 @@ export default function SolarPowerCalculator() {
                 </div>
 
                 {calculations.selectedRegion && (
-                  <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                  <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                     <Sun className="w-3 h-3 text-primary shrink-0" />
                     {calculations.selectedRegion.note} &mdash; {calculations.selectedRegion.peakSunHours} avg peak sun hours/day
                   </p>
@@ -749,7 +749,7 @@ export default function SolarPowerCalculator() {
                         />
                         <span className="font-bold text-sm uppercase tracking-wide">{cat.name}</span>
                         {catCount > 0 && (
-                          <span className="bg-primary/15 text-primary text-xs font-bold px-2 py-0.5 rounded">
+                          <span className="bg-primary/15 text-primary text-sm font-bold px-2 py-0.5 rounded">
                             {catCount} device{catCount !== 1 ? "s" : ""} / {fmtWh(catWh)}
                           </span>
                         )}
@@ -794,7 +794,7 @@ export default function SolarPowerCalculator() {
                                       {device.name}
                                     </span>
                                     {device.essential && (
-                                      <span className="text-[10px] uppercase tracking-wider font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+                                      <span className="text-xs uppercase tracking-wider font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
                                         Essential
                                       </span>
                                     )}
@@ -813,10 +813,10 @@ export default function SolarPowerCalculator() {
                                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3 ml-11">
                                   <div className="flex items-center gap-1.5">
                                     <Zap className="w-3 h-3 text-muted-foreground" />
-                                    <span className="text-[10px] text-muted-foreground uppercase tracking-wide">W:</span>
+                                    <span className="text-xs text-muted-foreground uppercase tracking-wide">W:</span>
                                     <button
                                       onClick={() => setDeviceWatts(device.id, currentWatts - wattsStep)}
-                                      className="w-6 h-6 rounded flex items-center justify-center bg-muted border border-border text-muted-foreground hover:border-primary/50 text-xs"
+                                      className="w-6 h-6 rounded flex items-center justify-center bg-muted border border-border text-muted-foreground hover:border-primary/50 text-sm"
                                       data-testid={`watts-decrease-${device.id}`}
                                     >
                                       <Minus className="w-3 h-3" />
@@ -827,7 +827,7 @@ export default function SolarPowerCalculator() {
                                       max="5000"
                                       value={currentWatts}
                                       onChange={(e) => setDeviceWatts(device.id, parseInt(e.target.value) || device.watts)}
-                                      className={`w-16 border rounded px-2 py-1 text-xs text-center font-bold focus:outline-none focus:border-primary ${
+                                      className={`w-16 border rounded px-2 py-1 text-sm text-center font-bold focus:outline-none focus:border-primary ${
                                         isCustomWatts
                                           ? "bg-primary/10 border-primary text-primary"
                                           : "bg-background border-border text-foreground"
@@ -836,7 +836,7 @@ export default function SolarPowerCalculator() {
                                     />
                                     <button
                                       onClick={() => setDeviceWatts(device.id, currentWatts + wattsStep)}
-                                      className="w-6 h-6 rounded flex items-center justify-center bg-primary text-primary-foreground text-xs"
+                                      className="w-6 h-6 rounded flex items-center justify-center bg-primary text-primary-foreground text-sm"
                                       data-testid={`watts-increase-${device.id}`}
                                     >
                                       <Plus className="w-3 h-3" />
@@ -844,7 +844,7 @@ export default function SolarPowerCalculator() {
                                     {isCustomWatts && (
                                       <button
                                         onClick={() => setDeviceWatts(device.id, device.watts)}
-                                        className="text-[10px] text-primary hover:underline ml-0.5"
+                                        className="text-xs text-primary hover:underline ml-0.5"
                                         data-testid={`watts-reset-${device.id}`}
                                       >
                                         reset
@@ -853,10 +853,10 @@ export default function SolarPowerCalculator() {
                                   </div>
 
                                   <div className="flex items-center gap-1.5">
-                                    <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Qty:</span>
+                                    <span className="text-xs text-muted-foreground uppercase tracking-wide">Qty:</span>
                                     <button
                                       onClick={() => adjustQty(device.id, -1)}
-                                      className="w-6 h-6 rounded flex items-center justify-center bg-muted border border-border text-muted-foreground hover:border-primary/50 text-xs"
+                                      className="w-6 h-6 rounded flex items-center justify-center bg-muted border border-border text-muted-foreground hover:border-primary/50 text-sm"
                                       data-testid={`qty-decrease-${device.id}`}
                                     >
                                       <Minus className="w-3 h-3" />
@@ -864,7 +864,7 @@ export default function SolarPowerCalculator() {
                                     <span className="w-6 text-center text-sm font-bold tabular-nums">{sel.qty}</span>
                                     <button
                                       onClick={() => adjustQty(device.id, 1)}
-                                      className="w-6 h-6 rounded flex items-center justify-center bg-primary text-primary-foreground text-xs"
+                                      className="w-6 h-6 rounded flex items-center justify-center bg-primary text-primary-foreground text-sm"
                                       data-testid={`qty-increase-${device.id}`}
                                     >
                                       <Plus className="w-3 h-3" />
@@ -872,7 +872,7 @@ export default function SolarPowerCalculator() {
                                   </div>
 
                                   <div className="flex items-center gap-1.5 flex-1">
-                                    <span className="text-[10px] text-muted-foreground uppercase tracking-wide whitespace-nowrap">Hrs/day:</span>
+                                    <span className="text-xs text-muted-foreground uppercase tracking-wide whitespace-nowrap">Hrs/day:</span>
                                     <input
                                       type="range"
                                       min="0"
@@ -890,12 +890,12 @@ export default function SolarPowerCalculator() {
                                       step="0.5"
                                       value={sel.hours}
                                       onChange={(e) => setHours(device.id, parseFloat(e.target.value) || 0)}
-                                      className="w-14 bg-background border border-border rounded px-2 py-1 text-xs text-center font-bold text-foreground focus:outline-none focus:border-primary"
+                                      className="w-14 bg-background border border-border rounded px-2 py-1 text-sm text-center font-bold text-foreground focus:outline-none focus:border-primary"
                                       data-testid={`input-hours-${device.id}`}
                                     />
                                   </div>
 
-                                  <span className="text-xs font-bold text-primary tabular-nums whitespace-nowrap" data-testid={`text-daily-wh-${device.id}`}>
+                                  <span className="text-sm font-bold text-primary tabular-nums whitespace-nowrap" data-testid={`text-daily-wh-${device.id}`}>
                                     {Math.round(dailyWh)} Wh/day
                                   </span>
                                 </div>
@@ -914,7 +914,7 @@ export default function SolarPowerCalculator() {
                   <Users className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                   <div>
                     <h3 className="text-sm font-bold uppercase tracking-wide mb-1">Community Driven</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       This calculator is community-driven. We&apos;re constantly adding devices based on what
                       real preppers use. If your device isn&apos;t listed, let us know and we&apos;ll add it.
                     </p>
@@ -933,7 +933,7 @@ export default function SolarPowerCalculator() {
                 ) : (
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase tracking-wide text-primary">Request a Device</h4>
+                      <h4 className="text-sm font-bold uppercase tracking-wide text-primary">Request a Device</h4>
                       <button
                         onClick={() => { setShowRequestForm(false); setRequestStatus("idle"); }}
                         className="text-muted-foreground hover:text-foreground transition-colors"
@@ -948,7 +948,7 @@ export default function SolarPowerCalculator() {
                       <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 text-center">
                         <CheckCircle className="w-6 h-6 text-green-500 mx-auto mb-2" />
                         <p className="text-sm font-bold text-green-500">Request Submitted!</p>
-                        <p className="text-xs text-muted-foreground mt-1">We&apos;ll review it and add it if it fits. Thanks for helping us improve.</p>
+                        <p className="text-sm text-muted-foreground mt-1">We&apos;ll review it and add it if it fits. Thanks for helping us improve.</p>
                       </div>
                     ) : (
                       <>
@@ -1026,7 +1026,7 @@ export default function SolarPowerCalculator() {
                           )}
                         </button>
 
-                        <p className="text-[10px] text-muted-foreground/50 text-center">
+                        <p className="text-xs text-muted-foreground/50 text-center">
                           All requests are reviewed before being added. We typically update weekly.
                         </p>
                       </>
@@ -1036,10 +1036,10 @@ export default function SolarPowerCalculator() {
               </div>
 
               <div className="bg-muted rounded-lg p-5">
-                <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">Data Sources &amp; References</h3>
+                <h3 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-3">Data Sources &amp; References</h3>
                 <ul className="space-y-1">
                   {dataSources.map((ds) => (
-                    <li key={ds.name} className="text-xs text-muted-foreground">
+                    <li key={ds.name} className="text-sm text-muted-foreground">
                       {ds.url ? (
                         <a href={ds.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                           {ds.name}
@@ -1088,24 +1088,24 @@ export default function SolarPowerCalculator() {
                   {calculations.deviceCount > 0 && (
                     <div className="grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-border">
                       <div>
-                        <p className="text-xs text-muted-foreground uppercase">Daily Need</p>
+                        <p className="text-sm text-muted-foreground uppercase">Daily Need</p>
                         <p className="text-lg font-extrabold" data-testid="text-daily-need">{fmtWh(calculations.totalDailyWh)}</p>
-                        <p className="text-xs text-muted-foreground">{calculations.deviceCount} device{calculations.deviceCount !== 1 ? "s" : ""}</p>
+                        <p className="text-sm text-muted-foreground">{calculations.deviceCount} device{calculations.deviceCount !== 1 ? "s" : ""}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground uppercase">{days}-Day Total</p>
+                        <p className="text-sm text-muted-foreground uppercase">{days}-Day Total</p>
                         <p className="text-lg font-extrabold" data-testid="text-total-need">{fmtWh(calculations.totalWhNeeded)}</p>
-                        <p className="text-xs text-muted-foreground">full duration</p>
+                        <p className="text-sm text-muted-foreground">full duration</p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground uppercase">Battery Needed</p>
+                        <p className="text-sm text-muted-foreground uppercase">Battery Needed</p>
                         <p className="text-lg font-extrabold text-primary" data-testid="text-battery-needed">{fmtWh(calculations.batteryCapacityNeeded)}</p>
-                        <p className="text-xs text-muted-foreground">min capacity</p>
+                        <p className="text-sm text-muted-foreground">min capacity</p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground uppercase">Solar Needed</p>
+                        <p className="text-sm text-muted-foreground uppercase">Solar Needed</p>
                         <p className="text-lg font-extrabold text-primary" data-testid="text-solar-needed">{fmtW(calculations.solarWattsNeeded)}</p>
-                        <p className="text-xs text-muted-foreground">{calculations.selectedRegion.peakSunHours}h sun/day</p>
+                        <p className="text-sm text-muted-foreground">{calculations.selectedRegion.peakSunHours}h sun/day</p>
                       </div>
                     </div>
                   )}
@@ -1119,7 +1119,7 @@ export default function SolarPowerCalculator() {
                         const pct = calculations.totalDailyWh > 0 ? (d.dailyWh / calculations.totalDailyWh) * 100 : 0;
                         return (
                           <div key={`${d.name}-${i}`}>
-                            <div className="flex items-center justify-between text-xs mb-0.5">
+                            <div className="flex items-center justify-between text-sm mb-0.5">
                               <span className="text-muted-foreground truncate">{d.name}{d.qty > 1 ? ` x${d.qty}` : ""}</span>
                               <span className="font-bold tabular-nums ml-2">{Math.round(d.dailyWh)} Wh</span>
                             </div>
@@ -1142,7 +1142,7 @@ export default function SolarPowerCalculator() {
                       <AlertTriangle className="w-5 h-5 text-[#EAB308] shrink-0 mt-0.5" />
                       <div>
                         <p className="text-sm font-bold mb-1">High Peak Wattage</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                           Your setup could draw up to <strong className="text-foreground">{fmtW(calculations.peakWatts)}</strong> if
                           everything runs simultaneously. Make sure your power station&apos;s inverter can handle the peak load.
                           Stagger high-draw devices to stay safe.
@@ -1175,7 +1175,7 @@ export default function SolarPowerCalculator() {
                                 <span className="text-sm font-medium group-hover:text-primary transition-colors block">
                                   {ps.name}
                                 </span>
-                                <span className="text-xs text-muted-foreground block mt-0.5">
+                                <span className="text-sm text-muted-foreground block mt-0.5">
                                   {fmtWh(ps.capacityWh)} / {fmtW(ps.maxOutputW)} &mdash; {ps.price}
                                 </span>
                               </div>
@@ -1191,14 +1191,14 @@ export default function SolarPowerCalculator() {
                                   }}
                                 />
                               </div>
-                              <span className="text-[10px] font-bold tabular-nums">{coversPct}%</span>
+                              <span className="text-xs font-bold tabular-nums">{coversPct}%</span>
                             </div>
                             <p className="text-[11px] text-muted-foreground mt-1">{ps.note}</p>
                           </a>
                         );
                       })}
                     </div>
-                    <p className="text-[10px] text-muted-foreground/50 mt-3">
+                    <p className="text-xs text-muted-foreground/50 mt-3">
                       Affiliate links &mdash; we earn a commission at no extra cost to you.
                     </p>
                   </div>
@@ -1229,7 +1229,7 @@ export default function SolarPowerCalculator() {
                                 <span className="text-sm font-medium group-hover:text-primary transition-colors block">
                                   {panel.name}
                                 </span>
-                                <span className="text-xs text-muted-foreground block mt-0.5">
+                                <span className="text-sm text-muted-foreground block mt-0.5">
                                   {panel.watts}W {panel.portable ? "Portable" : "Rigid"} &mdash; {panel.price}
                                 </span>
                               </div>
@@ -1240,7 +1240,7 @@ export default function SolarPowerCalculator() {
                         );
                       })}
                     </div>
-                    <p className="text-[10px] text-muted-foreground/50 mt-3">
+                    <p className="text-xs text-muted-foreground/50 mt-3">
                       Affiliate links &mdash; we earn a commission at no extra cost to you.
                     </p>
                   </div>
@@ -1252,7 +1252,7 @@ export default function SolarPowerCalculator() {
                       <Home className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                       <div>
                         <p className="text-sm font-bold mb-1">Apartment Solar Notes</p>
-                        <ul className="text-xs text-muted-foreground space-y-1">
+                        <ul className="text-sm text-muted-foreground space-y-1">
                           <li>&bull; Only portable/foldable panels shown (max 200W) — no rigid rooftop kits.</li>
                           <li>&bull; Check your balcony weight limit before placing panels — most support 60-100 lbs/sqft.</li>
                           <li>&bull; HOA or lease may restrict visible solar panels — foldable panels store when not in use.</li>
@@ -1270,7 +1270,7 @@ export default function SolarPowerCalculator() {
                       <CheckCircle className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-sm font-bold mb-1 text-green-500">Manageable Load</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                           Your power needs are within the range of a single mid-size portable power station.
                           Perfect for {useCase === "camping" ? "overlanding and camping" : useCase === "emergency" ? "emergency backup" : "off-grid setups"}.
                         </p>
@@ -1313,7 +1313,7 @@ export default function SolarPowerCalculator() {
                 <ToolSocialShare url={getShareUrl()} toolName="Solar Power Calculator" />
 
                 <div className="bg-muted rounded-lg p-4">
-                  <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">How We Calculate</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">How We Calculate</h4>
                   <ul className="space-y-1 text-[11px] text-muted-foreground leading-relaxed">
                     <li>&bull; <strong className="text-foreground">15% system loss</strong> for wiring, inverter efficiency, and temperature</li>
                     <li>&bull; <strong className="text-foreground">80% depth of discharge</strong> to protect battery longevity</li>

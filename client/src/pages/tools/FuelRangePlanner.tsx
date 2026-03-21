@@ -114,7 +114,7 @@ function SegmentEditor({
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <GripVertical className="w-4 h-4 text-muted-foreground/30" />
-          <span className="text-[10px] font-bold uppercase tracking-wide text-primary">
+          <span className="text-xs font-bold uppercase tracking-wide text-primary">
             Segment {index + 1}
           </span>
           {segment.isFuelStop && (
@@ -174,7 +174,7 @@ function SegmentEditor({
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <div className="col-span-2 sm:col-span-3">
-          <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+          <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
             Segment Name
           </label>
           <input
@@ -188,7 +188,7 @@ function SegmentEditor({
         </div>
 
         <div>
-          <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+          <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
             Distance (mi)
           </label>
           <input
@@ -204,7 +204,7 @@ function SegmentEditor({
         </div>
 
         <div>
-          <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+          <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
             Terrain
           </label>
           <select
@@ -222,7 +222,7 @@ function SegmentEditor({
         </div>
 
         <div>
-          <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+          <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
             Elev. Gain (ft)
           </label>
           <input
@@ -237,7 +237,7 @@ function SegmentEditor({
         </div>
 
         <div>
-          <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+          <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
             Speed (mph)
           </label>
           <input
@@ -254,7 +254,7 @@ function SegmentEditor({
         </div>
 
         <div>
-          <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+          <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
             <Timer className="w-3 h-3 inline -mt-0.5 mr-0.5" />
             Idle Time (min)
           </label>
@@ -272,7 +272,7 @@ function SegmentEditor({
         </div>
 
         <div className="col-span-2 sm:col-span-1">
-          <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+          <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
             Terrain Impact
           </label>
           <div className="bg-muted border border-border rounded-lg px-3 py-2 text-sm">
@@ -372,7 +372,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
     <div className="bg-card border border-border rounded-lg p-4" data-testid="rig-conditions-card">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors w-full"
+        className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors w-full"
         data-testid="button-rig-conditions-toggle"
       >
         <Settings2 className="w-4 h-4 text-primary flex-shrink-0" />
@@ -395,12 +395,12 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
 
           {/* Suspension & Tires */}
           <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-wide text-primary mb-3">
+            <h4 className="text-xs font-bold uppercase tracking-wide text-primary mb-3">
               Suspension & Tires
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                   Lift Height
                 </label>
                 <select
@@ -416,7 +416,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                   Tire Type
                 </label>
                 <select
@@ -432,7 +432,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                   Tire Size Over Stock (in)
                 </label>
                 <input
@@ -450,7 +450,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                   Aired Down
                 </label>
                 <button
@@ -473,12 +473,12 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
 
           {/* Drivetrain & Engine */}
           <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-wide text-primary mb-3">
+            <h4 className="text-xs font-bold uppercase tracking-wide text-primary mb-3">
               Drivetrain & Engine
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                   4WD Engagement
                 </label>
                 <select
@@ -494,7 +494,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                   A/C Running
                 </label>
                 <button
@@ -512,7 +512,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                   Fuel Type
                 </label>
                 <select
@@ -528,7 +528,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                   Turbo / Forced Induction
                 </label>
                 <button
@@ -551,12 +551,12 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
 
           {/* Aero & Load */}
           <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-wide text-primary mb-3">
+            <h4 className="text-xs font-bold uppercase tracking-wide text-primary mb-3">
               Aero & Load
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                   Trip Cargo (lbs)
                 </label>
                 <input
@@ -578,7 +578,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
               </div>
 
               <div className="col-span-2 sm:col-span-1">
-                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                   Towing
                 </label>
                 <button
@@ -597,7 +597,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
 
               {conditions.towingEnabled && (
                 <div>
-                  <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                  <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                     Trailer Weight (lbs)
                   </label>
                   <input
@@ -621,7 +621,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
             </div>
 
             <div>
-              <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-2">
+              <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-2">
                 Aero Drag Mods
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -692,12 +692,12 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
 
           {/* Environment */}
           <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-wide text-primary mb-3">
+            <h4 className="text-xs font-bold uppercase tracking-wide text-primary mb-3">
               Environment
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                   <Wind className="w-3 h-3 inline -mt-0.5 mr-0.5" />
                   Headwind
                 </label>
@@ -714,7 +714,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                   <Mountain className="w-3 h-3 inline -mt-0.5 mr-0.5" />
                   Sustained Altitude
                 </label>
@@ -736,7 +736,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
           {rigResult.breakdown.length > 0 && (
             <div className="bg-muted rounded-lg p-3 border border-border">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                   Rig Adjustment Impact
                 </span>
                 <span className={`text-sm font-extrabold ${totalPenaltyPct > 0 ? "text-red-400" : "text-emerald-400"}`}>
@@ -747,7 +747,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
                 {rigResult.breakdown.map((item, i) => {
                   const pctChange = Math.round((1 - item.multiplier) * 100);
                   return (
-                    <div key={i} className="flex items-center justify-between text-xs">
+                    <div key={i} className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{item.label}</span>
                       <span className={`font-bold ${pctChange > 0 ? "text-red-400" : "text-emerald-400"}`}>
                         {pctChange > 0 ? `-${pctChange}%` : `+${Math.abs(pctChange)}%`}
@@ -763,7 +763,7 @@ function RigConditionsPanel({ conditions, onChange, profileLinked }: RigConditio
           <div className="flex justify-end">
             <button
               onClick={() => onChange({ ...DEFAULT_RIG_CONDITIONS })}
-              className="text-[10px] font-bold uppercase tracking-wide text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
+              className="text-xs font-bold uppercase tracking-wide text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
               data-testid="button-reset-rig"
             >
               <RotateCcw className="w-3 h-3" />
@@ -1211,7 +1211,7 @@ export default function FuelRangePlanner() {
               <InstallButton />
               <button
                 onClick={handlePrint}
-                className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-1.5 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors"
                 data-testid="button-print"
               >
                 <Printer className="w-3.5 h-3.5" />
@@ -1221,7 +1221,7 @@ export default function FuelRangePlanner() {
                 <button
                   onClick={handlePdfExport}
                   disabled={pdfLoading}
-                  className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+                  className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-1.5 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
                   data-testid="button-pdf-export"
                 >
                   <Download className="w-3.5 h-3.5" />
@@ -1241,7 +1241,7 @@ export default function FuelRangePlanner() {
               <div className="bg-card border border-border rounded-lg p-4" data-testid="vehicle-summary-card">
                 <div className="flex items-center gap-2 mb-3">
                   <Truck className="w-4 h-4 text-primary flex-shrink-0" />
-                  <h3 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                  <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                     Your Vehicle
                   </h3>
                 </div>
@@ -1251,7 +1251,7 @@ export default function FuelRangePlanner() {
                       {profile.year} {profile.make} {profile.model}
                     </p>
                     {profile.nickname && (
-                      <p className="text-xs text-muted-foreground">&ldquo;{profile.nickname}&rdquo;</p>
+                      <p className="text-sm text-muted-foreground">&ldquo;{profile.nickname}&rdquo;</p>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
@@ -1259,7 +1259,7 @@ export default function FuelRangePlanner() {
                       <span className="text-muted-foreground">MPG: </span>
                       <span className="font-bold text-foreground">{rigAdjustedMpg}</span>
                       {(computed.mpgPenaltyPct > 0 || jerryCans > 0 || rigPenaltyResult.multiplier < 1) && (
-                        <span className="text-red-400 text-xs ml-1">
+                        <span className="text-red-400 text-sm ml-1">
                           ({baseMpg} base{rigPenaltyResult.multiplier < 1 ? ` x ${Math.round(rigPenaltyResult.multiplier * 100)}% rig` : ""}{jerryCans > 0 ? " - cargo" : ""})
                         </span>
                       )}
@@ -1268,7 +1268,7 @@ export default function FuelRangePlanner() {
                       <span className="text-muted-foreground">Fuel: </span>
                       <span className="font-bold text-foreground">{totalFuelGal} gal</span>
                       {jerryCans > 0 && (
-                        <span className="text-blue-400 text-xs ml-1">(+{jerryCans * JERRY_CAN_GAL} aux)</span>
+                        <span className="text-blue-400 text-sm ml-1">(+{jerryCans * JERRY_CAN_GAL} aux)</span>
                       )}
                     </div>
                     <div>
@@ -1280,7 +1280,7 @@ export default function FuelRangePlanner() {
                 {computed.warnings.length > 0 && (
                   <div className="mt-3 space-y-1">
                     {computed.warnings.map((w, i) => (
-                      <div key={i} className="flex items-start gap-1.5 text-xs text-amber-400">
+                      <div key={i} className="flex items-start gap-1.5 text-sm text-amber-400">
                         <AlertTriangle className="w-3 h-3 flex-shrink-0 mt-0.5" />
                         {w}
                       </div>
@@ -1292,7 +1292,7 @@ export default function FuelRangePlanner() {
               <div className="bg-card border border-border rounded-lg p-6 text-center" data-testid="no-vehicle-card">
                 <Truck className="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
                 <p className="text-sm font-bold text-foreground mb-1">No Vehicle Profile Found</p>
-                <p className="text-xs text-muted-foreground mb-4">
+                <p className="text-sm text-muted-foreground mb-4">
                   Build your vehicle profile first so we can calculate accurate fuel consumption
                   based on your rig's actual specs and modifications.
                 </p>
@@ -1304,7 +1304,7 @@ export default function FuelRangePlanner() {
                   <Truck className="w-4 h-4" />
                   Build Vehicle Profile
                 </Link>
-                <p className="text-[10px] text-muted-foreground/50 mt-3">
+                <p className="text-xs text-muted-foreground/50 mt-3">
                   Or continue below with default values (20 MPG / 24 gal tank)
                 </p>
               </div>
@@ -1314,7 +1314,7 @@ export default function FuelRangePlanner() {
               <div className="bg-card border border-border rounded-lg p-4">
                 <button
                   onClick={() => setShowManualOverride(!showManualOverride)}
-                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors w-full"
+                  className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors w-full"
                   data-testid="button-manual-override"
                 >
                   <Gauge className="w-4 h-4 text-primary flex-shrink-0" />
@@ -1324,7 +1324,7 @@ export default function FuelRangePlanner() {
                 {showManualOverride && (
                   <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-border">
                     <div>
-                      <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                      <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                         Base MPG
                       </label>
                       <input
@@ -1340,7 +1340,7 @@ export default function FuelRangePlanner() {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                      <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                         Tank Size (gal)
                       </label>
                       <input
@@ -1359,7 +1359,7 @@ export default function FuelRangePlanner() {
                       <div className="col-span-2">
                         <button
                           onClick={() => { setManualMpg(null); setManualFuel(null); }}
-                          className="text-[10px] font-bold uppercase tracking-wide text-red-400 hover:text-red-300 transition-colors"
+                          className="text-xs font-bold uppercase tracking-wide text-red-400 hover:text-red-300 transition-colors"
                           data-testid="button-clear-override"
                         >
                           Clear Override
@@ -1373,7 +1373,7 @@ export default function FuelRangePlanner() {
               <div className="bg-card border border-border rounded-lg p-4">
                 <button
                   onClick={() => setShowAuxFuel(!showAuxFuel)}
-                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors w-full"
+                  className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors w-full"
                   data-testid="button-aux-fuel-toggle"
                 >
                   <Package className="w-4 h-4 text-primary flex-shrink-0" />
@@ -1383,7 +1383,7 @@ export default function FuelRangePlanner() {
                 {showAuxFuel && (
                   <div className="space-y-3 mt-3 pt-3 border-t border-border">
                     <div>
-                      <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                      <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                         Jerry Cans (5 gal each)
                       </label>
                       <div className="flex items-center gap-3">
@@ -1399,19 +1399,19 @@ export default function FuelRangePlanner() {
                           data-testid="input-jerry-cans"
                         />
                         {jerryCans > 0 && (
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-sm text-muted-foreground">
                             +{jerryCans * JERRY_CAN_GAL} gal / +{jerryCans * JERRY_CAN_WEIGHT_LBS} lbs cargo
                           </span>
                         )}
                       </div>
                       {jerryCans > 0 && (
-                        <p className="text-[10px] text-amber-400 mt-1">
+                        <p className="text-xs text-amber-400 mt-1">
                           MPG reduced {rawBaseMpg} &rarr; {baseMpg} due to extra weight
                         </p>
                       )}
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground block mb-1">
+                      <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
                         <DollarSign className="w-3 h-3 inline -mt-0.5" /> Gas Price ($/gal)
                       </label>
                       <input
@@ -1449,14 +1449,14 @@ export default function FuelRangePlanner() {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <Route className="w-4 h-4 text-primary flex-shrink-0" />
-                  <h3 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                  <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                     Trip Planner
                   </h3>
                 </div>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setRoundTrip(!roundTrip)}
-                    className={`flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide transition-colors ${roundTrip ? "text-primary" : "text-muted-foreground/50 hover:text-primary"}`}
+                    className={`flex items-center gap-1 text-xs font-bold uppercase tracking-wide transition-colors ${roundTrip ? "text-primary" : "text-muted-foreground/50 hover:text-primary"}`}
                     data-testid="button-round-trip"
                     title="Mirror segments for return trip"
                   >
@@ -1465,7 +1465,7 @@ export default function FuelRangePlanner() {
                   </button>
                   <button
                     onClick={() => setShowPresets(!showPresets)}
-                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/50 hover:text-primary transition-colors"
+                    className="flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-muted-foreground/50 hover:text-primary transition-colors"
                     data-testid="button-presets"
                   >
                     <BookOpen className="w-3 h-3" />
@@ -1473,7 +1473,7 @@ export default function FuelRangePlanner() {
                   </button>
                   <button
                     onClick={resetTrip}
-                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/50 hover:text-red-400 transition-colors"
+                    className="flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-muted-foreground/50 hover:text-red-400 transition-colors"
                     data-testid="button-reset-trip"
                   >
                     <RotateCcw className="w-3 h-3" />
@@ -1484,7 +1484,7 @@ export default function FuelRangePlanner() {
 
               {showPresets && (
                 <div className="mb-4 p-3 bg-muted rounded-lg border border-border">
-                  <p className="text-[10px] font-bold uppercase tracking-wide text-primary mb-3">
+                  <p className="text-xs font-bold uppercase tracking-wide text-primary mb-3">
                     Load a Route Template
                   </p>
                   <div className="grid sm:grid-cols-2 gap-2 max-h-64 overflow-y-auto">
@@ -1499,10 +1499,10 @@ export default function FuelRangePlanner() {
                           <span className="text-sm font-bold text-foreground">{preset.name}</span>
                           <ChevronRight className="w-3 h-3 text-muted-foreground" />
                         </div>
-                        <p className="text-[10px] text-primary font-bold mb-1">
+                        <p className="text-xs text-primary font-bold mb-1">
                           {preset.region} &middot; {preset.totalMiles} mi &middot; {preset.segments.length} segments
                         </p>
-                        <p className="text-[10px] text-muted-foreground line-clamp-2">{preset.description}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-2">{preset.description}</p>
                       </button>
                     ))}
                   </div>
@@ -1518,7 +1518,7 @@ export default function FuelRangePlanner() {
                 data-testid="input-trip-name"
               />
               {roundTrip && (
-                <p className="text-[10px] text-primary mt-2 flex items-center gap-1">
+                <p className="text-xs text-primary mt-2 flex items-center gap-1">
                   <Repeat className="w-3 h-3" />
                   Round-trip mode: your {segments.length} segment{segments.length !== 1 ? "s" : ""} will be mirrored for the return ({segments.length * 2} total segments calculated)
                 </p>
@@ -1556,14 +1556,14 @@ export default function FuelRangePlanner() {
                 <div className="bg-card border border-border rounded-lg p-4" data-testid="trip-summary-card">
                   <div className="flex items-center gap-2 mb-4">
                     <Gauge className="w-4 h-4 text-primary flex-shrink-0" />
-                    <h3 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                    <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                       Trip Summary {roundTrip ? "(Round Trip)" : ""}
                     </h3>
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">
+                      <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
                         Total Distance
                       </p>
                       <p className="text-xl font-extrabold text-foreground" data-testid="text-total-distance">
@@ -1571,7 +1571,7 @@ export default function FuelRangePlanner() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">
+                      <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
                         Fuel Required
                       </p>
                       <p className={`text-xl font-extrabold ${tripResult.outOfFuel ? "text-red-400" : "text-foreground"}`} data-testid="text-fuel-required">
@@ -1579,7 +1579,7 @@ export default function FuelRangePlanner() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">
+                      <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
                         Fuel Remaining
                       </p>
                       <p className={`text-xl font-extrabold ${tripResult.outOfFuel ? "text-red-400" : tripResult.reserveWarning ? "text-amber-400" : "text-emerald-400"}`} data-testid="text-fuel-remaining">
@@ -1587,7 +1587,7 @@ export default function FuelRangePlanner() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">
+                      <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
                         Drive Time
                       </p>
                       <p className="text-xl font-extrabold text-foreground" data-testid="text-drive-time">
@@ -1602,7 +1602,7 @@ export default function FuelRangePlanner() {
                         <div data-testid="text-fuel-cost">
                           <span className="text-muted-foreground">Est. Cost: </span>
                           <span className="font-bold text-foreground">${tripResult.totalFuelCost.toFixed(2)}</span>
-                          <span className="text-muted-foreground text-xs ml-1">@ ${gasPrice.toFixed(2)}/gal</span>
+                          <span className="text-muted-foreground text-sm ml-1">@ ${gasPrice.toFixed(2)}/gal</span>
                         </div>
                       )}
                       {tripResult.refuelStopCount > 0 && (
@@ -1633,7 +1633,7 @@ export default function FuelRangePlanner() {
                   )}
 
                   <div>
-                    <div className="flex justify-between text-[10px] text-muted-foreground mb-1">
+                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
                       <span>Fuel Level After Trip</span>
                       <span className="font-bold">
                         {tripResult.outOfFuel
@@ -1652,7 +1652,7 @@ export default function FuelRangePlanner() {
                   <div className="bg-card border border-border rounded-lg p-4" data-testid="terrain-breakdown-chart">
                     <div className="flex items-center gap-2 mb-4">
                       <Fuel className="w-4 h-4 text-primary flex-shrink-0" />
-                      <h3 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                      <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                         Fuel by Terrain Type
                       </h3>
                     </div>
@@ -1676,7 +1676,7 @@ export default function FuelRangePlanner() {
                             color: t.color,
                           }))}
                         />
-                        <div className="mt-3 pt-3 border-t border-border grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+                        <div className="mt-3 pt-3 border-t border-border grid grid-cols-2 gap-2 text-sm text-muted-foreground">
                           {terrainBreakdown.map((t) => (
                             <div key={t.terrain} className="flex justify-between">
                               <span>{terrainIcons[t.terrain]} {t.distance} mi</span>
@@ -1693,7 +1693,7 @@ export default function FuelRangePlanner() {
                   <div className={`border rounded-lg p-4 ${tripResult.outOfFuel ? "bg-red-500/10 border-red-500/30" : "bg-amber-500/10 border-amber-500/30"}`} data-testid="fuel-warnings">
                     <div className="flex items-center gap-2 mb-2">
                       <AlertTriangle className={`w-4 h-4 ${tripResult.outOfFuel ? "text-red-400" : "text-amber-400"}`} />
-                      <h3 className={`text-[10px] font-bold uppercase tracking-wide ${tripResult.outOfFuel ? "text-red-400" : "text-amber-400"}`}>
+                      <h3 className={`text-xs font-bold uppercase tracking-wide ${tripResult.outOfFuel ? "text-red-400" : "text-amber-400"}`}>
                         {tripResult.outOfFuel ? "Fuel Critical" : "Fuel Warning"}
                       </h3>
                     </div>
@@ -1713,7 +1713,7 @@ export default function FuelRangePlanner() {
                         </p>
                       )}
                       {tripResult.pointOfNoReturnIdx !== null && !tripResult.outOfFuel && (
-                        <p className="text-muted-foreground text-xs">
+                        <p className="text-muted-foreground text-sm">
                           Point of no return: Segment {tripResult.pointOfNoReturnIdx + 1} &mdash; beyond here,
                           you don't have enough fuel to retrace your route.
                         </p>
@@ -1726,13 +1726,13 @@ export default function FuelRangePlanner() {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
-                      <h3 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                      <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                         Route Fuel Timeline
                       </h3>
                     </div>
                     <button
                       onClick={() => setShowBreakdown(!showBreakdown)}
-                      className="text-[10px] font-bold uppercase tracking-wide text-primary hover:text-primary/80 transition-colors"
+                      className="text-xs font-bold uppercase tracking-wide text-primary hover:text-primary/80 transition-colors"
                       data-testid="button-toggle-details"
                     >
                       {showBreakdown ? "Hide" : "Show"} Details
@@ -1743,7 +1743,7 @@ export default function FuelRangePlanner() {
                     <div className="w-3 h-3 rounded-full bg-emerald-500 flex-shrink-0" />
                     <div className="flex-1 flex items-center justify-between">
                       <span className="text-sm font-bold text-foreground">Start</span>
-                      <span className="text-xs font-bold text-emerald-400">
+                      <span className="text-sm font-bold text-emerald-400">
                         {totalFuelGal} gal (100%)
                       </span>
                     </div>
@@ -1762,7 +1762,7 @@ export default function FuelRangePlanner() {
                               <div className="w-0.5 h-4 bg-blue-500/50" />
                             </div>
                             <div className="flex-1 bg-blue-500/10 border border-blue-500/30 rounded px-2 py-1">
-                              <span className="text-[10px] font-bold text-blue-400">
+                              <span className="text-xs font-bold text-blue-400">
                                 FUEL STOP &mdash; Tank refilled to {totalFuelGal} gal
                               </span>
                             </div>
@@ -1772,7 +1772,7 @@ export default function FuelRangePlanner() {
                           <div className="w-3 flex justify-center">
                             <div className={`w-0.5 h-full min-h-[48px] ${isOutOfFuel ? "bg-red-500/50" : "bg-border"}`} />
                           </div>
-                          <div className="flex-1 py-2 text-xs text-muted-foreground space-y-0.5">
+                          <div className="flex-1 py-2 text-sm text-muted-foreground space-y-0.5">
                             <div className="flex items-center gap-2">
                               <span>{terrainIcons[res.segment.terrain]} {terrainLabels[res.segment.terrain]}</span>
                               <span>&middot;</span>
@@ -1802,7 +1802,7 @@ export default function FuelRangePlanner() {
                             </div>
 
                             {showBreakdown && (
-                              <div className="mt-1 pt-1 border-t border-border/50 text-[10px] text-muted-foreground/60 space-y-0.5">
+                              <div className="mt-1 pt-1 border-t border-border/50 text-xs text-muted-foreground/60 space-y-0.5">
                                 <div>Terrain penalty: -{Math.round((1 - res.terrainMultiplier) * 100)}%</div>
                                 {res.segment.elevationGainFt > 0 && (
                                   <div>Elevation penalty: -{Math.round((1 - res.elevationPenalty) * 100)}%</div>
@@ -1839,7 +1839,7 @@ export default function FuelRangePlanner() {
                                 </span>
                               )}
                             </div>
-                            <span className={`text-xs font-bold ${isOutOfFuel ? "text-red-400" : pct < 25 ? "text-amber-400" : "text-emerald-400"}`}>
+                            <span className={`text-sm font-bold ${isOutOfFuel ? "text-red-400" : pct < 25 ? "text-amber-400" : "text-emerald-400"}`}>
                               {isOutOfFuel ? "EMPTY" : `${res.fuelRemainingGal} gal (${pct}%)`}
                             </span>
                           </div>
@@ -1853,15 +1853,15 @@ export default function FuelRangePlanner() {
                   <div className="p-4 border-b border-border">
                     <div className="flex items-center gap-2">
                       <Info className="w-4 h-4 text-primary flex-shrink-0" />
-                      <h3 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                      <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                         Segment Breakdown
                       </h3>
                     </div>
                   </div>
                   <div className="overflow-x-auto">
-                    <table className="w-full text-xs">
+                    <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b border-border text-left text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                        <tr className="border-b border-border text-left text-xs font-bold uppercase tracking-wide text-muted-foreground">
                           <th className="px-4 py-2">#</th>
                           <th className="px-4 py-2">Segment</th>
                           <th className="px-4 py-2 text-right">Dist</th>
@@ -1930,7 +1930,7 @@ export default function FuelRangePlanner() {
                   <div className="bg-card border border-border rounded-lg p-4" data-testid="fuel-cache-recommendations">
                     <div className="flex items-center gap-2 mb-3">
                       <Fuel className="w-4 h-4 text-primary flex-shrink-0" />
-                      <h3 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                      <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                         Fuel Cache Recommendations
                       </h3>
                     </div>
@@ -1964,7 +1964,7 @@ export default function FuelRangePlanner() {
                           </p>
                         </div>
                       )}
-                      <div className="flex items-start gap-2 text-xs text-muted-foreground/60">
+                      <div className="flex items-start gap-2 text-sm text-muted-foreground/60">
                         <Info className="w-3 h-3 flex-shrink-0 mt-0.5" />
                         <p>
                           Fuel caching is the practice of pre-positioning fuel along your route before the trip.
