@@ -507,6 +507,13 @@ export default function RigSafeConfigurator() {
     }));
   }, []);
 
+  const updatePresetMount = useCallback((id: string, mount: CargoMountTarget) => {
+    setConfig((prev) => ({
+      ...prev,
+      presetMountTargets: { ...(prev.presetMountTargets ?? {}), [id]: mount },
+    }));
+  }, []);
+
   const updateCargoItem = useCallback((id: string, field: keyof CargoItem, value: string | number) => {
     setConfig((prev) => ({
       ...prev,
@@ -1402,6 +1409,16 @@ export default function RigSafeConfigurator() {
                   ]}
                 />
 
+                <SelectInput
+                  label="Mounted On"
+                  value={config.awningMountTarget ?? "bed_rack"}
+                  onChange={(v) => update("awningMountTarget", v)}
+                  options={[
+                    { value: "bed_rack", label: config.rack ? `${config.rack.brand} ${config.rack.model}` : "Bed Rack" },
+                    ...(config.hasSecondaryRack ? [{ value: "cab_rack", label: config.secondaryRack ? `${config.secondaryRack.brand} ${config.secondaryRack.model}` : "Cab Roof Rack" }] : []),
+                  ]}
+                />
+
                 <p className="text-xs text-muted-foreground italic">Most awning weight transfers to ground poles when deployed. Only bracket weight (~10-15 lbs) stays on rack.</p>
 
                 {/* Awning Annex (Wall Kit) */}
@@ -1877,27 +1894,47 @@ export default function RigSafeConfigurator() {
             {/* ─── a) Quick-Add Rack Items (presets) ─────────── */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Quick-Add Rack Items</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
                 {RACK_CARGO_PRESETS.map((preset) => {
                   const checked = config.rackPresets.includes(preset.id);
+                  const mount: CargoMountTarget = config.presetMountTargets?.[preset.id] ?? (preset.location === "bed" ? "bed" : "bed_rack");
                   return (
-                    <label key={preset.id} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-muted/50 rounded px-2 py-1.5 transition-colors">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => {
-                          setConfig((prev) => ({
-                            ...prev,
-                            rackPresets: checked
-                              ? prev.rackPresets.filter((id) => id !== preset.id)
-                              : [...prev.rackPresets, preset.id],
-                          }));
-                        }}
-                        className="accent-accent w-3.5 h-3.5"
-                      />
-                      <span className="flex-1 text-foreground">{preset.name}</span>
-                      <span className="text-muted font-mono text-xs">{preset.weightLbs} lbs</span>
-                    </label>
+                    <div key={preset.id} className="flex flex-col gap-0.5 hover:bg-muted/50 rounded px-2 py-1.5 transition-colors">
+                      <label className="flex items-center gap-2 text-sm cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => {
+                            setConfig((prev) => ({
+                              ...prev,
+                              rackPresets: checked
+                                ? prev.rackPresets.filter((id) => id !== preset.id)
+                                : [...prev.rackPresets, preset.id],
+                            }));
+                          }}
+                          className="accent-accent w-3.5 h-3.5"
+                        />
+                        <span className="flex-1 text-foreground">{preset.name}</span>
+                        <span className="text-muted font-mono text-xs">{preset.weightLbs} lbs</span>
+                      </label>
+                      {checked && (
+                        <div className="flex items-center gap-1.5 pl-5">
+                          <span className="text-xs text-muted-foreground">Mounted:</span>
+                          <select
+                            value={mount}
+                            onChange={(e) => updatePresetMount(preset.id, e.target.value as CargoMountTarget)}
+                            className="flex-1 bg-muted border border-border rounded px-1.5 py-0.5 text-xs text-foreground focus:border-primary outline-none transition-colors"
+                          >
+                            <option value="bed_rack">{config.rack ? `${config.rack.brand} ${config.rack.model}` : "Bed Rack"}</option>
+                            {config.hasSecondaryRack && (
+                              <option value="cab_rack">{config.secondaryRack ? `${config.secondaryRack.brand} ${config.secondaryRack.model}` : "Cab Roof Rack"}</option>
+                            )}
+                            <option value="bed">Truck Bed</option>
+                            <option value="hitch">Hitch Carrier</option>
+                          </select>
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
               </div>

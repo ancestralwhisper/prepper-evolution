@@ -175,6 +175,7 @@ export interface RigSafeConfig {
   };
   useManualAwning: boolean;
   hasAwning: boolean;
+  awningMountTarget: "bed_rack" | "cab_rack"; // which rack the awning bracket mounts to
   awningSide: "driver" | "passenger" | "rear";
   hasWallKit: boolean;
   wallKitWeightLbs: number;
@@ -253,6 +254,7 @@ export interface RigSafeConfig {
 
   // Quick-add rack cargo presets
   rackPresets: string[]; // array of preset IDs that are toggled on
+  presetMountTargets: Record<string, CargoMountTarget>; // per-preset mount location override
 
   // Occupants (new: individual list)
   occupantList: Occupant[];
@@ -633,6 +635,11 @@ export const RACK_CARGO_PRESETS = [
   { id: "camp-shower", name: "Camp Shower Bag (full)", weightLbs: 22, location: "bed" as const },
 ] as const;
 
+// ─── Helper: resolve per-preset mount target ────────────────────────
+function getPresetMount(config: RigSafeConfig, preset: { id: string; location: "rack" | "bed" }): CargoMountTarget {
+  return config.presetMountTargets?.[preset.id] ?? (preset.location === "bed" ? "bed" : "bed_rack");
+}
+
 // ─── Compute: Rack Load Budget ──────────────────────────────────────
 
 export function computeRackLoad(config: RigSafeConfig): {
@@ -645,7 +652,8 @@ export function computeRackLoad(config: RigSafeConfig): {
   const awning = getAwning(config);
 
   const tentWeight = tent?.weightLbs ?? 0;
-  const awningBracketWeight = awning?.mountedBracketWeightLbs ?? 0;
+  const awningMountTarget = config.awningMountTarget ?? "bed_rack";
+  const awningBracketWeight = (awning && awningMountTarget === "bed_rack") ? (awning.mountedBracketWeightLbs ?? 0) : 0;
 
   // Cargo on bed rack only (items routed to cab_rack or bed are excluded)
   const cargoWeight = config.cargoItems
@@ -661,17 +669,17 @@ export function computeRackLoad(config: RigSafeConfig): {
     cargoBoxWeight += config.cargoBoxContentsLbs;
   }
 
-  // Rack preset items (only items physically on the rack — not bed cargo)
+  // Rack preset items (only items mounted on the bed rack)
   const presetWeight = config.rackPresets.reduce((sum, id) => {
     const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
-    if (!preset || preset.location === "bed") return sum; // bed items don't load the rack
+    if (!preset || getPresetMount(config, preset) !== "bed_rack") return sum;
     return sum + preset.weightLbs;
   }, 0);
 
   // Bed preset items weight (for payload calc, not rack)
   const bedPresetWeight = config.rackPresets.reduce((sum, id) => {
     const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
-    if (!preset || preset.location !== "bed") return sum;
+    if (!preset || getPresetMount(config, preset) !== "bed") return sum;
     return sum + preset.weightLbs;
   }, 0);
 
@@ -724,6 +732,19 @@ export function computeSecondaryRackLoad(config: RigSafeConfig): {
   if (config.secondaryRackSolar) load += config.secondaryRackSolarWeightLbs;
   if (config.secondaryRackLightBar) load += config.secondaryRackLightBarWeightLbs;
   load += config.secondaryRackCargoLbs;
+
+  // Awning bracket on cab rack
+  if (config.hasAwning && (config.awningMountTarget ?? "bed_rack") === "cab_rack") {
+    const awning = getAwning(config);
+    load += awning?.mountedBracketWeightLbs ?? 0;
+  }
+
+  // Preset items routed to cab rack
+  load += config.rackPresets.reduce((sum, id) => {
+    const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
+    if (!preset || getPresetMount(config, preset) !== "cab_rack") return sum;
+    return sum + preset.weightLbs;
+  }, 0);
 
   // Custom cargo items routed to cab rack
   load += config.cargoItems
@@ -1178,13 +1199,18 @@ export function computeWeightBreakdown(config: RigSafeConfig): {
   }
   rackCargoWeight += config.rackPresets.reduce((sum, id) => {
     const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
-    if (!preset || preset.location === "bed") return sum;
+    if (!preset || getPresetMount(config, preset) !== "bed_rack") return sum;
     return sum + preset.weightLbs;
   }, 0);
   if (rackCargoWeight > 0) items.push({ label: "Rack Cargo", value: rackCargoWeight, color: "#EF4444" });
 
-  // Cab rack cargo (custom items + cargo box on cab rack)
-  let cabRackCargoWeight = config.cargoItems
+  // Cab rack cargo (presets + custom items + cargo box on cab rack)
+  let cabRackCargoWeight = config.rackPresets.reduce((sum, id) => {
+    const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
+    if (!preset || getPresetMount(config, preset) !== "cab_rack") return sum;
+    return sum + preset.weightLbs;
+  }, 0);
+  cabRackCargoWeight += config.cargoItems
     .filter(i => i.mountTarget === "cab_rack")
     .reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
   if (config.hasCargoBox && config.cargoBoxMountTarget === "cab_rack") {
@@ -1195,19 +1221,25 @@ export function computeWeightBreakdown(config: RigSafeConfig): {
   }
   if (cabRackCargoWeight > 0) items.push({ label: "Cab Rack Cargo", value: cabRackCargoWeight, color: "#F97316" });
 
-  // Hitch cargo (counts payload only)
-  const hitchCargoWeight = config.cargoItems
+  // Hitch cargo (presets + custom items + cargo box on hitch)
+  let hitchCargoWeight = config.rackPresets.reduce((sum, id) => {
+    const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
+    if (!preset || getPresetMount(config, preset) !== "hitch") return sum;
+    return sum + preset.weightLbs;
+  }, 0);
+  hitchCargoWeight += config.cargoItems
     .filter(i => i.mountTarget === "hitch")
     .reduce((sum, i) => sum + i.weightLbs * i.qty, 0);
   if (config.hasCargoBox && config.cargoBoxMountTarget === "hitch") {
-    // cargo box on hitch - included in hitch weight
+    hitchCargoWeight += config.useManualCargoBox ? config.manualCargoBoxWeightLbs : (config.cargoBox?.weightLbs ?? 0);
+    hitchCargoWeight += config.cargoBoxContentsLbs;
   }
   if (hitchCargoWeight > 0) items.push({ label: "Hitch Cargo", value: hitchCargoWeight, color: "#84CC16" });
 
-  // Bed preset cargo (chairs, table, compressor, etc.)
+  // Bed preset cargo (items mounted in the truck bed)
   const bedPresetCargo = config.rackPresets.reduce((sum, id) => {
     const preset = RACK_CARGO_PRESETS.find(p => p.id === id);
-    if (!preset || preset.location !== "bed") return sum;
+    if (!preset || getPresetMount(config, preset) !== "bed") return sum;
     return sum + preset.weightLbs;
   }, 0);
   if (bedPresetCargo > 0) items.push({ label: "Bed Accessories", value: bedPresetCargo, color: "#F97316" });
@@ -1229,7 +1261,8 @@ export function computeBedRackBreakdown(config: RigSafeConfig): BreakdownSegment
   const awning = getAwning(config);
 
   const tentW = tent?.weightLbs ?? 0;
-  const awningW = awning?.mountedBracketWeightLbs ?? 0;
+  const awningOnBedRack = (config.awningMountTarget ?? "bed_rack") === "bed_rack";
+  const awningW = (awning && awningOnBedRack) ? (awning.mountedBracketWeightLbs ?? 0) : 0;
 
   if (tentW > 0) items.push({ label: "Tent", value: tentW, color: "#3B82F6" });
   if (awningW > 0) items.push({ label: "Awning Bracket", value: awningW, color: "#10B981" });
@@ -1238,10 +1271,10 @@ export function computeBedRackBreakdown(config: RigSafeConfig): BreakdownSegment
   const roofModW = computeRoofMountedModWeight(config);
   if (roofModW > 0) items.push({ label: "Solar / Lights", value: roofModW, color: "#FBBF24" });
 
-  // Rack preset items
+  // Rack preset items (bed rack only)
   const presetW = config.rackPresets.reduce((sum, id) => {
     const p = RACK_CARGO_PRESETS.find(x => x.id === id);
-    if (!p || p.location === "bed") return sum;
+    if (!p || getPresetMount(config, p) !== "bed_rack") return sum;
     return sum + p.weightLbs;
   }, 0);
   if (presetW > 0) items.push({ label: "Preset Cargo", value: presetW, color: "#8B5CF6" });
@@ -1282,6 +1315,21 @@ export function computeCabRackBreakdown(config: RigSafeConfig): BreakdownSegment
   if (config.secondaryRackCargoLbs > 0)
     items.push({ label: "Manual Cargo", value: config.secondaryRackCargoLbs, color: "#8B5CF6" });
 
+  // Awning bracket on cab rack
+  if (config.hasAwning && (config.awningMountTarget ?? "bed_rack") === "cab_rack") {
+    const awn = getAwning(config);
+    const awnW = awn?.mountedBracketWeightLbs ?? 0;
+    if (awnW > 0) items.push({ label: "Awning Bracket", value: awnW, color: "#10B981" });
+  }
+
+  // Preset cargo on cab rack
+  const presetW = config.rackPresets.reduce((sum, id) => {
+    const p = RACK_CARGO_PRESETS.find(x => x.id === id);
+    if (!p || getPresetMount(config, p) !== "cab_rack") return sum;
+    return sum + p.weightLbs;
+  }, 0);
+  if (presetW > 0) items.push({ label: "Preset Cargo", value: presetW, color: "#8B5CF6" });
+
   // Custom cargo on cab rack
   const customW = config.cargoItems
     .filter(i => i.mountTarget === "cab_rack")
@@ -1307,6 +1355,14 @@ export function computeCabRackBreakdown(config: RigSafeConfig): BreakdownSegment
 
 export function computeHitchBreakdown(config: RigSafeConfig): BreakdownSegment[] {
   const items: BreakdownSegment[] = [];
+
+  // Preset items on hitch
+  const presetW = config.rackPresets.reduce((sum, id) => {
+    const p = RACK_CARGO_PRESETS.find(x => x.id === id);
+    if (!p || getPresetMount(config, p) !== "hitch") return sum;
+    return sum + p.weightLbs;
+  }, 0);
+  if (presetW > 0) items.push({ label: "Preset Cargo", value: presetW, color: "#8B5CF6" });
 
   const customW = config.cargoItems
     .filter(i => i.mountTarget === "hitch")
@@ -1716,6 +1772,7 @@ export const defaultRigSafeConfig: RigSafeConfig = {
   manualAwning: { totalWeightLbs: 60, mountedBracketWeightLbs: 12 },
   useManualAwning: false,
   hasAwning: false,
+  awningMountTarget: "bed_rack",
   awningSide: "driver",
   hasWallKit: false,
   wallKitWeightLbs: 20,
@@ -1790,6 +1847,7 @@ export const defaultRigSafeConfig: RigSafeConfig = {
   cargoBoxContentsLbs: 0,
   cargoBoxMountTarget: "bed_rack" as CargoMountTarget,
   rackPresets: [],
+  presetMountTargets: {},
 
   occupantList: [
     { id: "adult-1", label: "Adult 1", weightLbs: 180, isSleeper: true },
