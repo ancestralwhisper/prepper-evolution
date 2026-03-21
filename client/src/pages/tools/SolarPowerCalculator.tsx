@@ -93,6 +93,8 @@ export default function SolarPowerCalculator() {
   const [livingSituation, setLivingSituation] = useState<LivingSituation>("house");
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
+  const [cloudyDays, setCloudyDays] = useState(3);
+
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestName, setRequestName] = useState("");
   const [requestBrand, setRequestBrand] = useState("");
@@ -1254,6 +1256,77 @@ export default function SolarPowerCalculator() {
                     </p>
                   </div>
                 )}
+
+                {calculations.deviceCount > 0 && (() => {
+                  const cloudyDaysCapacity = (cloudyDays * calculations.totalDailyWh * (1 / 0.85)) / 0.8;
+                  const isInsufficient = cloudyDaysCapacity > calculations.batteryCapacityNeeded;
+                  const commonSizes = [2500, 5000, 10000];
+                  const suggestion = (() => {
+                    let remaining = cloudyDaysCapacity;
+                    const counts: { wh: number; label: string; qty: number }[] = [];
+                    for (const size of commonSizes.slice().reverse()) {
+                      const qty = Math.floor(remaining / size);
+                      if (qty > 0) {
+                        counts.push({ wh: size, label: size >= 1000 ? `${size / 1000} kWh` : `${size} Wh`, qty });
+                        remaining -= qty * size;
+                      }
+                    }
+                    if (remaining > 500) counts.push({ wh: commonSizes[0], label: `${commonSizes[0] / 1000} kWh`, qty: 1 });
+                    return counts;
+                  })();
+                  return (
+                    <div className="bg-card border border-border rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Sun className="w-4 h-4 text-primary" />
+                        <h3 className="text-sm font-bold uppercase tracking-wide">Cloudy Days Buffer</h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-3">
+                        How many consecutive cloudy days do you want to survive without solar recharge?
+                      </p>
+                      <div className="flex items-center gap-3 mb-3">
+                        <input
+                          type="range"
+                          min="1"
+                          max="14"
+                          value={cloudyDays}
+                          onChange={(e) => setCloudyDays(parseInt(e.target.value))}
+                          className="flex-1 accent-primary h-1.5"
+                          data-testid="input-cloudy-days-slider"
+                        />
+                        <span className="text-sm font-extrabold tabular-nums w-16 text-right">
+                          {cloudyDays} day{cloudyDays !== 1 ? "s" : ""}
+                        </span>
+                      </div>
+                      <p className="text-sm text-foreground mb-3">
+                        To power your loads for <strong>{cloudyDays} cloudy day{cloudyDays !== 1 ? "s" : ""}</strong>, you need{" "}
+                        <strong className="text-primary">{(cloudyDaysCapacity / 1000).toFixed(1)} kWh</strong> of usable battery capacity.
+                      </p>
+                      {isInsufficient && (
+                        <div className="bg-[#EAB308]/10 border border-[#EAB308]/30 rounded-md p-3 mb-3">
+                          <div className="flex items-start gap-2">
+                            <AlertTriangle className="w-4 h-4 text-[#EAB308] shrink-0 mt-0.5" />
+                            <p className="text-xs text-muted-foreground leading-relaxed">
+                              Your current battery recommendation ({(calculations.batteryCapacityNeeded / 1000).toFixed(1)} kWh) may not cover {cloudyDays} cloudy day{cloudyDays !== 1 ? "s" : ""}.
+                              Consider upgrading to <strong className="text-foreground">{(cloudyDaysCapacity / 1000).toFixed(1)} kWh</strong>.
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      {suggestion.length > 0 && (
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1.5">EcoFlow battery combo:</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {suggestion.map((s, i) => (
+                              <span key={i} className="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded">
+                                {s.qty > 1 ? `${s.qty}x ` : ""}{s.label}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
 
                 {livingSituation === "apartment" && calculations.deviceCount > 0 && (
                   <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">

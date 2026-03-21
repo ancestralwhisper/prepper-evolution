@@ -48,6 +48,8 @@ export default function FoodStorageCalculator() {
   const [activePreset, setActivePreset] = useState<string | null>("1m");
   const [livingSituation, setLivingSituation] = useState<LivingSituation>("house");
 
+  const [rationPct, setRationPct] = useState(100);
+
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestName, setRequestName] = useState("");
   const [requestBrand, setRequestBrand] = useState("");
@@ -890,6 +892,52 @@ export default function FoodStorageCalculator() {
                     </div>
                   </div>
                 )}
+
+                {calculations.totalPeople > 0 && (() => {
+                  const rationedDays = calculations.dailyTotalCals > 0
+                    ? Math.round(calculations.totalCalories / (calculations.dailyTotalCals * rationPct / 100))
+                    : 0;
+                  const extraDays = rationedDays - durationDays;
+                  return (
+                    <div className="bg-card border border-border rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <ShieldAlert className="w-4 h-4 text-primary" />
+                        <h3 className="text-sm font-bold uppercase tracking-wide">Ration Planning</h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-2">
+                        At <strong className="text-foreground">{rationPct}% rations</strong>{" "}
+                        ({Math.round(calculations.dailyTotalCals * rationPct / 100).toLocaleString()} cal/day)
+                      </p>
+                      <div className="flex items-center gap-3 mb-3">
+                        <input
+                          type="range"
+                          min="50"
+                          max="100"
+                          step="5"
+                          value={rationPct}
+                          onChange={(e) => setRationPct(parseInt(e.target.value))}
+                          className="flex-1 accent-primary h-1.5"
+                          data-testid="input-ration-slider"
+                        />
+                        <span className="text-sm font-extrabold tabular-nums w-12 text-right">{rationPct}%</span>
+                      </div>
+                      <p className="text-sm text-foreground mb-2">
+                        Your stored calories will last{" "}
+                        <strong className="text-primary">{rationedDays} days</strong> at {rationPct}% rations for{" "}
+                        {calculations.totalPeople} {calculations.totalPeople === 1 ? "person" : "people"}.
+                      </p>
+                      {rationPct < 100 ? (
+                        <p className="text-xs text-muted-foreground">
+                          That&apos;s <strong className="text-foreground">{extraDays} extra day{extraDays !== 1 ? "s" : ""}</strong> beyond your {durationDays}-day target.
+                        </p>
+                      ) : (
+                        <p className="text-xs text-muted-foreground">
+                          Increase your stock or reduce rations to extend your supply.
+                        </p>
+                      )}
+                    </div>
+                  );
+                })()}
 
                 {livingSituation === "apartment" && calculations.totalPeople > 0 && (
                   <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
