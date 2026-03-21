@@ -1619,8 +1619,8 @@ export const defaultRigSafeConfig: RigSafeConfig = {
   rackPresets: [],
 
   occupantList: [
-    { id: "driver", label: "Driver", weightLbs: 180, isSleeper: true },
-    { id: "passenger", label: "Passenger", weightLbs: 150, isSleeper: true },
+    { id: "adult-1", label: "Adult 1", weightLbs: 180, isSleeper: true },
+    { id: "adult-2", label: "Adult 2", weightLbs: 150, isSleeper: true },
   ],
   occupants: {
     adults: 2,

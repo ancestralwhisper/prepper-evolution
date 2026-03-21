@@ -463,6 +463,35 @@ export default function RigSafeConfigurator() {
     }));
   }, []);
 
+  const setAdultCount = useCallback((count: number) => {
+    setConfig((prev) => {
+      const existing = prev.occupantList.filter((o) => o.id.startsWith("adult-"));
+      const others = prev.occupantList.filter((o) => !o.id.startsWith("adult-"));
+      const newAdults = Array.from({ length: count }, (_, i) =>
+        existing[i] ?? { id: `adult-${i + 1}`, label: `Adult ${i + 1}`, weightLbs: 180, isSleeper: true }
+      );
+      return { ...prev, occupantList: [...others, ...newAdults], occupants: { ...prev.occupants, adults: count } };
+    });
+  }, []);
+
+  const setKidCount = useCallback((count: number) => {
+    setConfig((prev) => {
+      const existing = prev.occupantList.filter((o) => o.id.startsWith("child-"));
+      const others = prev.occupantList.filter((o) => !o.id.startsWith("child-"));
+      const newKids = Array.from({ length: count }, (_, i) =>
+        existing[i] ?? { id: `child-${i + 1}`, label: `Child ${i + 1}`, weightLbs: 80, isSleeper: true }
+      );
+      return { ...prev, occupantList: [...others, ...newKids], occupants: { ...prev.occupants, kids: count } };
+    });
+  }, []);
+
+  const updateOccupantWeight = useCallback((id: string, weightLbs: number) => {
+    setConfig((prev) => ({
+      ...prev,
+      occupantList: prev.occupantList.map((o) => (o.id === id ? { ...o, weightLbs } : o)),
+    }));
+  }, []);
+
   // ─── Cargo items ──────────────────────────────────────────────
   const addCargoItem = useCallback(() => {
     setConfig((prev) => ({
@@ -1995,14 +2024,46 @@ export default function RigSafeConfigurator() {
             </div>
 
             {/* Occupants */}
-            <div className="border-t border-border pt-4 space-y-3">
+            <div className="border-t border-border pt-4 space-y-4">
               <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Occupants</h4>
               <p className="text-[10px] text-muted-foreground">Occupant weight counts against rack static budget (sleeping) and vehicle payload (always).</p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <NumberInput label="Adults" value={config.occupants.adults} onChange={(v) => updateOccupants("adults", v)} min={0} max={8} />
-                <NumberInput label="Avg Adult Weight" value={config.occupants.avgAdultLbs} onChange={(v) => updateOccupants("avgAdultLbs", v)} unit="lbs" />
-                <NumberInput label="Kids/Teens" value={config.occupants.kids} onChange={(v) => updateOccupants("kids", v)} min={0} max={8} />
-                <NumberInput label="Avg Kid Weight" value={config.occupants.avgKidLbs} onChange={(v) => updateOccupants("avgKidLbs", v)} unit="lbs" />
+
+              {/* Adults */}
+              <div className="space-y-2">
+                <NumberInput
+                  label="Adults"
+                  value={config.occupantList.filter((o) => o.id.startsWith("adult-")).length}
+                  onChange={setAdultCount}
+                  min={0} max={8}
+                />
+                {config.occupantList.filter((o) => o.id.startsWith("adult-")).map((o, i) => (
+                  <NumberInput
+                    key={o.id}
+                    label={`Adult ${i + 1} Weight`}
+                    value={o.weightLbs}
+                    onChange={(v) => updateOccupantWeight(o.id, v)}
+                    unit="lbs"
+                  />
+                ))}
+              </div>
+
+              {/* Kids */}
+              <div className="space-y-2">
+                <NumberInput
+                  label="Kids / Teens"
+                  value={config.occupantList.filter((o) => o.id.startsWith("child-")).length}
+                  onChange={setKidCount}
+                  min={0} max={8}
+                />
+                {config.occupantList.filter((o) => o.id.startsWith("child-")).map((o, i) => (
+                  <NumberInput
+                    key={o.id}
+                    label={`Child ${i + 1} Weight`}
+                    value={o.weightLbs}
+                    onChange={(v) => updateOccupantWeight(o.id, v)}
+                    unit="lbs"
+                  />
+                ))}
               </div>
             </div>
 
