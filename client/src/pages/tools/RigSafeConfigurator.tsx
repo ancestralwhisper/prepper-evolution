@@ -338,6 +338,7 @@ export default function RigSafeConfigurator() {
   // Profile import banner
   const [profileAvailable, setProfileAvailable] = useState(false);
   const [profileImported, setProfileImported] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
   // Request form state
   const [reqForm, setReqForm] = useState({ make: "", model: "", year: "", trim: "", bodyType: "", notes: "", email: "" });
@@ -368,6 +369,7 @@ export default function RigSafeConfigurator() {
     if (!loaded) return;
     try {
       localStorage.setItem(RIGSAFE_KEY, JSON.stringify(config));
+      setLastSaved(new Date());
     } catch { /* ignore */ }
   }, [config, loaded]);
 
@@ -629,6 +631,11 @@ export default function RigSafeConfigurator() {
         <div className="flex items-center gap-3 flex-wrap">
           <h2 className="text-2xl sm:text-3xl font-extrabold">RigSafe Overland <span className="text-primary">Configurator</span></h2>
           <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">{RIGSAFE_VERSION}</span>
+          {lastSaved && (
+            <span className="text-xs text-muted-foreground">
+              Saved {lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            </span>
+          )}
         </div>
       </div>
 

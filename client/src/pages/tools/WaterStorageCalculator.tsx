@@ -65,6 +65,7 @@ export default function WaterStorageCalculator() {
   const [state, setState] = useState<State>(DEFAULT_STATE);
   const [showShareToast, setShowShareToast] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
 
   const [showRequestForm, setShowRequestForm] = useState(false);
@@ -126,6 +127,7 @@ export default function WaterStorageCalculator() {
   useEffect(() => {
     if (!initialized) return;
     localStorage.setItem("pe-water-calculator", JSON.stringify(state));
+    setLastSaved(new Date());
   }, [state, initialized]);
 
   const set = useCallback(<K extends keyof State>(key: K, value: State[K]) => {
@@ -425,7 +427,14 @@ export default function WaterStorageCalculator() {
           {/* Tool Title */}
           <div>
             <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Free Tool</p>
-            <h2 className="text-2xl sm:text-3xl font-extrabold">Water Storage <span className="text-primary">Calculator</span></h2>
+            <div className="flex items-center gap-3 flex-wrap">
+              <h2 className="text-2xl sm:text-3xl font-extrabold">Water Storage <span className="text-primary">Calculator</span></h2>
+              {lastSaved && (
+                <span className="text-xs text-muted-foreground">
+                  Saved {lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 

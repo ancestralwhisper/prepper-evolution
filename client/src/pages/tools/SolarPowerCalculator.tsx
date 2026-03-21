@@ -91,6 +91,7 @@ export default function SolarPowerCalculator() {
   const [initialized, setInitialized] = useState(false);
 
   const [livingSituation, setLivingSituation] = useState<LivingSituation>("house");
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestName, setRequestName] = useState("");
@@ -150,6 +151,7 @@ export default function SolarPowerCalculator() {
     if (!initialized) return;
     const data = { people, days, region, useCase, selected, livingSituation, timestamp: Date.now() };
     localStorage.setItem("pe-solar-calculator", JSON.stringify(data));
+    setLastSaved(new Date());
   }, [people, days, region, useCase, selected, livingSituation, initialized]);
 
   const applyUseCase = useCallback((uc: UseCase) => {
@@ -586,7 +588,14 @@ export default function SolarPowerCalculator() {
             {/* Tool Title */}
             <div>
               <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Free Tool</p>
-              <h2 className="text-2xl sm:text-3xl font-extrabold">Solar &amp; Power Station <span className="text-primary">Calculator</span></h2>
+              <div className="flex items-center gap-3 flex-wrap">
+                <h2 className="text-2xl sm:text-3xl font-extrabold">Solar &amp; Power Station <span className="text-primary">Calculator</span></h2>
+                {lastSaved && (
+                  <span className="text-xs text-muted-foreground">
+                    Saved {lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 

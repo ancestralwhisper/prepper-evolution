@@ -44,6 +44,7 @@ export default function FoodStorageCalculator() {
   const [showShareToast, setShowShareToast] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [activePreset, setActivePreset] = useState<string | null>("1m");
   const [livingSituation, setLivingSituation] = useState<LivingSituation>("house");
 
@@ -93,6 +94,7 @@ export default function FoodStorageCalculator() {
     if (!initialized) return;
     const data = { group, durationDays, activity, livingSituation, timestamp: Date.now() };
     localStorage.setItem("pe-food-calculator", JSON.stringify(data));
+    setLastSaved(new Date());
   }, [group, durationDays, activity, livingSituation, initialized]);
 
   const adjustGroup = useCallback((key: keyof GroupConfig, delta: number) => {
@@ -339,7 +341,14 @@ export default function FoodStorageCalculator() {
             {/* Tool Title */}
             <div>
               <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Free Tool</p>
-              <h2 className="text-2xl sm:text-3xl font-extrabold">Food Storage <span className="text-primary">Calculator</span></h2>
+              <div className="flex items-center gap-3 flex-wrap">
+                <h2 className="text-2xl sm:text-3xl font-extrabold">Food Storage <span className="text-primary">Calculator</span></h2>
+                {lastSaved && (
+                  <span className="text-xs text-muted-foreground">
+                    Saved {lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 

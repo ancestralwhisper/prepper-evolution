@@ -119,6 +119,7 @@ export default function KitBuilder() {
   const [initialized, setInitialized] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
 
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestName, setRequestName] = useState("");
   const [requestBrand, setRequestBrand] = useState("");
@@ -153,6 +154,7 @@ export default function KitBuilder() {
     if (!initialized) return;
     const data = { answers, checked, showResults, timestamp: Date.now() };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    setLastSaved(new Date());
   }, [answers, checked, showResults, initialized]);
 
   const setAnswer = useCallback((questionId: string, value: string | number | string[]) => {
@@ -661,7 +663,14 @@ export default function KitBuilder() {
         {/* Tool Title */}
         <div className="mb-6">
           <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Free Tool</p>
-          <h2 className="text-2xl sm:text-3xl font-extrabold">72-Hour Kit <span className="text-primary">Builder</span></h2>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h2 className="text-2xl sm:text-3xl font-extrabold">72-Hour Kit <span className="text-primary">Builder</span></h2>
+            {lastSaved && (
+              <span className="text-xs text-muted-foreground">
+                Saved {lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* How This Tool Works */}

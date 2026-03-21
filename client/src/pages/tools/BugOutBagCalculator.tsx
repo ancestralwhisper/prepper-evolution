@@ -42,6 +42,7 @@ export default function BugOutBagCalculator() {
   const [showShareToast, setShowShareToast] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [showEssentialsOnly, setShowEssentialsOnly] = useState(false);
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestName, setRequestName] = useState("");
@@ -78,6 +79,7 @@ export default function BugOutBagCalculator() {
     if (!initialized) return;
     const data = { bodyWeight, selected, customItems, timestamp: Date.now() };
     localStorage.setItem("pe-bob-calculator", JSON.stringify(data));
+    setLastSaved(new Date());
   }, [bodyWeight, selected, customItems, initialized]);
 
   const toggleItem = useCallback((id: string) => {
@@ -451,7 +453,14 @@ export default function BugOutBagCalculator() {
             {/* Tool Title */}
             <div>
               <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Free Tool</p>
-              <h2 className="text-2xl sm:text-3xl font-extrabold">Bug Out Bag <span className="text-primary">Calculator</span></h2>
+              <div className="flex items-center gap-3 flex-wrap">
+                <h2 className="text-2xl sm:text-3xl font-extrabold">Bug Out Bag <span className="text-primary">Calculator</span></h2>
+                {lastSaved && (
+                  <span className="text-xs text-muted-foreground">
+                    Saved {lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 

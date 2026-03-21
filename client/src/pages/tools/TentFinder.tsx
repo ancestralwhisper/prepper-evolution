@@ -18,6 +18,7 @@ import {
   windColors,
   type BackpackingTent,
 } from "./tent-data";
+import { vehicleDatabase } from "./vehicle-db";
 
 // ─── Sort options ────────────────────────────────────────────────────────
 type SortKey =
@@ -360,6 +361,8 @@ export default function TentFinder() {
   const [wallFilter, setWallFilter] = useState<Set<string>>(new Set());
   const [freestandingOnly, setFreestandingOnly] = useState(false);
 
+  const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
+
   // ─── Sort / compare / modal state ──────────────────────────
   const [sortKey, setSortKey] = useState<SortKey>("lightest");
   const [compareIds, setCompareIds] = useState<Set<string>>(new Set());
@@ -403,10 +406,17 @@ export default function TentFinder() {
     setWindFilter(new Set());
     setWallFilter(new Set());
     setFreestandingOnly(false);
+    setSelectedVehicleId(null);
   }, []);
+
+  // ─── Vehicle roof filter ────────────────────────────────────
+  const selectedVehicle = vehicleDatabase.find(
+    (v) => `${v.year}-${v.make}-${v.model}-${v.trim}` === selectedVehicleId
+  ) ?? null;
 
   // ─── Filter + sort ─────────────────────────────────────────
   const filtered = useMemo(() => {
+    const roofLimitOz = selectedVehicle ? selectedVehicle.roofDynamicLbs * 16 : null;
     let result = tents.filter((t) => {
       if (capacity.size > 0 && !capacity.has(t.capacity)) return false;
       if (t.price < priceMin || t.price > priceMax) return false;
@@ -416,6 +426,7 @@ export default function TentFinder() {
       if (windFilter.size > 0 && !windFilter.has(t.windRating)) return false;
       if (wallFilter.size > 0 && !wallFilter.has(t.wallType)) return false;
       if (freestandingOnly && t.setup !== "freestanding") return false;
+      if (roofLimitOz !== null && t.weightOz > roofLimitOz) return false;
       return true;
     });
     return sortTents(result, sortKey);
@@ -429,6 +440,7 @@ export default function TentFinder() {
     windFilter,
     wallFilter,
     freestandingOnly,
+    selectedVehicle,
     sortKey,
   ]);
 
@@ -458,7 +470,8 @@ export default function TentFinder() {
     seasonFilter.size > 0 ||
     windFilter.size > 0 ||
     wallFilter.size > 0 ||
-    freestandingOnly;
+    freestandingOnly ||
+    selectedVehicleId !== null;
 
   return (
     <div className="bg-background min-h-screen">
@@ -745,6 +758,47 @@ export default function TentFinder() {
                       </label>
                     ))}
                   </div>
+                </div>
+
+                {/* Vehicle Roof Filter */}
+                <div>
+                  <p className="text-sm font-bold text-muted-foreground mb-2">
+                    Filter by Your Vehicle
+                  </p>
+                  <select
+                    value={selectedVehicleId ?? ""}
+                    onChange={(e) =>
+                      setSelectedVehicleId(e.target.value || null)
+                    }
+                    className="w-full bg-muted border border-border rounded px-2 py-1.5 text-sm"
+                  >
+                    <option value="">Select your vehicle</option>
+                    {vehicleDatabase.map((v) => {
+                      const id = `${v.year}-${v.make}-${v.model}-${v.trim}`;
+                      return (
+                        <option key={id} value={id}>
+                          {v.year} {v.make} {v.model} — {v.trim}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  {selectedVehicle && (
+                    <div className="mt-2 space-y-1">
+                      <p className="text-xs text-muted-foreground">
+                        Filters to tents your roof rack can safely carry (dynamic limit:{" "}
+                        <span className="font-bold text-foreground">
+                          {selectedVehicle.roofDynamicLbs} lbs
+                        </span>
+                        )
+                      </p>
+                      <button
+                        onClick={() => setSelectedVehicleId(null)}
+                        className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
+                      >
+                        <X className="w-3 h-3" /> Clear vehicle
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
