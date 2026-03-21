@@ -101,7 +101,7 @@ function GaugeArc({
           </text>
         )}
       </svg>
-      <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mt-1">{label}</span>
+      <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground mt-1">{label}</span>
     </div>
   );
 }
@@ -123,7 +123,7 @@ function Section({
         <Icon className={`w-4 h-4 ${iconColor || "text-primary"}`} />
         <span className="text-sm font-extrabold flex-1">{title}</span>
         {badge && (
-          <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+          <span className="text-xs font-bold uppercase px-2 py-0.5 rounded-full bg-primary/10 text-primary">
             {badge}
           </span>
         )}
@@ -144,7 +144,7 @@ function NumberInput({
 }) {
   return (
     <div>
-      <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">
+      <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
         {label} {unit && <span className="normal-case font-normal">({unit})</span>}
       </label>
       <input
@@ -154,7 +154,7 @@ function NumberInput({
         min={min} max={max} step={step || 1}
         className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
       />
-      {hint && <p className="text-[10px] text-muted-foreground mt-0.5">{hint}</p>}
+      {hint && <p className="text-xs text-muted-foreground mt-0.5">{hint}</p>}
     </div>
   );
 }
@@ -167,7 +167,7 @@ function SelectInput<T extends string>({
 }) {
   return (
     <div>
-      <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">{label}</label>
+      <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">{label}</label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
@@ -177,7 +177,7 @@ function SelectInput<T extends string>({
           <option key={o.value} value={o.value}>{o.label}</option>
         ))}
       </select>
-      {hint && <p className="text-[10px] text-muted-foreground mt-0.5">{hint}</p>}
+      {hint && <p className="text-xs text-muted-foreground mt-0.5">{hint}</p>}
     </div>
   );
 }
@@ -202,7 +202,7 @@ function Toggle({
       </div>
       <div>
         <span className="text-sm font-bold group-hover:text-primary transition-colors">{label}</span>
-        {hint && <p className="text-[10px] text-muted-foreground">{hint}</p>}
+        {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
       </div>
     </label>
   );
@@ -218,7 +218,7 @@ function StatusBadge({ pct }: { pct: number }) {
   else if (pct >= 70) { color = "bg-yellow-500/10 text-yellow-500 border-yellow-500/30"; text = "Near Margin"; }
 
   return (
-    <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${color}`}>
+    <span className={`text-xs font-bold uppercase px-2 py-0.5 rounded-full border ${color}`}>
       {text} ({pct}%)
     </span>
   );
@@ -239,7 +239,7 @@ function WarningsPanel({ warnings }: { warnings: RigSafeWarning[] }) {
             {w.level === "danger" ? <ShieldAlert className={`w-4 h-4 ${iconColor} flex-shrink-0 mt-0.5`} /> :
              w.level === "warning" ? <AlertTriangle className={`w-4 h-4 ${iconColor} flex-shrink-0 mt-0.5`} /> :
              <Info className={`w-4 h-4 ${iconColor} flex-shrink-0 mt-0.5`} />}
-            <p className="text-xs leading-relaxed">{w.message}</p>
+            <p className="text-sm leading-relaxed">{w.message}</p>
           </div>
         );
       })}
@@ -260,7 +260,7 @@ function BudgetCard({ label, used, rating, remaining, pct, unit }: {
   return (
     <div className="bg-card border border-border rounded-lg p-3 space-y-2">
       <div className="flex justify-between items-center">
-        <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
+        <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
         <StatusBadge pct={pct} />
       </div>
       <div className="h-2 bg-muted rounded-full overflow-hidden">
@@ -269,11 +269,11 @@ function BudgetCard({ label, used, rating, remaining, pct, unit }: {
           style={{ width: `${Math.min(100, pct)}%`, backgroundColor: barColor }}
         />
       </div>
-      <div className="flex justify-between text-xs text-muted-foreground">
+      <div className="flex justify-between text-sm text-muted-foreground">
         <span>{used} {unit || "lbs"} used</span>
         <span>{remaining >= 0 ? `${remaining} ${unit || "lbs"} remaining` : `${Math.abs(remaining)} ${unit || "lbs"} OVER`}</span>
       </div>
-      <p className="text-[10px] text-muted-foreground">Rating: {rating} {unit || "lbs"}</p>
+      <p className="text-xs text-muted-foreground">Rating: {rating} {unit || "lbs"}</p>
     </div>
   );
 }
@@ -649,11 +649,11 @@ export default function RigSafeConfigurator() {
           <Truck className="w-5 h-5 text-primary flex-shrink-0" />
           <div className="flex-1">
             <p className="text-sm font-bold">Vehicle Profile Detected</p>
-            <p className="text-xs text-muted-foreground">We found your saved vehicle from Ops Deck. Import it?</p>
+            <p className="text-sm text-muted-foreground">We found your saved vehicle from Ops Deck. Import it?</p>
           </div>
           <button
             onClick={importFromProfile}
-            className="px-4 py-2 bg-primary text-white text-xs font-bold uppercase rounded-lg hover:bg-primary/90 transition-colors"
+            className="px-4 py-2 bg-primary text-white text-sm font-bold uppercase rounded-lg hover:bg-primary/90 transition-colors"
           >
             Import Vehicle
           </button>
@@ -684,7 +684,7 @@ export default function RigSafeConfigurator() {
                 {/* Make/Model/Trim dropdowns */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Make</label>
+                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Make</label>
                     <select
                       value={selMake}
                       onChange={(e) => handleMakeChange(e.target.value)}
@@ -695,7 +695,7 @@ export default function RigSafeConfigurator() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                     <select
                       value={selModel}
                       onChange={(e) => handleModelChange(e.target.value)}
@@ -707,7 +707,7 @@ export default function RigSafeConfigurator() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Year / Trim</label>
+                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Year / Trim</label>
                     <select
                       value={selTrim}
                       onChange={(e) => handleTrimChange(e.target.value)}
@@ -721,35 +721,35 @@ export default function RigSafeConfigurator() {
                 </div>
 
                 {config.vehicle && (
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-[10px] uppercase">Curb Weight</span>
+                      <span className="text-muted block text-xs uppercase">Curb Weight</span>
                       <span className="font-bold">{config.vehicle.curbWeightLbs.toLocaleString()} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-[10px] uppercase">GVWR</span>
+                      <span className="text-muted block text-xs uppercase">GVWR</span>
                       <span className="font-bold">{config.vehicle.gvwrLbs.toLocaleString()} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-[10px] uppercase">Payload</span>
+                      <span className="text-muted block text-xs uppercase">Payload</span>
                       <span className="font-bold">{(config.vehicle.gvwrLbs - config.vehicle.curbWeightLbs).toLocaleString()} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-[10px] uppercase">Roof Dynamic</span>
+                      <span className="text-muted block text-xs uppercase">Roof Dynamic</span>
                       <span className="font-bold">{config.vehicle.roofDynamicLbs} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-[10px] uppercase">Height</span>
+                      <span className="text-muted block text-xs uppercase">Height</span>
                       <span className="font-bold">{config.vehicle.overallHeightIn}&quot;</span>
                     </div>
                     {config.vehicle.bedLengthIn && (
                       <div className="bg-muted rounded-lg p-2">
-                        <span className="text-muted block text-[10px] uppercase">Bed Length</span>
+                        <span className="text-muted block text-xs uppercase">Bed Length</span>
                         <span className="font-bold">{config.vehicle.bedLengthIn}&quot;</span>
                       </div>
                     )}
                     <div className="bg-muted rounded-lg p-2">
-                      <span className="text-muted block text-[10px] uppercase">Body Type</span>
+                      <span className="text-muted block text-xs uppercase">Body Type</span>
                       <span className="font-bold">{config.vehicle.bodyType}</span>
                     </div>
                   </div>
@@ -760,7 +760,7 @@ export default function RigSafeConfigurator() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 <NumberInput label="Year" value={config.manualVehicle.year} onChange={(v) => updateManualVehicle("year", v)} min={1990} max={2030} />
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Make</label>
+                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Make</label>
                   <input
                     type="text" value={config.manualVehicle.make}
                     onChange={(e) => updateManualVehicle("make", e.target.value)}
@@ -768,7 +768,7 @@ export default function RigSafeConfigurator() {
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                  <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                   <input
                     type="text" value={config.manualVehicle.model}
                     onChange={(e) => updateManualVehicle("model", e.target.value)}
@@ -841,7 +841,7 @@ export default function RigSafeConfigurator() {
                     {!config.useManualTonneau ? (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                          <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                           <select
                             value={selTonneauBrand}
                             onChange={(e) => { setSelTonneauBrand(e.target.value); update("tonneau", null); }}
@@ -852,7 +852,7 @@ export default function RigSafeConfigurator() {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                          <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                           <select
                             value={config.tonneau?.id || ""}
                             onChange={(e) => {
@@ -894,7 +894,7 @@ export default function RigSafeConfigurator() {
 
             {/* Rack selector */}
             <div className="space-y-3">
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Rack</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Rack</h4>
               <Toggle
                 label="Manual Entry"
                 checked={config.useManualRack}
@@ -903,7 +903,7 @@ export default function RigSafeConfigurator() {
               {!config.useManualRack ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                     <select
                       value={selRackBrand}
                       onChange={(e) => { setSelRackBrand(e.target.value); update("rack", null); }}
@@ -914,7 +914,7 @@ export default function RigSafeConfigurator() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                     <select
                       value={config.rack?.id || ""}
                       onChange={(e) => {
@@ -945,21 +945,21 @@ export default function RigSafeConfigurator() {
               {/* Rack details (when selected from DB) */}
               {config.rack && !config.useManualRack && (
                 <div className="space-y-3">
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
                     <div className="bg-muted rounded-lg p-2.5">
-                      <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Static Rating</span>
+                      <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">Static Rating</span>
                       <span className="font-extrabold text-sm">{config.rack.staticLbs} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2.5">
-                      <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">On-Road Dynamic</span>
+                      <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">On-Road Dynamic</span>
                       <span className="font-extrabold text-sm">{config.rack.onRoadDynamicLbs} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2.5">
-                      <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Off-Road Dynamic</span>
+                      <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">Off-Road Dynamic</span>
                       <span className="font-extrabold text-sm">{config.rack.offRoadDynamicLbs} lbs</span>
                     </div>
                     <div className="bg-muted rounded-lg p-2.5">
-                      <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Product Weight</span>
+                      <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">Product Weight</span>
                       <span className="font-extrabold text-sm">{config.rack.weightLbs} lbs</span>
                     </div>
                   </div>
@@ -978,7 +978,7 @@ export default function RigSafeConfigurator() {
                   )}
 
                   {config.rack.notes && (
-                    <p className="text-[10px] text-muted-foreground italic">{config.rack.notes}</p>
+                    <p className="text-xs text-muted-foreground italic">{config.rack.notes}</p>
                   )}
 
                   {/* T-slot tonneau warning */}
@@ -986,7 +986,7 @@ export default function RigSafeConfigurator() {
                     <div className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
                       <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
                       <div className="space-y-1">
-                        <p className="text-xs font-semibold text-amber-300">T-Slot Tonneau Required</p>
+                        <p className="text-sm font-semibold text-amber-300">T-Slot Tonneau Required</p>
                         <p className="text-[11px] text-amber-200/80">
                           This rack mounts to T-tracks in your tonneau cover (e.g. BAKFlip MX4 TS, ReTrax OneXT). Not all tonneaus have T-slots — verify yours does before ordering.
                         </p>
@@ -999,7 +999,7 @@ export default function RigSafeConfigurator() {
                     </div>
                   )}
 
-                  <p className="text-[10px] text-muted-foreground">Ratings shown are manufacturer-published values. Actual capacity may vary by installation, condition, and use.</p>
+                  <p className="text-xs text-muted-foreground">Ratings shown are manufacturer-published values. Actual capacity may vary by installation, condition, and use.</p>
                 </div>
               )}
             </div>
@@ -1007,7 +1007,7 @@ export default function RigSafeConfigurator() {
             {/* Secondary Rack (Cab Roof Rack) — trucks with bed rack only */}
             {config.mountType === "bed-rack" && (
               <div className="space-y-3 border-t border-border pt-4">
-                <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Secondary Rack (Cab Roof Rack)</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Secondary Rack (Cab Roof Rack)</h4>
                 <Toggle
                   label="I have a cab roof rack installed"
                   checked={config.hasSecondaryRack}
@@ -1027,7 +1027,7 @@ export default function RigSafeConfigurator() {
                       <div className="space-y-3">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                            <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                             <select
                               value={selSecondaryRackBrand}
                               onChange={(e) => { setSelSecondaryRackBrand(e.target.value); update("secondaryRack", null); }}
@@ -1038,7 +1038,7 @@ export default function RigSafeConfigurator() {
                             </select>
                           </div>
                           <div>
-                            <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                            <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                             <select
                               value={config.secondaryRack?.id || ""}
                               onChange={(e) => {
@@ -1056,7 +1056,7 @@ export default function RigSafeConfigurator() {
                           </div>
                         </div>
                         {config.secondaryRack && (
-                          <p className="text-[10px] text-muted-foreground italic">
+                          <p className="text-xs text-muted-foreground italic">
                             Crossbar height: {(config.secondaryRack as any).crossbarHeightAboveRoofIn ?? 3}&quot; above roof surface
                             {config.secondaryRack.notes && ` — ${config.secondaryRack.notes}`}
                           </p>
@@ -1118,7 +1118,7 @@ export default function RigSafeConfigurator() {
                         setSelTentBrand("");
                         update("tent", null);
                       }}
-                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${
+                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold border transition-colors ${
                         lightweightTentOnly
                           ? "bg-primary text-primary-foreground border-primary"
                           : "bg-muted text-muted-foreground border-border hover:border-primary"
@@ -1128,7 +1128,7 @@ export default function RigSafeConfigurator() {
                     </button>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select
                           value={selTentBrand}
                           onChange={(e) => { setSelTentBrand(e.target.value); update("tent", null); }}
@@ -1139,7 +1139,7 @@ export default function RigSafeConfigurator() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select
                           value={config.tent?.id || ""}
                           onChange={(e) => {
@@ -1163,37 +1163,37 @@ export default function RigSafeConfigurator() {
 
                     {config.tent && (
                       <div className="space-y-3">
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
                           <div className="bg-muted rounded-lg p-2.5">
-                            <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Tent Weight</span>
+                            <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">Tent Weight</span>
                             <span className="font-extrabold text-sm">{config.tent.closedWeightLbs} lbs</span>
                           </div>
                           <div className="bg-muted rounded-lg p-2.5">
-                            <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Closed Height</span>
+                            <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">Closed Height</span>
                             <span className="font-extrabold text-sm">{config.tent.closedHeightIn}&quot;</span>
                           </div>
                           <div className="bg-muted rounded-lg p-2.5">
-                            <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Marketing Sleeps</span>
+                            <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">Marketing Sleeps</span>
                             <span className="font-extrabold text-sm">{config.tent.sleepsMarketing}</span>
                           </div>
                           <div className="bg-muted rounded-lg p-2.5">
-                            <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Realistic Sleeps</span>
+                            <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">Realistic Sleeps</span>
                             <span className="font-extrabold text-sm text-primary">{config.tent.sleepsRealistic}</span>
                           </div>
                         </div>
 
                         <div className="bg-muted rounded-lg p-3">
-                          <p className="text-xs">
+                          <p className="text-sm">
                             <span className="text-primary font-bold">Footprint:</span> {config.tent.closedLengthIn}&quot; x {config.tent.closedWidthIn}&quot; (closed)
                             {" / "}{config.tent.openLengthIn}&quot; x {config.tent.openWidthIn}&quot; (open)
                           </p>
-                          <p className="text-xs mt-1">
+                          <p className="text-sm mt-1">
                             <span className="text-primary font-bold">Headroom:</span> {config.tent.openHeadroomIn}&quot; | <span className="text-primary font-bold">Mattress:</span> {config.tent.mattressThicknessIn}&quot;
                           </p>
                         </div>
 
                         {config.tent.notes && (
-                          <p className="text-[10px] text-muted-foreground italic">{config.tent.notes}</p>
+                          <p className="text-xs text-muted-foreground italic">{config.tent.notes}</p>
                         )}
                       </div>
                     )}
@@ -1212,7 +1212,7 @@ export default function RigSafeConfigurator() {
                 {/* Tent Annex */}
                 {config.hasTent && (config.tent?.hasAnnex || config.useManualTent) && (
                   <div className="border-t border-border pt-4 space-y-3">
-                    <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Tent Annex</h4>
+                    <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Tent Annex</h4>
                     <Toggle
                       label={config.tent?.annexName ? `Add ${config.tent.annexName}` : "Add Tent Annex"}
                       checked={config.hasAnnex}
@@ -1223,13 +1223,13 @@ export default function RigSafeConfigurator() {
                       <div className="pl-6 space-y-3">
                         {/* Show matched annex details when tent is from DB */}
                         {config.tent?.hasAnnex && !config.useManualTent && (
-                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
                             <div className="bg-muted rounded-lg p-2.5">
-                              <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Annex Weight</span>
+                              <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">Annex Weight</span>
                               <span className="font-extrabold text-sm">{config.annexWeightLbs} lbs</span>
                             </div>
                             <div className="bg-muted rounded-lg p-2.5">
-                              <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Sleeps</span>
+                              <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">Sleeps</span>
                               <span className="font-extrabold text-sm">{config.annexSleeps}</span>
                             </div>
                             {config.tent.annexAffiliateUrl && (
@@ -1238,7 +1238,7 @@ export default function RigSafeConfigurator() {
                                   href={config.tent.annexAffiliateUrl}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-1.5 text-xs text-primary hover:underline"
+                                  className="flex items-center gap-1.5 text-sm text-primary hover:underline"
                                 >
                                   <ExternalLink className="w-3 h-3" /> View on Amazon
                                 </a>
@@ -1299,7 +1299,7 @@ export default function RigSafeConfigurator() {
                   <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select
                           value={selAwningBrand}
                           onChange={(e) => { setSelAwningBrand(e.target.value); update("awning", null); }}
@@ -1310,7 +1310,7 @@ export default function RigSafeConfigurator() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select
                           value={config.awning?.id || ""}
                           onChange={(e) => {
@@ -1329,17 +1329,17 @@ export default function RigSafeConfigurator() {
                     </div>
 
                     {config.awning && (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
                         <div className="bg-muted rounded-lg p-2.5">
-                          <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Total Weight</span>
+                          <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">Total Weight</span>
                           <span className="font-extrabold text-sm">{config.awning.totalWeightLbs} lbs</span>
                         </div>
                         <div className="bg-muted rounded-lg p-2.5">
-                          <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Bracket Weight</span>
+                          <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">Bracket Weight</span>
                           <span className="font-extrabold text-sm">{config.awning.mountedBracketWeightLbs} lbs</span>
                         </div>
                         <div className="bg-muted rounded-lg p-2.5">
-                          <span className="text-primary block text-[10px] font-bold uppercase tracking-wide mb-0.5">Coverage</span>
+                          <span className="text-primary block text-xs font-bold uppercase tracking-wide mb-0.5">Coverage</span>
                           <span className="font-extrabold text-sm">{config.awning.deployedCoverageSqFt} sq ft</span>
                         </div>
                       </div>
@@ -1363,12 +1363,12 @@ export default function RigSafeConfigurator() {
                   ]}
                 />
 
-                <p className="text-[10px] text-muted-foreground italic">Most awning weight transfers to ground poles when deployed. Only bracket weight (~10-15 lbs) stays on rack.</p>
+                <p className="text-xs text-muted-foreground italic">Most awning weight transfers to ground poles when deployed. Only bracket weight (~10-15 lbs) stays on rack.</p>
 
                 {/* Awning Annex (Wall Kit) */}
                 {config.awning?.hasWallKit !== false && (
                   <div className="border-t border-border pt-4 space-y-3">
-                    <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Awning Annex</h4>
+                    <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Awning Annex</h4>
                     <Toggle
                       label="Add Awning Wall Kit"
                       checked={config.hasWallKit}
@@ -1397,13 +1397,13 @@ export default function RigSafeConfigurator() {
           badge={result.vehicleModsWeightLbs > 0 ? `${result.vehicleModsWeightLbs} lbs` : undefined}
         >
           <div className="px-4 space-y-6">
-            <p className="text-[10px] text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Heavy bolt-ons that eat payload before you load the roof. These deduct from your vehicle payload budget.
             </p>
 
             {/* ── Group 1: Armor & Recovery ─── */}
             <div className="space-y-4">
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground border-b border-border pb-1">Armor & Recovery</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground border-b border-border pb-1">Armor & Recovery</h4>
 
               {/* Front Bumper */}
               <Toggle label="Front Bumper" checked={config.hasFrontBumper} onChange={(v) => update("hasFrontBumper", v)} />
@@ -1413,14 +1413,14 @@ export default function RigSafeConfigurator() {
                   {!config.useManualBumpers ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select value={selBumperBrand} onChange={(e) => { setSelBumperBrand(e.target.value); update("frontBumper", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
                           <option value="">Select Brand</option>
                           {getBumperBrands("front").map((b) => <option key={b} value={b}>{b}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select value={config.frontBumper?.id ?? ""} onChange={(e) => { const b = findBumper(e.target.value); if (b) update("frontBumper", b); }} disabled={!selBumperBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
                           <option value="">Select Model</option>
                           {getBumperModels(selBumperBrand, "front").map((b) => <option key={b.id} value={b.id}>{b.model} ({b.weightLbs} lbs)</option>)}
@@ -1441,14 +1441,14 @@ export default function RigSafeConfigurator() {
                   {!config.useManualBumpers ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select value={selBumperBrand} onChange={(e) => { setSelBumperBrand(e.target.value); update("rearBumper", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
                           <option value="">Select Brand</option>
                           {getBumperBrands("rear").map((b) => <option key={b} value={b}>{b}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select value={config.rearBumper?.id ?? ""} onChange={(e) => { const b = findBumper(e.target.value); if (b) update("rearBumper", b); }} disabled={!selBumperBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
                           <option value="">Select Model</option>
                           {getBumperModels(selBumperBrand, "rear").map((b) => <option key={b.id} value={b.id}>{b.model} ({b.weightLbs} lbs)</option>)}
@@ -1469,14 +1469,14 @@ export default function RigSafeConfigurator() {
                   {!config.useManualWinch ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select value={selWinchBrand} onChange={(e) => { setSelWinchBrand(e.target.value); update("winch", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
                           <option value="">Select Brand</option>
                           {getWinchBrands().map((b) => <option key={b} value={b}>{b}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select value={config.winch?.id ?? ""} onChange={(e) => { const w = findWinch(e.target.value); if (w) update("winch", w); }} disabled={!selWinchBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
                           <option value="">Select Model</option>
                           {getWinchModels(selWinchBrand).map((w) => <option key={w.id} value={w.id}>{w.model} ({w.weightLbs} lbs, {w.pullCapacityLbs.toLocaleString()} lb pull)</option>)}
@@ -1497,14 +1497,14 @@ export default function RigSafeConfigurator() {
                   {!config.useManualSkidPlates ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select value={selSkidPlateBrand} onChange={(e) => { setSelSkidPlateBrand(e.target.value); update("skidPlates", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
                           <option value="">Select Brand</option>
                           {getSkidPlateBrands().map((b) => <option key={b} value={b}>{b}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select value={config.skidPlates?.id ?? ""} onChange={(e) => { const s = findSkidPlate(e.target.value); if (s) update("skidPlates", s); }} disabled={!selSkidPlateBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
                           <option value="">Select Model</option>
                           {getSkidPlateModels(selSkidPlateBrand).map((s) => <option key={s.id} value={s.id}>{s.model} ({s.weightLbs} lbs, {s.coverage})</option>)}
@@ -1520,7 +1520,7 @@ export default function RigSafeConfigurator() {
 
             {/* ── Group 2: Storage & Camp ─── */}
             <div className="space-y-4">
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground border-b border-border pb-1">Storage & Camp</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground border-b border-border pb-1">Storage & Camp</h4>
 
               {/* Drawer System */}
               <Toggle label="Drawer System" checked={config.hasDrawers} onChange={(v) => update("hasDrawers", v)} />
@@ -1530,14 +1530,14 @@ export default function RigSafeConfigurator() {
                   {!config.useManualDrawers ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select value={selDrawerBrand} onChange={(e) => { setSelDrawerBrand(e.target.value); update("drawers", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
                           <option value="">Select Brand</option>
                           {getDrawerBrands().map((b) => <option key={b} value={b}>{b}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select value={config.drawers?.id ?? ""} onChange={(e) => { const d = findDrawer(e.target.value); if (d) update("drawers", d); }} disabled={!selDrawerBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
                           <option value="">Select Model</option>
                           {getDrawerModels(selDrawerBrand).map((d) => <option key={d.id} value={d.id}>{d.model} ({d.weightLbs} lbs)</option>)}
@@ -1558,14 +1558,14 @@ export default function RigSafeConfigurator() {
                   {!config.useManualFridge ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select value={selFridgeBrand} onChange={(e) => { setSelFridgeBrand(e.target.value); update("fridge", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
                           <option value="">Select Brand</option>
                           {getFridgeBrands().map((b) => <option key={b} value={b}>{b}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select value={config.fridge?.id ?? ""} onChange={(e) => { const f = findFridge(e.target.value); if (f) update("fridge", f); }} disabled={!selFridgeBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
                           <option value="">Select Model</option>
                           {getFridgeModels(selFridgeBrand).map((f) => <option key={f.id} value={f.id}>{f.model} ({f.weightLbs} lbs, {f.capacityQts} qt)</option>)}
@@ -1586,14 +1586,14 @@ export default function RigSafeConfigurator() {
                   {!config.useManualKitchen ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select value={selKitchenBrand} onChange={(e) => { setSelKitchenBrand(e.target.value); update("slideKitchen", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
                           <option value="">Select Brand</option>
                           {getKitchenBrands().map((b) => <option key={b} value={b}>{b}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select value={config.slideKitchen?.id ?? ""} onChange={(e) => { const k = findKitchen(e.target.value); if (k) update("slideKitchen", k); }} disabled={!selKitchenBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
                           <option value="">Select Model</option>
                           {getKitchenModels(selKitchenBrand).map((k) => <option key={k.id} value={k.id}>{k.model} ({k.weightLbs} lbs)</option>)}
@@ -1614,14 +1614,14 @@ export default function RigSafeConfigurator() {
                   {!config.useManualWaterTank ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select value={selWaterTankBrand} onChange={(e) => { setSelWaterTankBrand(e.target.value); update("waterTank", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
                           <option value="">Select Brand</option>
                           {getWaterTankBrands().map((b) => <option key={b} value={b}>{b}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select value={config.waterTank?.id ?? ""} onChange={(e) => { const t = findWaterTank(e.target.value); if (t) update("waterTank", t); }} disabled={!selWaterTankBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
                           <option value="">Select Model</option>
                           {getWaterTankModels(selWaterTankBrand).map((t) => <option key={t.id} value={t.id}>{t.model} ({t.capacityGal} gal, {t.emptyWeightLbs} lbs empty)</option>)}
@@ -1636,7 +1636,7 @@ export default function RigSafeConfigurator() {
                   )}
                   {/* Fill % slider */}
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
                       Fill Level: {config.waterTankFillPct}%
                     </label>
                     <input
@@ -1645,7 +1645,7 @@ export default function RigSafeConfigurator() {
                       onChange={(e) => update("waterTankFillPct", Number(e.target.value))}
                       className="w-full accent-accent"
                     />
-                    <div className="flex justify-between text-[10px] text-muted-foreground">
+                    <div className="flex justify-between text-xs text-muted-foreground">
                       <span>Empty</span>
                       <span>Full</span>
                     </div>
@@ -1656,7 +1656,7 @@ export default function RigSafeConfigurator() {
 
             {/* ── Group 3: Electrical & Lighting ─── */}
             <div className="space-y-4">
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground border-b border-border pb-1">Electrical & Lighting</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground border-b border-border pb-1">Electrical & Lighting</h4>
 
               {/* Solar Panels */}
               <Toggle label="Solar Panels" checked={config.hasSolar} onChange={(v) => update("hasSolar", v)} hint="Roof-rack or bed-rack mounted panels also count against rack load" />
@@ -1666,14 +1666,14 @@ export default function RigSafeConfigurator() {
                   {!config.useManualSolar ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select value={selSolarBrand} onChange={(e) => { setSelSolarBrand(e.target.value); update("solarPanels", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
                           <option value="">Select Brand</option>
                           {getSolarBrands().map((b) => <option key={b} value={b}>{b}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select value={config.solarPanels?.id ?? ""} onChange={(e) => { const s = findSolar(e.target.value); if (s) update("solarPanels", s); }} disabled={!selSolarBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
                           <option value="">Select Model</option>
                           {getSolarModels(selSolarBrand).map((s) => <option key={s.id} value={s.id}>{s.model} ({s.watts}W, {s.weightLbs} lbs)</option>)}
@@ -1694,14 +1694,14 @@ export default function RigSafeConfigurator() {
                   {!config.useManualLightBar ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select value={selLightBarBrand} onChange={(e) => { setSelLightBarBrand(e.target.value); update("lightBar", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
                           <option value="">Select Brand</option>
                           {getLightBarBrands().map((b) => <option key={b} value={b}>{b}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select value={config.lightBar?.id ?? ""} onChange={(e) => { const l = findLightBar(e.target.value); if (l) update("lightBar", l); }} disabled={!selLightBarBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
                           <option value="">Select Model</option>
                           {getLightBarModels(selLightBarBrand).map((l) => <option key={l.id} value={l.id}>{l.model} ({l.lengthIn}", {l.weightLbs} lbs)</option>)}
@@ -1717,7 +1717,7 @@ export default function RigSafeConfigurator() {
 
             {/* ── Group 4: Carry ─── */}
             <div className="space-y-4">
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground border-b border-border pb-1">Carry</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground border-b border-border pb-1">Carry</h4>
 
               {/* Spare Tire Carrier */}
               <Toggle label="Spare Tire Carrier" checked={config.hasSpareCarrier} onChange={(v) => update("hasSpareCarrier", v)} />
@@ -1727,14 +1727,14 @@ export default function RigSafeConfigurator() {
                   {!config.useManualSpareCarrier ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
                         <select value={selSpareCarrierBrand} onChange={(e) => { setSelSpareCarrierBrand(e.target.value); update("spareCarrier", null); }} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors">
                           <option value="">Select Brand</option>
                           {getSpareCarrierBrands().map((b) => <option key={b} value={b}>{b}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                        <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
                         <select value={config.spareCarrier?.id ?? ""} onChange={(e) => { const c = findSpareCarrier(e.target.value); if (c) update("spareCarrier", c); }} disabled={!selSpareCarrierBrand} className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors disabled:opacity-40">
                           <option value="">Select Model</option>
                           {getSpareCarrierModels(selSpareCarrierBrand).map((c) => <option key={c.id} value={c.id}>{c.model} ({c.carrierWeightLbs} lbs)</option>)}
@@ -1755,7 +1755,7 @@ export default function RigSafeConfigurator() {
                   <Toggle label="Manual Entry" checked={config.useManualRecovery} onChange={(v) => update("useManualRecovery", v)} hint="Enter total weight manually instead of selecting items" />
                   {!config.useManualRecovery ? (
                     <div className="space-y-2">
-                      <p className="text-[10px] text-muted-foreground">Select recovery items you carry:</p>
+                      <p className="text-xs text-muted-foreground">Select recovery items you carry:</p>
                       {recoveryDatabase.map((item) => {
                         const isSelected = config.recoveryGear.some((g) => g.id === item.id);
                         return (
@@ -1772,7 +1772,7 @@ export default function RigSafeConfigurator() {
                               }}
                               className="accent-accent"
                             />
-                            <span className="text-xs group-hover:text-primary transition-colors">
+                            <span className="text-sm group-hover:text-primary transition-colors">
                               {item.brand} {item.model} ({item.weightLbs} lbs)
                             </span>
                           </label>
@@ -1790,10 +1790,10 @@ export default function RigSafeConfigurator() {
             {result.vehicleModsWeightLbs > 0 && (
               <div className="bg-amber-500/5 border border-amber-500/30 rounded-lg p-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-wide">Vehicle Mods Total</span>
+                  <span className="text-sm font-bold uppercase tracking-wide">Vehicle Mods Total</span>
                   <span className="text-lg font-extrabold">{result.vehicleModsWeightLbs} lbs</span>
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   {result.vehiclePayload.rating > 0
                     ? `${Math.round((result.vehicleModsWeightLbs / result.vehiclePayload.rating) * 100)}% of payload used before roof load`
                     : "Select a vehicle to see payload impact"}
@@ -1813,8 +1813,8 @@ export default function RigSafeConfigurator() {
           <div className="px-4 space-y-6">
             {/* Rack Cargo Header with total */}
             <div className="space-y-1">
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Rack Cargo</h4>
-              <p className="text-xs text-muted-foreground">
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Rack Cargo</h4>
+              <p className="text-sm text-muted-foreground">
                 Total rack cargo:{" "}
                 <span className="font-bold text-foreground">
                   {(() => {
@@ -1837,12 +1837,12 @@ export default function RigSafeConfigurator() {
 
             {/* ─── a) Quick-Add Rack Items (presets) ─────────── */}
             <div className="space-y-3">
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Quick-Add Rack Items</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Quick-Add Rack Items</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                 {RACK_CARGO_PRESETS.map((preset) => {
                   const checked = config.rackPresets.includes(preset.id);
                   return (
-                    <label key={preset.id} className="flex items-center gap-2 text-xs cursor-pointer hover:bg-muted/50 rounded px-2 py-1.5 transition-colors">
+                    <label key={preset.id} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-muted/50 rounded px-2 py-1.5 transition-colors">
                       <input
                         type="checkbox"
                         checked={checked}
@@ -1857,7 +1857,7 @@ export default function RigSafeConfigurator() {
                         className="accent-accent w-3.5 h-3.5"
                       />
                       <span className="flex-1 text-foreground">{preset.name}</span>
-                      <span className="text-muted font-mono text-[10px]">{preset.weightLbs} lbs</span>
+                      <span className="text-muted font-mono text-xs">{preset.weightLbs} lbs</span>
                     </label>
                   );
                 })}
@@ -1874,14 +1874,14 @@ export default function RigSafeConfigurator() {
                     onChange={(e) => update("hasCargoBox", e.target.checked)}
                     className="accent-accent w-3.5 h-3.5"
                   />
-                  <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Cargo Box</span>
+                  <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Cargo Box</span>
                 </label>
               </div>
 
               {config.hasCargoBox && (
                 <div className="space-y-3 pl-1">
                   {/* Manual toggle */}
-                  <label className="flex items-center gap-2 text-xs cursor-pointer">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
                     <input
                       type="checkbox"
                       checked={config.useManualCargoBox}
@@ -1936,7 +1936,7 @@ export default function RigSafeConfigurator() {
 
                   {/* Contents slider */}
                   <div className="space-y-1">
-                    <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground">
                       Contents Inside Box: {config.cargoBoxContentsLbs} lbs
                     </label>
                     <input
@@ -1956,7 +1956,7 @@ export default function RigSafeConfigurator() {
 
                   {/* Show selected box info */}
                   {!config.useManualCargoBox && config.cargoBox && (
-                    <div className="bg-muted/50 rounded-lg p-2 text-[10px] text-muted-foreground space-y-0.5">
+                    <div className="bg-muted/50 rounded-lg p-2 text-xs text-muted-foreground space-y-0.5">
                       <p><span className="font-bold text-foreground">{config.cargoBox.brand} {config.cargoBox.model}</span></p>
                       <p>{config.cargoBox.capacityCuFt} cu ft &middot; {config.cargoBox.lengthIn}&quot;L &times; {config.cargoBox.widthIn}&quot;W &times; {config.cargoBox.heightIn}&quot;H &middot; {config.cargoBox.material}</p>
                       {config.cargoBox.notes && <p>{config.cargoBox.notes}</p>}
@@ -1974,23 +1974,23 @@ export default function RigSafeConfigurator() {
             {/* ─── c) Custom Items ─────────────────────────────── */}
             <div className="border-t border-border pt-4 space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Custom Items</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Custom Items</h4>
                 <button
                   onClick={addCargoItem}
-                  className="flex items-center gap-1 text-[10px] font-bold uppercase text-primary hover:text-primary/80 transition-colors"
+                  className="flex items-center gap-1 text-xs font-bold uppercase text-primary hover:text-primary/80 transition-colors"
                 >
                   <Plus className="w-3 h-3" /> Add Item
                 </button>
               </div>
 
               {config.cargoItems.length === 0 && (
-                <p className="text-xs text-muted-foreground">Add custom cargo items not covered above.</p>
+                <p className="text-sm text-muted-foreground">Add custom cargo items not covered above.</p>
               )}
 
               {config.cargoItems.map((item) => (
                 <div key={item.id} className="flex gap-2 items-end">
                   <div className="flex-1">
-                    <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Item</label>
+                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Item</label>
                     <input
                       type="text" value={item.name} placeholder="e.g. Pelican case"
                       onChange={(e) => updateCargoItem(item.id, "name", e.target.value)}
@@ -1998,7 +1998,7 @@ export default function RigSafeConfigurator() {
                     />
                   </div>
                   <div className="w-20">
-                    <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">lbs</label>
+                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">lbs</label>
                     <input
                       type="number" value={item.weightLbs || ""}
                       onChange={(e) => updateCargoItem(item.id, "weightLbs", Number(e.target.value))}
@@ -2006,7 +2006,7 @@ export default function RigSafeConfigurator() {
                     />
                   </div>
                   <div className="w-16">
-                    <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Qty</label>
+                    <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Qty</label>
                     <input
                       type="number" value={item.qty} min={1}
                       onChange={(e) => updateCargoItem(item.id, "qty", Number(e.target.value))}
@@ -2025,8 +2025,8 @@ export default function RigSafeConfigurator() {
 
             {/* Occupants */}
             <div className="border-t border-border pt-4 space-y-4">
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Occupants</h4>
-              <p className="text-[10px] text-muted-foreground">Occupant weight counts against rack static budget (sleeping) and vehicle payload (always).</p>
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Occupants</h4>
+              <p className="text-xs text-muted-foreground">Occupant weight counts against rack static budget (sleeping) and vehicle payload (always).</p>
 
               {/* Adults */}
               <div className="space-y-2">
@@ -2069,7 +2069,7 @@ export default function RigSafeConfigurator() {
 
             {/* Bedding */}
             <div className="border-t border-border pt-4 space-y-3">
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Bedding (in tent)</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Bedding (in tent)</h4>
               <SelectInput
                 label="Bedding Level"
                 value={config.beddingLevel}
@@ -2087,7 +2087,7 @@ export default function RigSafeConfigurator() {
 
             {/* Garage & misc */}
             <div className="border-t border-border pt-4 space-y-3">
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Other</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Other</h4>
               <div className="grid grid-cols-2 gap-3">
                 <NumberInput label="Garage Height" value={config.garageHeightIn} onChange={(v) => update("garageHeightIn", v)} unit="in" hint="84 = 7ft, 96 = 8ft" />
                 <NumberInput label="Tongue Weight" value={config.tongueWeightLbs} onChange={(v) => update("tongueWeightLbs", v)} unit="lbs" hint="If towing a trailer" />
@@ -2109,7 +2109,7 @@ export default function RigSafeConfigurator() {
             {result.safetyMarginStatus === "margin-warning" && (
               <div className="bg-yellow-500/5 border border-yellow-500/30 rounded-lg p-3 flex gap-2">
                 <AlertTriangle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
-                <p className="text-xs text-yellow-500">
+                <p className="text-sm text-yellow-500">
                   Always leave a 10-20% safety margin to prevent overload. One or more budgets are within the margin zone.
                 </p>
               </div>
@@ -2117,7 +2117,7 @@ export default function RigSafeConfigurator() {
             {result.safetyMarginStatus === "over-limit" && (
               <div className="bg-red-500/5 border border-red-500/30 rounded-lg p-3 flex gap-2">
                 <ShieldAlert className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-                <p className="text-xs text-red-500 font-bold">
+                <p className="text-sm text-red-500 font-bold">
                   One or more load budgets are OVER LIMIT. Remove weight or upgrade equipment before use.
                 </p>
               </div>
@@ -2125,7 +2125,7 @@ export default function RigSafeConfigurator() {
 
             {/* Three primary gauges */}
             <div>
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-3">Rack Load Budgets</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">Rack Load Budgets</h4>
               <div className="grid grid-cols-3 gap-2">
                 <GaugeArc
                   value={result.rackStatic.pct}
@@ -2155,7 +2155,7 @@ export default function RigSafeConfigurator() {
                   dangerThreshold={90}
                 />
               </div>
-              <p className="text-[10px] text-muted-foreground text-center mt-1">
+              <p className="text-xs text-muted-foreground text-center mt-1">
                 Off-road dynamic ratings assume moderate trail conditions. Extreme terrain imposes higher loads.
               </p>
             </div>
@@ -2170,35 +2170,35 @@ export default function RigSafeConfigurator() {
 
             {/* Weakest Link */}
             <div className="bg-card border border-border rounded-lg p-4 space-y-2">
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Weakest Link Analysis</h4>
-              <div className="grid grid-cols-3 gap-3 text-xs">
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Weakest Link Analysis</h4>
+              <div className="grid grid-cols-3 gap-3 text-sm">
                 <div>
-                  <span className="text-muted block text-[10px] uppercase">Static Limit</span>
+                  <span className="text-muted block text-xs uppercase">Static Limit</span>
                   <span className="font-bold">{result.weakestLink.staticLimit} lbs</span>
-                  <span className="block text-[10px] text-muted-foreground">({result.weakestLink.staticBottleneck})</span>
+                  <span className="block text-xs text-muted-foreground">({result.weakestLink.staticBottleneck})</span>
                 </div>
                 <div>
-                  <span className="text-muted block text-[10px] uppercase">Dynamic Limit</span>
+                  <span className="text-muted block text-xs uppercase">Dynamic Limit</span>
                   <span className="font-bold">{result.weakestLink.dynamicLimit} lbs</span>
-                  <span className="block text-[10px] text-muted-foreground">({result.weakestLink.dynamicBottleneck})</span>
+                  <span className="block text-xs text-muted-foreground">({result.weakestLink.dynamicBottleneck})</span>
                 </div>
                 <div>
-                  <span className="text-muted block text-[10px] uppercase">Off-Road Limit</span>
+                  <span className="text-muted block text-xs uppercase">Off-Road Limit</span>
                   <span className="font-bold">{result.weakestLink.offRoadLimit} lbs</span>
-                  <span className="block text-[10px] text-muted-foreground">({result.weakestLink.offRoadBottleneck})</span>
+                  <span className="block text-xs text-muted-foreground">({result.weakestLink.offRoadBottleneck})</span>
                 </div>
               </div>
-              <p className="text-[10px] text-muted-foreground italic">The lower rating between rack and vehicle roof is the effective limit.</p>
+              <p className="text-xs text-muted-foreground italic">The lower rating between rack and vehicle roof is the effective limit.</p>
             </div>
 
             {/* Garage Clearance */}
             <div className="flex items-center gap-4 bg-card border border-border rounded-lg p-4">
               <div className="flex-1">
-                <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Garage Clearance</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Garage Clearance</h4>
                 <p className="text-lg font-extrabold">{result.totalHeightIn}&quot;</p>
-                <p className="text-xs text-muted-foreground">vs {result.garageHeightIn}&quot; garage</p>
+                <p className="text-sm text-muted-foreground">vs {result.garageHeightIn}&quot; garage</p>
               </div>
-              <span className={`text-xs font-bold uppercase px-3 py-1 rounded-full ${
+              <span className={`text-sm font-bold uppercase px-3 py-1 rounded-full ${
                 result.garageFits
                   ? "bg-green-500/10 text-green-500 border border-green-500/30"
                   : "bg-red-500/10 text-red-500 border border-red-500/30"
@@ -2209,46 +2209,46 @@ export default function RigSafeConfigurator() {
 
             {/* Sleeping Capacity */}
             <div className="bg-card border border-border rounded-lg p-4 space-y-2">
-              <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Sleeping Capacity</h4>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Sleeping Capacity</h4>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
                 <div>
-                  <span className="text-muted block text-[10px] uppercase">Tent (Comfort)</span>
+                  <span className="text-muted block text-xs uppercase">Tent (Comfort)</span>
                   <span className="text-xl font-extrabold text-primary">{result.sleepingCapacity.tentComfort}</span>
                 </div>
                 <div>
-                  <span className="text-muted block text-[10px] uppercase">Tent (Tight)</span>
+                  <span className="text-muted block text-xs uppercase">Tent (Tight)</span>
                   <span className="text-xl font-extrabold">{result.sleepingCapacity.tentTight}</span>
                 </div>
                 {result.sleepingCapacity.annexSleeps > 0 && (
                   <div>
-                    <span className="text-muted block text-[10px] uppercase">Annex</span>
+                    <span className="text-muted block text-xs uppercase">Annex</span>
                     <span className="text-xl font-extrabold">{result.sleepingCapacity.annexSleeps}</span>
                   </div>
                 )}
                 {result.sleepingCapacity.wallKitSleeps > 0 && (
                   <div>
-                    <span className="text-muted block text-[10px] uppercase">Wall Kit</span>
+                    <span className="text-muted block text-xs uppercase">Wall Kit</span>
                     <span className="text-xl font-extrabold">{result.sleepingCapacity.wallKitSleeps}</span>
                   </div>
                 )}
               </div>
-              <p className="text-xs font-bold">Total rig sleeping capacity: {result.sleepingCapacity.total}</p>
+              <p className="text-sm font-bold">Total rig sleeping capacity: {result.sleepingCapacity.total}</p>
             </div>
 
             {/* CG Impact */}
             {result.cgRaiseIn > 0 && (
               <div className="bg-card border border-border rounded-lg p-4">
-                <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Center of Gravity Impact</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Center of Gravity Impact</h4>
                 <p className="text-sm">CG raised ~{result.cgRaiseIn}&quot;</p>
-                <p className="text-xs text-muted-foreground mt-1">{result.stabilityNote}</p>
+                <p className="text-sm text-muted-foreground mt-1">{result.stabilityNote}</p>
               </div>
             )}
 
             {/* Bed Fitment (trucks) */}
             {!result.bedFitmentOk && !result.cabClearance.applicable && (
               <div className="bg-yellow-500/5 border border-yellow-500/30 rounded-lg p-4">
-                <h4 className="text-[10px] font-bold uppercase tracking-wide text-yellow-500 mb-1">Bed Fitment</h4>
-                <p className="text-xs">Tent overhangs bed by {result.bedOverhangIn}&quot;. Check cab/tailgate clearance.</p>
+                <h4 className="text-xs font-bold uppercase tracking-wide text-yellow-500 mb-1">Bed Fitment</h4>
+                <p className="text-sm">Tent overhangs bed by {result.bedOverhangIn}&quot;. Check cab/tailgate clearance.</p>
               </div>
             )}
 
@@ -2256,8 +2256,8 @@ export default function RigSafeConfigurator() {
             {result.cabClearance.applicable && (
               <div className="bg-card border border-border rounded-lg p-4 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Cab Clearance & Tent Positioning</h4>
-                  <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${
+                  <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Cab Clearance & Tent Positioning</h4>
+                  <span className={`text-xs font-bold uppercase px-2 py-0.5 rounded-full border ${
                     result.cabClearance.currentHeightStatus === "clear"
                       ? "bg-green-500/10 text-green-500 border-green-500/30"
                       : result.cabClearance.currentHeightStatus === "tight"
@@ -2274,7 +2274,7 @@ export default function RigSafeConfigurator() {
 
                 {/* Overhang summary */}
                 {!result.cabClearance.fitsInBed && (
-                  <div className="bg-muted rounded-lg p-3 text-xs space-y-1">
+                  <div className="bg-muted rounded-lg p-3 text-sm space-y-1">
                     <p>
                       Tent overhangs bed by <span className="font-bold">{result.cabClearance.totalOverhangIn}&quot;</span>.
                     </p>
@@ -2287,11 +2287,11 @@ export default function RigSafeConfigurator() {
 
                 {/* Height matrix */}
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">Height Settings vs Cab Clearance</p>
+                  <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Height Settings vs Cab Clearance</p>
                   <div className="overflow-x-auto">
-                    <table className="w-full text-xs min-w-[320px]">
+                    <table className="w-full text-sm min-w-[320px]">
                       <thead>
-                        <tr className="text-[10px] uppercase text-muted-foreground border-b border-border">
+                        <tr className="text-xs uppercase text-muted-foreground border-b border-border">
                           <th className="text-left pb-1.5 font-bold">Rack Ht</th>
                           <th className="text-right pb-1.5 font-bold">Tent Bottom</th>
                           <th className="text-right pb-1.5 font-bold">Rack Top</th>
@@ -2335,7 +2335,7 @@ export default function RigSafeConfigurator() {
                 {/* Recommended setting callout */}
                 {result.cabClearance.recommendedHeightIn !== null && (
                   <div className="bg-green-500/5 border border-green-500/30 rounded-lg p-3">
-                    <p className="text-xs">
+                    <p className="text-sm">
                       <span className="font-bold text-green-500">Recommended: {result.cabClearance.recommendedHeightIn}&quot; setting</span>
                       {" — "}lowest height that fully clears the cab rack (≥2&quot; gap).
                     </p>
@@ -2344,7 +2344,7 @@ export default function RigSafeConfigurator() {
 
                 {result.cabClearance.recommendedHeightIn === null && result.cabClearance.heightOptions.length > 0 && (
                   <div className="bg-red-500/5 border border-red-500/30 rounded-lg p-3">
-                    <p className="text-xs text-red-500 font-bold">No height setting achieves full clearance with this combination. Consider a different rack or tent.</p>
+                    <p className="text-sm text-red-500 font-bold">No height setting achieves full clearance with this combination. Consider a different rack or tent.</p>
                   </div>
                 )}
               </div>
@@ -2353,7 +2353,7 @@ export default function RigSafeConfigurator() {
             {/* Weight Breakdown Donut */}
             {result.weightBreakdown.length > 0 && (
               <div className="bg-card border border-border rounded-lg p-4">
-                <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-3">Weight Breakdown</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">Weight Breakdown</h4>
                 <div className="flex flex-col items-center">
                   <DonutChart
                     segments={result.weightBreakdown}
@@ -2369,7 +2369,7 @@ export default function RigSafeConfigurator() {
             {/* Warnings */}
             {result.warnings.length > 0 && (
               <div>
-                <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">Warnings & Notes</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Warnings & Notes</h4>
                 <WarningsPanel warnings={result.warnings} />
               </div>
             )}
@@ -2377,14 +2377,14 @@ export default function RigSafeConfigurator() {
             {/* Product Recommendations */}
             {(config.rack || config.tent || config.awning || config.frontBumper || config.rearBumper || config.winch || config.drawers || config.fridge || config.waterTank || config.skidPlates || config.spareCarrier || config.solarPanels || config.lightBar || config.slideKitchen) && (
               <div className="bg-card border border-border rounded-lg p-4 space-y-3">
-                <h4 className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Product Links</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Product Links</h4>
                 <div className="space-y-2">
                   {config.rack && (
                     <a
                       href={config.rack.affiliateUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-xs text-primary hover:underline"
+                      className="flex items-center gap-2 text-sm text-primary hover:underline"
                     >
                       <ExternalLink className="w-3 h-3" /> {config.rack.brand} {config.rack.model}
                     </a>
@@ -2394,7 +2394,7 @@ export default function RigSafeConfigurator() {
                       href={config.tent.affiliateUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-xs text-primary hover:underline"
+                      className="flex items-center gap-2 text-sm text-primary hover:underline"
                     >
                       <ExternalLink className="w-3 h-3" /> {config.tent.brand} {config.tent.model}
                     </a>
@@ -2404,7 +2404,7 @@ export default function RigSafeConfigurator() {
                       href={config.awning.affiliateUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-xs text-primary hover:underline"
+                      className="flex items-center gap-2 text-sm text-primary hover:underline"
                     >
                       <ExternalLink className="w-3 h-3" /> {config.awning.brand} {config.awning.model}
                     </a>
@@ -2414,63 +2414,63 @@ export default function RigSafeConfigurator() {
                       href={config.tonneau.affiliateUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-xs text-primary hover:underline"
+                      className="flex items-center gap-2 text-sm text-primary hover:underline"
                     >
                       <ExternalLink className="w-3 h-3" /> {config.tonneau.brand} {config.tonneau.model}
                     </a>
                   )}
                   {config.frontBumper && (
-                    <a href={config.frontBumper.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                    <a href={config.frontBumper.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" /> {config.frontBumper.brand} {config.frontBumper.model}
                     </a>
                   )}
                   {config.rearBumper && (
-                    <a href={config.rearBumper.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                    <a href={config.rearBumper.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" /> {config.rearBumper.brand} {config.rearBumper.model}
                     </a>
                   )}
                   {config.winch && (
-                    <a href={config.winch.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                    <a href={config.winch.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" /> {config.winch.brand} {config.winch.model}
                     </a>
                   )}
                   {config.drawers && (
-                    <a href={config.drawers.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                    <a href={config.drawers.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" /> {config.drawers.brand} {config.drawers.model}
                     </a>
                   )}
                   {config.fridge && (
-                    <a href={config.fridge.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                    <a href={config.fridge.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" /> {config.fridge.brand} {config.fridge.model}
                     </a>
                   )}
                   {config.slideKitchen && (
-                    <a href={config.slideKitchen.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                    <a href={config.slideKitchen.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" /> {config.slideKitchen.brand} {config.slideKitchen.model}
                     </a>
                   )}
                   {config.waterTank && (
-                    <a href={config.waterTank.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                    <a href={config.waterTank.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" /> {config.waterTank.brand} {config.waterTank.model}
                     </a>
                   )}
                   {config.skidPlates && (
-                    <a href={config.skidPlates.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                    <a href={config.skidPlates.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" /> {config.skidPlates.brand} {config.skidPlates.model}
                     </a>
                   )}
                   {config.spareCarrier && (
-                    <a href={config.spareCarrier.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                    <a href={config.spareCarrier.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" /> {config.spareCarrier.brand} {config.spareCarrier.model}
                     </a>
                   )}
                   {config.solarPanels && (
-                    <a href={config.solarPanels.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                    <a href={config.solarPanels.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" /> {config.solarPanels.brand} {config.solarPanels.model}
                     </a>
                   )}
                   {config.lightBar && (
-                    <a href={config.lightBar.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-primary hover:underline">
+                    <a href={config.lightBar.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" /> {config.lightBar.brand} {config.lightBar.model}
                     </a>
                   )}
@@ -2515,13 +2515,13 @@ export default function RigSafeConfigurator() {
             trackEvent("pe_pdf_exported", { tool: "rigsafe" });
             generateRigSafePdf(pdfData);
           }}
-          className="flex items-center gap-2 text-xs font-bold uppercase text-primary hover:text-primary/80 transition-colors"
+          className="flex items-center gap-2 text-sm font-bold uppercase text-primary hover:text-primary/80 transition-colors"
         >
           <Download className="w-3.5 h-3.5" /> Export PDF
         </button>
         <button
           onClick={resetAll}
-          className="flex items-center gap-2 text-xs font-bold uppercase text-muted-foreground hover:text-red-500 transition-colors"
+          className="flex items-center gap-2 text-sm font-bold uppercase text-muted-foreground hover:text-red-500 transition-colors"
         >
           <RotateCcw className="w-3.5 h-3.5" /> Reset All
         </button>
@@ -2533,7 +2533,7 @@ export default function RigSafeConfigurator() {
           <Send className="w-4 h-4 text-primary" />
           Request a Vehicle
         </h3>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Don&apos;t see your vehicle? Submit a request and we&apos;ll add it to the database.
         </p>
         {reqStatus === "sent" ? (
@@ -2569,7 +2569,7 @@ export default function RigSafeConfigurator() {
           >
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Make *</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Make *</label>
                 <input
                   type="text" required minLength={2} maxLength={50} placeholder="e.g. Toyota"
                   value={reqForm.make} onChange={(e) => setReqForm((p) => ({ ...p, make: e.target.value }))}
@@ -2577,7 +2577,7 @@ export default function RigSafeConfigurator() {
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Model *</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model *</label>
                 <input
                   type="text" required minLength={2} maxLength={80} placeholder="e.g. Tacoma"
                   value={reqForm.model} onChange={(e) => setReqForm((p) => ({ ...p, model: e.target.value }))}
@@ -2585,7 +2585,7 @@ export default function RigSafeConfigurator() {
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Year *</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Year *</label>
                 <input
                   type="text" required minLength={4} maxLength={4} placeholder="e.g. 2024"
                   value={reqForm.year} onChange={(e) => setReqForm((p) => ({ ...p, year: e.target.value.replace(/\D/g, "").slice(0, 4) }))}
@@ -2593,7 +2593,7 @@ export default function RigSafeConfigurator() {
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Trim</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Trim</label>
                 <input
                   type="text" maxLength={80} placeholder="e.g. TRD Off-Road"
                   value={reqForm.trim} onChange={(e) => setReqForm((p) => ({ ...p, trim: e.target.value }))}
@@ -2601,7 +2601,7 @@ export default function RigSafeConfigurator() {
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Body Type</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Body Type</label>
                 <select
                   value={reqForm.bodyType} onChange={(e) => setReqForm((p) => ({ ...p, bodyType: e.target.value }))}
                   className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
@@ -2618,7 +2618,7 @@ export default function RigSafeConfigurator() {
                 </select>
               </div>
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Email</label>
+                <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Email</label>
                 <input
                   type="email" maxLength={120} placeholder="Optional — notify me"
                   value={reqForm.email} onChange={(e) => setReqForm((p) => ({ ...p, email: e.target.value }))}
@@ -2627,7 +2627,7 @@ export default function RigSafeConfigurator() {
               </div>
             </div>
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Notes</label>
+              <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Notes</label>
               <textarea
                 maxLength={200} rows={2} placeholder="Any details that would help us add this vehicle..."
                 value={reqForm.notes} onChange={(e) => setReqForm((p) => ({ ...p, notes: e.target.value }))}
@@ -2637,7 +2637,7 @@ export default function RigSafeConfigurator() {
             <button
               type="submit"
               disabled={reqStatus === "sending"}
-              className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg text-xs font-bold uppercase hover:bg-primary/90 transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-bold uppercase hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
               <Send className="w-3.5 h-3.5" />
               {reqStatus === "sending" ? "Submitting..." : "Submit Request"}
