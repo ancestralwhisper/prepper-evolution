@@ -18,6 +18,8 @@ import { awningDatabase, getAwningBrands, getAwningModels, findAwning } from "./
 import type { AwningEntry } from "./rigsafe-awnings";
 import { tonneauDatabase, getTonneauBrands, getTonneauModels, findTonneau } from "./rigsafe-tonneaus";
 import type { TonneauEntry } from "./rigsafe-tonneaus";
+import { getBedCapBrands, getBedCapModels, findBedCap, getBedCapsForVehicle } from "./rigsafe-bed-caps";
+import type { BedCapEntry } from "./rigsafe-bed-caps";
 import { getBumperBrands, getBumperModels, findBumper } from "./rigsafe-bumpers";
 import { getWinchBrands, getWinchModels, findWinch } from "./rigsafe-winches";
 import { getDrawerBrands, getDrawerModels, findDrawer } from "./rigsafe-drawers";
@@ -386,6 +388,9 @@ export default function RigSafeConfigurator() {
   // Tonneau selector state
   const [selTonneauBrand, setSelTonneauBrand] = useState("");
 
+  // Bed cap selector state
+  const [selBedCapBrand, setSelBedCapBrand] = useState("");
+
   // Vehicle mod selector states
   const [selBumperBrand, setSelBumperBrand] = useState("");
   const [selWinchBrand, setSelWinchBrand] = useState("");
@@ -675,6 +680,7 @@ export default function RigSafeConfigurator() {
     setSelTentBrand("");
     setSelAwningBrand("");
     setSelTonneauBrand("");
+    setSelBedCapBrand("");
     setSelBumperBrand("");
     setSelWinchBrand("");
     setSelDrawerBrand("");
@@ -717,6 +723,14 @@ export default function RigSafeConfigurator() {
 
   const tonneauBrands = getTonneauBrands();
   const tonneauModels = selTonneauBrand ? getTonneauModels(selTonneauBrand) : [];
+
+  // Bed cap — filter by selected vehicle when available
+  const bedCapVehicle = config.useManual ? null : config.vehicle;
+  const compatibleBedCaps = bedCapVehicle
+    ? getBedCapsForVehicle(bedCapVehicle.make, bedCapVehicle.model, bedCapVehicle.year)
+    : getBedCapsForVehicle("", "", 0);
+  const bedCapBrands = Array.from(new Set(compatibleBedCaps.map((c) => c.brand))).sort();
+  const bedCapModels = selBedCapBrand ? compatibleBedCaps.filter((c) => c.brand === selBedCapBrand) : [];
 
   return (
     <div className="space-y-6">
@@ -1026,6 +1040,132 @@ export default function RigSafeConfigurator() {
                       <div className="grid grid-cols-2 gap-3">
                         <NumberInput label="Weight" value={config.manualTonneau.weightLbs} onChange={(v) => setConfig((prev) => ({ ...prev, manualTonneau: { ...prev.manualTonneau, weightLbs: v } }))} unit="lbs" />
                         <NumberInput label="Folded Height" value={config.manualTonneau.foldedHeightIn} onChange={(v) => setConfig((prev) => ({ ...prev, manualTonneau: { ...prev.manualTonneau, foldedHeightIn: v } }))} unit="in" />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Bed Cap (trucks only — mutually exclusive with tonneau) */}
+            {isTruck && (
+              <div className="space-y-3">
+                <Toggle
+                  label="Modular Bed Cap"
+                  checked={config.hasBedCap}
+                  onChange={(v) => {
+                    update("hasBedCap", v);
+                    if (v) update("hasTonneau", false); // mutually exclusive
+                  }}
+                  hint="Enclosed aluminum or stainless canopy — weight counts against vehicle payload"
+                />
+                {config.hasBedCap && (
+                  <div className="pl-6 space-y-3">
+                    {/* Vehicle fitment notice */}
+                    {bedCapVehicle && (
+                      <p className="text-xs text-primary font-semibold">
+                        Showing caps with known fitments for your {bedCapVehicle.year} {bedCapVehicle.make} {bedCapVehicle.model}
+                      </p>
+                    )}
+                    <Toggle
+                      label="Manual Entry"
+                      checked={config.useManualBedCap}
+                      onChange={(v) => update("useManualBedCap", v)}
+                    />
+                    {!config.useManualBedCap ? (
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Brand</label>
+                            <select
+                              value={selBedCapBrand}
+                              onChange={(e) => { setSelBedCapBrand(e.target.value); update("bedCap", null); }}
+                              className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                            >
+                              <option value="">Select Brand</option>
+                              {bedCapBrands.map((b) => <option key={b} value={b}>{b}</option>)}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">Model</label>
+                            <select
+                              value={config.bedCap?.id || ""}
+                              onChange={(e) => {
+                                const cap = findBedCap(e.target.value);
+                                update("bedCap", cap || null);
+                              }}
+                              className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
+                              disabled={!selBedCapBrand}
+                            >
+                              <option value="">Select Model</option>
+                              {bedCapModels.map((c) => (
+                                <option key={c.id} value={c.id}>
+                                  {c.model} ({c.weightLbs} lbs{c.weightNote ? " est." : ""})
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Selected cap details */}
+                        {config.bedCap && (
+                          <div className="bg-muted/50 border border-border rounded-lg p-3 space-y-2 text-xs">
+                            <div className="flex flex-wrap gap-3">
+                              <div>
+                                <span className="text-muted-foreground uppercase tracking-wide font-bold">Weight </span>
+                                <span className="font-semibold">{config.bedCap.weightLbs} lbs</span>
+                                {config.bedCap.weightNote && <span className="text-muted-foreground ml-1">({config.bedCap.weightNote})</span>}
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground uppercase tracking-wide font-bold">Dynamic Load </span>
+                                {config.bedCap.dynamicLoadLbs > 0
+                                  ? <span className="font-semibold text-primary">{config.bedCap.dynamicLoadLbs} lbs</span>
+                                  : <span className="text-amber-400 font-semibold">Not published</span>}
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground uppercase tracking-wide font-bold">Static Load </span>
+                                {config.bedCap.staticLoadLbs > 0
+                                  ? <span className="font-semibold text-emerald-400">{config.bedCap.staticLoadLbs} lbs</span>
+                                  : <span className="text-amber-400 font-semibold">Not published</span>}
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground uppercase tracking-wide font-bold">Material </span>
+                                <span className="font-semibold capitalize">{config.bedCap.material.replace("-", " ")}</span>
+                              </div>
+                            </div>
+                            {config.bedCap.loadNote && (
+                              <p className="text-muted-foreground leading-relaxed">{config.bedCap.loadNote}</p>
+                            )}
+                            {config.bedCap.features.length > 0 && (
+                              <ul className="text-muted-foreground space-y-0.5 list-disc list-inside">
+                                {config.bedCap.features.slice(0, 5).map((f, i) => <li key={i}>{f}</li>)}
+                              </ul>
+                            )}
+                            {config.bedCap.websiteUrl && (
+                              <a
+                                href={config.bedCap.websiteUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-primary hover:underline font-semibold"
+                              >
+                                <ExternalLink className="w-3 h-3" /> {config.bedCap.brand} website
+                              </a>
+                            )}
+                            {/* Bed wall support warning — SmartCap and any cap with this flag */}
+                            {config.bedCap.bedWallSupportRequired && (
+                              <div className="flex gap-2 mt-1 p-2 bg-amber-400/10 border border-amber-400/30 rounded">
+                                <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
+                                <p className="text-amber-300 leading-relaxed">{config.bedCap.bedWallSupportNote}</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-3 gap-3">
+                        <NumberInput label="Weight" value={config.manualBedCap.weightLbs} onChange={(v) => setConfig((prev) => ({ ...prev, manualBedCap: { ...prev.manualBedCap, weightLbs: v } }))} unit="lbs" />
+                        <NumberInput label="Dynamic Load" value={config.manualBedCap.dynamicLoadLbs} onChange={(v) => setConfig((prev) => ({ ...prev, manualBedCap: { ...prev.manualBedCap, dynamicLoadLbs: v } }))} unit="lbs" />
+                        <NumberInput label="Static Load" value={config.manualBedCap.staticLoadLbs} onChange={(v) => setConfig((prev) => ({ ...prev, manualBedCap: { ...prev.manualBedCap, staticLoadLbs: v } }))} unit="lbs" />
                       </div>
                     )}
                   </div>
@@ -2701,6 +2841,16 @@ export default function RigSafeConfigurator() {
                       <ExternalLink className="w-3 h-3" /> {config.tonneau.brand} {config.tonneau.model}
                     </a>
                   )}
+                  {config.hasBedCap && config.bedCap && config.bedCap.websiteUrl && (
+                    <a
+                      href={config.bedCap.websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-sm text-primary hover:underline"
+                    >
+                      <ExternalLink className="w-3 h-3" /> {config.bedCap.brand} {config.bedCap.model}
+                    </a>
+                  )}
                   {config.frontBumper && (
                     <a href={config.frontBumper.affiliateUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" /> {config.frontBumper.brand} {config.frontBumper.model}
@@ -2772,6 +2922,7 @@ export default function RigSafeConfigurator() {
             if (config.tent) productLinks.push({ name: `${config.tent.brand} ${config.tent.model}`, url: config.tent.affiliateUrl });
             if (config.awning) productLinks.push({ name: `${config.awning.brand} ${config.awning.model}`, url: config.awning.affiliateUrl });
             if (config.tonneau) productLinks.push({ name: `${config.tonneau.brand} ${config.tonneau.model}`, url: config.tonneau.affiliateUrl });
+            if (config.hasBedCap && config.bedCap?.websiteUrl) productLinks.push({ name: `${config.bedCap.brand} ${config.bedCap.model}`, url: config.bedCap.websiteUrl });
 
             const pdfData: RigSafePdfData = {
               vehicleName: config.vehicle ? `${config.vehicle.year} ${config.vehicle.make} ${config.vehicle.model} ${config.vehicle.trim}` : config.useManual ? `${config.manualVehicle.year} ${config.manualVehicle.make} ${config.manualVehicle.model}` : "",

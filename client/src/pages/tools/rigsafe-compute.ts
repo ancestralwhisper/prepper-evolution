@@ -7,9 +7,19 @@
 //   Chain 3: Weakest Link Identification (rack vs vehicle roof rating)
 //
 
-export const RIGSAFE_VERSION = "v2.0";
+export const RIGSAFE_VERSION = "v2.1";
 
 export const RIGSAFE_CHANGELOG: { version: string; date: string; changes: string[] }[] = [
+  {
+    version: "v2.1",
+    date: "March 2026",
+    changes: [
+      "Modular bed cap support — 10 brands with real vehicle fitments, load ratings, and weight integration",
+      "Bed cap weight counts against vehicle payload (same chain as tonneau)",
+      "Mutual exclusion: tonneau and bed cap cannot be active simultaneously",
+      "Bed wall support truss warning (SmartCap EVO and other heavy stainless caps)",
+    ],
+  },
   {
     version: "v2.0",
     date: "March 2026",
@@ -42,6 +52,7 @@ import type { RackEntry } from "./rigsafe-racks";
 import type { TentEntry } from "./rigsafe-tents";
 import type { AwningEntry } from "./rigsafe-awnings";
 import type { TonneauEntry } from "./rigsafe-tonneaus";
+import type { BedCapEntry } from "./rigsafe-bed-caps";
 import type { BumperEntry } from "./rigsafe-bumpers";
 import type { WinchEntry } from "./rigsafe-winches";
 import type { DrawerEntry } from "./rigsafe-drawers";
@@ -142,11 +153,17 @@ export interface RigSafeConfig {
   secondaryRackLightBarWeightLbs: number;
   secondaryRackCargoLbs: number;
 
-  // Tonneau (trucks only)
+  // Tonneau (trucks only — mutually exclusive with bed cap)
   tonneau: TonneauEntry | null;
   manualTonneau: { weightLbs: number; foldedHeightIn: number };
   useManualTonneau: boolean;
   hasTonneau: boolean;
+
+  // Bed Cap (trucks only — mutually exclusive with tonneau)
+  bedCap: BedCapEntry | null;
+  manualBedCap: { weightLbs: number; dynamicLoadLbs: number; staticLoadLbs: number };
+  useManualBedCap: boolean;
+  hasBedCap: boolean;
 
   // Tent
   tent: TentEntry | null;
@@ -477,6 +494,12 @@ function getTonneau(config: RigSafeConfig) {
   };
 }
 
+function getBedCapWeight(config: RigSafeConfig): number {
+  if (!config.hasBedCap) return 0;
+  if (config.useManualBedCap) return config.manualBedCap.weightLbs;
+  return config.bedCap?.weightLbs ?? config.manualBedCap.weightLbs;
+}
+
 // ─── Helper: Frame Mods Weight (bolted to chassis — not in bed or on roof) ──
 
 export function computeFrameModsWeight(config: RigSafeConfig): number {
@@ -799,6 +822,9 @@ export function computePayload(config: RigSafeConfig): RackBudget {
 
   // Tonneau weight
   if (tonneau) used += tonneau.weightLbs;
+
+  // Bed cap weight (mutually exclusive with tonneau — only one can be active)
+  used += getBedCapWeight(config);
 
   // Tent weight
   if (tent) used += tent.weightLbs;
@@ -1168,6 +1194,8 @@ export function computeWeightBreakdown(config: RigSafeConfig): {
   if (tent) items.push({ label: "Tent", value: tent.weightLbs, color: "#3B82F6" });
   if (awning) items.push({ label: "Awning", value: awning.totalWeightLbs, color: "#10B981" });
   if (tonneau) items.push({ label: "Tonneau", value: tonneau.weightLbs, color: "#8B5CF6" });
+  const bedCapWt = getBedCapWeight(config);
+  if (bedCapWt > 0) items.push({ label: "Bed Cap", value: bedCapWt, color: "#7C3AED" });
   if (config.hasAnnex && config.annexWeightLbs > 0)
     items.push({ label: "Annex", value: config.annexWeightLbs, color: "#F59E0B" });
   if (config.hasWallKit && config.wallKitWeightLbs > 0)
@@ -1478,6 +1506,28 @@ export function computeWarnings(config: RigSafeConfig, result: Omit<RigSafeResul
     w.push({ level: "warning", message: `Tonneau fold clearance only ${result.tonneauClearanceIn}". May interfere with rack. Need 2"+ gap.` });
   }
 
+  // Bed cap warnings
+  if (config.hasBedCap) {
+    const capWt = getBedCapWeight(config);
+    const bedCapObj = !config.useManualBedCap ? config.bedCap : null;
+
+    // Bed wall support truss warning for heavy stainless caps
+    if (bedCapObj?.bedWallSupportRequired) {
+      w.push({ level: "warning", message: `${bedCapObj.brand} ${bedCapObj.model}: Bed wall support trusses are recommended. Without them, sustained load from the stainless cap can deform bed walls near the tailgate over time. Order trusses with or before the cap.` });
+    }
+
+    // Heavy cap + heavy bed build = payload/squat warning
+    const bedLoadWeight = computeBedLoadWeight(config);
+    if (capWt >= 200 && bedLoadWeight >= 200) {
+      w.push({ level: "warning", message: `Heavy build: bed cap (${capWt} lbs) + bed load (${bedLoadWeight} lbs) = ${capWt + bedLoadWeight} lbs before occupants and roof gear. Check rear suspension sag — air bags or helper springs may be needed.` });
+    }
+
+    // No load rating published
+    if (bedCapObj && bedCapObj.dynamicLoadLbs === 0) {
+      w.push({ level: "info", message: `${bedCapObj.brand} ${bedCapObj.model} does not publish load ratings. Contact manufacturer before mounting an RTT or heavy roof gear.` });
+    }
+  }
+
   // Tent open-side awareness
   if (config.hasTent && config.tent && config.tent.openSide !== "either") {
     const side = config.tent.openSide;
@@ -1750,6 +1800,11 @@ export const defaultRigSafeConfig: RigSafeConfig = {
   manualTonneau: { weightLbs: 50, foldedHeightIn: 14 },
   useManualTonneau: false,
   hasTonneau: false,
+
+  bedCap: null,
+  manualBedCap: { weightLbs: 200, dynamicLoadLbs: 330, staticLoadLbs: 750 },
+  useManualBedCap: false,
+  hasBedCap: false,
 
   tent: null,
   manualTent: {
