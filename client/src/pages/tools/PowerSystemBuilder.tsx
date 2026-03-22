@@ -1000,6 +1000,118 @@ export default function PowerSystemBuilder() {
           </div>
         </div>
 
+        {/* ─── Action Plan ─────────────────────────────────────────── */}
+        {(() => {
+          type ActionLevel = "critical" | "warning" | "info";
+          interface ActionItem { level: ActionLevel; text: string; detail: string }
+          const actions: ActionItem[] = [];
+
+          // Daily charge deficit
+          if (result.budget.surplusAh < 0) {
+            const deficitAh = Math.abs(result.budget.surplusAh).toFixed(0);
+            const addSolarW = Math.ceil((Math.abs(result.budget.surplusAh) / (peakSunHours * 0.80 / 12)) / 25) * 25;
+            actions.push({
+              level: "critical",
+              text: `Daily charge deficit of ${deficitAh}Ah — battery will drain over multiple days`,
+              detail: solarWatts === 0
+                ? `You have no solar configured. Adding ~${addSolarW}W would close the gap at ${peakSunHours}h peak sun.`
+                : `Add ~${addSolarW}W more solar, cut load by ${deficitAh}Ah/day, or drive more hours per day.`,
+            });
+          }
+
+          // Battery shortfall vs target
+          const batteryShortAh = result.recommendedBankAh - result.batteryBank.totalCapacityAh;
+          if (batteryShortAh > 0) {
+            const addBatteries = Math.ceil(batteryShortAh / singleCapacityAh);
+            const spec = batterySpecs[chemistry];
+            actions.push({
+              level: "warning",
+              text: `Battery bank is ${batteryShortAh}Ah short of the ${daysAutonomyTarget}-day target`,
+              detail: `Add ${addBatteries} \u00d7 ${singleCapacityAh}Ah ${spec.label} ${addBatteries === 1 ? "battery" : "batteries"} to reach ${result.recommendedBankAh}Ah.`,
+            });
+          }
+
+          // No DC-DC charger
+          if (!dcDcCharger) {
+            actions.push({
+              level: "warning",
+              text: "No DC-DC charger \u2014 alternator charging not configured",
+              detail: "A 40-50A DC-DC charger adds 40-100Ah/day just from driving. Essential for any vehicle-based build.",
+            });
+          }
+
+          // No solar (but has alternator charger)
+          if (solarWatts === 0 && !!dcDcCharger) {
+            const suggestedAh = ((200 * peakSunHours * 0.80) / 12).toFixed(0);
+            actions.push({
+              level: "info",
+              text: "No solar \u2014 engine-on is your only charge source",
+              detail: `200W of solar would generate ~${suggestedAh}Ah/day and let you camp without running the engine.`,
+            });
+          }
+
+          // Autonomy below target when bank is adequate
+          if (result.budget.daysAutonomy < daysAutonomyTarget && batteryShortAh <= 0 && result.budget.surplusAh >= 0) {
+            actions.push({
+              level: "info",
+              text: `Actual autonomy (${result.budget.daysAutonomy.toFixed(1)} days) is below your ${daysAutonomyTarget}-day goal`,
+              detail: "Bank is sized right but recharge time limits real-world autonomy. Add more solar or extend daily drive time.",
+            });
+          }
+
+          // Failed wire circuits
+          const failedCircuits = result.circuits.filter((c) => c.status === "fail");
+          if (failedCircuits.length > 0) {
+            actions.push({
+              level: "critical",
+              text: `${failedCircuits.length} circuit${failedCircuits.length > 1 ? "s have" : " has"} a wiring problem \u2014 do not install as-is`,
+              detail: `Fix before pulling wire: ${failedCircuits.map((c) => c.label).join(", ")}.`,
+            });
+          }
+
+          if (actions.length === 0) return (
+            <div className="bg-emerald-500/5 border border-emerald-500/30 rounded-lg p-4 flex gap-3">
+              <Check className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-emerald-400">System looks solid</p>
+                <p className="text-xs text-muted-foreground mt-0.5">No gaps detected. Review the wire and fuse schedules below before you start the build.</p>
+              </div>
+            </div>
+          );
+
+          return (
+            <div className="bg-card border border-border rounded-lg p-6 space-y-4">
+              <div>
+                <h3 className="text-lg font-extrabold mb-1">Action Plan</h3>
+                <p className="text-sm text-muted-foreground">Here&apos;s exactly what needs fixing and how to close each gap.</p>
+              </div>
+              <div className="space-y-3">
+                {actions.map((a, i) => (
+                  <div key={i} className={`flex gap-3 rounded-lg border p-3 ${
+                    a.level === "critical" ? "border-red-500/30 bg-red-500/5" :
+                    a.level === "warning" ? "border-amber-500/30 bg-amber-500/5" :
+                    "border-blue-500/30 bg-blue-500/5"
+                  }`}>
+                    <AlertTriangle className={`w-4 h-4 flex-shrink-0 mt-0.5 ${
+                      a.level === "critical" ? "text-red-500" :
+                      a.level === "warning" ? "text-amber-500" :
+                      "text-blue-400"
+                    }`} />
+                    <div className="space-y-0.5">
+                      <p className={`text-sm font-bold ${
+                        a.level === "critical" ? "text-red-400" :
+                        a.level === "warning" ? "text-amber-400" :
+                        "text-blue-400"
+                      }`}>{a.text}</p>
+                      <p className="text-xs text-muted-foreground">{a.detail}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Battery Assessment */}
         <div className="bg-card border border-border rounded-lg p-6">
           <h3 className="text-lg font-extrabold mb-3">Battery Assessment</h3>
