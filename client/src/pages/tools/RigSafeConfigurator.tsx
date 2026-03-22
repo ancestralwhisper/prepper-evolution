@@ -236,13 +236,15 @@ function WarningsPanel({ warnings }: { warnings: RigSafeWarning[] }) {
     <div className="space-y-2">
       {warnings.map((w, i) => {
         const iconColor = w.level === "danger" ? "text-red-500" : w.level === "warning" ? "text-yellow-500" : "text-blue-400";
-        const bgColor = w.level === "danger" ? "bg-red-500/5 border-red-500/30" : w.level === "warning" ? "bg-yellow-500/5 border-yellow-500/30" : "bg-blue-500/5 border-blue-500/30";
+        const bgColor = w.level === "danger" ? "bg-red-500/10 border-red-500/40" : w.level === "warning" ? "bg-yellow-500/8 border-yellow-500/30" : "bg-blue-500/5 border-blue-500/30";
+        const textSize = w.level === "danger" ? "text-base font-medium" : w.level === "warning" ? "text-sm font-medium" : "text-sm";
+        const iconSize = w.level === "danger" ? "w-5 h-5" : "w-4 h-4";
         return (
-          <div key={i} className={`flex gap-2 p-3 rounded-lg border ${bgColor}`}>
-            {w.level === "danger" ? <ShieldAlert className={`w-4 h-4 ${iconColor} flex-shrink-0 mt-0.5`} /> :
-             w.level === "warning" ? <AlertTriangle className={`w-4 h-4 ${iconColor} flex-shrink-0 mt-0.5`} /> :
-             <Info className={`w-4 h-4 ${iconColor} flex-shrink-0 mt-0.5`} />}
-            <p className="text-sm leading-relaxed">{w.message}</p>
+          <div key={i} className={`flex gap-3 p-3 rounded-lg border ${bgColor}`}>
+            {w.level === "danger" ? <ShieldAlert className={`${iconSize} ${iconColor} flex-shrink-0 mt-0.5`} /> :
+             w.level === "warning" ? <AlertTriangle className={`${iconSize} ${iconColor} flex-shrink-0 mt-0.5`} /> :
+             <Info className={`${iconSize} ${iconColor} flex-shrink-0 mt-0.5`} />}
+            <p className={`${textSize} leading-relaxed`}>{w.message}</p>
           </div>
         );
       })}
