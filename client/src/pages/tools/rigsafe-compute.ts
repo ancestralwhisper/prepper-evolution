@@ -1511,9 +1511,9 @@ export function computeWarnings(config: RigSafeConfig, result: Omit<RigSafeResul
     const capWt = getBedCapWeight(config);
     const bedCapObj = !config.useManualBedCap ? config.bedCap : null;
 
-    // Bed wall support truss warning for heavy stainless caps
-    if (bedCapObj?.bedWallSupportRequired) {
-      w.push({ level: "warning", message: `${bedCapObj.brand} ${bedCapObj.model}: Bed wall support trusses are recommended. Without them, sustained load from the stainless cap can deform bed walls near the tailgate over time. Order trusses with or before the cap.` });
+    // Bed stiffener warning (SmartCap EVO on Tundra and heavy builds)
+    if (bedCapObj?.bedStiffenersRequired) {
+      w.push({ level: "warning", message: `${bedCapObj.brand} ${bedCapObj.model}: RSI notes that the 2022+ Tundra (and older/smaller trucks) requires bed stiffeners to handle cap weight on the bedrails. Order bed stiffeners with the cap — they're available directly from RSI.` });
     }
 
     // Heavy cap + heavy bed build = payload/squat warning

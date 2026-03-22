@@ -37,8 +37,8 @@ export interface BedCapEntry {
   hasMOLLE: boolean;
   warrantyYears: number | null; // null = not published
   universal: boolean;              // true = custom-fit any make/model (e.g. GFC)
-  bedWallSupportRequired?: boolean; // true if manufacturer offers/recommends bed wall support trusses
-  bedWallSupportNote?: string;      // specific note about bed wall reinforcement
+  bedStiffenersRequired?: boolean; // true if manufacturer offers/recommends bed wall support trusses
+  bedStiffenersNote?: string;      // specific note about bed wall reinforcement
   fitments: BedCapFitment[];
   websiteUrl: string;
   affiliateUrl?: string;
@@ -58,8 +58,8 @@ export const bedCapDatabase: BedCapEntry[] = [
     dynamicLoadLbs: 330,
     staticLoadLbs: 770,
     loadNote: "Off-road dynamic not independently published by RSI — treated as equal to on-road dynamic (330 lbs) per community/installer reports. Verify with dealer for your use case.",
-    bedWallSupportRequired: true,
-    bedWallSupportNote: "RSI released bed support trusses specifically for the EVO series — they rest on the bed floor and bolt to the cap to prevent bed wall deformation under the cap's weight. Highly recommended, especially with heavy bed loads (drawers, fridge, water). Without them, sustained downward load from the stainless cap can bow the rear bed walls outward over time.",
+    bedStiffenersRequired: true,
+    bedStiffenersNote: "RSI specifically notes that the 2022+ Toyota Tundra (and older/smaller trucks) may require bed stiffeners to handle the cap's weight on the bedrails. Without them, the stainless cap's load can deform the bedrails over time. RSI sells bed stiffeners for this — order them with the cap if you're on a Tundra or running a heavy loaded build.",
     features: [
       "5-piece modular — ships flat, installs in sections",
       "Universal roof rails included",
@@ -69,7 +69,7 @@ export const bedCapDatabase: BedCapEntry[] = [
       "Gullwing doors with sliders",
       "No-drill install with bed clamps",
       "Fully weatherproof, double seals",
-      "Bed support trusses available (recommended for loaded builds)",
+      "Bed stiffeners available (required for 2022+ Tundra; recommended for heavy builds)",
     ],
     installType: "clamp",
     hasGullwing: true,

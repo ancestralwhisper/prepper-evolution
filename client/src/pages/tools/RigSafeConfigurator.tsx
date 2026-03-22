@@ -1152,10 +1152,10 @@ export default function RigSafeConfigurator() {
                               </a>
                             )}
                             {/* Bed wall support warning — SmartCap and any cap with this flag */}
-                            {config.bedCap.bedWallSupportRequired && (
+                            {config.bedCap.bedStiffenersRequired && (
                               <div className="flex gap-2 mt-1 p-2 bg-amber-400/10 border border-amber-400/30 rounded">
                                 <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
-                                <p className="text-amber-300 leading-relaxed">{config.bedCap.bedWallSupportNote}</p>
+                                <p className="text-amber-300 leading-relaxed">{config.bedCap.bedStiffenersNote}</p>
                               </div>
                             )}
                           </div>
