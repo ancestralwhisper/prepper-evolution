@@ -18,7 +18,7 @@ await client.connect();
 
 for (const fix of fixes) {
   const res = await client.query(
-    `UPDATE products SET "amazonLink" = $1 WHERE slug = $2 RETURNING name`,
+    `UPDATE products SET amazon_link = $1 WHERE slug = $2 RETURNING name`,
     [fix.url, fix.slug]
   );
   if (res.rowCount > 0) {
