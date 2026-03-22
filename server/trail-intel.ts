@@ -80,6 +80,46 @@ export interface TrailIntelResponse {
     nearbyCount: number;
   };
   trailSystem?: TrailSystemData;
+  airQuality?: {
+    available: boolean;
+    readings: Array<{
+      parameter: string;
+      aqi: number;
+      category: string;
+      reportingArea: string;
+    }>;
+    maxAqi: number;
+    maxCategory: string;
+  };
+  streamGauges?: {
+    gauges: Array<{
+      name: string;
+      lid: string;
+      status: string;
+      observed: number | null;
+      floodStage: number | null;
+      url?: string;
+    }>;
+    hasElevated: boolean;
+  };
+  fireRestrictions?: {
+    areas: Array<{
+      name: string;
+      level: number;
+      description?: string;
+      effectiveDate?: string;
+    }>;
+    maxLevel: number;
+  };
+  earthquakes?: {
+    events: Array<{
+      magnitude: number;
+      place: string;
+      time: string;
+      depthKm: number;
+    }>;
+    maxMagnitude: number;
+  };
   overallThreatLevel: "clear" | "advisory" | "watch" | "warning";
   errors: string[];
 }
@@ -379,15 +419,159 @@ async function fetchUSFSAccess(forestName: string): Promise<SeasonalAccess> {
   return { forest: forestName, vehicleAccess };
 }
 
+async function fetchAQI(zip: string): Promise<TrailIntelResponse["airQuality"]> {
+  const apiKey = process.env.AIRNOW_API_KEY;
+  if (!apiKey) {
+    return { available: false, readings: [], maxAqi: 0, maxCategory: "Unknown" };
+  }
+
+  const url =
+    `https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json` +
+    `&zipCode=${zip}&distance=25&API_KEY=${apiKey}`;
+
+  const res = await fetchWithTimeout(url);
+  if (!res.ok) throw new Error(`AirNow API returned ${res.status}`);
+
+  const json = await res.json();
+  const records = Array.isArray(json) ? json : [];
+
+  const readings = records.map((r: Record<string, Record<string, string> | string | number>) => ({
+    parameter: (r.ParameterName as string) || "Unknown",
+    aqi: (r.AQI as number) || 0,
+    category: ((r.Category as Record<string, string>)?.Name) || "Unknown",
+    reportingArea: (r.ReportingArea as string) || "",
+  }));
+
+  let maxAqi = 0;
+  let maxCategory = "Good";
+  for (const r of readings) {
+    if (r.aqi > maxAqi) {
+      maxAqi = r.aqi;
+      maxCategory = r.category;
+    }
+  }
+
+  return { available: true, readings, maxAqi, maxCategory };
+}
+
+async function fetchStreamGauges(lat: number, lon: number): Promise<TrailIntelResponse["streamGauges"]> {
+  const url =
+    `https://api.water.noaa.gov/nwps/v1/gauges` +
+    `?bbox=${lon - 0.75},${lat - 0.75},${lon + 0.75},${lat + 0.75}`;
+
+  const res = await fetchWithTimeout(url, {}, 8000);
+  if (!res.ok) throw new Error(`NOAA Water API returned ${res.status}`);
+
+  const json = await res.json();
+  const rawGauges = json.gauges || [];
+
+  const ELEVATED_STATUSES = new Set(["action", "minor", "moderate", "major"]);
+
+  const gauges = rawGauges.slice(0, 5).map((g: Record<string, unknown>) => {
+    const observed = (g.observed as Record<string, Record<string, number>> | undefined)?.primary?.value ?? null;
+    const flood = g.flood as Record<string, Record<string, Record<string, number>>> | undefined;
+    const floodStage = flood?.categories?.flood?.stage ?? null;
+    const status = ((g.status as string) || "unknown").toLowerCase();
+    const lid = (g.lid as string) || "";
+    return {
+      name: (g.name as string) || "Unknown Gauge",
+      lid,
+      status,
+      observed: typeof observed === "number" ? observed : null,
+      floodStage: typeof floodStage === "number" ? floodStage : null,
+      url: lid ? `https://water.noaa.gov/gauges/${lid}` : undefined,
+    };
+  });
+
+  const hasElevated = gauges.some((g: { status: string }) => ELEVATED_STATUSES.has(g.status));
+
+  return { gauges, hasElevated };
+}
+
+async function fetchFireRestrictions(lat: number, lon: number): Promise<TrailIntelResponse["fireRestrictions"]> {
+  const url =
+    `https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_FireRestrictions_Public/FeatureServer/0/query` +
+    `?where=1%3D1` +
+    `&geometry=${encodeURIComponent(`${lon - 1.5},${lat - 1.5},${lon + 1.5},${lat + 1.5}`)}` +
+    `&geometryType=esriGeometryEnvelope` +
+    `&inSR=4326` +
+    `&spatialRel=esriSpatialRelIntersects` +
+    `&outFields=UnitName,RestrictionLevel,EffectiveDate,RestrictionOrder` +
+    `&returnGeometry=false` +
+    `&f=json`;
+
+  const res = await fetchWithTimeout(url, {}, 8000);
+  if (!res.ok) throw new Error(`NIFC Fire Restrictions API returned ${res.status}`);
+
+  const json = await res.json();
+  const features = json.features || [];
+
+  const seenNames = new Set<string>();
+  const areas: TrailIntelResponse["fireRestrictions"] extends undefined ? never : TrailIntelResponse["fireRestrictions"]["areas"] = [];
+
+  for (const f of features) {
+    const name = (f.attributes?.UnitName as string) || "Unknown Area";
+    if (seenNames.has(name)) continue;
+    seenNames.add(name);
+
+    const level = parseInt((f.attributes?.RestrictionLevel as string) || "0", 10) || 0;
+    const effectiveDate = f.attributes?.EffectiveDate as string | undefined;
+    const description = f.attributes?.RestrictionOrder as string | undefined;
+
+    areas.push({ name, level, description, effectiveDate });
+    if (areas.length >= 5) break;
+  }
+
+  const maxLevel = areas.reduce((max, a) => Math.max(max, a.level), 0);
+
+  return { areas, maxLevel };
+}
+
+async function fetchEarthquakes(lat: number, lon: number): Promise<TrailIntelResponse["earthquakes"]> {
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+  const url =
+    `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson` +
+    `&latitude=${lat}&longitude=${lon}` +
+    `&maxradiuskm=200&minmagnitude=2.5&orderby=time&limit=10` +
+    `&starttime=${sevenDaysAgo}`;
+
+  const res = await fetchWithTimeout(url, {}, 8000);
+  if (!res.ok) throw new Error(`USGS Earthquake API returned ${res.status}`);
+
+  const json = await res.json();
+  const features = json.features || [];
+
+  const events = features.map((f: Record<string, Record<string, unknown> | number[]>) => ({
+    magnitude: (f.properties as Record<string, number>).mag || 0,
+    place: (f.properties as Record<string, string>).place || "Unknown",
+    time: new Date((f.properties as Record<string, number>).time).toISOString(),
+    depthKm: ((f.geometry as Record<string, number[]>).coordinates?.[2]) || 0,
+  }));
+
+  const maxMagnitude = events.reduce((max: number, e: { magnitude: number }) => Math.max(max, e.magnitude), 0);
+
+  return { events, maxMagnitude };
+}
+
 function computeThreatLevel(
   weather: { severity: string },
   disasters: { active: DisasterEntry[]; recentCount: number },
   wildfires: { active: WildfireEntry[] },
   trailSystem?: TrailSystemData,
+  airQuality?: TrailIntelResponse["airQuality"],
+  fireRestrictions?: TrailIntelResponse["fireRestrictions"],
+  earthquakes?: TrailIntelResponse["earthquakes"],
+  streamGauges?: TrailIntelResponse["streamGauges"],
 ): "clear" | "advisory" | "watch" | "warning" {
   const ws = weather.severity;
 
   if (ws === "severe" || ws === "extreme" || wildfires.active.length > 0) {
+    return "warning";
+  }
+
+  // AQI "Very Unhealthy" (201+) or "Hazardous" (301+)
+  if (airQuality?.available && airQuality.maxAqi >= 201) {
     return "warning";
   }
 
@@ -402,7 +586,37 @@ function computeThreatLevel(
     return "watch";
   }
 
+  // AQI "Unhealthy" (151–200)
+  if (airQuality?.available && airQuality.maxAqi >= 151) {
+    return "watch";
+  }
+
+  // Fire restrictions Stage 2
+  if (fireRestrictions && fireRestrictions.maxLevel >= 2) {
+    return "watch";
+  }
+
+  // Earthquakes M5.5+ within 200km
+  if (earthquakes && earthquakes.maxMagnitude >= 5.5) {
+    return "watch";
+  }
+
   if (ws === "minor" || disasters.recentCount > 0) {
+    return "advisory";
+  }
+
+  // AQI "Unhealthy for Sensitive Groups" (101–150)
+  if (airQuality?.available && airQuality.maxAqi >= 101) {
+    return "advisory";
+  }
+
+  // Fire restrictions Stage 1
+  if (fireRestrictions && fireRestrictions.maxLevel >= 1) {
+    return "advisory";
+  }
+
+  // Stream gauges elevated
+  if (streamGauges?.hasElevated) {
     return "advisory";
   }
 
@@ -496,10 +710,14 @@ export async function handleTrailIntel(req: Request, res: Response) {
 
   const errors: string[] = [];
 
-  const [weatherResult, disasterResult, wildfireResult] = await Promise.allSettled([
+  const [weatherResult, disasterResult, wildfireResult, aqiResult, streamResult, fireResult, quakeResult] = await Promise.allSettled([
     fetchNWS(coords.lat, coords.lon),
     fetchFEMA(state),
     fetchWildfires(coords.lat, coords.lon),
+    fetchAQI(cleanZip),
+    fetchStreamGauges(coords.lat, coords.lon),
+    fetchFireRestrictions(coords.lat, coords.lon),
+    fetchEarthquakes(coords.lat, coords.lon),
   ]);
 
   const weather = weatherResult.status === "fulfilled"
@@ -514,12 +732,28 @@ export async function handleTrailIntel(req: Request, res: Response) {
     ? wildfireResult.value
     : (() => { errors.push("Wildfire data unavailable"); return { active: [] as WildfireEntry[], nearbyCount: 0 }; })();
 
+  const airQuality = aqiResult.status === "fulfilled"
+    ? aqiResult.value
+    : (() => { errors.push("Air quality data unavailable"); return undefined; })();
+
+  const streamGauges = streamResult.status === "fulfilled"
+    ? streamResult.value
+    : (() => { errors.push("Stream gauge data unavailable"); return undefined; })();
+
+  const fireRestrictions = fireResult.status === "fulfilled"
+    ? fireResult.value
+    : (() => { errors.push("Fire restrictions data unavailable"); return undefined; })();
+
+  const earthquakes = quakeResult.status === "fulfilled"
+    ? quakeResult.value
+    : (() => { errors.push("Earthquake data unavailable"); return undefined; })();
+
   let trailSystemData: TrailSystemData | undefined;
   if (trailSystem) {
     trailSystemData = await buildTrailSystemData(trailSystem, errors);
   }
 
-  const overallThreatLevel = computeThreatLevel(weather, disasters, wildfires, trailSystemData);
+  const overallThreatLevel = computeThreatLevel(weather, disasters, wildfires, trailSystemData, airQuality, fireRestrictions, earthquakes, streamGauges);
 
   const response: TrailIntelResponse = {
     zip: cleanZip,
@@ -530,6 +764,10 @@ export async function handleTrailIntel(req: Request, res: Response) {
     disasters,
     wildfires,
     trailSystem: trailSystemData,
+    airQuality,
+    streamGauges,
+    fireRestrictions,
+    earthquakes,
     overallThreatLevel,
     errors,
   };

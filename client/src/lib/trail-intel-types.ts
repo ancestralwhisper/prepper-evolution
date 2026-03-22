@@ -73,6 +73,46 @@ export interface TrailIntelResponse {
     nearbyCount: number;
   };
   trailSystem?: TrailSystemData;
+  airQuality?: {
+    available: boolean;
+    readings: Array<{
+      parameter: string;
+      aqi: number;
+      category: string;
+      reportingArea: string;
+    }>;
+    maxAqi: number;
+    maxCategory: string;
+  };
+  streamGauges?: {
+    gauges: Array<{
+      name: string;
+      lid: string;
+      status: string;
+      observed: number | null;
+      floodStage: number | null;
+      url?: string;
+    }>;
+    hasElevated: boolean;
+  };
+  fireRestrictions?: {
+    areas: Array<{
+      name: string;
+      level: number;
+      description?: string;
+      effectiveDate?: string;
+    }>;
+    maxLevel: number;
+  };
+  earthquakes?: {
+    events: Array<{
+      magnitude: number;
+      place: string;
+      time: string;
+      depthKm: number;
+    }>;
+    maxMagnitude: number;
+  };
   overallThreatLevel: "clear" | "advisory" | "watch" | "warning";
   errors: string[];
 }

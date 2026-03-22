@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
   Radar, Cloud, AlertTriangle, Flame, ChevronDown, ChevronRight,
   RefreshCw, X, MapPin, Clock, WifiOff, Mountain, ExternalLink,
-  ShieldAlert, Route, TreePine,
+  ShieldAlert, Route, TreePine, Wind, Droplets, Activity,
 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import type { TrailIntelResponse } from "@/lib/trail-intel-types";
@@ -59,6 +59,38 @@ function alertCategoryColor(category: string): string {
   }
 }
 
+// ─── AQI color helpers ───────────────────────────────────────────
+
+function aqiColor(aqi: number): string {
+  if (aqi <= 50) return "text-emerald-400";
+  if (aqi <= 100) return "text-yellow-400";
+  if (aqi <= 150) return "text-amber-400";
+  if (aqi <= 200) return "text-orange-400";
+  if (aqi <= 300) return "text-red-400";
+  return "text-purple-400";
+}
+
+function aqiBg(aqi: number): string {
+  if (aqi <= 50) return "bg-emerald-400/10 border-emerald-400/30";
+  if (aqi <= 100) return "bg-yellow-400/10 border-yellow-400/30";
+  if (aqi <= 150) return "bg-amber-400/10 border-amber-400/30";
+  if (aqi <= 200) return "bg-orange-400/10 border-orange-400/30";
+  if (aqi <= 300) return "bg-red-400/10 border-red-400/30";
+  return "bg-purple-400/10 border-purple-400/30";
+}
+
+// ─── Gauge status color ──────────────────────────────────────────
+
+function gaugeStatusColor(status: string): string {
+  switch (status.toLowerCase()) {
+    case "major": return "text-red-400";
+    case "moderate": return "text-orange-400";
+    case "minor": return "text-amber-400";
+    case "action": return "text-yellow-400";
+    default: return "text-emerald-400";
+  }
+}
+
 // ─── Land type badge ─────────────────────────────────────────────
 
 function landTypeBadge(landType: string): { label: string; color: string } {
@@ -101,7 +133,7 @@ export default function TrailIntel({
   const [selectedTrail, setSelectedTrail] = useState<string>("");
 
   const [collapsed, setCollapsed] = useState(defaultCollapsed);
-  const [panels, setPanels] = useState({ weather: true, disasters: true, wildfires: true, trailSystem: true });
+  const [panels, setPanels] = useState({ weather: true, disasters: true, wildfires: true, trailSystem: true, airQuality: true, streamGauges: false, earthquakes: false });
 
   const fetchedRef = useRef({ zip: "", trail: "" });
 
@@ -707,9 +739,165 @@ export default function TrailIntel({
                         </div>
                       ))
                     )}
+
+                    {/* Fire Restrictions subsection */}
+                    {data.fireRestrictions && data.fireRestrictions.areas.length > 0 && (
+                      <div className="space-y-1.5 pt-2 border-t border-border">
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Fire Restrictions</p>
+                        {data.fireRestrictions.areas.map((area, i) => (
+                          <div key={i} className="bg-muted rounded-lg p-2.5 space-y-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-xs font-bold text-foreground">{area.name}</span>
+                              {area.level > 0 && (
+                                <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${area.level >= 2 ? "bg-red-400/20 text-red-400" : "bg-amber-400/20 text-amber-400"}`}>
+                                  Stage {area.level}
+                                </span>
+                              )}
+                            </div>
+                            {area.description && (
+                              <p className="text-[11px] text-muted-foreground leading-relaxed">{area.description}</p>
+                            )}
+                            {area.effectiveDate && (
+                              <p className="text-[10px] text-muted/60">Effective: {area.effectiveDate}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
+
+              {/* Air Quality Panel */}
+              {(data.airQuality?.available && data.airQuality.readings.length > 0) ? (
+                <div className="border border-border rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => togglePanel("airQuality")}
+                    className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-muted/50 transition-colors"
+                  >
+                    <Wind className="w-3.5 h-3.5 text-sky-400 flex-shrink-0" />
+                    <span className="text-xs font-extrabold flex-1">Air Quality</span>
+                    {data.airQuality.maxAqi > 0 && (
+                      <span className={`text-[10px] font-mono ${aqiColor(data.airQuality.maxAqi)}`}>
+                        AQI {data.airQuality.maxAqi}
+                      </span>
+                    )}
+                    {panels.airQuality ? <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />}
+                  </button>
+                  {panels.airQuality && (
+                    <div className="px-3 pb-3 space-y-2">
+                      {data.airQuality.readings.map((r, i) => (
+                        <div key={i} className={`rounded-lg p-2.5 border ${aqiBg(r.aqi)}`}>
+                          <div className="flex items-center justify-between gap-2 flex-wrap">
+                            <span className="text-xs font-bold text-foreground">{r.parameter}</span>
+                            <span className={`text-sm font-bold font-mono ${aqiColor(r.aqi)}`}>{r.aqi}</span>
+                          </div>
+                          <div className="flex items-center justify-between text-[11px] mt-1">
+                            <span className={`font-bold ${aqiColor(r.aqi)}`}>{r.category}</span>
+                            {r.reportingArea && (
+                              <span className="text-muted/60">{r.reportingArea}</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                      <p className="text-[10px] text-muted/50">
+                        AQI 0–50 Good · 51–100 Moderate · 101–150 Sensitive Groups · 151+ Unhealthy
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : data.airQuality && !data.airQuality.available ? (
+                <div className="flex items-center gap-2 px-3 py-2 border border-border rounded-lg">
+                  <Wind className="w-3.5 h-3.5 text-muted/40 flex-shrink-0" />
+                  <p className="text-[11px] text-muted/50">AQI data unavailable</p>
+                </div>
+              ) : null}
+
+              {/* Stream Gauges Panel */}
+              {data.streamGauges && data.streamGauges.gauges.length > 0 && (
+                <div className="border border-border rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => togglePanel("streamGauges")}
+                    className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-muted/50 transition-colors"
+                  >
+                    <Droplets className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+                    <span className="text-xs font-extrabold flex-1">Stream Gauges</span>
+                    <span className="text-[10px] font-mono text-muted-foreground">{data.streamGauges.gauges.length}</span>
+                    {panels.streamGauges ? <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />}
+                  </button>
+                  {panels.streamGauges && (
+                    <div className="px-3 pb-3 space-y-2">
+                      {data.streamGauges.hasElevated && (
+                        <div className="flex items-center gap-2 bg-amber-400/5 border border-amber-400/20 rounded-lg px-3 py-2">
+                          <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                          <p className="text-[11px] text-amber-400 font-bold">One or more gauges at elevated stage</p>
+                        </div>
+                      )}
+                      {data.streamGauges.gauges.map((g, i) => (
+                        <div key={i} className="bg-muted rounded-lg p-2.5 space-y-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-xs font-bold text-foreground">{g.name}</span>
+                            <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-muted/60 ${gaugeStatusColor(g.status)}`}>
+                              {g.status}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3 text-[11px] text-muted-foreground flex-wrap">
+                            {g.observed !== null && (
+                              <span>Stage: <span className="text-foreground font-mono">{g.observed} ft</span></span>
+                            )}
+                            {g.floodStage !== null && (
+                              <span>Flood: <span className="text-foreground font-mono">{g.floodStage} ft</span></span>
+                            )}
+                            {g.url && (
+                              <a
+                                href={g.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-primary hover:text-primary-hover transition-colors"
+                              >
+                                Details <ExternalLink className="w-2.5 h-2.5" />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Earthquakes Panel */}
+              {data.earthquakes && data.earthquakes.events.length > 0 && (
+                <div className="border border-border rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => togglePanel("earthquakes")}
+                    className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-muted/50 transition-colors"
+                  >
+                    <Activity className="w-3.5 h-3.5 text-orange-400 flex-shrink-0" />
+                    <span className="text-xs font-extrabold flex-1">Recent Earthquakes</span>
+                    <span className="text-[10px] font-mono text-muted-foreground">{data.earthquakes.events.length}</span>
+                    {panels.earthquakes ? <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />}
+                  </button>
+                  {panels.earthquakes && (
+                    <div className="px-3 pb-3 space-y-2">
+                      {data.earthquakes.events.map((eq, i) => (
+                        <div key={i} className="bg-muted rounded-lg p-2.5 space-y-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className={`text-sm font-bold font-mono ${eq.magnitude >= 5 ? "text-red-400" : eq.magnitude >= 4 ? "text-amber-400" : "text-foreground"}`}>
+                              M{eq.magnitude.toFixed(1)}
+                            </span>
+                            <span className="text-xs font-bold text-foreground">{eq.place}</span>
+                          </div>
+                          <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                            <span>{timeAgo(eq.time)}</span>
+                            <span>Depth: {eq.depthKm.toFixed(1)} km</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Footer: last updated + refresh */}
               <div className="flex items-center justify-between pt-1">
