@@ -37,8 +37,9 @@ export interface BedCapEntry {
   hasMOLLE: boolean;
   warrantyYears: number | null; // null = not published
   universal: boolean;              // true = custom-fit any make/model (e.g. GFC)
-  bedStiffenersRequired?: boolean; // true if manufacturer offers/recommends bed wall support trusses
-  bedStiffenersNote?: string;      // specific note about bed wall reinforcement
+  bedStiffenersRequired?: boolean; // true if manufacturer documents a bed stiffener requirement for any fitment
+  bedStiffenersNote?: string;      // general note about bed stiffeners
+  bedStiffenerFitments?: BedCapFitment[]; // specific vehicles that require bed stiffeners
   fitments: BedCapFitment[];
   websiteUrl: string;
   affiliateUrl?: string;
@@ -59,7 +60,11 @@ export const bedCapDatabase: BedCapEntry[] = [
     staticLoadLbs: 770,
     loadNote: "Off-road dynamic not independently published by RSI — treated as equal to on-road dynamic (330 lbs) per community/installer reports. Verify with dealer for your use case.",
     bedStiffenersRequired: true,
-    bedStiffenersNote: "RSI specifically notes that the 2022+ Toyota Tundra (and older/smaller trucks) may require bed stiffeners to handle the cap's weight on the bedrails. Without them, the stainless cap's load can deform the bedrails over time. RSI sells bed stiffeners for this — order them with the cap if you're on a Tundra or running a heavy loaded build.",
+    bedStiffenersNote: "RSI requires Bed Stiffener/J-Brace brackets for specific vehicles — these are NOT included with the cap and must be purchased separately. Per RSI's warranty notice: failure to install them can affect the structural integrity of the bed walls AND may lead to SmartCap rear flange welding failures. This is a warranty requirement, not a suggestion.",
+    bedStiffenerFitments: [
+      { make: "Toyota", modelKeywords: ["Tundra"], yearStart: 2022, yearEnd: 2026, bedLengths: ["5.5 ft", "6.5 ft"] },
+      { make: "Ford", modelKeywords: ["Ranger"], yearStart: 2024, yearEnd: 2026 },
+    ],
     features: [
       "5-piece modular — ships flat, installs in sections",
       "Universal roof rails included",
@@ -69,7 +74,7 @@ export const bedCapDatabase: BedCapEntry[] = [
       "Gullwing doors with sliders",
       "No-drill install with bed clamps",
       "Fully weatherproof, double seals",
-      "Bed stiffeners available (required for 2022+ Tundra; recommended for heavy builds)",
+      "Bed Stiffener/J-Brace brackets required for 2022+ Tundra and 2024+ Ranger (NOT included — order separately)",
     ],
     installType: "clamp",
     hasGullwing: true,

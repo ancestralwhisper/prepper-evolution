@@ -1511,9 +1511,17 @@ export function computeWarnings(config: RigSafeConfig, result: Omit<RigSafeResul
     const capWt = getBedCapWeight(config);
     const bedCapObj = !config.useManualBedCap ? config.bedCap : null;
 
-    // Bed stiffener warning (SmartCap EVO on Tundra and heavy builds)
-    if (bedCapObj?.bedStiffenersRequired) {
-      w.push({ level: "warning", message: `${bedCapObj.brand} ${bedCapObj.model}: RSI notes that the 2022+ Tundra (and older/smaller trucks) requires bed stiffeners to handle cap weight on the bedrails. Order bed stiffeners with the cap — they're available directly from RSI.` });
+    // Bed stiffener warning — only fire when the selected vehicle matches a known affected fitment
+    if (bedCapObj?.bedStiffenersRequired && bedCapObj.bedStiffenerFitments?.length) {
+      const v = getVehicle(config);
+      const vehicleNeedsStiffeners = bedCapObj.bedStiffenerFitments.some((fit) => {
+        if (fit.make !== v.make) return false;
+        if (fit.yearStart > v.year || (fit.yearEnd !== null && fit.yearEnd < v.year)) return false;
+        return fit.modelKeywords.some((kw) => v.model.includes(kw));
+      });
+      if (vehicleNeedsStiffeners) {
+        w.push({ level: "danger", message: `WARRANTY REQUIRED — ${bedCapObj.brand} ${bedCapObj.model}: Your ${v.year} ${v.make} ${v.model} requires Bed Stiffener/J-Brace brackets (sold separately, NOT included). Per RSI's warranty notice: failure to install them can structurally damage your bed walls AND void the SmartCap warranty. Order the brackets from RSI when you order the cap.` });
+      }
     }
 
     // Heavy cap + heavy bed build = payload/squat warning

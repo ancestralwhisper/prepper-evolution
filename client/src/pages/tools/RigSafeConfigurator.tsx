@@ -1151,11 +1151,14 @@ export default function RigSafeConfigurator() {
                                 <ExternalLink className="w-3 h-3" /> {config.bedCap.brand} website
                               </a>
                             )}
-                            {/* Bed wall support warning — SmartCap and any cap with this flag */}
+                            {/* Bed stiffener warranty warning — SmartCap specific */}
                             {config.bedCap.bedStiffenersRequired && (
-                              <div className="flex gap-2 mt-1 p-2 bg-amber-400/10 border border-amber-400/30 rounded">
-                                <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
-                                <p className="text-amber-300 leading-relaxed">{config.bedCap.bedStiffenersNote}</p>
+                              <div className="flex gap-2 mt-1 p-2 bg-red-500/10 border border-red-500/30 rounded">
+                                <AlertTriangle className="w-3.5 h-3.5 text-red-400 flex-shrink-0 mt-0.5" />
+                                <div>
+                                  <p className="text-red-400 font-bold text-[11px] uppercase tracking-wide mb-0.5">Warranty Requirement</p>
+                                  <p className="text-red-300 leading-relaxed">{config.bedCap.bedStiffenersNote}</p>
+                                </div>
                               </div>
                             )}
                           </div>
