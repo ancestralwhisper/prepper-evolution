@@ -58,6 +58,33 @@ function makeId(): string {
   return Math.random().toString(36).substring(2, 9);
 }
 
+// ─── Inline Tooltip ──────────────────────────────────────────────────
+function Tip({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <span className="relative inline-flex items-center ml-1">
+      <button
+        type="button"
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+        onClick={() => setOpen((o) => !o)}
+        className="text-muted-foreground hover:text-primary transition-colors align-middle"
+        aria-label="More info"
+      >
+        <Info className="w-3 h-3" />
+      </button>
+      {open && (
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-popover border border-border rounded-lg px-3 py-2 text-xs text-muted-foreground shadow-xl z-50 pointer-events-none block text-left leading-relaxed font-normal normal-case tracking-normal">
+          {text}
+          <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-border block" />
+        </span>
+      )}
+    </span>
+  );
+}
+
 function defaultSegment(index: number): TripSegment {
   return {
     id: makeId(),
@@ -206,6 +233,7 @@ function SegmentEditor({
         <div>
           <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
             Terrain
+            <Tip text="Terrain multiplies your fuel burn. Rock crawling can use 3× more fuel than highway — you're idling in 4-Low at walking speed. Choose the most representative surface for this segment." />
           </label>
           <select
             value={segment.terrain}
@@ -224,6 +252,7 @@ function SegmentEditor({
         <div>
           <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
             Elev. Gain (ft)
+            <Tip text="Net elevation change for this segment. Climbing costs fuel — roughly 3-5% more per 1,000 ft. Enter a negative number for descents. This stacks on top of terrain penalties." />
           </label>
           <input
             type="number"
@@ -257,6 +286,7 @@ function SegmentEditor({
           <label className="text-xs font-bold uppercase tracking-wide text-muted-foreground block mb-1">
             <Timer className="w-3 h-3 inline -mt-0.5 mr-0.5" />
             Idle Time (min)
+            <Tip text="Time spent idling at this location — running heat, camp power, or waiting at a trailhead. Most trucks burn ~0.5 gal/hr at idle. 8 hours can drain 4 gallons without moving an inch." />
           </label>
           <input
             type="number"
@@ -1834,8 +1864,8 @@ export default function FuelRangePlanner() {
                                 {res.segment.name}
                               </span>
                               {isPonr && (
-                                <span className="text-[9px] font-bold uppercase tracking-wide text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded">
-                                  Point of No Return
+                                <span className="text-[9px] font-bold uppercase tracking-wide text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded" title="Past this point you don't have enough fuel to turn around and make it back to your start. You're committed to finding fuel ahead.">
+                                  Point of No Return ⚠
                                 </span>
                               )}
                             </div>

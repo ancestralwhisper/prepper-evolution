@@ -110,13 +110,13 @@ function GaugeArc({
 // ─── Collapsible Section ─────────────────────────────────────────────
 
 function Section({
-  title, icon: Icon, children, open, onToggle, iconColor, badge,
+  title, icon: Icon, children, open, onToggle, iconColor, badge, id,
 }: {
   title: string; icon: React.ElementType; children: React.ReactNode;
-  open: boolean; onToggle: () => void; iconColor?: string; badge?: string;
+  open: boolean; onToggle: () => void; iconColor?: string; badge?: string; id?: string;
 }) {
   return (
-    <div className="border-b border-border last:border-0">
+    <div id={id} className="border-b border-border last:border-0">
       <button
         onClick={onToggle}
         className="w-full flex items-center gap-3 py-4 text-left hover:text-primary transition-colors"
@@ -279,6 +279,74 @@ function BudgetCard({ label, used, rating, remaining, pct, unit }: {
   );
 }
 
+// ─── Tip (Inline Tooltip) ────────────────────────────────────────────
+
+function Tip({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <span className="relative inline-flex items-center ml-1">
+      <button
+        type="button"
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+        onClick={() => setOpen((o) => !o)}
+        className="text-muted-foreground hover:text-primary transition-colors align-middle"
+        aria-label="More info"
+      >
+        <Info className="w-3.5 h-3.5" />
+      </button>
+      {open && (
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-popover border border-border rounded-lg px-3 py-2 text-xs text-muted-foreground shadow-xl z-50 pointer-events-none block text-left leading-relaxed">
+          {text}
+          <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-border block" />
+        </span>
+      )}
+    </span>
+  );
+}
+
+// ─── Guide Steps ────────────────────────────────────────────────────
+
+const GUIDE_STEPS: { sectionKey: string; extraKeys?: string[]; title: string; body: string }[] = [
+  {
+    sectionKey: "vehicle",
+    title: "Vehicle Setup",
+    body: "Start here. Pick your exact year, make, model, and trim — or use Manual Entry if your rig isn't in the database yet. Your GVWR and curb weight set your total payload budget. Everything you add gets subtracted from that number.",
+  },
+  {
+    sectionKey: "mounting",
+    title: "Rack & Mount Type",
+    body: "Choose what's bolted to your rig. Rack brand and model matter — every rack has its own weight rating, and it's often less than what your vehicle roof can handle. The weakest link sets your ceiling, not the GVWR.",
+  },
+  {
+    sectionKey: "tent",
+    title: "Tent",
+    body: "Add your rooftop or bed tent. Weight counts against two limits: your rack's rated capacity and your vehicle payload budget. Not running a tent yet? Skip this and move on.",
+  },
+  {
+    sectionKey: "awning",
+    title: "Awning",
+    body: "Awnings create cantilevered side load. Even a lightweight awning on a 6-foot arm puts real leverage on your rack mounting points. Add yours here — or skip if you're not running one.",
+  },
+  {
+    sectionKey: "cargo",
+    title: "Cargo & Occupants",
+    body: "This is where it adds up fast. Log your crew with honest weights, then pile on the gear. The tool tracks where each item mounts and applies the correct load multiplier for that location on the vehicle.",
+  },
+  {
+    sectionKey: "vehicleMods",
+    title: "Vehicle Mods",
+    body: "Steel bumpers, winches, skid plates, drawers, fridges, light bars — all permanent weight. A full armor package can stack 400+ lbs. Log every mod so the payload number reflects your actual rig, not a stock spec sheet.",
+  },
+  {
+    sectionKey: "results",
+    title: "Results Dashboard",
+    body: "Your report card. Three gauges: Static (parked/sleeping), On-Road Dynamic (highway loads), Off-Road Dynamic (trail G-forces). Off-road multiplies the effective load — same gear hits harder on a rocky trail than on pavement. Green = clear. Yellow = tightening up. Red = pull weight before you roll.",
+  },
+];
+
 // ─── Main Component ────────────────────────────────────────────────
 
 export default function RigSafeConfigurator() {
@@ -286,6 +354,7 @@ export default function RigSafeConfigurator() {
   const [config, setConfig] = useState<RigSafeConfig>(defaultRigSafeConfig);
   const [loaded, setLoaded] = useState(false);
   const [showChangelog, setShowChangelog] = useState(false);
+  const [guideStep, setGuideStep] = useState<number | null>(null);
 
   // Section open state
   const [sections, setSections] = useState({
@@ -577,6 +646,25 @@ export default function RigSafeConfigurator() {
     setSections((prev) => ({ ...prev, [key]: !prev[key] }));
   }, []);
 
+  // ─── Guide navigation ────────────────────────────────────────
+  const advanceGuide = useCallback((nextStep: number) => {
+    if (nextStep >= GUIDE_STEPS.length) {
+      setGuideStep(null);
+      return;
+    }
+    setGuideStep(nextStep);
+    const step = GUIDE_STEPS[nextStep];
+    const keys = [step.sectionKey, ...(step.extraKeys ?? [])];
+    setSections((prev) => {
+      const next = { ...prev } as Record<string, boolean>;
+      keys.forEach((k) => { next[k] = true; });
+      return next as typeof prev;
+    });
+    setTimeout(() => {
+      document.getElementById(`section-${step.sectionKey}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 150);
+  }, []);
+
   // ─── Reset ────────────────────────────────────────────────────
   const resetAll = useCallback(() => {
     setConfig(defaultRigSafeConfig);
@@ -673,6 +761,23 @@ export default function RigSafeConfigurator() {
           )}
         </div>
 
+      {/* Guided Tour Banner */}
+      {guideStep === null && (
+        <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <Info className="w-4 h-4 text-primary flex-shrink-0 mt-0.5 sm:mt-0" />
+          <div className="flex-1">
+            <p className="text-sm font-bold text-foreground">First time? Take the guided tour.</p>
+            <p className="text-xs text-muted-foreground">Walk through each section with plain-English explanations of what to enter and why it matters.</p>
+          </div>
+          <button
+            onClick={() => advanceGuide(0)}
+            className="px-4 py-2 bg-primary text-white text-sm font-bold uppercase rounded-lg hover:bg-primary/90 transition-colors whitespace-nowrap"
+          >
+            Start Guide
+          </button>
+        </div>
+      )}
+
       {/* Safety Disclaimer */}
       <ToolSafetyDisclaimer level="safety-critical" />
 
@@ -711,6 +816,7 @@ export default function RigSafeConfigurator() {
 
         {/* ─── Section 1: Vehicle Setup ─────────────────────────── */}
         <Section
+          id="section-vehicle"
           title="Vehicle Setup"
           icon={Truck}
           open={sections.vehicle}
@@ -861,6 +967,7 @@ export default function RigSafeConfigurator() {
 
         {/* ─── Section 2: Mounting Configuration ────────────────── */}
         <Section
+          id="section-mounting"
           title="Mounting Configuration"
           icon={Package}
           open={sections.mounting}
@@ -1134,6 +1241,7 @@ export default function RigSafeConfigurator() {
 
         {/* ─── Section 3: Rooftop Tent ────────────────────────── */}
         <Section
+          id="section-tent"
           title="Rooftop Tent"
           icon={Tent}
           open={sections.tent}
@@ -1320,6 +1428,7 @@ export default function RigSafeConfigurator() {
 
         {/* ─── Section 4: Awning & Shelter ────────────────────── */}
         <Section
+          id="section-awning"
           title="Awning & Shelter"
           icon={Wind}
           open={sections.awning}
@@ -1446,6 +1555,7 @@ export default function RigSafeConfigurator() {
 
         {/* ─── Section 5: Vehicle Mods ──────────────────────── */}
         <Section
+          id="section-vehicleMods"
           title="Vehicle Mods"
           icon={Wrench}
           open={sections.vehicleMods}
@@ -1861,6 +1971,7 @@ export default function RigSafeConfigurator() {
 
         {/* ─── Section 6: Additional Load ─────────────────────── */}
         <Section
+          id="section-cargo"
           title="Cargo & Occupants"
           icon={Users}
           open={sections.cargo}
@@ -2206,6 +2317,7 @@ export default function RigSafeConfigurator() {
 
         {/* ─── Section 7: Results Dashboard ───────────────────── */}
         <Section
+          id="section-results"
           title="Results Dashboard"
           icon={Ruler}
           open={sections.results}
@@ -2233,7 +2345,10 @@ export default function RigSafeConfigurator() {
 
             {/* Three primary gauges */}
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">Rack Load Budgets</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">
+                Rack Load Budgets
+                <Tip text="Three separate rating chains — Static (parked), On-Road Dynamic (highway), and Off-Road Dynamic (trail). You must stay within all three, not just the highest one." />
+              </h4>
               <div className="grid grid-cols-3 gap-2">
                 <GaugeArc
                   value={result.rackStatic.pct}
@@ -2278,7 +2393,10 @@ export default function RigSafeConfigurator() {
 
             {/* Weakest Link */}
             <div className="bg-card border border-border rounded-lg p-4 space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Weakest Link Analysis</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                Weakest Link Analysis
+                <Tip text="Your effective load ceiling is whichever is lower: your rack's rating or your vehicle's roof rating. The weakest component in the chain sets the limit for the entire system." />
+              </h4>
               <div className="grid grid-cols-3 gap-3 text-sm">
                 <div>
                   <span className="text-muted-foreground block text-xs uppercase">Static Limit</span>
@@ -2809,6 +2927,43 @@ export default function RigSafeConfigurator() {
           </form>
         )}
       </div>
+
+      {/* ─── Floating Guide Panel ──────────────────────────────────── */}
+      {guideStep !== null && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[min(92vw,480px)] bg-card border border-primary/40 rounded-xl shadow-2xl z-50 overflow-hidden">
+          <div className="bg-primary/10 border-b border-primary/20 px-4 py-2 flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-widest text-primary">
+              Step {guideStep + 1} of {GUIDE_STEPS.length}
+            </span>
+            <button
+              onClick={() => setGuideStep(null)}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors font-bold uppercase tracking-wide"
+            >
+              ✕ Skip Guide
+            </button>
+          </div>
+          <div className="px-4 py-3 space-y-2">
+            <p className="text-sm font-extrabold text-foreground">{GUIDE_STEPS[guideStep].title}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">{GUIDE_STEPS[guideStep].body}</p>
+          </div>
+          <div className="px-4 pb-3 flex justify-end gap-2">
+            {guideStep > 0 && (
+              <button
+                onClick={() => advanceGuide(guideStep - 1)}
+                className="px-3 py-1.5 text-xs font-bold uppercase border border-border rounded-lg hover:bg-muted transition-colors"
+              >
+                ← Back
+              </button>
+            )}
+            <button
+              onClick={() => advanceGuide(guideStep + 1)}
+              className="px-4 py-1.5 bg-primary text-white text-xs font-bold uppercase rounded-lg hover:bg-primary/90 transition-colors"
+            >
+              {guideStep < GUIDE_STEPS.length - 1 ? "Next →" : "Done ✓"}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Shared footer components */}
       <DataPrivacyNotice />

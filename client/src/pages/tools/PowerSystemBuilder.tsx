@@ -75,6 +75,33 @@ interface SavedState {
   circuitDistances: Record<string, number>;
 }
 
+// ─── Inline Tooltip ──────────────────────────────────────────────────
+function Tip({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <span className="relative inline-flex items-center ml-1">
+      <button
+        type="button"
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+        onClick={() => setOpen((o) => !o)}
+        className="text-muted-foreground hover:text-primary transition-colors align-middle"
+        aria-label="More info"
+      >
+        <Info className="w-3.5 h-3.5" />
+      </button>
+      {open && (
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-popover border border-border rounded-lg px-3 py-2 text-xs text-muted-foreground shadow-xl z-50 pointer-events-none block text-left leading-relaxed font-normal normal-case tracking-normal">
+          {text}
+          <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-border block" />
+        </span>
+      )}
+    </span>
+  );
+}
+
 const ELECTRICAL_SAFETY_MESSAGE =
   "Incorrect wire sizing or fuse sizing can cause vehicle fires. This tool uses NEC/ABYC-based calculations " +
   "but is for planning purposes only. Have all electrical work inspected by a qualified technician. " +
@@ -389,7 +416,7 @@ export default function PowerSystemBuilder() {
           <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${smartAlternator ? "left-5" : "left-0.5"}`} />
         </button>
         <div>
-          <span className="text-sm font-bold">Smart Alternator</span>
+          <span className="text-sm font-bold">Smart Alternator <Tip text="ECU-managed alternators (most 2017+ vehicles) don't output a stable charging voltage. Directly connecting an aux battery can damage it or the vehicle's electrical system. A DC-DC charger isolates and regulates the charge properly." /></span>
           <p className="text-xs text-muted-foreground">Most 2017+ vehicles have ECU-controlled alternators. Requires compatible DC-DC charger.</p>
         </div>
       </div>
@@ -625,7 +652,7 @@ export default function PowerSystemBuilder() {
 
       {/* Chemistry */}
       <div className="space-y-2">
-        <label className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Chemistry</label>
+        <label className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Chemistry <Tip text="DOD = Depth of Discharge — how much of the battery you can safely use. LiFePO4 gives you 80% usable capacity vs ~50% for AGM. Lead-acid at 50% DOD also ages faster with each deep cycle." /></label>
         <div className="grid grid-cols-3 gap-2">
           {(Object.keys(batterySpecs) as BatteryChemistry[]).map((chem) => {
             const s = batterySpecs[chem];
@@ -678,7 +705,7 @@ export default function PowerSystemBuilder() {
 
       {/* Days of autonomy */}
       <div className="space-y-2">
-        <label className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Days of Autonomy Target</label>
+        <label className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Days of Autonomy Target <Tip text="How many days you want to run your gear without any recharge (no driving, no solar, no shore power). Start at 2 for a vehicle-based setup. Off-grid cabin builds often target 3-5 days." /></label>
         <input type="range" min={1} max={5} step={0.5} value={daysAutonomyTarget}
           onChange={(e) => setDaysAutonomyTarget(Number(e.target.value))}
           className="w-full accent-accent" />

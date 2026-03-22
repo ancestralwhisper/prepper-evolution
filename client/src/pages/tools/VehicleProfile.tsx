@@ -176,15 +176,15 @@ function Section({
 // ─── Input Helpers ───────────────────────────────────────────────────
 
 function NumberInput({
-  label, value, onChange, min, max, step, unit, hint,
+  label, value, onChange, min, max, step, unit, hint, tip,
 }: {
   label: string; value: number; onChange: (v: number) => void;
-  min?: number; max?: number; step?: number; unit?: string; hint?: string;
+  min?: number; max?: number; step?: number; unit?: string; hint?: string; tip?: string;
 }) {
   return (
     <div>
       <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
-        {label} {unit && <span className="normal-case font-normal">({unit})</span>}
+        {label} {unit && <span className="normal-case font-normal">({unit})</span>}{tip && <Tip text={tip} />}
       </label>
       <input
         type="number"
@@ -457,6 +457,33 @@ function MpgBreakdownChart({ items }: { items: { label: string; penalty: number 
         </div>
       ))}
     </div>
+  );
+}
+
+// ─── Inline Tooltip ──────────────────────────────────────────────────
+function Tip({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <span className="relative inline-flex items-center ml-1">
+      <button
+        type="button"
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+        onClick={() => setOpen((o) => !o)}
+        className="text-muted-foreground hover:text-primary transition-colors align-middle"
+        aria-label="More info"
+      >
+        <Info className="w-3 h-3" />
+      </button>
+      {open && (
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-popover border border-border rounded-lg px-3 py-2 text-xs text-muted-foreground shadow-xl z-50 pointer-events-none block text-left leading-relaxed font-normal normal-case tracking-normal">
+          {text}
+          <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-border block" />
+        </span>
+      )}
+    </span>
   );
 }
 
@@ -843,12 +870,12 @@ export default function VehicleProfileEditor() {
               <NumberInput label="Wheelbase" value={profile.wheelbaseIn} onChange={(v) => update("wheelbaseIn", v)} unit="in" />
               <NumberInput label="Track Width" value={profile.trackWidthIn} onChange={(v) => update("trackWidthIn", v)} unit="in" hint="Front track" />
               <NumberInput label="Ground Clearance" value={profile.groundClearanceIn} onChange={(v) => update("groundClearanceIn", v)} unit="in" />
-              <NumberInput label="Approach Angle" value={profile.approachAngle} onChange={(v) => update("approachAngle", v)} unit="deg" />
-              <NumberInput label="Departure Angle" value={profile.departureAngle} onChange={(v) => update("departureAngle", v)} unit="deg" />
-              <NumberInput label="Breakover Angle" value={profile.breakoverAngle} onChange={(v) => update("breakoverAngle", v)} unit="deg" />
+              <NumberInput label="Approach Angle" value={profile.approachAngle} onChange={(v) => update("approachAngle", v)} unit="deg" tip="The maximum angle your front end can climb without the bumper hitting. Higher = better approach to obstacles and steep ledges. Aftermarket bumpers and lift kits improve this." />
+              <NumberInput label="Departure Angle" value={profile.departureAngle} onChange={(v) => update("departureAngle", v)} unit="deg" tip="The maximum angle you can drive off without scraping the rear. Spare tire carriers and rear bumpers can reduce this. Higher is better for steep exits and ledge drops." />
+              <NumberInput label="Breakover Angle" value={profile.breakoverAngle} onChange={(v) => update("breakoverAngle", v)} unit="deg" tip="The maximum peak angle between your front and rear axles without high-centering (belly dragging). Longer wheelbase = worse breakover. Lockers and skid plates help protect you when you exceed it." />
               <NumberInput label="Fuel Tank" value={profile.fuelTankGal} onChange={(v) => update("fuelTankGal", v)} unit="gal" />
               <NumberInput label="MPG Combined" value={profile.mpgCombined} onChange={(v) => update("mpgCombined", v)} />
-              <NumberInput label="SSF" value={profile.ssf} onChange={(v) => update("ssf", v)} step={0.01} hint="NHTSA Static Stability Factor" />
+              <NumberInput label="SSF" value={profile.ssf} onChange={(v) => update("ssf", v)} step={0.01} hint="NHTSA Static Stability Factor" tip="Static Stability Factor measures rollover resistance. Higher = more stable. Below 1.0 is considered risky. Most stock full-size trucks are 1.1–1.3. Adding roof weight (rack, RTT) lowers this number." />
             </div>
             <div className="grid sm:grid-cols-3 gap-4 mb-4">
               <SelectInput label="Engine" value={profile.engineType} onChange={(v) => update("engineType", v as EngineType)}
