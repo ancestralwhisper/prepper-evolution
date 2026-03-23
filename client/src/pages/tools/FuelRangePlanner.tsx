@@ -35,6 +35,14 @@ import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import { generateFuelRangePdf } from "@/components/tools/PdfExport";
 import { trackEvent } from "@/lib/analytics";
 import { useSEO } from "@/hooks/useSEO";
+import { GuidedTour } from "./GuidedTour";
+
+const FUEL_TOUR = [
+  { title: "Your Vehicle", body: "Select your vehicle from the database. The planner loads your real fuel tank capacity and EPA highway MPG — these are your best-case numbers before accounting for mods and load." },
+  { title: "Rig Modifications", body: "Add what's running on the rig: roof rack, RTT, lift kit, bigger tires. Each one adds aerodynamic drag or rolling resistance that cuts your real-world MPG." },
+  { title: "Load & Passengers", body: "A loaded rig burns more fuel. Set your passenger count and approximate cargo weight — both reduce your range per tank." },
+  { title: "Read Your Range", body: "The results show adjusted MPG, miles per tank, and how far you can get before needing fuel. For a bug-out scenario, use this number to map fuel stops before you leave." },
+];
 
 const TRIP_STORAGE_KEY = "pe-fuel-range-trip";
 const RIG_CONDITIONS_KEY = "pe-fuel-rig-conditions";
@@ -1264,6 +1272,8 @@ export default function FuelRangePlanner() {
               />
             </div>
           </div>
+
+          <GuidedTour steps={FUEL_TOUR} toolName="Fuel Range walkthrough" />
 
           <div className="space-y-6">
 

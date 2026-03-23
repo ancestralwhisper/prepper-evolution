@@ -26,6 +26,14 @@ import {
   type ItemPriority,
 } from "./kit-data";
 import { useSEO } from "@/hooks/useSEO";
+import { GuidedTour } from "./GuidedTour";
+
+const KIT_TOUR = [
+  { title: "Answer the Questions", body: "The wizard asks 5-7 questions about where you live, who you're building for, and your situation. Your answers filter the kit to what's actually relevant — a desert kit is different from a coastal hurricane kit." },
+  { title: "Your Location Matters", body: "Your ZIP auto-fills your climate region and identifies your most likely hazards. This determines which items are essential vs. optional in your specific kit." },
+  { title: "Household Size", body: "More people means more items, more weight, and more cost. The calculator scales everything to your group size automatically." },
+  { title: "Priority Guide", body: "After the final question, look for the Priority Guide in your results — it tells you what to buy first if you're building the kit on a budget over time. Start with the Essential tier." },
+];
 
 type Answers = Record<string, string | number | string[]>;
 
@@ -402,6 +410,9 @@ export default function KitBuilder() {
               cost estimates and product recommendations.
             </p>
           </div>
+
+          {/* Guided Tour */}
+          <GuidedTour steps={KIT_TOUR} toolName="72-Hour Kit walkthrough" />
 
           <div className="mb-8">
             <div className="flex items-center justify-between mb-2">

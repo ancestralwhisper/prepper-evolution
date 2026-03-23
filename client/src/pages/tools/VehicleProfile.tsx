@@ -22,6 +22,14 @@ import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import InstallButton from "@/components/tools/InstallButton";
 import { trackEvent } from "@/lib/analytics";
+import { GuidedTour } from "./GuidedTour";
+
+const VEHICLE_TOUR = [
+  { title: "Select Your Vehicle", body: "Search or pick your rig from the database. The profile loads real specs — GVWR, curb weight, payload capacity, roof rating. These are the hard limits you're working within." },
+  { title: "Document Your Build", body: "Work through the modification sections to log what's on your rig. Each mod contributes to your payload used — the total updates in real time as you add gear." },
+  { title: "Watch Your Payload", body: "The payload gauge shows how much capacity is used. Most overlanding builds max out faster than people expect once you add RTT, rack, fridge, recovery gear, and passengers." },
+  { title: "Export & Share", body: "Your profile saves automatically in your browser. The Load Balancer tool reads from this profile — keep it accurate and your load analysis will be too." },
+];
 
 // ─── SVG Gauge Component ─────────────────────────────────────────────
 
@@ -756,6 +764,8 @@ export default function VehicleProfileEditor() {
           })}
         </div>
       </div>
+
+      <GuidedTour steps={VEHICLE_TOUR} toolName="Vehicle Profile walkthrough" />
 
       {/* How This Tool Works */}
       <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">

@@ -103,6 +103,12 @@ export const deviceDatabase: DeviceEntry[] = [
   { id: "dometic-cfx5-55im",name: "Dometic CFX5 55 IM (55L)", watts: 47, amps12v: 3.92, dutyCyclePct: 33, defaultHoursPerDay: 24, category: "refrigeration" },
   { id: "dometic-cfx5-75dz",name: "Dometic CFX5 75DZ (75L)", watts: 61, amps12v: 5.08, dutyCyclePct: 40, defaultHoursPerDay: 24, category: "refrigeration" },
   { id: "arb-63qt",         name: "ARB Classic II 63QT",   watts: 45,  amps12v: 3.75, dutyCyclePct: 35, defaultHoursPerDay: 24, category: "refrigeration" },
+  { id: "dometic-cfx5-95dz",name: "Dometic CFX5 95DZ (95L dual-zone)", watts: 72, amps12v: 6.0, dutyCyclePct: 35, defaultHoursPerDay: 24, category: "refrigeration" },
+  { id: "arb-zero-47qt",   name: "ARB Zero 47QT (44L)",   watts: 38,  amps12v: 3.17, dutyCyclePct: 33, defaultHoursPerDay: 24, category: "refrigeration" },
+  { id: "arb-zero-63qt",   name: "ARB Zero 63QT (60L)",   watts: 45,  amps12v: 3.75, dutyCyclePct: 35, defaultHoursPerDay: 24, category: "refrigeration" },
+  { id: "arb-zero-69qt-dz",name: "ARB Zero 69QT Dual Zone", watts: 55, amps12v: 4.58, dutyCyclePct: 38, defaultHoursPerDay: 24, category: "refrigeration" },
+  { id: "truma-c36",       name: "Truma Cooler C36 (36L)", watts: 42, amps12v: 3.5,  dutyCyclePct: 33, defaultHoursPerDay: 24, category: "refrigeration" },
+  { id: "truma-c69",       name: "Truma Cooler C69 (69L)", watts: 55, amps12v: 4.58, dutyCyclePct: 35, defaultHoursPerDay: 24, category: "refrigeration" },
 
   // ─── Lighting ───
   { id: "led-interior",  name: "LED Interior Light",   watts: 10,  amps12v: 0.83, dutyCyclePct: 100, defaultHoursPerDay: 4, category: "lighting" },
@@ -118,6 +124,12 @@ export const deviceDatabase: DeviceEntry[] = [
   { id: "starlink-mini", name: "Starlink Mini",            watts: 35,  amps12v: 2.92, dutyCyclePct: 100, defaultHoursPerDay: 6, category: "communication" },
   { id: "starlink-std",  name: "Starlink Standard",        watts: 85,  amps12v: 7.08, dutyCyclePct: 100, defaultHoursPerDay: 6, category: "communication" },
   { id: "cb-radio",      name: "CB Radio",                 watts: 5,   amps12v: 0.42, dutyCyclePct: 100, defaultHoursPerDay: 4, category: "communication" },
+  { id: "gmrs-mobile-15w-rx", name: "GMRS Mobile 15W (Receive)", watts: 10, amps12v: 0.83, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "communication" },
+  { id: "gmrs-mobile-15w-tx", name: "GMRS Mobile 15W (Transmit)", watts: 30, amps12v: 2.5, dutyCyclePct: 10, defaultHoursPerDay: 2, category: "communication", note: "Peak draw during transmit only" },
+  { id: "gmrs-mobile-50w-rx", name: "GMRS Mobile 50W (Receive)", watts: 12, amps12v: 1.0, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "communication" },
+  { id: "gmrs-mobile-50w-tx", name: "GMRS Mobile 50W (Transmit)", watts: 72, amps12v: 6.0, dutyCyclePct: 10, defaultHoursPerDay: 2, category: "communication", note: "Peak draw during transmit only" },
+  { id: "weboost-drive-reach",  name: "weBoost Drive Reach Overland", watts: 8, amps12v: 0.67, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "communication" },
+  { id: "garmin-inreach-mini",  name: "Garmin inReach Mini 2",   watts: 3,   amps12v: 0.25, dutyCyclePct: 100, defaultHoursPerDay: 6, category: "communication" },
 
   // ─── Medical ───
   { id: "cpap-no-humid",  name: "CPAP (No Humidifier)",   watts: 45,  amps12v: 3.75, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "medical" },
@@ -134,7 +146,11 @@ export const deviceDatabase: DeviceEntry[] = [
   // ─── Climate Control ───
   { id: "diesel-heater-run",     name: "Diesel Heater (Running)", watts: 20,  amps12v: 1.67, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "climate" },
   { id: "diesel-heater-startup", name: "Diesel Heater (Startup)", watts: 150, amps12v: 12.5, dutyCyclePct: 5,   defaultHoursPerDay: 8, category: "climate", note: "150W spike on ignition — 5% duty" },
-  { id: "maxxair-fan",           name: "MaxxAir Vent Fan",        watts: 20,  amps12v: 1.67, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "climate" },
+  { id: "maxxair-fan",           name: "Maxxfan Deluxe",          watts: 20,  amps12v: 1.67, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "climate" },
+  { id: "maxxair-fan-low",      name: "Maxxfan Deluxe (Low Speed)", watts: 7, amps12v: 0.58, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "climate" },
+  { id: "webasto-2000stc-run",  name: "Webasto Air Top 2000 STC (Running)", watts: 22, amps12v: 1.83, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "climate" },
+  { id: "webasto-2000stc-glow", name: "Webasto Air Top 2000 STC (Glow Plug)", watts: 180, amps12v: 15.0, dutyCyclePct: 3, defaultHoursPerDay: 8, category: "climate", note: "180W glow plug spike on ignition — 3% duty" },
+  { id: "truma-varioheat",      name: "Truma VarioHeat Comfort",  watts: 15,  amps12v: 1.25, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "climate" },
   { id: "heated-blanket",        name: "12V Heated Blanket",      watts: 45,  amps12v: 3.75, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "climate" },
 
   // ─── Recovery & Water ───
@@ -227,6 +243,7 @@ export const dcDcChargers: DcDcCharger[] = [
   { id: "redarc-bcdc1225d",  brand: "Redarc",  model: "BCDC1225D",         dcAmps: 25, solarAmps: null, solarMaxV: null, solarMaxW: 350,  lifepo4AbsV: 14.6, smartAltCompatible: true },
   { id: "redarc-bcdc1240d",  brand: "Redarc",  model: "BCDC1240D",         dcAmps: 40, solarAmps: null, solarMaxV: null, solarMaxW: 550,  lifepo4AbsV: 14.6, smartAltCompatible: true },
   { id: "redarc-bcdc1250d",  brand: "Redarc",  model: "BCDC1250D",         dcAmps: 50, solarAmps: null, solarMaxV: null, solarMaxW: 750,  lifepo4AbsV: 14.6, smartAltCompatible: true },
+  { id: "redarc-manager30", brand: "Redarc",  model: "Manager30",         dcAmps: 30, solarAmps: 30,   solarMaxV: 50,  solarMaxW: null, lifepo4AbsV: 14.6, smartAltCompatible: true },
 ];
 
 // ─── Alternator Spare Capacity Lookup ──────────────────────────────
@@ -277,6 +294,15 @@ export interface ProductRecommendation {
 }
 
 export const productRecommendations: ProductRecommendation[] = [
+  // Fridges
+  { category: "Fridges", name: "Dometic CFX5 95DZ (95L Dual Zone)", spec: "95L, dual zone fridge+freezer, CompressorCool, Bluetooth" },
+  { category: "Fridges", name: "Dometic CFX5 75DZ (75L Dual Zone)", spec: "75L, dual zone, CompressorCool, ~61W avg" },
+  { category: "Fridges", name: "Dometic CFX5 55 IM (55L)", spec: "55L, single zone with ice maker, ~47W avg", asin: "B09HN6YKM4", url: amzUrl("B09HN6YKM4") },
+  { category: "Fridges", name: "ARB Zero 47QT Single Zone", spec: "44L, single zone, ~38W avg, rugged IP67 rating" },
+  { category: "Fridges", name: "ARB Zero 63QT Single Zone", spec: "60L, single zone, ~45W avg, IP67 rating" },
+  { category: "Fridges", name: "ARB Zero 69QT Dual Zone", spec: "65L, dual zone fridge+freezer, ~55W avg, IP67" },
+  { category: "Fridges", name: "Truma Cooler C69 Dual Zone", spec: "69L, dual zone, whisper-quiet compressor" },
+
   // Batteries
   { category: "Batteries", name: "Battle Born 100Ah LiFePO4", spec: "100Ah, 12V, 31 lbs, BMS built-in, 3000+ cycles", asin: "B06XX197GJ", url: amzUrl("B06XX197GJ") },
   { category: "Batteries", name: "SOK 206Ah LiFePO4", spec: "206Ah, 12V, 47 lbs, self-heating option available", asin: "B092CPZK4M", url: amzUrl("B092CPZK4M") },
@@ -296,6 +322,22 @@ export const productRecommendations: ProductRecommendation[] = [
   { category: "DC-DC Chargers", name: "Redarc BCDC1225D", spec: "25A DC + 350W solar, Australian-made", asin: "B077JPHCRV", url: amzUrl("B077JPHCRV") },
   { category: "DC-DC Chargers", name: "Redarc BCDC1240D", spec: "40A DC + 550W solar, Australian-made", asin: "B077JR6NH5", url: amzUrl("B077JR6NH5") },
   { category: "DC-DC Chargers", name: "Redarc BCDC1250D", spec: "50A DC + 750W solar, Australian-made", asin: "B07MT9T1Q5", url: amzUrl("B07MT9T1Q5") },
+  { category: "DC-DC Chargers", name: "Redarc Manager30", spec: "30A DC + 30A MPPT solar + AC shore power input, RedVision compatible" },
+
+  // Battery Monitors
+  { category: "Battery Monitors", name: "Victron BMV-712 Smart", spec: "Bluetooth battery monitor, 500A shunt, SOC + voltage + current", asin: "B07PX3C2ZB", url: amzUrl("B07PX3C2ZB") },
+  { category: "Battery Monitors", name: "Victron SmartShunt 500A", spec: "500A shunt, Bluetooth, no display (use VictronConnect app)", asin: "B08BPNK6K3", url: amzUrl("B08BPNK6K3") },
+
+  // Inverters
+  { category: "Inverters", name: "Renogy 2000W Pure Sine Inverter", spec: "2000W continuous, 4000W surge, pure sine wave, 12V DC" },
+  { category: "Inverters", name: "Victron Phoenix 12/1200", spec: "1200VA pure sine, 12V, Bluetooth, VE.Direct monitoring" },
+
+  // Switch Panels
+  { category: "Switch Panels", name: "Blue Sea 4-Position Water-Resistant Panel", spec: "4 circuit breakers, 12V socket, dual USB, voltmeter — model 1229" },
+  { category: "Switch Panels", name: "Blue Sea ST Blade Fuse Block (12-circuit)", spec: "12 circuits, cover, integrated negative bus — model 5026", asin: "B00JWZ9M12", url: amzUrl("B00JWZ9M12") },
+
+  // Roof Fans
+  { category: "Roof Fans", name: "Maxxfan Deluxe 10-Speed", spec: "10-speed fan + thermostat + rain shield, 12V, 20W max, remote included" },
 
   // Fuse Boxes & Protection
   { category: "Fuse & Protection", name: "Blue Sea ST Blade Fuse Block (12-ckt)", spec: "12-circuit, cover + negative bus, model 5026", asin: "B00JWZ9M12", url: amzUrl("B00JWZ9M12") },

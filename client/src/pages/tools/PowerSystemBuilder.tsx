@@ -23,6 +23,16 @@ import ToolSafetyDisclaimer from "@/components/tools/ToolSafetyDisclaimer";
 import SupportFooter from "@/components/tools/SupportFooter";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import { trackEvent } from "@/lib/analytics";
+import { GuidedTour } from "./GuidedTour";
+import { loadPowerConfig, savePowerConfig, mergePowerConfig } from "./power-config-shared";
+
+const PSB_TOUR = [
+  { title: "Vehicle Setup", body: "Start here. Pick your vehicle type — this sets your alternator's estimated spare capacity, which determines how much DC charging you can pull while driving." },
+  { title: "Add Your Loads", body: "Add every device you'll actually run in the field: fridge, fan, lights, radios. Set honest hours-per-day — that number drives your battery size. The fridge is almost always the biggest single draw." },
+  { title: "Battery Bank", body: "The calculator recommends a bank size based on your loads and autonomy target. LiFePO4 is the right call for overland builds — 80% usable depth vs 50% for AGM means a smaller, lighter bank that lasts longer." },
+  { title: "Charging Sources", body: "Add your alternator (via DC-DC charger), solar panels, or both. More charging input means a smaller battery bank. Solar handles camp days; alternator handles driving days. Most rigs need both." },
+  { title: "Wiring & Report", body: "The wiring diagram shows how everything connects. The System Report below gives you specific wire gauges, fuse sizes, and a shopping list with Amazon links for everything in the build." },
+];
 
 // ─── localStorage keys ─────────────────────────────────────────────
 const STORAGE_KEY = "pe-power-system";
@@ -151,6 +161,10 @@ export default function PowerSystemBuilder() {
   // Safety checklist
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
 
+  // Solar Compat import banner
+  const [importedFromSolar, setImportedFromSolar] = useState(false);
+  const [importedSolarWatts, setImportedSolarWatts] = useState(0);
+
   const saveTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
   const hasTrackedStart = useRef(false);
 
@@ -200,6 +214,24 @@ export default function PowerSystemBuilder() {
       }
     } catch { /* ignore */ }
   }, []);
+
+  // ─── Read shared state from Solar Compat Checker ─────────────────
+  useEffect(() => {
+    const shared = loadPowerConfig();
+    if (!shared || shared.lastUpdatedBy !== "solar-compat") return;
+    setImportedFromSolar(true);
+    if (shared.totalSolarWatts && shared.totalSolarWatts > 0) {
+      setImportedSolarWatts(shared.totalSolarWatts);
+    }
+  }, []);
+
+  // ─── Write solar wattage back to shared state ─────────────────────
+  useEffect(() => {
+    savePowerConfig(mergePowerConfig(loadPowerConfig(), {
+      totalSolarWatts: solarWatts,
+      lastUpdatedBy: "power-system-builder",
+    }));
+  }, [solarWatts]);
 
   // ─── Debounced save ──────────────────────────────────────────────
   useEffect(() => {
@@ -1290,6 +1322,26 @@ export default function PowerSystemBuilder() {
         <p className="text-primary text-sm font-bold uppercase tracking-widest mb-2">Ops Deck</p>
         <h2 className="text-2xl sm:text-3xl font-extrabold">Power System <span className="text-primary">Builder</span></h2>
       </div>
+
+      {/* Guided Tour */}
+      <GuidedTour steps={PSB_TOUR} toolName="Power System walkthrough" />
+
+      {/* Solar Compat import banner */}
+      {importedFromSolar && importedSolarWatts > 0 && (
+        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 flex items-start gap-3">
+          <Sun className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-bold">Solar configuration imported</p>
+            <p className="text-xs text-muted-foreground">
+              You configured {importedSolarWatts}W of solar in the Solar Compatibility Checker.
+              Set your solar panel wattage to match in Step 4.
+            </p>
+          </div>
+          <a href="/tools/solar-compatibility" className="text-xs text-yellow-500 hover:text-yellow-400 font-bold whitespace-nowrap">
+            &larr; Back to Solar Checker
+          </a>
+        </div>
+      )}
 
       {/* Safety disclaimer at top */}
       <ToolSafetyDisclaimer level="safety-critical" message={ELECTRICAL_SAFETY_MESSAGE} />

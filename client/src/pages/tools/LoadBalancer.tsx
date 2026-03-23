@@ -25,6 +25,15 @@ import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
 import ToolSafetyDisclaimer from "@/components/tools/ToolSafetyDisclaimer";
 import { useSEO } from "@/hooks/useSEO";
+import { GuidedTour } from "./GuidedTour";
+
+const LB_TOUR = [
+  { title: "Select Your Vehicle", body: "Search or pick your rig from the database. The balancer loads your real GVWR, curb weight, and roof rating — these are the hard limits you're working within." },
+  { title: "People & Fuel", body: "Set passenger count, weights, and how full your fuel tank is. Most people forget these — fuel alone is 150-200 lbs on a full-size truck." },
+  { title: "Build Your Gear List", body: "Add gear from the library or enter custom items. Assign each one a placement zone: cab, bed-front, bed-rear, roof, or hitch. Zone placement affects your axle balance, not just total weight." },
+  { title: "Read the Payload Gauge", body: "The gauge shows payload % used. Green is safe, yellow means getting close, red means remove gear before you drive. Over 100% is a legal and safety issue, not just a guideline." },
+  { title: "Axle Balance & Stability", body: "The axle bars show front/rear weight split. Over 65% on the rear means move heavier gear toward the cab. The Stability Risk badge combines roof load, rear bias, and payload into one verdict." },
+];
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -368,6 +377,9 @@ export default function LoadBalancer() {
             Know your numbers before you load up.
           </p>
         </div>
+
+        {/* Guided Tour */}
+        <GuidedTour steps={LB_TOUR} toolName="Load Balancer walkthrough" />
 
         {/* ─── 3-Panel Layout ─── */}
         <div className="animate-fade-in-up-delay-1">

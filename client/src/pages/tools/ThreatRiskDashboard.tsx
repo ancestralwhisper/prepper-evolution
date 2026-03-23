@@ -12,6 +12,14 @@ import SupportFooter from "@/components/tools/SupportFooter";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import InstallButton from "@/components/tools/InstallButton";
 import { trackEvent } from "@/lib/analytics";
+import { GuidedTour } from "./GuidedTour";
+
+const THREAT_TOUR = [
+  { title: "Your Location", body: "Your ZIP or region pulls in the most likely threats for your area: hurricane coast, tornado corridor, wildfire zone, earthquake risk, flood plain. Start here." },
+  { title: "Select Your Threats", body: "Choose the specific threats you want to assess. The dashboard scores your current prep against each one independently." },
+  { title: "Your Prep Profile", body: "Answer questions about what you currently have: supplies, communication plan, bug-out route, documentation. These feed the threat-specific readiness scores." },
+  { title: "Threat Scores", body: "Each threat gets a readiness score. Red means critical gaps. Prioritize your highest-threat, lowest-readiness items first — that's where a real crisis will find you unprepared." },
+];
 
 const zipData = zipDataRaw as Record<string, { st: string }>;
 
@@ -215,6 +223,8 @@ export default function ThreatRiskDashboard() {
           Threat-Specific <span className="text-primary">Risk Dashboard</span>
         </h1>
       </div>
+
+      <GuidedTour steps={THREAT_TOUR} toolName="Threat Dashboard walkthrough" />
 
       {/* How It Works */}
       <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">

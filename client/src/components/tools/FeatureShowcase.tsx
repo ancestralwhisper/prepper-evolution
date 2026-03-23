@@ -18,7 +18,7 @@ interface FeatureShowcaseProps {
   cta: string;
   href: string;
   reverse?: boolean;
-  variant?: "default" | "emerald" | "red";
+  variant?: "default" | "emerald" | "red" | "blue";
 }
 
 const colors = {
@@ -45,6 +45,14 @@ const colors = {
     check: "text-red-500",
     btnBg: "bg-red-500/10 hover:bg-red-500/20",
     btnText: "text-red-500",
+  },
+  blue: {
+    label: "text-blue-500",
+    accent: "text-blue-500",
+    checkBg: "bg-blue-500/10",
+    check: "text-blue-500",
+    btnBg: "bg-blue-500/10 hover:bg-blue-500/20",
+    btnText: "text-blue-500",
   },
 };
 

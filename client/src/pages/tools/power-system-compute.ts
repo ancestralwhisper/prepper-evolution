@@ -626,6 +626,18 @@ export function computeFullSystem(params: {
   const findProduct = (search: string) =>
     productRecommendations.find((p) => p.name.toLowerCase().includes(search.toLowerCase()));
 
+  // Fridge recommendation — if user has a refrigeration load, suggest the matching product
+  const fridgeLoad = loads.find((l) => l.category === "refrigeration");
+  if (fridgeLoad) {
+    // Try to match the device name to a product rec; fall back to generic suggestions
+    const pFridge = productRecommendations.find(
+      (p) => p.category === "Fridges" && p.name.toLowerCase().includes(fridgeLoad.name.split(" ").slice(0, 3).join(" ").toLowerCase())
+    ) ?? productRecommendations.find((p) => p.category === "Fridges");
+    if (pFridge) {
+      shoppingList.push({ category: "Fridge", name: pFridge.name, spec: pFridge.spec, url: pFridge.url, asin: pFridge.asin });
+    }
+  }
+
   // Battery recommendation
   if (chemistry === "lifepo4") {
     if (singleCapacityAh <= 100) {

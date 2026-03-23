@@ -28,6 +28,13 @@ import {
   type PowerStationRec,
   type SolarRegion,
 } from "./runtime-data";
+import { GuidedTour } from "./GuidedTour";
+
+const RUNTIME_TOUR = [
+  { title: "Pick Your Power Station", body: "Select your power station from the list — the calculator loads its real Wh capacity automatically. If yours isn't listed, you can enter the Wh manually." },
+  { title: "Add Your Devices", body: "Add the devices you'd run during an outage and set how many hours per day each runs. The fridge is almost always the biggest draw — don't forget it." },
+  { title: "Read Your Runtime", body: "The results show how long your station lasts at your configured load and when you'll need to recharge. Scroll down to see how adding solar panels changes the math." },
+];
 
 interface SelectedDevices {
   [id: string]: { qty: number; hours: number; watts?: number };
@@ -289,6 +296,8 @@ export default function Calculator() {
         {/* LEFT PANEL */}
         <div className="lg:col-span-2 space-y-6">
 
+          <GuidedTour steps={RUNTIME_TOUR} toolName="Runtime Calculator walkthrough" />
+
           {/* How It Works */}
           <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
             <h3 className="text-base sm:text-lg font-extrabold mb-3">How This Tool Works</h3>
@@ -529,6 +538,9 @@ export default function Calculator() {
             {solarEnabled && (
               <div className="space-y-3">
                 <p className="text-sm text-muted-foreground">If you have solar panels, enter the total wattage and your region to see how much they extend your runtime.</p>
+                <a href="/tools/solar-compatibility" className="inline-flex items-center gap-1.5 text-xs font-bold text-yellow-500 hover:text-yellow-400 transition-colors">
+                  <Sun className="w-3.5 h-3.5" /> Not sure which panels work with your station? Check compatibility →
+                </a>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-bold uppercase tracking-wide text-muted-foreground mb-1">Panel Wattage</label>

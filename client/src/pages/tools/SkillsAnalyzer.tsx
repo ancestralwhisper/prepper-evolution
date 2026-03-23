@@ -44,6 +44,14 @@ import {
   type FamilyMember,
   type Certification,
 } from "./skills-data";
+import { GuidedTour } from "./GuidedTour";
+
+const SKILLS_TOUR = [
+  { title: "Rate Your Skills", body: "Go through each category and honestly rate your current level. This is a gap finder, not a test — there's no wrong answer." },
+  { title: "Set Your Scenario", body: "Pick your most likely emergency scenario. The tool weights skills differently depending on whether you're planning for natural disasters, grid-down situations, or evacuation scenarios." },
+  { title: "Gap Analysis", body: "The results highlight your biggest skill gaps for your chosen scenario — not just your lowest scores. A gap in fire-starting matters more than a navigation gap for most suburban preppers." },
+  { title: "Action Plan", body: "The Action Plan gives you specific next steps for your top gaps: courses, books, practice drills. Start with the highest-impact skill for your scenario." },
+];
 
 const DOMAIN_ICONS: Record<string, React.ElementType> = {
   Droplets,
@@ -800,6 +808,8 @@ export default function SkillsAnalyzer() {
             training plan that actually matters.
           </p>
         </div>
+
+        <GuidedTour steps={SKILLS_TOUR} toolName="Skills Analyzer walkthrough" />
 
         {/* What You Get */}
         <div className="grid sm:grid-cols-3 gap-4">

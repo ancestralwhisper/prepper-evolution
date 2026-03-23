@@ -19,6 +19,15 @@ import {
   type GearItem,
 } from "./gear-data";
 import { useSEO } from "@/hooks/useSEO";
+import { GuidedTour } from "./GuidedTour";
+
+const BOB_TOUR = [
+  { title: "Set Your Body Weight", body: "Use the slider at the top to enter your body weight. A bug out bag should never exceed 25% of your weight — the calculator enforces this limit automatically.", anchor: "bob-body-weight" },
+  { title: "Add Gear by Category", body: "Browse the 11 gear categories and check off items you're packing. Weights are pre-loaded from real manufacturer specs — no estimating required.", anchor: "bob-gear-list" },
+  { title: "Add Custom Gear", body: "Have something not in the list? Use the custom gear section to add it by name and weight. It feeds into the same running total.", anchor: "bob-custom-gear" },
+  { title: "Watch the Pack Weight", body: "The Pack Weight panel on the right updates in real time. Green means you're within the safe limit, yellow means you're getting close, red means you need to cut before it goes on your back.", anchor: "bob-weight-panel" },
+  { title: "Recommended Gear", body: "Scroll past the calculator to see affiliate-linked gear for items you haven't added yet. Every link goes to Amazon with real pricing so you can check out in one shot.", anchor: "bob-recommended" },
+];
 
 interface SelectedGear {
   [id: string]: number;
@@ -466,6 +475,9 @@ export default function BugOutBagCalculator() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
+
+              {/* Guided Tour */}
+              <GuidedTour steps={BOB_TOUR} toolName="Bug Out Bag walkthrough" />
 
               {/* How This Tool Works */}
               <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">

@@ -4,7 +4,7 @@ import {
   Backpack, Droplets, UtensilsCrossed, Zap, ClipboardList, Map,
   ArrowRight, FolderOpen, Shield, Target, Crosshair,
   Siren, Skull, Truck, Fuel, Weight, Brain, Wrench, Radar, BatteryCharging,
-  AlertTriangle, BarChart3, Repeat, Package, Tent, Search,
+  AlertTriangle, BarChart3, Repeat, Package, Tent, Search, Sun,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import ChangelogTicker from "@/components/tools/ChangelogTicker";
@@ -108,6 +108,17 @@ const gearFinders: Tool[] = [
     status: "live",
     version: "v1.0",
     cta: "Find Tents",
+  },
+  {
+    slug: "solar-compatibility",
+    name: "Solar Panel Compatibility Checker",
+    description:
+      "Find solar panels that actually work with your power station. Check voltage limits, connector types, adapter requirements, optimal series/parallel configs, and real-world charge time estimates for 20 stations and 11 panels.",
+    icon: Sun,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Check Compatibility",
   },
 ];
 
@@ -566,6 +577,26 @@ export default function ToolsIndex() {
             ))}
           </div>
         </div>
+
+        {/* ─── Showcase: Gear Finders ──────────────────────────── */}
+        <FeatureShowcase
+          label="Gear Finders"
+          title="Compare Gear."
+          titleAccent="Find What Actually Fits."
+          description="Stop reading spec sheets one tab at a time. Gear Finders let you filter 150+ products by weight, price, and category-specific specs — all side by side. Built for people who want the right piece of kit, not just the most popular one."
+          features={[
+            { highlight: "150+ products", text: "— real specs from manufacturer data, not marketing copy" },
+            { highlight: "Filter by weight & price", text: "— set your budget and pack limit, see only what qualifies" },
+            { highlight: "Category-specific specs", text: "— fill power for sleeping bags, lumen output for headlamps, flow rate for filters" },
+            { highlight: "No account required", text: "— results are instant, nothing to sign up for" },
+          ]}
+          imageSrc="https://wp.prepperevolution.com/wp-content/uploads/2026/03/gear-finder-tools.jpg"
+          imageAlt="Gear comparison interface showing backpack, sleeping bag, headlamp and water filter selection"
+          cta="Find Your Gear"
+          href="/tools/gear-finder"
+          reverse={true}
+          variant="blue"
+        />
 
         <div className="mb-16">
           <div className="flex items-center gap-3 mb-2">

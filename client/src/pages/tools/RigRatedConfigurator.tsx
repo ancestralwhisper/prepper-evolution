@@ -35,6 +35,16 @@ import ToolSafetyDisclaimer from "@/components/tools/ToolSafetyDisclaimer";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import InstallButton from "@/components/tools/InstallButton";
 import { VEHICLE_PROFILE_KEY } from "./vehicle-types";
+import { GuidedTour } from "./GuidedTour";
+
+const RIGRATED_TOUR = [
+  { title: "Select Your Machine", body: "Pick your UTV or side-by-side by year, make, model, and trim. The builder loads your machine's real GVWR and factory payload — these are the hard limits before you add a single accessory.", anchor: "rigrated-machine" },
+  { title: "Add Accessories", body: "Check off what's on your rig: winch, roof, skid plates, light bar. Every item has a real weight pulled from manufacturer specs — the payload gauge updates as you add." },
+  { title: "Occupants & Gear", body: "Add your passengers and cargo weight. Most people forget to account for people — two adults and a cooler can burn 400+ lbs of payload before you even leave the driveway." },
+  { title: "Trail Compatibility", body: "Select trails you're planning to run. The tool checks your loaded rig's specs against trail width, difficulty, and clearance requirements so you know what you can actually run." },
+  { title: "Legal & Permits", body: "State laws on UTVs vary wildly — street legal rules, speed limits, required equipment. The legal map shows what applies in your state so you're not caught off-guard at a trailhead." },
+  { title: "Drive vs Trailer", body: "The final section tells you whether your rig can tow this UTV, or whether it needs to be trailered. It reads your saved vehicle profile from Ops Deck if you have one." },
+];
 
 // ─── SVG Gauge Component ──────────────────────────────────────────────
 
@@ -468,6 +478,9 @@ export default function RigRatedConfigurator() {
           </div>
         </div>
       )}
+
+      {/* Guided Tour */}
+      <GuidedTour steps={RIGRATED_TOUR} toolName="RigRated walkthrough" />
 
       {/* Book Value vs Real World Explainer */}
       <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">

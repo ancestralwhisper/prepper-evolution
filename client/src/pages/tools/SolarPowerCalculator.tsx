@@ -32,6 +32,15 @@ import {
   type LivingSituation,
 } from "./device-data";
 import { useSEO } from "@/hooks/useSEO";
+import { GuidedTour } from "./GuidedTour";
+
+const SOLAR_TOUR = [
+  { title: "People & Days", body: "Set how many people are in your household and how many days of backup power you want. More people and longer autonomy means a bigger system — start here before adding devices." },
+  { title: "Add Your Devices", body: "Add every device you'd actually need running during an outage. Start with the critical ones: fridge, CPAP, phone charging. You can add or remove at any time." },
+  { title: "Cloudy Day Buffer", body: "The cloudy day buffer accounts for days your panels underperform. In the Northeast, plan for 3-4 cloudy days minimum — don't size for perfect-sun performance or you'll run short when it matters." },
+  { title: "Read Your Numbers", body: "The Power Summary gives you four shopping numbers: daily Wh needed, total capacity, battery Ah required, and solar watts needed. These translate directly to product specs when you shop." },
+  { title: "Recommended Products", body: "Scroll past the summary for power station and panel recommendations matched to your calculated load, with Amazon links for each." },
+];
 
 interface SelectedDevices {
   [id: string]: { qty: number; hours: number; watts?: number };
@@ -603,6 +612,9 @@ export default function SolarPowerCalculator() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
+
+              {/* Guided Tour */}
+              <GuidedTour steps={SOLAR_TOUR} toolName="Solar Power walkthrough" />
 
               {/* How This Tool Works */}
               <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">

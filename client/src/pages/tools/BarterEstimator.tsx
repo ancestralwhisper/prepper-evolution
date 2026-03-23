@@ -44,6 +44,13 @@ import {
   getTopItems,
   getTradeSuggestions,
 } from "./barter-compute";
+import { GuidedTour } from "./GuidedTour";
+
+const BARTER_TOUR = [
+  { title: "Your Inventory", body: "Add items from your preps that have barter value — ammo, food, fuel, medical supplies, tools. The estimator applies realistic trade values for each category." },
+  { title: "Trade Environment", body: "Set how many days into a disruption you're calculating for. Barter values shift dramatically between week 1 (survival mode) and month 3 (new equilibrium forming)." },
+  { title: "Read Your Trade Position", body: "The results show your estimated barter position and which items carry the most value. Focus your stockpiling on high-value items that are easy to trade in small amounts." },
+];
 
 // ─── Constants ──────────────────────────────────────────────────────────────────
 
@@ -434,6 +441,8 @@ export default function BarterEstimator() {
               </p>
             </div>
           </div>
+
+          <GuidedTour steps={BARTER_TOUR} toolName="Barter Estimator walkthrough" />
 
           {/* Timeline Slider */}
           <div className="bg-card border border-border rounded-lg p-4">

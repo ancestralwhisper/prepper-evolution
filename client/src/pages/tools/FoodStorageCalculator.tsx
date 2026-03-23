@@ -29,6 +29,14 @@ import {
   type LivingSituation,
 } from "./food-data";
 import { useSEO } from "@/hooks/useSEO";
+import { GuidedTour } from "./GuidedTour";
+
+const FOOD_TOUR = [
+  { title: "Your Household", body: "Set the number of adults and children you're storing food for. The calculator uses different calorie targets for adults vs. kids, so the split matters." },
+  { title: "Living Situation", body: "Apartment or house affects your storage space estimate. The tool flags when your plan exceeds realistic apartment storage — so you know what you're actually working with." },
+  { title: "Storage Duration", body: "Set how many days you want covered. FEMA recommends 72 hours; most preparedness guides say 30-90 days is the real target. Start with 30 days if you're building from scratch." },
+  { title: "Read Your Results", body: "The results show total calories needed, food categories, estimated cost, and space required. Check the calorie breakdown — variety and nutrition matter for long-duration storage, not just raw calories." },
+];
 
 interface GroupConfig {
   males: number;
@@ -356,6 +364,9 @@ export default function FoodStorageCalculator() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
+
+              {/* Guided Tour */}
+              <GuidedTour steps={FOOD_TOUR} toolName="Food Storage walkthrough" />
 
               {/* How This Tool Works */}
               <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">

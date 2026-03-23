@@ -34,6 +34,15 @@ import {
   type LivingSituation,
 } from "./water-data";
 import { useSEO } from "@/hooks/useSEO";
+import { GuidedTour } from "./GuidedTour";
+
+const WATER_TOUR = [
+  { title: "Your Group", body: "Set how many people you're storing water for. Each additional person adds to your daily water requirement — adults and children have different needs." },
+  { title: "Living Situation", body: "Apartment or house changes your container options. The tool filters out tanks and barrels that won't fit in a small space — only containers realistic for your situation show up." },
+  { title: "Climate Zone", body: "Enter your ZIP or pick your region. Hot and arid climates need about 1.5x more water per day than temperate zones — your location directly affects the final gallon count." },
+  { title: "Special Needs", body: "Check anything that applies: pregnancy, medical conditions, pets. These all increase your daily water need above the standard FEMA baseline of 1 gallon per person per day." },
+  { title: "Your Results", body: "The Water Summary shows daily need, total gallons, total weight, and container options filtered for your living situation. These are the numbers to bring to the hardware store." },
+];
 
 interface State {
   adults: number;
@@ -440,6 +449,9 @@ export default function WaterStorageCalculator() {
 
         <div className="grid lg:grid-cols-3 gap-8 no-print">
           <div className="lg:col-span-2 space-y-6">
+
+            {/* Guided Tour */}
+            <GuidedTour steps={WATER_TOUR} toolName="Water Storage walkthrough" />
 
             {/* How This Tool Works */}
             <div className="bg-card border-2 border-primary/30 rounded-lg p-5 sm:p-6">
