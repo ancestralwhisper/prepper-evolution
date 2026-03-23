@@ -32,6 +32,7 @@ const calculators: Tool[] = [
     status: "live",
     badge: "Popular",
     version: "v1.3",
+    cta: "Build My BOB",
   },
   {
     slug: "water-storage-calculator",
@@ -41,6 +42,7 @@ const calculators: Tool[] = [
     icon: Droplets,
     status: "live",
     version: "v1.2",
+    cta: "Calculate Water",
   },
   {
     slug: "food-storage-calculator",
@@ -50,6 +52,7 @@ const calculators: Tool[] = [
     icon: UtensilsCrossed,
     status: "live",
     version: "v1.2",
+    cta: "Plan Food Storage",
   },
   {
     slug: "solar-power-calculator",
@@ -59,6 +62,7 @@ const calculators: Tool[] = [
     icon: Zap,
     status: "live",
     version: "v1.3",
+    cta: "Size My System",
   },
   {
     slug: "power-station-runtime",
@@ -69,6 +73,7 @@ const calculators: Tool[] = [
     status: "live",
     badge: "New",
     version: "v1.0",
+    cta: "Check Runtime",
   },
   {
     slug: "72-hour-kit-builder",
@@ -78,6 +83,7 @@ const calculators: Tool[] = [
     icon: ClipboardList,
     status: "live",
     version: "v1.2",
+    cta: "Build My Kit",
   },
 ];
 
@@ -251,6 +257,41 @@ const opsDeckTools: Tool[] = [
   },
 ];
 
+const ACCENT_GRADIENT: Record<string, string> = {
+  primary: "from-primary/20 to-primary/5",
+  red: "from-red-500/20 to-red-500/5",
+  emerald: "from-emerald-500/20 to-emerald-500/5",
+  blue: "from-blue-500/20 to-blue-500/5",
+};
+
+const ACCENT_ICON_BG: Record<string, string> = {
+  primary: "bg-primary/15",
+  red: "bg-red-500/15",
+  emerald: "bg-emerald-500/15",
+  blue: "bg-blue-500/15",
+};
+
+const ACCENT_ICON_COLOR: Record<string, string> = {
+  primary: "text-primary",
+  red: "text-red-500",
+  emerald: "text-emerald-500",
+  blue: "text-blue-500",
+};
+
+const ACCENT_BORDER: Record<string, string> = {
+  primary: "hover:border-primary/40",
+  red: "hover:border-red-500/40",
+  emerald: "hover:border-emerald-500/40",
+  blue: "hover:border-blue-500/40",
+};
+
+const ACCENT_CTA: Record<string, string> = {
+  primary: "text-primary",
+  red: "text-red-500",
+  emerald: "text-emerald-500",
+  blue: "text-blue-500",
+};
+
 function ReadinessBanner() {
   const [score, setScore] = useState<number | null>(null);
   const [assessed, setAssessed] = useState(0);
@@ -344,23 +385,29 @@ function ReadinessBanner() {
   );
 }
 
-function ToolCard({ tool }: { tool: Tool }) {
+function ToolCard({ tool, color = "primary" }: { tool: Tool; color?: string }) {
   const Icon = tool.icon;
   const isLive = tool.status === "live";
-  const cta = tool.cta || "Open Calculator";
+  const cta = tool.cta || "Open Tool";
+  const gradient = ACCENT_GRADIENT[color] ?? ACCENT_GRADIENT.primary;
+  const iconBg = ACCENT_ICON_BG[color] ?? ACCENT_ICON_BG.primary;
+  const iconColor = ACCENT_ICON_COLOR[color] ?? ACCENT_ICON_COLOR.primary;
+  const borderHover = ACCENT_BORDER[color] ?? ACCENT_BORDER.primary;
+  const ctaColor = ACCENT_CTA[color] ?? ACCENT_CTA.primary;
 
   const card = (
     <div
-      className={`bg-card border border-border rounded-lg p-6 flex flex-col h-full transition-all ${
+      className={`bg-card border border-border rounded-xl overflow-hidden flex flex-col h-full transition-all group ${
         isLive
-          ? "hover:shadow-lg hover:border-primary/30 cursor-pointer"
-          : "opacity-60"
+          ? `hover:shadow-xl ${borderHover} cursor-pointer`
+          : "opacity-55"
       }`}
       data-testid={`card-tool-${tool.slug}`}
     >
-      <div className="flex items-start justify-between mb-4">
-        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-          <Icon className="w-6 h-6 text-primary" />
+      {/* Gradient header with centered icon */}
+      <div className={`relative bg-gradient-to-b ${gradient} px-6 pt-6 pb-5 flex items-center justify-between`}>
+        <div className={`w-12 h-12 rounded-xl ${iconBg} flex items-center justify-center ring-1 ring-white/10`}>
+          <Icon className={`w-6 h-6 ${iconColor}`} />
         </div>
         {tool.badge && (
           <span className="text-xs font-bold uppercase tracking-wide bg-primary text-primary-foreground px-2 py-1 rounded">
@@ -374,21 +421,24 @@ function ToolCard({ tool }: { tool: Tool }) {
         )}
       </div>
 
-      <h3 className="text-lg font-extrabold mb-2">{tool.name}</h3>
-      <p className="text-sm text-muted-foreground leading-relaxed flex-1">{tool.description}</p>
+      {/* Card body */}
+      <div className="px-6 pb-6 pt-4 flex flex-col flex-1 min-h-[160px]">
+        <h3 className="text-base font-extrabold mb-2 leading-snug">{tool.name}</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed flex-1">{tool.description}</p>
 
-      {isLive && (
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
-          <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wide">
-            {cta} <ArrowRight className="w-4 h-4" />
+        {isLive && (
+          <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
+            <div className={`flex items-center gap-2 ${ctaColor} font-bold text-sm uppercase tracking-wide`}>
+              {cta} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+            {tool.version && (
+              <span className="text-[10px] font-mono font-bold text-muted-foreground/50 uppercase tracking-wider">
+                {tool.version}
+              </span>
+            )}
           </div>
-          {tool.version && (
-            <span className="text-[10px] font-mono font-bold text-muted-foreground/50 uppercase tracking-wider">
-              {tool.version}
-            </span>
-          )}
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 
@@ -512,7 +562,7 @@ export default function ToolsIndex() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up-delay-1">
             {calculators.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} />
+              <ToolCard key={tool.slug} tool={tool} color="primary" />
             ))}
           </div>
         </div>
@@ -529,7 +579,7 @@ export default function ToolsIndex() {
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up-delay-1">
             {gearFinders.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} />
+              <ToolCard key={tool.slug} tool={tool} color="blue" />
             ))}
           </div>
         </div>
@@ -566,7 +616,7 @@ export default function ToolsIndex() {
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up-delay-1">
             {hardlineTools.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} />
+              <ToolCard key={tool.slug} tool={tool} color="red" />
             ))}
           </div>
         </div>
@@ -602,7 +652,7 @@ export default function ToolsIndex() {
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up-delay-1">
             {opsDeckTools.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} />
+              <ToolCard key={tool.slug} tool={tool} color="emerald" />
             ))}
           </div>
         </div>
