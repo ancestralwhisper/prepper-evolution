@@ -1,5 +1,17 @@
 [
   {
+    "date": "Mar 22, 2026",
+    "tool": "RigSafe",
+    "version": "v2.1",
+    "summary": "Added modular bed cap support — 10 brands, vehicle-specific fitments, RSI SmartCap EVO bed stiffener WARRANTY warning for 2022-2026 Tundra and 2024-2026 Ranger"
+  },
+  {
+    "date": "Mar 22, 2026",
+    "tool": "Trail Intel",
+    "version": "v3.0",
+    "summary": "Added Air Quality Index (EPA AirNow), NOAA stream gauge flood status, NIFC fire restrictions by stage, and USGS earthquake activity within 200km"
+  },
+  {
     "date": "Mar 14, 2026",
     "tool": "Barter & Trade Value Estimator",
     "version": "v1.0",
