@@ -1,6 +1,12 @@
 [
   {
     "date": "Mar 22, 2026",
+    "tool": "Overland Load Balancer",
+    "version": "v1.0",
+    "summary": "New Ops Deck tool — 70+ gear items, zone-based axle distribution, roof load check, stability risk scoring, and payload safety warnings"
+  },
+  {
+    "date": "Mar 22, 2026",
     "tool": "RigSafe",
     "version": "v2.1",
     "summary": "Added modular bed cap support — 10 brands, vehicle-specific fitments, RSI SmartCap EVO bed stiffener WARRANTY warning for 2022-2026 Tundra and 2024-2026 Ranger"

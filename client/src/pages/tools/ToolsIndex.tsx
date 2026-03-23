@@ -162,6 +162,17 @@ const opsDeckTools: Tool[] = [
     cta: "Plan Route",
   },
   {
+    slug: "load-balancer",
+    name: "Overland Load Balancer Ops Deck",
+    description:
+      "Know your numbers before you load up. Pick your vehicle, add gear by placement zone, and see live payload math — total loaded weight vs GVWR, axle distribution, roof load check, and safety warnings.",
+    icon: Weight,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Balance Load",
+  },
+  {
     slug: "rigsafe-configurator",
     name: "RigSafe Overland Configurator",
     description:
