@@ -124,6 +124,17 @@ const gearFinders: Tool[] = [
 
 const hardlineTools: Tool[] = [
   {
+    slug: "virtual-go-bag",
+    name: "Virtual Go-Bag Builder",
+    description:
+      "Build your go-bag digitally. Pick from 70+ real pieces of gear across 9 categories, track total load weight, and add your own custom items. Gear with a Diagnostic badge unlocks the Field Failure Diagnostic — filtered to what you actually carry.",
+    icon: Backpack,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Build My Bag",
+  },
+  {
     slug: "field-diagnostic",
     name: "Field Failure Diagnostic",
     description:

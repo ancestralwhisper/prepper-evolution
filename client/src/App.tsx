@@ -44,6 +44,7 @@ import ReadinessDashboard from "@/pages/tools/ReadinessDashboard";
 import LoadBalancer from "@/pages/tools/LoadBalancer";
 import SolarCompatChecker from "@/pages/tools/SolarCompatChecker";
 import FailureModeDiagnostic from "@/pages/tools/FailureModeDiagnostic";
+import VirtualGoBag from "@/pages/tools/VirtualGoBag";
 import Quiz from "@/pages/Quiz";
 import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
@@ -108,6 +109,7 @@ function Router() {
             <Route path="/tools/load-balancer" component={LoadBalancer} />
             <Route path="/tools/solar-compatibility" component={SolarCompatChecker} />
             <Route path="/tools/field-diagnostic" component={FailureModeDiagnostic} />
+            <Route path="/tools/virtual-go-bag" component={VirtualGoBag} />
             <Route path="/readiness">{() => <Redirect href="/tools/readiness-dashboard" />}</Route>
             <Route path="/quiz" component={Quiz} />
             <Route path="/contact" component={Contact} />
