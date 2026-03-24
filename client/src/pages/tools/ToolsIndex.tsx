@@ -124,6 +124,16 @@ const gearFinders: Tool[] = [
 
 const hardlineTools: Tool[] = [
   {
+    slug: "field-diagnostic",
+    name: "Field Failure Diagnostic",
+    description:
+      "Tap through Yes/No questions to isolate gear failures in the field. Covers water filters, stoves, solar, winches, and shelter — with standard fixes, improvised fixes, and extreme bush fixes.",
+    icon: Wrench,
+    status: "live",
+    version: "v1.0",
+    cta: "Diagnose Gear",
+  },
+  {
     slug: "shtf-simulator",
     name: "SHTF Scenario Simulator",
     description:

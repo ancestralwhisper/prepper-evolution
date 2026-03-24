@@ -43,6 +43,7 @@ import ThreatRiskDashboard from "@/pages/tools/ThreatRiskDashboard";
 import ReadinessDashboard from "@/pages/tools/ReadinessDashboard";
 import LoadBalancer from "@/pages/tools/LoadBalancer";
 import SolarCompatChecker from "@/pages/tools/SolarCompatChecker";
+import FailureModeDiagnostic from "@/pages/tools/FailureModeDiagnostic";
 import Quiz from "@/pages/Quiz";
 import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
@@ -106,6 +107,7 @@ function Router() {
             <Route path="/tools/readiness-dashboard" component={ReadinessDashboard} />
             <Route path="/tools/load-balancer" component={LoadBalancer} />
             <Route path="/tools/solar-compatibility" component={SolarCompatChecker} />
+            <Route path="/tools/field-diagnostic" component={FailureModeDiagnostic} />
             <Route path="/readiness">{() => <Redirect href="/tools/readiness-dashboard" />}</Route>
             <Route path="/quiz" component={Quiz} />
             <Route path="/contact" component={Contact} />
