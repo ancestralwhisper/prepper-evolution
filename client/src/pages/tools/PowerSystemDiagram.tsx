@@ -120,7 +120,7 @@ export default function PowerSystemDiagram({ circuits, hasSolar, totalBankAh }: 
   const fusePanelY = auxBankY + blockH + 60;
   const branchY = fusePanelY + blockH + 50;
   const solarRowY = hasSolar ? topRowY + blockH + 50 : 0;
-  const svgH = branchY + branchBlockH + 30;
+  const svgH = branchY + branchBlockH + 55;
 
   // Horizontal positions
   const starterX = 20;

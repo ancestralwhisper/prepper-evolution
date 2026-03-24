@@ -410,7 +410,7 @@ export default function LoadBalancer() {
                     <SelectTrigger className="text-sm">
                       <SelectValue placeholder="Select a vehicle" />
                     </SelectTrigger>
-                    <SelectContent className="max-h-72">
+                    <SelectContent className="max-h-72 bg-neutral-900 border-neutral-700">
                       {uniqueMakes
                         .filter((make) => vehiclesByMake[make]?.length)
                         .map((make) => (
@@ -635,7 +635,7 @@ export default function LoadBalancer() {
                         <SelectTrigger className="text-xs flex-1">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-neutral-900 border-neutral-700">
                           {(Object.keys(ZONE_LABELS) as PlacementZone[]).map((z) => (
                             <SelectItem key={z} value={z} className="text-xs">{ZONE_LABELS[z]}</SelectItem>
                           ))}
@@ -748,7 +748,7 @@ export default function LoadBalancer() {
                           <SelectTrigger className="h-6 text-[10px] w-24 px-1.5 py-0">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="bg-neutral-900 border-neutral-700">
                             {(Object.keys(ZONE_LABELS) as PlacementZone[]).map((z) => (
                               <SelectItem key={z} value={z} className="text-xs">{ZONE_LABELS[z]}</SelectItem>
                             ))}
