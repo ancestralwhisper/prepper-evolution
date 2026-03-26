@@ -53,6 +53,29 @@ export async function registerRoutes(
     });
   }
 
+  // --- WordPress /category/slug redirects → /articles?category=slug ---
+  app.get('/category/:slug', (req, res) => {
+    const catMap: Record<string, string> = {
+      overlanding: 'overlanding',
+      camping: 'camping',
+      gear: 'gear-reviews',
+      preparedness: 'skills-strategy',
+      'bags-packs': 'skills-strategy',
+      communication: 'communication',
+      water: 'water-food',
+      'water-filters': 'water-food',
+      'food-storage': 'water-food',
+      'first-aid': 'first-aid',
+      security: 'security',
+    };
+    const mapped = catMap[req.params.slug];
+    if (mapped) {
+      res.redirect(301, `/articles?category=${mapped}`);
+    } else {
+      res.redirect(301, '/articles');
+    }
+  });
+
   // --- Legacy URL redirects (fix GSC 404s and soft 404s) ---
   const legacyRedirects: Record<string, string> = {
     "/best-rooftop-tents": "/articles/best-rooftop-tents-compared-2026",

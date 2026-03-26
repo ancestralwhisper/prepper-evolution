@@ -10,6 +10,16 @@ export function serveStatic(app: Express) {
     );
   }
 
+  // Strip trailing slashes — redirect /articles/slug/ → /articles/slug
+  app.use((req, res, next) => {
+    if (req.path !== '/' && req.path.endsWith('/')) {
+      const newPath = req.path.slice(0, -1);
+      const query = req.url.slice(req.path.length);
+      return res.redirect(301, newPath + query);
+    }
+    next();
+  });
+
   app.use(express.static(distPath));
 
   // fall through to index.html if the file doesn't exist

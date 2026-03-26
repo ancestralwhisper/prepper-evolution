@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /*?cat=*
+Disallow: /hello-world
 
 Sitemap: https://prepperevolution.com/sitemap.xml

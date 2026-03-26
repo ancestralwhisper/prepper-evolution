@@ -44,9 +44,14 @@ export default function Articles() {
   }
   if (pageParam > 1) description += ` Page ${pageParam}.`;
 
+  const canonicalUrl = `https://prepperevolution.com/articles${
+    categorySlug ? `?category=${categorySlug}` : ''
+  }${pageParam > 1 ? `${categorySlug ? '&' : '?'}page=${pageParam}` : ''}`;
+
   useSEO({
     title: titleParts.join(" - ") + " | Prepper Evolution",
     description,
+    url: canonicalUrl,
   });
 
   const { data, isLoading, isError } = useQuery({

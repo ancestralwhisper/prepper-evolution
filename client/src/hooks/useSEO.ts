@@ -39,6 +39,17 @@ export function useSEO({ title, description, url, type = 'website', image }: SEO
     if (url) setOgTag('og:url', url);
     if (image) setOgTag('og:image', image);
 
+    // Set canonical tag
+    if (url) {
+      let canonicalTag = document.querySelector('link[rel="canonical"]');
+      if (!canonicalTag) {
+        canonicalTag = document.createElement('link');
+        canonicalTag.setAttribute('rel', 'canonical');
+        document.head.appendChild(canonicalTag);
+      }
+      canonicalTag.setAttribute('href', url);
+    }
+
     return () => {
       // Revert to defaults on unmount if needed, though usually overwriting is fine
     };
