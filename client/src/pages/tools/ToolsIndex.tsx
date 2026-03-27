@@ -287,6 +287,17 @@ const opsDeckTools: Tool[] = [
     version: "v1.0",
     cta: "Estimate Values",
   },
+  {
+    slug: "sitrep",
+    name: "SITREP — Ops Deck Readiness Report",
+    description:
+      "Pick a scenario — grid-down, 72-hour bug-out, wildfire evac — and get a scored situation report across mobility, power, shelter, water, food, and comms. Reads your Vehicle Profile, Power System, and supply calculators automatically.",
+    icon: Crosshair,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Run SITREP",
+  },
 ];
 
 const ACCENT_GRADIENT: Record<string, string> = {
