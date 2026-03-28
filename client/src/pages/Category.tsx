@@ -7,6 +7,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@shared/schema";
 import { productArticleMap } from "@/content/products";
+import { categoryAccent, SECTION_BORDER, CARD_HOVER } from "@/lib/categoryColors";
 
 export default function Category() {
   const { name } = useParams();
@@ -22,6 +23,7 @@ export default function Category() {
   };
 
   const categoryTitle = titleMap[decodedName.toLowerCase()] || decodedName;
+  const accent = categoryAccent(name ?? "");
 
   useSEO({
     title: `${categoryTitle} Guides & Gear`,
@@ -87,14 +89,14 @@ export default function Category() {
           </div>
         ) : categoryArticles.length > 0 ? (
           <section className="mb-20">
-            <h2 className="text-2xl font-display font-bold mb-8 uppercase tracking-wider border-b border-border pb-4">Articles & Intel</h2>
+            <h2 className={`text-2xl font-display font-bold mb-8 uppercase tracking-wider border-b border-border pb-4 ${SECTION_BORDER[accent]}`}>Articles & Intel</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {categoryArticles.map(article => {
                 const categoryName = decodeHtmlEntities(article._embedded?.['wp:term']?.[0]?.[0]?.name || "Uncategorized");
                 const featuredImage = getPostImage(article);
                 return (
                   <Link key={article.id} href={`/articles/${article.slug}`} className="group block h-full">
-                    <div className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-300 h-full flex flex-col">
+                    <div className={`bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl ${CARD_HOVER[accent]} transition-all duration-300 h-full flex flex-col`}>
                       <div className="aspect-video relative overflow-hidden bg-muted">
                         <img src={featuredImage} alt={article.title.rendered} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       </div>
@@ -115,7 +117,7 @@ export default function Category() {
 
         {categoryProducts.length > 0 && (
           <section>
-            <h2 className="text-2xl font-display font-bold mb-8 uppercase tracking-wider border-b border-border pb-4">Vetted Gear</h2>
+            <h2 className={`text-2xl font-display font-bold mb-8 uppercase tracking-wider border-b border-border pb-4 ${SECTION_BORDER[accent]}`}>Vetted Gear</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {categoryProducts.map(product => {
                 const price = typeof product.price === 'string' ? parseFloat(product.price) : product.price;

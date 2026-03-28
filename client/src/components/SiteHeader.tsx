@@ -7,13 +7,13 @@ import { useDarkMode } from "@/hooks/useDarkMode";
 import { SiteSearch } from "@/components/SiteSearch";
 
 const NAV_ITEMS = [
-  { label: 'Preparedness', href: '/category/preparedness' },
-  { label: 'Overlanding', href: '/category/overlanding' },
-  { label: 'Camping', href: '/category/camping' },
-  { label: 'Gear Reviews', href: '/category/gear-reviews' },
-  { label: 'Shop Gear', href: '/products' },
-  { label: 'Skills & Strategy', href: '/category/skills-&-strategy' },
-  { label: 'Tools', href: '/tools' },
+  { label: 'Preparedness',    href: '/category/preparedness',       hover: 'hover:text-red-500     decoration-red-500'     },
+  { label: 'Overlanding',     href: '/category/overlanding',        hover: 'hover:text-emerald-600 decoration-emerald-600' },
+  { label: 'Camping',         href: '/category/camping',            hover: 'hover:text-emerald-600 decoration-emerald-600' },
+  { label: 'Gear Reviews',    href: '/category/gear-reviews',       hover: 'hover:text-primary     decoration-primary'     },
+  { label: 'Shop Gear',       href: '/products',                    hover: 'hover:text-primary     decoration-primary'     },
+  { label: 'Skills & Strategy', href: '/category/skills-&-strategy', hover: 'hover:text-red-500   decoration-red-500'     },
+  { label: 'Tools',           href: '/tools',                       hover: 'hover:text-primary     decoration-primary'     },
 ];
 
 export default function SiteHeader() {
@@ -36,7 +36,7 @@ export default function SiteHeader() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="text-foreground/80 hover:text-primary transition-colors hover:underline decoration-primary underline-offset-4"
+                className={`text-foreground/80 transition-colors hover:underline underline-offset-4 ${item.hover}`}
                 data-testid={`link-nav-${item.label.toLowerCase().replace(/ /g, '-')}`}
               >
                 {item.label}
@@ -114,7 +114,7 @@ export default function SiteHeader() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors py-2"
+                    className={`text-lg font-medium text-foreground/80 transition-colors py-2 ${item.hover}`}
                     onClick={() => setIsMenuOpen(false)}
                     data-testid={`link-mobile-nav-${item.label.toLowerCase().replace(/ /g, '-')}`}
                   >

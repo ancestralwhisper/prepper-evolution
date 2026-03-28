@@ -5,6 +5,7 @@ import { fetchPosts, decodeHtmlEntities, getPostImage } from "@/lib/wp";
 import { useSEO } from "@/hooks/useSEO";
 import CategoryFilter from "@/components/CategoryFilter";
 import Pagination from "@/components/Pagination";
+import { categoryAccent, BADGE_CLASSES } from "@/lib/categoryColors";
 
 const ARTICLES_PER_PAGE = 12;
 
@@ -131,7 +132,7 @@ export default function Articles() {
                     <div className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-300 h-full flex flex-col">
                       <div className="aspect-video relative overflow-hidden bg-muted">
                         <img src={featuredImage} alt={post.title.rendered} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold uppercase tracking-wider text-foreground">
+                        <div className={`absolute top-3 left-3 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider ${BADGE_CLASSES[categoryAccent(category)]}`}>
                           {category}
                         </div>
                       </div>

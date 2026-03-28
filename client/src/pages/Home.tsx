@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchLatestPosts, decodeHtmlEntities, getPostImage } from "@/lib/wp";
 import type { Product } from "@shared/schema";
 import { productArticleMap } from "@/content/products";
+import { categoryAccent, BADGE_CLASSES, LABEL_CLASSES, ICON_BG, ICON_COLOR } from "@/lib/categoryColors";
 
 import { useToast } from "@/hooks/use-toast";
 import heroBg from "@/assets/images/hero-bg.png";
@@ -224,25 +225,27 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: "Bug Out Bags", icon: Battery, desc: "Build the perfect 72-hour kit for any scenario.", link: "/articles/building-your-first-bug-out-bag" },
-              { title: "Overland Navigation", icon: Navigation, desc: "Find your way when the grid goes down.", link: "/articles/overlanding-for-preppers-bug-out-vehicle" },
-              { title: "Water Procurement", icon: Shield, desc: "Filtration, purification, and storage techniques.", link: "/articles/water-purification-methods" }
+              { title: "Bug Out Bags", icon: Battery, desc: "Build the perfect 72-hour kit for any scenario.", link: "/articles/building-your-first-bug-out-bag", accent: "red" as const },
+              { title: "Overland Navigation", icon: Navigation, desc: "Find your way when the grid goes down.", link: "/articles/overlanding-for-preppers-bug-out-vehicle", accent: "emerald" as const },
+              { title: "Water Procurement", icon: Shield, desc: "Filtration, purification, and storage techniques.", link: "/articles/water-purification-methods", accent: "red" as const },
             ].map((feature, i) => (
-              <motion.div 
-                key={i} 
+              <motion.div
+                key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.3, delay: i * 0.1 }}
-                className="group p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-xl hover:border-primary/50 hover:-translate-y-2 transition-all duration-300 cursor-pointer flex flex-col h-full" 
+                className={`group p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer flex flex-col h-full ${
+                  feature.accent === "red" ? "hover:border-red-400/50" : "hover:border-emerald-500/50"
+                }`}
                 data-testid={`card-feature-${i}`}
               >
-                <div className="w-12 h-12 rounded-lg bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-6 transition-colors duration-300">
-                  <feature.icon className="w-6 h-6 text-primary group-hover:scale-110 transition-transform duration-300" />
+                <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-6 transition-colors duration-300 ${ICON_BG[feature.accent]}`}>
+                  <feature.icon className={`w-6 h-6 group-hover:scale-110 transition-transform duration-300 ${ICON_COLOR[feature.accent]}`} />
                 </div>
-                <h3 className="text-xl font-display font-semibold mb-3 group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
+                <h3 className={`text-xl font-display font-semibold mb-3 transition-colors duration-300 ${ICON_COLOR[feature.accent]}`}>{feature.title}</h3>
                 <p className="text-muted-foreground mb-6 flex-grow">{feature.desc}</p>
-                <Link href={feature.link} className="inline-flex items-center text-primary font-medium group-hover:tracking-wide transition-all duration-300 mt-auto">
+                <Link href={feature.link} className={`inline-flex items-center font-medium group-hover:tracking-wide transition-all duration-300 mt-auto ${ICON_COLOR[feature.accent]}`}>
                   Learn more <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
               </motion.div>
@@ -285,7 +288,7 @@ export default function Home() {
                 >
                   <div className="aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-muted relative">
                     <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold uppercase tracking-wider text-foreground">
+                    <div className={`absolute top-3 left-3 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider ${BADGE_CLASSES[categoryAccent(item.category)]}`}>
                       {item.category}
                     </div>
                     {item.onSale && item.salePrice && (
@@ -451,7 +454,7 @@ export default function Home() {
                         </div>
                         <div className="flex-1 flex flex-col justify-center">
                           <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xs text-primary font-bold uppercase tracking-wider">{category}</span>
+                            <span className={`text-xs font-bold uppercase tracking-wider ${LABEL_CLASSES[categoryAccent(category)]}`}>{category}</span>
                             <span className="text-xs text-muted-foreground font-medium">• {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                           </div>
                           <h3 className="text-lg font-bold font-display group-hover:text-primary transition-colors leading-snug line-clamp-2" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
@@ -509,7 +512,7 @@ export default function Home() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{category}</span>
+                              <span className={`text-[10px] font-bold uppercase tracking-wider ${LABEL_CLASSES[categoryAccent(category)]}`}>{category}</span>
                               <span className="text-[10px] text-muted-foreground">{formattedDate}</span>
                             </div>
                             <span className="font-medium group-hover:text-primary transition-colors line-clamp-2 text-sm leading-snug" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
