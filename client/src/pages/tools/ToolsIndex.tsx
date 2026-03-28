@@ -5,11 +5,13 @@ import {
   ArrowRight, FolderOpen, Shield, Target, Crosshair,
   Siren, Skull, Truck, Fuel, Weight, Brain, Wrench, Radar, BatteryCharging,
   AlertTriangle, BarChart3, Repeat, Package, Tent, Search, Sun,
+  Users, CheckCircle, Clock, ChevronRight,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import ChangelogTicker from "@/components/tools/ChangelogTicker";
 import FeatureShowcase from "@/components/tools/FeatureShowcase";
 import SupportFooter from "@/components/tools/SupportFooter";
+import { getHousehold, countConnectedTools, staleness } from "@/lib/household-store";
 
 interface Tool {
   slug: string;
@@ -335,6 +337,107 @@ const ACCENT_CTA: Record<string, string> = {
   blue: "text-blue-500",
 };
 
+// ─── Household Profile Banner ─────────────────────────────────────
+function HouseholdBanner() {
+  const [connected, setConnected] = useState(0);
+  const [lastUpdated, setLastUpdated] = useState("");
+  const [hasProfile, setHasProfile] = useState(false);
+  const [summary, setSummary] = useState("");
+
+  useEffect(() => {
+    const h = getHousehold();
+    if (h) {
+      setHasProfile(true);
+      setConnected(countConnectedTools(h));
+      setLastUpdated(h.lastProfileUpdate);
+      const p = h.profile;
+      const people = p.adults + p.children + p.elderly;
+      const pets = p.dogs + p.cats;
+      setSummary(`${people} ${people === 1 ? "person" : "people"}${pets ? ` · ${pets} ${pets === 1 ? "pet" : "pets"}` : ""} · ${p.livingSituation}`);
+    }
+  }, []);
+
+  return (
+    <div className="mb-6 animate-fade-in-up">
+      <Link href="/tools/household" className="block group">
+        <div className={`relative overflow-hidden rounded-xl border-2 transition-all ${
+          hasProfile
+            ? "border-emerald-500/40 hover:border-emerald-500/70 bg-gradient-to-r from-card to-emerald-500/5"
+            : "border-primary/30 hover:border-primary/60 bg-gradient-to-r from-card to-primary/5"
+        }`}>
+          <div className={`absolute top-0 left-0 bottom-0 w-1.5 ${hasProfile ? "bg-emerald-500" : "bg-primary"}`} />
+          <div className="relative z-10 px-6 py-4 flex items-center gap-5">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+              hasProfile ? "bg-emerald-500/15" : "bg-primary/10"
+            }`}>
+              <Users className={`w-5 h-5 ${hasProfile ? "text-emerald-500" : "text-primary"}`} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="text-sm font-extrabold">
+                  {hasProfile ? "Household Profile" : "Set Up Your Household Profile"}
+                </span>
+                {!hasProfile && (
+                  <span className="text-[10px] font-bold uppercase tracking-wide bg-primary text-primary-foreground px-1.5 py-0.5 rounded">
+                    Start Here
+                  </span>
+                )}
+                {hasProfile && connected > 0 && (
+                  <span className="text-[10px] font-bold text-emerald-500 flex items-center gap-1">
+                    <CheckCircle className="w-3 h-3" /> {connected}/5 tools connected
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {hasProfile
+                  ? summary + (lastUpdated ? ` · Updated ${staleness(lastUpdated)}` : "")
+                  : "Fill it in once — all calculators auto-fill from your household data. No re-entering the same info across 5 tools."
+                }
+              </p>
+            </div>
+            <div className={`flex items-center gap-1 text-xs font-bold flex-shrink-0 ${
+              hasProfile ? "text-emerald-500" : "text-primary"
+            }`}>
+              {hasProfile ? "Edit" : "Set Up"} <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+}
+
+// ─── Outcome Cards (top-level mission grouping) ───────────────────
+const OUTCOMES = [
+  { label: "Stay Home Through an Outage", icon: Shield,         href: "/tools/water-storage-calculator", color: "text-primary",     bg: "bg-primary/10"     },
+  { label: "Evacuate Fast",               icon: Backpack,       href: "/tools/bug-out-bag-calculator",   color: "text-red-500",     bg: "bg-red-500/10"     },
+  { label: "Build Your Household Plan",   icon: Users,          href: "/tools/household",                color: "text-primary",     bg: "bg-primary/10"     },
+  { label: "Vehicle & Mobile Readiness",  icon: Truck,          href: "/tools/vehicle-profile",          color: "text-emerald-500", bg: "bg-emerald-500/10" },
+  { label: "Run a Scenario",              icon: Crosshair,      href: "/tools/sitrep",                   color: "text-primary",     bg: "bg-primary/10"     },
+] as const;
+
+function OutcomeCards() {
+  return (
+    <div className="mb-8 animate-fade-in-up">
+      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
+        Start with your situation, not a random calculator
+      </p>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        {OUTCOMES.map(({ label, icon: Icon, href, color, bg }) => (
+          <Link key={href} href={href}>
+            <div className="flex flex-col items-center gap-2 p-4 rounded-xl border border-border bg-card hover:border-border/80 hover:shadow-md transition-all cursor-pointer text-center group">
+              <div className={`w-9 h-9 rounded-lg ${bg} flex items-center justify-center`}>
+                <Icon className={`w-4.5 h-4.5 ${color}`} />
+              </div>
+              <span className="text-xs font-semibold leading-tight">{label}</span>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ReadinessBanner() {
   const [score, setScore] = useState<number | null>(null);
   const [assessed, setAssessed] = useState(0);
@@ -534,6 +637,12 @@ export default function ToolsIndex() {
       <ChangelogTicker />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+
+        {/* ─── Household Profile Banner ────────────────────────── */}
+        <HouseholdBanner />
+
+        {/* ─── Outcome Cards ───────────────────────────────────── */}
+        <OutcomeCards />
 
         {/* ─── Readiness Dashboard Banner ─────────────────────── */}
         <ReadinessBanner />

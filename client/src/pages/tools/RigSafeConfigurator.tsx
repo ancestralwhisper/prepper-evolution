@@ -1377,6 +1377,12 @@ export default function RigSafeConfigurator() {
                         />
                       </div>
                     )}
+                    <Toggle
+                      label="Cab rack acts as tent positioning stop"
+                      checked={config.cabRackIsPositioningStop}
+                      onChange={(v) => update("cabRackIsPositioningStop", v)}
+                      hint="Tent mounting rails contact the cab rack by design — it's used as a front stop, not a clearance gap"
+                    />
                   </div>
                 )}
               </div>

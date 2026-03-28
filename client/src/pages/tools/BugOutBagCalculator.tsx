@@ -8,6 +8,7 @@ import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
 import { trackEvent } from "@/lib/analytics";
+import { updateReadiness } from "@/lib/household-store";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import {
@@ -81,6 +82,19 @@ export default function BugOutBagCalculator() {
       setSelected(gear);
     }
     trackEvent("pe_tool_view", { tool: "bug-out-bag" });
+
+    if (!params.get("w") && !params.get("g")) {
+      try {
+        const saved = localStorage.getItem("pe-bob-calculator");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed?.bodyWeight) setBodyWeight(parsed.bodyWeight);
+          if (parsed?.selected) setSelected(parsed.selected);
+          if (parsed?.customItems) setCustomItems(parsed.customItems);
+        }
+      } catch { /* ignore */ }
+    }
+
     setInitialized(true);
   }, []);
 
@@ -90,6 +104,20 @@ export default function BugOutBagCalculator() {
     localStorage.setItem("pe-bob-calculator", JSON.stringify(data));
     setLastSaved(new Date());
   }, [bodyWeight, selected, customItems, initialized]);
+
+  // Write computed results back to household readiness
+  useEffect(() => {
+    if (!initialized || calculations.totalLbs <= 0) return;
+    const status = calculations.pctBodyWeight >= CRITICAL_PERCENT ? "Too Heavy"
+      : calculations.pctBodyWeight >= WARNING_PERCENT ? "Heavy" : "Good";
+    updateReadiness("bugout", {
+      bagWeightLbs: calculations.totalLbs,
+      pctBodyWeight: calculations.pctBodyWeight,
+      status,
+      itemCount: calculations.itemCount,
+      lastCalculated: new Date().toISOString(),
+    });
+  }, [initialized, calculations.totalLbs, calculations.pctBodyWeight, calculations.itemCount]);
 
   const toggleItem = useCallback((id: string) => {
     setSelected((prev) => {

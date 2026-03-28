@@ -8,6 +8,7 @@ import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
 import { trackEvent } from "@/lib/analytics";
+import { getHousehold, updateReadiness } from "@/lib/household-store";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import ZipLookup from "@/components/tools/ZipLookup";
@@ -151,6 +152,22 @@ export default function KitBuilder() {
           setShowResults(true);
           setStep(questions.length);
         }
+      } else {
+        // No saved state — pre-fill from household profile
+        const household = getHousehold();
+        if (household) {
+          const p = household.profile;
+          const prefill: Record<string, string | number> = {
+            adults: p.adults,
+            children: p.children,
+            elderly: p.elderly,
+            pets: p.dogs + p.cats,
+          };
+          if (p.kitRegion) prefill.region = p.kitRegion;
+          if (p.primaryHazard) prefill.climate = hazardToKitClimate[p.primaryHazard as keyof typeof hazardToKitClimate] ?? p.primaryHazard;
+          if (p.budgetTier) prefill.budget = p.budgetTier;
+          setAnswers((prev) => ({ ...prev, ...prefill }));
+        }
       }
     } catch {
     }
@@ -164,6 +181,17 @@ export default function KitBuilder() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     setLastSaved(new Date());
   }, [answers, checked, showResults, initialized]);
+
+  // Write computed results back to household readiness
+  useEffect(() => {
+    if (!initialized || !showResults || filteredItems.length === 0) return;
+    updateReadiness("kit72", {
+      completionPct: itemCounts.total > 0 ? Math.round((itemCounts.checkedCount / itemCounts.total) * 100) : 0,
+      checkedCount: itemCounts.checkedCount,
+      totalItems: itemCounts.total,
+      lastCalculated: new Date().toISOString(),
+    });
+  }, [initialized, showResults, itemCounts.checkedCount, itemCounts.total, filteredItems.length]);
 
   const setAnswer = useCallback((questionId: string, value: string | number | string[]) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));

@@ -10,6 +10,7 @@ import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
 import { trackEvent } from "@/lib/analytics";
+import { getHousehold, updateReadiness } from "@/lib/household-store";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import ZipLookup from "@/components/tools/ZipLookup";
@@ -127,11 +128,39 @@ export default function WaterStorageCalculator() {
         if (parsed && typeof parsed.adults === "number") {
           setState((prev) => ({ ...prev, ...parsed }));
         }
+      } else if (!saved && Object.keys(updates).length === 0) {
+        // No saved state — pre-fill from household profile if available
+        const household = getHousehold();
+        if (household) {
+          const p = household.profile;
+          setState((prev) => ({
+            ...prev,
+            adults: p.adults,
+            children: p.children,
+            nursingMothers: p.nursingMothers,
+            dogs: p.dogs,
+            cats: p.cats,
+            livingSituation: (p.livingSituation === "rural" || p.livingSituation === "mobile") ? "house" : p.livingSituation as LivingSituation,
+            climate: p.climate || prev.climate,
+            activity: p.activityLevel || prev.activity,
+          }));
+        }
       }
     } catch { /* ignore */ }
 
     setInitialized(true);
   }, []);
+
+  // Write computed results back to household readiness
+  useEffect(() => {
+    if (!initialized || calc.totalGallons <= 0) return;
+    updateReadiness("water", {
+      totalGallons: calc.totalGallons,
+      daysOfSupply: state.days,
+      dailyGallons: calc.totalDailyGallons,
+      lastCalculated: new Date().toISOString(),
+    });
+  }, [initialized, calc.totalGallons, calc.totalDailyGallons, state.days]);
 
   useEffect(() => {
     if (!initialized) return;

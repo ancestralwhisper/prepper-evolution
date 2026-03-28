@@ -10,6 +10,7 @@ import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
 import { trackEvent } from "@/lib/analytics";
+import { getHousehold, updateReadiness } from "@/lib/household-store";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import ZipLookup from "@/components/tools/ZipLookup";
@@ -138,21 +139,57 @@ export default function SolarPowerCalculator() {
     const ls = params.get("ls");
     if (ls && livingSituations.some((l) => l.id === ls)) setLivingSituation(ls as LivingSituation);
 
+    const hasUrlParams = !!(p || d || r || uc || g || ls);
+
     if (!g) {
-      const activeUc = (uc === "offgrid" || uc === "camping") ? uc as UseCase : "emergency";
-      const preset = useCasePresets[activeUc];
-      const devices: SelectedDevices = {};
-      for (const [id, { qty, hours }] of Object.entries(preset)) {
-        const device = allDevices.find((dev) => dev.id === id);
-        devices[id] = { qty, hours, watts: device?.watts };
+      // Try restoring from localStorage first
+      let restoredFromStorage = false;
+      if (!hasUrlParams) {
+        try {
+          const saved = localStorage.getItem("pe-solar-calculator");
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed?.selected && Object.keys(parsed.selected).length > 0) {
+              if (parsed.people) setPeople(parsed.people);
+              if (parsed.days) setDays(parsed.days);
+              if (parsed.region) setRegion(parsed.region);
+              if (parsed.useCase) setUseCase(parsed.useCase);
+              if (parsed.livingSituation) setLivingSituation(parsed.livingSituation);
+              setSelected(parsed.selected);
+              restoredFromStorage = true;
+            }
+          }
+        } catch { /* ignore */ }
       }
-      setSelected(devices);
-      if (!ls) setLivingSituation(useCaseLabels[activeUc].living);
-      const cats = new Set(Object.keys(preset).map((id) => {
-        const d = allDevices.find((dev) => dev.id === id);
-        return d?.category || "";
-      }).filter(Boolean));
-      setExpandedCats(cats);
+
+      if (!restoredFromStorage) {
+        const activeUc = (uc === "offgrid" || uc === "camping") ? uc as UseCase : "emergency";
+        const preset = useCasePresets[activeUc];
+        const devices: SelectedDevices = {};
+        for (const [id, { qty, hours }] of Object.entries(preset)) {
+          const device = allDevices.find((dev) => dev.id === id);
+          devices[id] = { qty, hours, watts: device?.watts };
+        }
+        setSelected(devices);
+        if (!ls) setLivingSituation(useCaseLabels[activeUc].living);
+        const cats = new Set(Object.keys(preset).map((id) => {
+          const d = allDevices.find((dev) => dev.id === id);
+          return d?.category || "";
+        }).filter(Boolean));
+        setExpandedCats(cats);
+
+        // Pre-fill from household profile if no saved state
+        if (!hasUrlParams) {
+          const household = getHousehold();
+          if (household) {
+            const prof = household.profile;
+            setPeople(prof.adults + prof.children + prof.elderly);
+            if (prof.region) setRegion(prof.region);
+            const solarLiving = prof.livingSituation === "mobile" ? "rv" : prof.livingSituation;
+            setLivingSituation(solarLiving as LivingSituation);
+          }
+        }
+      }
     }
 
     setInitialized(true);
@@ -164,6 +201,18 @@ export default function SolarPowerCalculator() {
     localStorage.setItem("pe-solar-calculator", JSON.stringify(data));
     setLastSaved(new Date());
   }, [people, days, region, useCase, selected, livingSituation, initialized]);
+
+  // Write computed results back to household readiness
+  useEffect(() => {
+    if (!initialized || calculations.totalDailyWh <= 0) return;
+    updateReadiness("solar", {
+      totalDailyWh: calculations.totalDailyWh,
+      batteryCapacityNeeded: calculations.batteryCapacityNeeded,
+      solarWattsNeeded: calculations.solarWattsNeeded,
+      daysOfAutonomy: days,
+      lastCalculated: new Date().toISOString(),
+    });
+  }, [initialized, calculations.totalDailyWh, calculations.batteryCapacityNeeded, days]);
 
   const applyUseCase = useCallback((uc: UseCase) => {
     setUseCase(uc);

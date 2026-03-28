@@ -146,6 +146,8 @@ export interface RigSafeConfig {
     heightIn: number;
   };
   useManualSecondaryRack: boolean;
+  // When cab rack is used as a physical front-stop for the tent (tent rails contact it by design)
+  cabRackIsPositioningStop: boolean;
   // Items on secondary rack
   secondaryRackSolar: boolean;
   secondaryRackSolarWeightLbs: number;
@@ -1462,7 +1464,13 @@ export function computeWarnings(config: RigSafeConfig, result: Omit<RigSafeResul
     const cc = result.cabClearance;
     const current = cc.heightOptions.find(o => o.heightIn === (config.rackHeightSetting ?? config.manualRack.heightIn));
     if (current) {
-      if (current.status === "conflict") {
+      if (config.cabRackIsPositioningStop) {
+        // Tent rails are intentionally contacting the cab rack as a front positioning stop
+        w.push({
+          level: "info",
+          message: `Cab rack used as tent positioning stop — tent front rails contact it by design. Clearance check not applicable. Verify mounting rails are secure and not under lateral stress.`,
+        });
+      } else if (current.status === "conflict") {
         w.push({
           level: "danger",
           message: `Tent CONFLICTS with cab rack at ${current.heightIn}" rack height — tent bottom is ${Math.abs(current.clearanceIn)}" BELOW the roof rack crossbar. Raise bed rack to ${cc.recommendedHeightIn ?? "max"}" or higher.`,
@@ -1798,6 +1806,7 @@ export const defaultRigSafeConfig: RigSafeConfig = {
     heightIn: 4,
   },
   useManualSecondaryRack: false,
+  cabRackIsPositioningStop: false,
   secondaryRackSolar: false,
   secondaryRackSolarWeightLbs: 15,
   secondaryRackLightBar: false,

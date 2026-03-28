@@ -16,7 +16,7 @@ export default function Category() {
   const titleMap: Record<string, string> = {
     'preparedness': 'Preparedness',
     'overlanding': 'Overlanding',
-    'camping': 'Camping',
+    'camping': 'Camping & Outdoors',
     'gear reviews': 'Gear Reviews',
     'skills and strategy': 'Skills & Strategy',
     'skills & strategy': 'Skills & Strategy'
@@ -38,7 +38,9 @@ export default function Category() {
     retryDelay: (attemptIndex: number) => Math.min(1000 * (attemptIndex + 1), 5000),
   });
 
-  const wpCategory = categories?.find(c => c.name.toLowerCase() === categoryTitle.toLowerCase());
+  const wpCategory = categories?.find(
+    c => c.slug === (name ?? "") || c.name.toLowerCase() === categoryTitle.toLowerCase()
+  );
   
   const { data: postsData, isLoading: postsLoading } = useQuery({
     queryKey: ["wp-posts-by-category", wpCategory?.id],

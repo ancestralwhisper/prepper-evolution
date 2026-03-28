@@ -9,6 +9,7 @@ import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
 import SupportFooter from "@/components/tools/SupportFooter";
 import { trackEvent } from "@/lib/analytics";
+import { getHousehold, updateReadiness } from "@/lib/household-store";
 import InstallButton from "@/components/tools/InstallButton";
 import ToolSocialShare from "@/components/tools/ToolSocialShare";
 import {
@@ -97,6 +98,31 @@ export default function FoodStorageCalculator() {
     }
     const ls = params.get("ls");
     if (ls && livingSituations.some((l) => l.id === ls)) setLivingSituation(ls as LivingSituation);
+
+    const hasUrlParams = !!(m || f || c || d || a || ls);
+    try {
+      const saved = localStorage.getItem("pe-food-calculator");
+      if (saved && !hasUrlParams) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.group) {
+          setGroup(parsed.group);
+          if (parsed.durationDays) { setDurationDays(parsed.durationDays); const preset = durationPresets.find((p) => p.days === parsed.durationDays); setActivePreset(preset ? preset.id : null); }
+          if (parsed.activity) setActivity(parsed.activity);
+          if (parsed.livingSituation) setLivingSituation(parsed.livingSituation);
+        }
+      } else if (!saved && !hasUrlParams) {
+        // Pre-fill from household profile
+        const household = getHousehold();
+        if (household) {
+          const p = household.profile;
+          const half = Math.max(1, Math.ceil(p.adults / 2));
+          setGroup({ males: half, females: p.adults - half, children: p.children });
+          setActivity(p.activityLevel as ActivityLevel || "moderate");
+          setLivingSituation((p.livingSituation === "rural" || p.livingSituation === "mobile") ? "house" : p.livingSituation as LivingSituation);
+        }
+      }
+    } catch { /* ignore */ }
+
     setInitialized(true);
   }, []);
 
@@ -106,6 +132,17 @@ export default function FoodStorageCalculator() {
     localStorage.setItem("pe-food-calculator", JSON.stringify(data));
     setLastSaved(new Date());
   }, [group, durationDays, activity, livingSituation, initialized]);
+
+  // Write computed results back to household readiness
+  useEffect(() => {
+    if (!initialized || calculations.totalCalories <= 0) return;
+    updateReadiness("food", {
+      totalCalories: calculations.totalCalories,
+      daysOfSupply: durationDays,
+      totalLbs: calculations.totalLbs,
+      lastCalculated: new Date().toISOString(),
+    });
+  }, [initialized, calculations.totalCalories, calculations.totalLbs, durationDays]);
 
   const adjustGroup = useCallback((key: keyof GroupConfig, delta: number) => {
     setGroup((prev) => ({
