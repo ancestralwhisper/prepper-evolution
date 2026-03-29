@@ -47,6 +47,7 @@ import FailureModeDiagnostic from "@/pages/tools/FailureModeDiagnostic";
 import VirtualGoBag from "@/pages/tools/VirtualGoBag";
 import SITREP from "@/pages/tools/SITREP";
 import HouseholdSetup from "@/pages/tools/HouseholdSetup";
+import ShareResults from "@/pages/tools/ShareResults";
 import Quiz from "@/pages/Quiz";
 import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
@@ -114,6 +115,7 @@ function Router() {
             <Route path="/tools/virtual-go-bag" component={VirtualGoBag} />
             <Route path="/tools/sitrep" component={SITREP} />
             <Route path="/tools/household" component={HouseholdSetup} />
+            <Route path="/tools/share" component={ShareResults} />
             <Route path="/readiness">{() => <Redirect href="/tools/readiness-dashboard" />}</Route>
             <Route path="/quiz" component={Quiz} />
             <Route path="/contact" component={Contact} />

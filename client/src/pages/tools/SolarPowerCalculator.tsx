@@ -8,6 +8,7 @@ import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import { generateSolarPdf, type SolarPdfData } from "@/components/tools/PdfExport";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
+import BenchmarkOptIn from "@/components/tools/BenchmarkOptIn";
 import SupportFooter from "@/components/tools/SupportFooter";
 import { trackEvent } from "@/lib/analytics";
 import { getHousehold, updateReadiness } from "@/lib/household-store";
@@ -1125,6 +1126,11 @@ export default function SolarPowerCalculator() {
                 </ul>
               </div>
 
+              <BenchmarkOptIn
+                tool="solar"
+                metrics={{ totalDailyWh: calculations.totalDailyWh, batteryCapacityNeeded: calculations.batteryCapacityNeeded, solarWattsNeeded: calculations.solarWattsNeeded, daysOfAutonomy: days }}
+                autoSave
+              />
               <DataPrivacyNotice />
               <SupportFooter />
             </div>

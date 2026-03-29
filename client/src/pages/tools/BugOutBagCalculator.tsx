@@ -6,6 +6,7 @@ import {
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
+import BenchmarkOptIn from "@/components/tools/BenchmarkOptIn";
 import SupportFooter from "@/components/tools/SupportFooter";
 import { trackEvent } from "@/lib/analytics";
 import { updateReadiness } from "@/lib/household-store";
@@ -901,6 +902,11 @@ export default function BugOutBagCalculator() {
                 </ul>
               </div>
 
+              <BenchmarkOptIn
+                tool="bugout"
+                metrics={{ bagWeightLbs: calculations.totalLbs, pctBodyWeight: calculations.pctBodyWeight, itemCount: calculations.itemCount }}
+                autoSave
+              />
               <DataPrivacyNotice />
               <SupportFooter />
             </div>

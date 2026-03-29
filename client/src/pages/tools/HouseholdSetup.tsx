@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import {
   Users, Baby, Dog, Cat, Home, MapPin, Activity, Heart,
   CheckCircle, ArrowRight, Droplets, UtensilsCrossed, Zap,
-  Backpack, ClipboardList, RefreshCw, Shield, Clock,
+  Backpack, ClipboardList, RefreshCw, Shield, Clock, Share2,
 } from "lucide-react";
 import ZipLookup from "@/components/tools/ZipLookup";
 import type { ZipPrefixData } from "@/pages/tools/zip-types";
@@ -12,6 +12,8 @@ import {
   getHousehold,
   saveHousehold,
   countConnectedTools,
+  computePRS,
+  encodePRSShare,
   staleness,
   HOUSEHOLD_KEY,
 } from "@/lib/household-store";
@@ -209,6 +211,19 @@ export default function HouseholdSetup() {
 
   const connectedCount = countConnectedTools({ ...DEFAULT_HOUSEHOLD, readiness });
   const totalPeople = profile.adults + profile.children + profile.elderly;
+  const prs = computePRS({ ...DEFAULT_HOUSEHOLD, profile, readiness });
+  const [copied, setCopied] = useState(false);
+
+  function handleShare() {
+    const url = window.location.origin + encodePRSShare(prs, profile);
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {
+      // fallback: open in new tab
+      window.open(url, "_blank");
+    });
+  }
 
   return (
     <div className="bg-background min-h-screen">
@@ -250,6 +265,60 @@ export default function HouseholdSetup() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 space-y-5">
+
+        {/* ─── PRS Score Card ──────────────────────────────────── */}
+        <div className={`bg-card border-2 ${prs.ring} rounded-xl p-5`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="relative flex items-center justify-center w-20 h-20 flex-shrink-0">
+                {/* SVG ring */}
+                <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 80 80">
+                  <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="6" className="text-muted/30" />
+                  <circle
+                    cx="40" cy="40" r="34" fill="none" strokeWidth="6"
+                    strokeLinecap="round"
+                    className={prs.color.replace("text-", "stroke-")}
+                    strokeDasharray={`${(prs.total / 100) * 213.6} 213.6`}
+                  />
+                </svg>
+                <div className="text-center z-10">
+                  <div className={`text-2xl font-black tabular-nums leading-none ${prs.color}`}>{prs.total}</div>
+                  <div className="text-[9px] text-muted-foreground font-bold uppercase tracking-wide">/100</div>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Readiness Score</p>
+                <p className={`text-xl font-extrabold leading-tight ${prs.color}`}>{prs.label}</p>
+                <div className="flex gap-2 mt-1.5 flex-wrap">
+                  {[
+                    { label: "Water",  val: prs.water  },
+                    { label: "Food",   val: prs.food   },
+                    { label: "BOB",    val: prs.bugout },
+                    { label: "72-Hr",  val: prs.kit72  },
+                    { label: "Power",  val: prs.solar  },
+                  ].map(({ label, val }) => (
+                    <div key={label} className="text-[10px] text-muted-foreground">
+                      <span className="font-bold text-foreground">{val}</span>/20 {label}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={handleShare}
+              className="flex flex-col items-center gap-1 p-2.5 rounded-lg border border-border bg-muted/30 hover:bg-muted/60 transition-colors text-xs text-muted-foreground"
+              title="Copy shareable link"
+            >
+              <Share2 className="w-4 h-4" />
+              <span className="text-[10px]">{copied ? "Copied!" : "Share"}</span>
+            </button>
+          </div>
+          {connectedCount < 5 && (
+            <p className="text-xs text-muted-foreground mt-3 border-t border-border pt-3">
+              Run {5 - connectedCount} more {5 - connectedCount === 1 ? "calculator" : "calculators"} below to complete your score.
+            </p>
+          )}
+        </div>
 
         {/* ─── People ─────────────────────────────────────────── */}
         <Section title="Your People" icon={Users}>

@@ -7,6 +7,7 @@ import {
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
+import BenchmarkOptIn from "@/components/tools/BenchmarkOptIn";
 import SupportFooter from "@/components/tools/SupportFooter";
 import { trackEvent } from "@/lib/analytics";
 import { getHousehold, updateReadiness } from "@/lib/household-store";
@@ -823,6 +824,11 @@ export default function FoodStorageCalculator() {
                 </ul>
               </div>
 
+              <BenchmarkOptIn
+                tool="food"
+                metrics={{ totalCalories: calculations.totalCalories, daysOfSupply: durationDays, totalLbs: calculations.totalLbs }}
+                autoSave
+              />
               <DataPrivacyNotice />
               <SupportFooter />
             </div>

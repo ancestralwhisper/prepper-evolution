@@ -8,6 +8,7 @@ import {
 import DonutChart, { ChartLegend } from "@/components/tools/DonutChart";
 import PrintQrCode from "@/components/tools/PrintQrCode";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
+import BenchmarkOptIn from "@/components/tools/BenchmarkOptIn";
 import SupportFooter from "@/components/tools/SupportFooter";
 import { trackEvent } from "@/lib/analytics";
 import { getHousehold, updateReadiness } from "@/lib/household-store";
@@ -827,6 +828,11 @@ export default function WaterStorageCalculator() {
               </ul>
             </div>
 
+            <BenchmarkOptIn
+              tool="water"
+              metrics={{ totalGallons: calc.totalGallons, daysOfSupply: state.days, dailyGallons: calc.totalDailyGallons }}
+              autoSave
+            />
             <DataPrivacyNotice />
             <SupportFooter />
           </div>
