@@ -16,6 +16,7 @@ import SupportFooter from "@/components/tools/SupportFooter";
 import { GuidedTour } from "./GuidedTour";
 import { useSEO } from "@/hooks/useSEO";
 import { trackEvent } from "@/lib/analytics";
+import { getHousehold } from "@/lib/household-store";
 import { computeSitrep } from "./sitrep-compute";
 import {
   SCENARIO_META,
@@ -321,6 +322,7 @@ export default function SITREP() {
 
   // Track data source connections
   const [sourcesConnected, setSourcesConnected] = useState({
+    householdProfile: false,
     vehicleProfile: false,
     loadBalancer: false,
     powerSystem: false,
@@ -331,15 +333,34 @@ export default function SITREP() {
 
   useEffect(() => {
     trackEvent("pe_tool_view", { tool: "sitrep" });
-    // Check which data sources are connected
     setSourcesConnected({
-      vehicleProfile: !!localStorage.getItem("pe-vehicle-profile"),
-      loadBalancer:   !!localStorage.getItem("lb-ops-deck-v1"),
-      powerSystem:    !!localStorage.getItem("pe-power-config"),
-      bugOutBag:      !!localStorage.getItem("pe-bob-calculator"),
-      waterCalc:      !!localStorage.getItem("pe-water-calculator"),
-      foodCalc:       !!localStorage.getItem("pe-food-calculator"),
+      householdProfile: !!localStorage.getItem("pe-household"),
+      vehicleProfile:   !!localStorage.getItem("pe-vehicle-profile"),
+      loadBalancer:     !!localStorage.getItem("lb-ops-deck-v1"),
+      powerSystem:      !!localStorage.getItem("pe-power-config"),
+      bugOutBag:        !!localStorage.getItem("pe-bob-calculator"),
+      waterCalc:        !!localStorage.getItem("pe-water-calculator"),
+      foodCalc:         !!localStorage.getItem("pe-food-calculator"),
     });
+
+    // Pre-fill manual inputs from household readiness if still at defaults
+    const household = getHousehold();
+    if (household) {
+      setManual((prev) => {
+        const updates: Partial<SitrepManualInputs> = {};
+        const totalPeople = household.profile.adults + household.profile.children + household.profile.elderly;
+        if (prev.householdSize === DEFAULT_MANUAL_INPUTS.householdSize && totalPeople > 0) {
+          updates.householdSize = totalPeople;
+        }
+        if (prev.waterDaysOnHand === 0 && household.readiness.water?.daysOfSupply) {
+          updates.waterDaysOnHand = Math.round(household.readiness.water.daysOfSupply);
+        }
+        if (prev.foodDaysOnHand === 0 && household.readiness.food?.daysOfSupply) {
+          updates.foodDaysOnHand = Math.round(household.readiness.food.daysOfSupply);
+        }
+        return Object.keys(updates).length > 0 ? { ...prev, ...updates } : prev;
+      });
+    }
   }, []);
 
   // Persist state
@@ -360,6 +381,7 @@ export default function SITREP() {
 
   const goStyle = goNoGoStyle(result.goNoGo);
   const connectedCount = Object.values(sourcesConnected).filter(Boolean).length;
+  // dataSourceCount in result counts up to 7 now (added household)
 
   const reset = useCallback(() => {
     setManual(DEFAULT_MANUAL_INPUTS);
@@ -386,7 +408,7 @@ export default function SITREP() {
               Ops Deck
             </Badge>
             <span className="text-xs text-muted-foreground">
-              {connectedCount}/6 data sources connected
+              {connectedCount}/7 data sources connected
             </span>
           </div>
         </div>
@@ -571,12 +593,13 @@ export default function SITREP() {
                 <CardTitle className="text-base">Connected Sources</CardTitle>
               </CardHeader>
               <CardContent className="space-y-1.5">
-                <SourceBadge label="Vehicle Profile"     connected={sourcesConnected.vehicleProfile} toolSlug="vehicle-profile" />
-                <SourceBadge label="Load Balancer"       connected={sourcesConnected.loadBalancer}   toolSlug="load-balancer" />
-                <SourceBadge label="Power System"        connected={sourcesConnected.powerSystem}    toolSlug="power-system-builder" />
-                <SourceBadge label="Bug Out Bag"         connected={sourcesConnected.bugOutBag}      toolSlug="bug-out-bag-calculator" />
-                <SourceBadge label="Water Calculator"    connected={sourcesConnected.waterCalc}      toolSlug="water-storage-calculator" />
-                <SourceBadge label="Food Calculator"     connected={sourcesConnected.foodCalc}       toolSlug="food-storage-calculator" />
+                <SourceBadge label="Household Profile"   connected={sourcesConnected.householdProfile} toolSlug="household" />
+                <SourceBadge label="Vehicle Profile"     connected={sourcesConnected.vehicleProfile}   toolSlug="vehicle-profile" />
+                <SourceBadge label="Load Balancer"       connected={sourcesConnected.loadBalancer}     toolSlug="load-balancer" />
+                <SourceBadge label="Power System"        connected={sourcesConnected.powerSystem}      toolSlug="power-system-builder" />
+                <SourceBadge label="Bug Out Bag"         connected={sourcesConnected.bugOutBag}        toolSlug="bug-out-bag-calculator" />
+                <SourceBadge label="Water Calculator"    connected={sourcesConnected.waterCalc}        toolSlug="water-storage-calculator" />
+                <SourceBadge label="Food Calculator"     connected={sourcesConnected.foodCalc}         toolSlug="food-storage-calculator" />
                 <p className="text-[10px] text-muted-foreground pt-1">
                   Data is read automatically. Fill out more tools to improve score accuracy.
                 </p>
@@ -606,7 +629,7 @@ export default function SITREP() {
                     <p className="text-xs text-muted-foreground mt-2">
                       Scenario: <span className="font-medium">{SCENARIO_META[scenario].label}</span>
                       {" · "}
-                      {result.dataSourceCount}/6 data sources connected
+                      {result.dataSourceCount}/7 data sources connected
                     </p>
                   </div>
 

@@ -16,12 +16,13 @@ import type { SharedPowerConfig } from "./power-config-shared";
 
 // ─── localStorage Keys ────────────────────────────────────────────────────────
 
-const VEHICLE_KEY = "pe-vehicle-profile";
-const LB_KEY = "lb-ops-deck-v1";
-const POWER_KEY = "pe-power-config";
-const BOB_KEY = "pe-bob-calculator";
-const WATER_KEY = "pe-water-calculator";
-const FOOD_KEY = "pe-food-calculator";
+const VEHICLE_KEY    = "pe-vehicle-profile";
+const LB_KEY         = "lb-ops-deck-v1";
+const POWER_KEY      = "pe-power-config";
+const BOB_KEY        = "pe-bob-calculator";
+const WATER_KEY      = "pe-water-calculator";
+const FOOD_KEY       = "pe-food-calculator";
+const HOUSEHOLD_KEY  = "pe-household";
 
 // ─── Scenario Weights ─────────────────────────────────────────────────────────
 // Sum of each row must equal 1.0
@@ -334,6 +335,11 @@ function scoreShelter(
 
 // ─── Water ───────────────────────────────────────────────────────────────────
 
+interface HouseholdReadiness {
+  water?: { daysOfSupply: number };
+  food?: { daysOfSupply: number };
+}
+
 interface WaterCalcState {
   adults?: number;
   kids?: number;
@@ -345,20 +351,22 @@ function scoreWater(
   wc: WaterCalcState | null,
   lb: LBState | null,
   manual: SitrepManualInputs,
+  household: { readiness: HouseholdReadiness } | null,
 ): Omit<CategoryResult, "weight"> {
   const wins: string[] = [];
   const gaps: string[] = [];
   let score = 0;
 
-  // Use days from manual or derive from water calc stored gallons
+  // Use days from manual first; fall back to household readiness, then raw calc state
   let daysOnHand = manual.waterDaysOnHand;
 
-  if (wc && daysOnHand === 0) {
-    // Try to compute from stored water calc state
+  if (daysOnHand === 0 && household?.readiness?.water?.daysOfSupply) {
+    daysOnHand = household.readiness.water.daysOfSupply;
+  } else if (wc && daysOnHand === 0) {
+    // Derive from stored water calc raw state
     const stored = wc.storedGallons ?? (wc.storedLiters ? wc.storedLiters * 0.264 : 0);
     const people = (wc.adults ?? 1) + (wc.kids ?? 0);
     if (stored > 0 && people > 0) {
-      // FEMA minimum is 1 gal/person/day
       daysOnHand = stored / (people * 1);
     }
   }
@@ -430,6 +438,7 @@ function scoreFood(
   fc: FoodCalcState | null,
   bob: BOBState | null,
   manual: SitrepManualInputs,
+  household: { readiness: HouseholdReadiness } | null,
 ): Omit<CategoryResult, "weight"> {
   const wins: string[] = [];
   const gaps: string[] = [];
@@ -437,8 +446,10 @@ function scoreFood(
 
   let daysOnHand = manual.foodDaysOnHand;
 
-  // Try food calculator stored data
-  if (fc && daysOnHand === 0) {
+  // Prefer household readiness data (computed by food calculator)
+  if (daysOnHand === 0 && household?.readiness?.food?.daysOfSupply) {
+    daysOnHand = household.readiness.food.daysOfSupply;
+  } else if (fc && daysOnHand === 0) {
     const stored = fc.storedDays ?? 0;
     if (stored > 0) daysOnHand = stored;
   }
@@ -685,22 +696,23 @@ export function computeSitrep(
   manual: SitrepManualInputs,
 ): SitrepResult {
   // Read all data sources
-  const vp = safeRead<VehicleProfile>(VEHICLE_KEY);
-  const lb = safeRead<LBState>(LB_KEY);
-  const pc = safeRead<SharedPowerConfig>(POWER_KEY);
-  const bob = safeRead<BOBState>(BOB_KEY);
-  const wc = safeRead<WaterCalcState>(WATER_KEY);
-  const fc = safeRead<FoodCalcState>(FOOD_KEY);
+  const vp         = safeRead<VehicleProfile>(VEHICLE_KEY);
+  const lb         = safeRead<LBState>(LB_KEY);
+  const pc         = safeRead<SharedPowerConfig>(POWER_KEY);
+  const bob        = safeRead<BOBState>(BOB_KEY);
+  const wc         = safeRead<WaterCalcState>(WATER_KEY);
+  const fc         = safeRead<FoodCalcState>(FOOD_KEY);
+  const household  = safeRead<{ readiness: HouseholdReadiness }>(HOUSEHOLD_KEY);
 
   const weights = SCENARIO_WEIGHTS[scenario];
 
-  // Score each category
+  // Score each category (household readiness data flows into water/food scoring)
   const mobilityRaw = scoreMobility(vp, lb, manual);
-  const powerRaw = scorePower(pc, vp);
-  const shelterRaw = scoreShelter(vp, lb, manual);
-  const waterRaw = scoreWater(wc, lb, manual);
-  const foodRaw = scoreFood(fc, bob, manual);
-  const commsRaw = scoreComms(vp, manual);
+  const powerRaw    = scorePower(pc, vp);
+  const shelterRaw  = scoreShelter(vp, lb, manual);
+  const waterRaw    = scoreWater(wc, lb, manual, household);
+  const foodRaw     = scoreFood(fc, bob, manual, household);
+  const commsRaw    = scoreComms(vp, manual);
 
   const categories: CategoryResult[] = [
     { ...mobilityRaw, weight: weights.mobility },
@@ -728,8 +740,8 @@ export function computeSitrep(
   // Warnings
   const warnings = buildWarnings(vp, pc, scenario);
 
-  // Count connected data sources
-  const dataSourceCount = [vp, lb, pc, bob, wc, fc].filter(Boolean).length;
+  // Count connected data sources (include household profile)
+  const dataSourceCount = [vp, lb, pc, bob, wc, fc, household].filter(Boolean).length;
 
   return {
     scenario,
