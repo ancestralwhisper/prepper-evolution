@@ -160,6 +160,34 @@
   .wp-article-content b {
     @apply font-bold text-foreground;
   }
+
+  /* ── Tables ─────────────────────────────────────────────────────────── */
+  .wp-article-content table {
+    @apply w-full my-8 text-sm border-collapse;
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .wp-article-content thead {
+    @apply bg-muted;
+  }
+
+  .wp-article-content th {
+    @apply px-4 py-3 text-left font-bold text-foreground border border-border whitespace-nowrap;
+  }
+
+  .wp-article-content td {
+    @apply px-4 py-3 border border-border align-top;
+  }
+
+  .wp-article-content tbody tr:nth-child(even) {
+    @apply bg-muted/40;
+  }
+
+  .wp-article-content tbody tr:hover {
+    @apply bg-primary/5;
+  }
 }
 
 .print-only { display: none; }
