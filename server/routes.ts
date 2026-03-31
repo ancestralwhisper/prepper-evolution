@@ -287,6 +287,49 @@ export async function registerRoutes(
     return entry.count > 5;
   }
 
+  // --- VIN Miss Notification ---
+  // Called when a VIN decodes successfully via NHTSA but the vehicle isn't in the PE database.
+  // Sends a Telegram alert so the vehicle can be evaluated for addition.
+  app.post("/api/vin-miss", async (req, res) => {
+    try {
+      const vin  = sanitize(String(req.body.vin  || "")).toUpperCase().slice(0, 17);
+      const make  = sanitize(String(req.body.make  || "")).slice(0, 50);
+      const model = sanitize(String(req.body.model || "")).slice(0, 80);
+      const year  = parseInt(req.body.year) || 0;
+
+      if (!vin || vin.length !== 17) return res.status(400).json({ error: "Invalid VIN" });
+      if (!make || !model || !year) return res.status(400).json({ error: "Missing decoded data" });
+
+      const ts = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
+      console.log(`[vin-miss] ${year} ${make} ${model} — VIN: ${vin} — ${ts}`);
+
+      const botToken = process.env.TOOL_REQUEST_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
+      const chatId   = process.env.TOOL_REQUEST_CHAT_ID  || process.env.TELEGRAM_ADMIN_CHAT_ID;
+      if (botToken && chatId) {
+        const message = [
+          `🔍 *VIN Not In Database*`, ``,
+          `*Vehicle:* ${year} ${make} ${model}`,
+          `*VIN:* \`${vin}\``,
+          ``, `_${ts}_`,
+        ].join("\n");
+        try {
+          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: "Markdown" }),
+          });
+        } catch (err) {
+          console.error("[vin-miss] Telegram failed:", err);
+        }
+      }
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("[vin-miss] Error:", error);
+      res.status(500).json({ error: "Failed to log VIN miss" });
+    }
+  });
+
   app.post("/api/vehicle-requests", async (req, res) => {
     try {
       const ip = (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() || "unknown";

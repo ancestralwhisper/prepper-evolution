@@ -673,6 +673,12 @@ export default function VehicleProfileEditor() {
       if (!matched) {
         // Fall through to manual entry with fields pre-populated
         setManualEntry(true);
+        // Notify the server so this vehicle can be evaluated for DB addition
+        fetch("/api/vin-miss", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ vin, make, model, year: rawYear }),
+        }).catch(() => { /* fire-and-forget — don't surface errors to user */ });
       }
 
       // Always apply year, engine, drivetrain regardless of DB match

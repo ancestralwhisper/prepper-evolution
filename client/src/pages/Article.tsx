@@ -89,7 +89,10 @@ export default function Article() {
   });
 
   const categoryId = article?._embedded?.['wp:term']?.[0]?.[0]?.id;
-  
+  const modifiedDate = article?.modified ? new Date(article.modified) : null;
+  const publishedDate = article?.date ? new Date(article.date) : null;
+  const showUpdated = modifiedDate && publishedDate && (modifiedDate.getTime() - publishedDate.getTime()) > 7 * 24 * 60 * 60 * 1000;
+
   const { data: relatedPosts } = useQuery({
     queryKey: ["wp-related", categoryId, slug],
     queryFn: () => fetchPosts(1, categoryId),
@@ -111,7 +114,8 @@ export default function Article() {
     title: article?.title.rendered || "Loading Article...",
     description: cleanExcerpt || "Read our latest survival and gear strategies.",
     type: "article",
-    image: featuredImage
+    image: featuredImage,
+    url: `https://prepperevolution.com/articles/${slug}`
   });
 
   if (isLoading) {
@@ -134,13 +138,29 @@ export default function Article() {
 
   const schemaMarkup = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     "headline": article.title.rendered,
+    "description": cleanExcerpt,
     "image": [featuredImage],
     "datePublished": article.date,
+    "dateModified": article.modified || article.date,
     "author": {
       "@type": "Person",
-      "name": authorName
+      "name": authorName,
+      "url": "https://prepperevolution.com/about"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Prepper Evolution",
+      "url": "https://prepperevolution.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://prepperevolution.com/pe-logo.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://prepperevolution.com/articles/${slug}`
     }
   };
 
@@ -164,6 +184,9 @@ export default function Article() {
           <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4 font-medium">
             <span className="text-primary tracking-wider uppercase font-bold">{categoryName}</span>
             <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> {dateFormatted}</span>
+            {showUpdated && modifiedDate && (
+              <span className="flex items-center gap-1 text-primary/80">Updated {modifiedDate.toLocaleDateString()}</span>
+            )}
             <span className="flex items-center gap-1"><User className="w-4 h-4" /> {authorName}</span>
           </div>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight" dangerouslySetInnerHTML={{ __html: article.title.rendered }} />
