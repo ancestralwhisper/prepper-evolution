@@ -509,6 +509,12 @@ export default function VehicleProfileEditor() {
   const [selTrim, setSelTrim] = useState("");
   const [manualEntry, setManualEntry] = useState(false);
 
+  // VIN decoder
+  const [vinInput, setVinInput] = useState("");
+  const [vinLoading, setVinLoading] = useState(false);
+  const [vinError, setVinError] = useState("");
+  const [vinDecoded, setVinDecoded] = useState<{ make: string; model: string; year: number; matched: boolean } | null>(null);
+
   // Open sections
   const [openSections, setOpenSections] = useState<Set<string>>(new Set(["suspension", "tires"]));
 
@@ -600,6 +606,85 @@ export default function VehicleProfileEditor() {
       setProfile((prev) => applyStockVehicle(stock, prev));
     }
   };
+
+  // ─── VIN decoder ────────────────────────────────────────────────
+  const decodeVin = useCallback(async () => {
+    const vin = vinInput.trim().toUpperCase();
+    if (vin.length !== 17) { setVinError("VIN must be exactly 17 characters"); return; }
+    setVinLoading(true);
+    setVinError("");
+    setVinDecoded(null);
+    try {
+      const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${vin}?format=json`);
+      if (!res.ok) throw new Error("NHTSA API unavailable — try again");
+      const data = await res.json();
+      const get = (v: string): string =>
+        (data.Results as Array<{ Variable: string; Value: string }>)
+          .find((r) => r.Variable === v)?.Value ?? "";
+
+      const rawMake  = get("Make");
+      const rawModel = get("Model");
+      const rawYear  = parseInt(get("Model Year")) || 0;
+      const fuelRaw  = get("Fuel Type - Primary").toLowerCase();
+      const driveRaw = get("Drive Type").toLowerCase();
+
+      if (!rawMake || !rawYear) throw new Error("Could not decode this VIN — double-check the number");
+
+      // Normalize make
+      const makeMap: Record<string, string> = {
+        TOYOTA: "Toyota", FORD: "Ford", CHEVROLET: "Chevrolet", GMC: "GMC",
+        RAM: "Ram", JEEP: "Jeep", NISSAN: "Nissan", HONDA: "Honda",
+        SUBARU: "Subaru", LEXUS: "Lexus", RIVIAN: "Rivian", "LAND ROVER": "Land Rover",
+      };
+      const make  = makeMap[rawMake.toUpperCase()] ?? (rawMake.charAt(0) + rawMake.slice(1).toLowerCase());
+      const model = rawModel;
+
+      // Map fuel → engineType
+      let engineType: EngineType = "gas";
+      if (fuelRaw.includes("diesel"))                              engineType = "diesel";
+      else if (fuelRaw.includes("electric") && !fuelRaw.includes("hybrid")) engineType = "ev";
+      else if (fuelRaw.includes("hybrid") || fuelRaw.includes("plug"))      engineType = "hybrid";
+
+      // Map drive → drivetrain
+      let drivetrain: Drivetrain = "4wd";
+      if (driveRaw.includes("awd") || driveRaw.includes("all-wheel"))   drivetrain = "awd";
+      else if (driveRaw.includes("rwd") || driveRaw.includes("rear"))   drivetrain = "rwd";
+      else if (driveRaw.includes("fwd") || driveRaw.includes("front"))  drivetrain = "fwd";
+
+      // Try to match the DB — pre-select make + model dropdowns if found
+      const dbMakes = getUniqueMakes();
+      const matchedMake = dbMakes.find((m) => m.toLowerCase() === make.toLowerCase()) ?? "";
+      let matched = false;
+
+      if (matchedMake) {
+        const dbModels = getModelsForMake(matchedMake);
+        const matchedModel = dbModels.find(
+          (m) => model.toLowerCase().includes(m.toLowerCase()) || m.toLowerCase().includes(model.toLowerCase()),
+        ) ?? "";
+        if (matchedModel) {
+          setSelMake(matchedMake);
+          setSelModel(matchedModel);
+          setSelTrim("");
+          setManualEntry(false);
+          matched = true;
+        }
+      }
+
+      if (!matched) {
+        // Fall through to manual entry with fields pre-populated
+        setManualEntry(true);
+      }
+
+      // Always apply year, engine, drivetrain regardless of DB match
+      setProfile((prev) => ({ ...prev, year: rawYear, make, model, engineType, drivetrain }));
+      setVinDecoded({ make, model, year: rawYear, matched });
+      trackEvent("pe_vin_decoded", { make, model, year: rawYear, matched });
+    } catch (err) {
+      setVinError(err instanceof Error ? err.message : "Decode failed — try again");
+    } finally {
+      setVinLoading(false);
+    }
+  }, [vinInput]);
 
   // ─── Section toggle ─────────────────────────────────────────────
   const toggleSection = (id: string) => {
@@ -790,6 +875,47 @@ export default function VehicleProfileEditor() {
             <h2 className="text-lg font-extrabold">Select Your Vehicle</h2>
             <p className="text-xs text-muted-foreground">Choose from our database or enter specs manually</p>
           </div>
+        </div>
+
+        {/* VIN Decoder */}
+        <div className="mb-5 p-3 rounded-lg bg-muted/30 border border-border">
+          <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+            Decode by VIN <span className="normal-case font-normal text-muted-foreground/60">(optional — auto-fills year, make, model)</span>
+          </label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={vinInput}
+              onChange={(e) => { setVinInput(e.target.value.toUpperCase()); setVinError(""); setVinDecoded(null); }}
+              placeholder="17-character VIN"
+              maxLength={17}
+              className="flex-1 bg-muted border border-border rounded-lg px-3 py-2 text-sm font-mono text-foreground focus:border-primary outline-none transition-colors"
+            />
+            <button
+              type="button"
+              onClick={decodeVin}
+              disabled={vinLoading || vinInput.trim().length !== 17}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-90 transition-opacity shrink-0"
+            >
+              {vinLoading ? "Decoding…" : "Decode"}
+            </button>
+          </div>
+          {vinError && (
+            <p className="mt-2 text-xs text-red-500 flex items-center gap-1">
+              <X className="w-3 h-3 shrink-0" />{vinError}
+            </p>
+          )}
+          {vinDecoded && (
+            <p className="mt-2 text-xs text-green-600 dark:text-green-400 flex items-start gap-1.5">
+              <Check className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+              <span>
+                {vinDecoded.year} {vinDecoded.make} {vinDecoded.model} decoded.{" "}
+                {vinDecoded.matched
+                  ? "Found in database — select Year/Trim below to load full specs."
+                  : "Not in database — fields pre-filled, review and adjust specs manually."}
+              </span>
+            </p>
+          )}
         </div>
 
         {/* Nickname */}
