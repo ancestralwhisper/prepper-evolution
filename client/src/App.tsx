@@ -42,6 +42,7 @@ import SkillsAnalyzer from "@/pages/tools/SkillsAnalyzer";
 import ThreatRiskDashboard from "@/pages/tools/ThreatRiskDashboard";
 import ReadinessDashboard from "@/pages/tools/ReadinessDashboard";
 import LoadBalancer from "@/pages/tools/LoadBalancer";
+import EvacuationRoutePlanner from "@/pages/tools/EvacuationRoutePlanner";
 import SolarCompatChecker from "@/pages/tools/SolarCompatChecker";
 import FailureModeDiagnostic from "@/pages/tools/FailureModeDiagnostic";
 import VirtualGoBag from "@/pages/tools/VirtualGoBag";
@@ -111,6 +112,7 @@ function Router() {
             <Route path="/tools/threat-risk-dashboard" component={ThreatRiskDashboard} />
             <Route path="/tools/readiness-dashboard" component={ReadinessDashboard} />
             <Route path="/tools/load-balancer" component={LoadBalancer} />
+            <Route path="/tools/evacuation-route-planner" component={EvacuationRoutePlanner} />
             <Route path="/tools/solar-compatibility" component={SolarCompatChecker} />
             <Route path="/tools/field-diagnostic" component={FailureModeDiagnostic} />
             <Route path="/tools/virtual-go-bag" component={VirtualGoBag} />
