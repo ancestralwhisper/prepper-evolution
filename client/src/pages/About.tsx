@@ -3,14 +3,48 @@ import { ChevronLeft, Zap, TreePine, Mountain, Users, Wrench } from "lucide-reac
 import { useSEO } from "@/hooks/useSEO";
 import { motion } from "framer-motion";
 
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Mike",
+  "url": "https://prepperevolution.com/about",
+  "image": "https://prepperevolution.com/pe-logo.png",
+  "jobTitle": "Founder, Prepper Evolution",
+  "description": "Electrical lineman with 21 years of experience and union mutual aid deployments across California, Texas, Florida, New York, New Jersey, and Maine. Overlander, prepper, and father of five building real-world preparedness resources from lived experience.",
+  "knowsAbout": [
+    "Emergency preparedness",
+    "Overlanding",
+    "Electrical systems and grid infrastructure",
+    "Survival gear",
+    "Off-road vehicles",
+    "Solar power systems",
+    "Disaster response"
+  ],
+  "hasCredential": {
+    "@type": "EducationalOccupationalCredential",
+    "credentialCategory": "license",
+    "name": "Union Electrical Lineman (IBEW)",
+    "description": "21 years as a union electrical lineman. Mutual aid storm restoration deployments: Hurricane Sandy (NJ/Long Island), California wildfires, Texas winter storm, Florida hurricanes, Maine ice storms."
+  },
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Prepper Evolution LLC",
+    "url": "https://prepperevolution.com"
+  },
+  "sameAs": [
+    "https://prepperevolution.com"
+  ]
+};
+
 export default function About() {
   useSEO({
-    title: "About | Prepper Evolution",
-    description: "Meet Mike — a 21-year electrical worker from New Jersey who does mutual aid storm deployments across the country. Camping, overlanding, and building real-world preparedness skills.",
+    title: "About Mike | Prepper Evolution — 21-Year Lineman & Overlander",
+    description: "Meet Mike — a union electrical lineman from NJ with 21 years of experience and mutual aid deployments after Sandy, CA wildfires, TX winter storm, and FL hurricanes. This is why Prepper Evolution exists.",
   });
 
   return (
     <div className="min-h-screen bg-background pb-20">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
       <section className="bg-muted/30 py-20 md:py-32 border-b border-border">
         <div className="max-w-[800px] mx-auto px-4 md:px-6">
           <Link href="/" className="inline-flex items-center text-primary hover:text-primary/80 mb-8 font-medium">
