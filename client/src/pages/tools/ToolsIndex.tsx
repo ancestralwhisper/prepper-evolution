@@ -162,7 +162,9 @@ const hardlineTools: Tool[] = [
     description:
       "Plan primary, secondary, and tertiary evacuation routes. Inspired by Joel Skousen's Strategic Relocation principles — avoid highways, choke points, and high-risk corridors.",
     icon: Map,
-    status: "coming-soon",
+    status: "live",
+    badge: "Beta",
+    version: "v1.0",
     cta: "Open Planner",
   },
 ];
@@ -208,7 +210,7 @@ const opsDeckTools: Tool[] = [
       "Know your numbers before you load up. Pick your vehicle, add gear by placement zone, and see live payload math — total loaded weight vs GVWR, axle distribution, roof load check, and safety warnings.",
     icon: Weight,
     status: "live",
-    badge: "New",
+    badge: "Beta",
     version: "v1.0",
     cta: "Balance Load",
   },
