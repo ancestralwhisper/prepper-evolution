@@ -20,6 +20,8 @@ const FIXED_SCHEMA = {
   "itemReviewed": {
     "@type": "Product",
     "name": "iKamper Skycamp 3.0",
+    "description": "Hard-shell pop-up rooftop tent with a king-size sleeping platform, 60-second setup via gas struts, and four-season fiberglass construction. Fits most trucks and SUVs with a roof rack or crossbars.",
+    "image": "https://ikamper.com/cdn/shop/files/Skycamp_3.0_FrontRight_1400x.jpg?v=1733271825",
     "brand": { "@type": "Brand", "name": "iKamper" },
     "aggregateRating": {
       "@type": "AggregateRating",
