@@ -203,7 +203,7 @@ export const powerStations: PowerStationRec[] = [
   { id: "ecoflow-delta2", name: "EcoFlow DELTA 2", capacityWh: 1024, maxOutputW: 1800, price: "$649", affiliateUrl: A("B0B9XB57XM"), note: "Best value mid-range" },
   { id: "ecoflow-delta3-plus", name: "EcoFlow DELTA 3 Plus", capacityWh: 1024, maxOutputW: 1800, price: "$799", affiliateUrl: A("B0GQBJ2SCT"), note: "LFP, 140W USB-C, UPS mode, expandable to 5kWh" },
   { id: "ecoflow-delta3-1500", name: "EcoFlow DELTA 3 1500", capacityWh: 1536, maxOutputW: 2200, price: "$899", affiliateUrl: A("B0DFY9VZSX"), note: "LFP, X-Boost 2200W, 6 AC outlets, expandable to 5.5kWh" },
-  { id: "bluetti-ac200max", name: "Bluetti AC200MAX", capacityWh: 2048, maxOutputW: 2200, price: "$1,599", affiliateUrl: A("B09M8J9LY7"), note: "LiFePO4 — 3,500+ cycles" },
+  { id: "bluetti-ac200max", name: "Bluetti AC200MAX", capacityWh: 2048, maxOutputW: 2200, price: "$1,599", affiliateUrl: A("B09GKCH4CW"), note: "LiFePO4 — 3,500+ cycles" },
   { id: "ecoflow-delta2max", name: "EcoFlow DELTA 2 Max", capacityWh: 2048, maxOutputW: 2400, price: "$1,599", affiliateUrl: A("B0C4DW17PD"), note: "Expandable to 6kWh" },
   { id: "ecoflow-delta3-max-plus", name: "EcoFlow DELTA 3 Max Plus", capacityWh: 2048, maxOutputW: 3000, price: "$1,899", affiliateUrl: A("B0FQV9Q9J2"), note: "LFP, 3000W output, expandable to 10kWh" },
   { id: "bluetti-ac200l", name: "Bluetti AC200L", capacityWh: 2048, maxOutputW: 2400, price: "$1,199", affiliateUrl: A("B0CLGZB3L6"), note: "LiFePO4, expandable, WiFi app control" },

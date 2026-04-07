@@ -59,10 +59,26 @@ const UPDATES = [
     imageUrl: "https://m.media-amazon.com/images/I/41CvFaQf-fL._AC_SL1500_.jpg",
   },
 
-  // ── Broken Amazon link fix ─────────────────────────────────────────────────
+  // ── Broken Amazon link fixes ───────────────────────────────────────────────
   {
     slug: "bluetti-ac200max",
-    amazonLink: "https://www.amazon.com/dp/B09M8J9LY7?tag=prepperevo-20",
+    amazonLink: "https://www.amazon.com/dp/B09GKCH4CW?tag=prepperevo-20",
+  },
+  {
+    slug: "ecoflow-delta-3-ultra",
+    amazonLink: "https://www.amazon.com/dp/B0FT32MCM9?tag=prepperevo-20",
+  },
+  {
+    slug: "roofnest-falcon-2",
+    amazonLink: "https://www.amazon.com/dp/B0CJCWY2DN?tag=prepperevo-20",
+  },
+  {
+    slug: "biolite-campstove-2",
+    amazonLink: "https://www.amazon.com/dp/B0C31B18Y2?tag=prepperevo-20",
+  },
+  {
+    slug: "esee-4",
+    amazonLink: "https://www.amazon.com/dp/B07F3FKP3C?tag=prepperevo-20",
   },
 ];
 
