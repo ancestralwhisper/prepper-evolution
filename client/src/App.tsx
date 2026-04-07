@@ -54,6 +54,9 @@ import Quiz from "@/pages/Quiz";
 import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import Terms from "@/pages/Terms";
+import GearList from "@/pages/freebies/GearList";
+import FamilyKit from "@/pages/freebies/FamilyKit";
+import BobWeightGuide from "@/pages/freebies/BobWeightGuide";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -126,6 +129,9 @@ function Router() {
             <Route path="/privacy-policy" component={PrivacyPolicy} />
             <Route path="/terms" component={Terms} />
             <Route path="/admin/link-health" component={AdminLinkHealth} />
+            <Route path="/freebies/gear-list" component={GearList} />
+            <Route path="/freebies/72-hour-kit" component={FamilyKit} />
+            <Route path="/freebies/bob-weight-guide" component={BobWeightGuide} />
             <Route component={NotFound} />
           </Switch>
         </motion.div>
