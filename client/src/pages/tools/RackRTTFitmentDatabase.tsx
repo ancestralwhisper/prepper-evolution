@@ -664,9 +664,9 @@ function SubmitForm({ onSuccess }: { onSuccess: (entry: Partial<FitmentEntry> & 
               placeholder="e.g. Used 2&quot; aluminum billet risers, four bolts per foot. Retorque after the first trip — mine settled a bit. Took about an hour."
               value={form.notes}
               onChange={e => set("notes", e.target.value)}
-              maxLength={500}
+              maxLength={750}
             />
-            <p className="text-xs text-zinc-600 text-right mt-0.5">{form.notes.length}/500</p>
+            <p className="text-xs text-zinc-600 text-right mt-0.5">{form.notes.length}/750</p>
           </div>
         </div>
       </div>

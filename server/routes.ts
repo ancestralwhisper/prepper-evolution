@@ -542,7 +542,7 @@ export async function registerRoutes(
         mountFootThickness: parsed.mountFootThickness.toString(),
         riserUsed: parsed.riserUsed != null ? parsed.riserUsed.toString() : null,
         outcome: parsed.outcome,
-        notes: parsed.notes ? parsed.notes.replace(/[<>]/g, "").replace(/javascript:/gi, "").trim().slice(0, 500) : null,
+        notes: parsed.notes ? parsed.notes.replace(/[<>]/g, "").replace(/javascript:/gi, "").trim().slice(0, 750) : null,
         facebookUsername: parsed.facebookUsername ? sanitize(parsed.facebookUsername) : null,
       });
 
