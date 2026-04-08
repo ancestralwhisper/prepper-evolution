@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import {
   Tent, Search, Plus, CheckCircle, Users, ChevronDown, ChevronUp,
-  ExternalLink, X, AlertTriangle, RotateCcw,
+  ExternalLink, X, AlertTriangle, RotateCcw, Camera, ZoomIn,
 } from "lucide-react";
 import { GuidedTour } from "./GuidedTour";
 import { useSEO } from "@/hooks/useSEO";
@@ -28,6 +28,7 @@ interface FitmentEntry {
   outcome: string;
   notes: string | null;
   facebookUsername: string | null;
+  imageUrls: string[] | null;
   verifiedCount: number;
   approvedAt: string | null;
 }
@@ -193,10 +194,41 @@ function MeasurementDiagram({ showSpine }: { showSpine: boolean }) {
   );
 }
 
+// ─── Lightbox ───────────────────────────────────────────────────────────────
+
+function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <button
+        className="absolute top-4 right-4 w-9 h-9 bg-zinc-800 hover:bg-zinc-700 rounded-full flex items-center justify-center"
+        onClick={onClose}
+      >
+        <X className="w-4 h-4 text-zinc-200" />
+      </button>
+      <img
+        src={src}
+        alt="Fitment photo"
+        className="max-w-full max-h-[90vh] rounded-lg object-contain"
+        onClick={e => e.stopPropagation()}
+      />
+    </div>
+  );
+}
+
 // ─── Entry Card ─────────────────────────────────────────────────────────────
 
 function EntryCard({ entry }: { entry: FitmentEntry }) {
   const [expanded, setExpanded] = useState(false);
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const oi = outcomeInfo(entry.outcome);
   const totalObstacle = parseFloat(entry.crossbarRise) + (entry.hasSpine && entry.spineHeight ? parseFloat(entry.spineHeight) : 0);
   const recommended = calcRecommended(parseFloat(entry.crossbarRise), entry.hasSpine && entry.spineHeight ? parseFloat(entry.spineHeight) : 0);
@@ -276,6 +308,31 @@ function EntryCard({ entry }: { entry: FitmentEntry }) {
               <p className="text-sm text-zinc-300 leading-relaxed">{entry.notes}</p>
             </div>
           )}
+
+          {entry.imageUrls && entry.imageUrls.length > 0 && (
+            <div>
+              <p className="text-xs text-zinc-500 mb-2 flex items-center gap-1">
+                <Camera className="w-3.5 h-3.5" /> Photos
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {entry.imageUrls.map((url, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={e => { e.stopPropagation(); setLightboxSrc(url); }}
+                    className="relative group w-20 h-20 rounded overflow-hidden border border-zinc-700 hover:border-emerald-500 transition-colors flex-shrink-0"
+                  >
+                    <img src={url} alt={`Fitment photo ${i + 1}`} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <ZoomIn className="w-5 h-5 text-white" />
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {lightboxSrc && <Lightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />}
 
           {entry.facebookUsername && (
             <div className="flex items-center gap-2">
@@ -363,6 +420,8 @@ function SubmitForm({ onSuccess }: { onSuccess: (entry: Partial<FitmentEntry> & 
   const [form, setForm] = useState<FormState>(defaultForm);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [uploadPreviews, setUploadPreviews] = useState<string[]>([]);
 
   const set = (k: keyof FormState, v: any) => setForm(f => ({ ...f, [k]: v }));
 
@@ -404,6 +463,19 @@ function SubmitForm({ onSuccess }: { onSuccess: (entry: Partial<FitmentEntry> & 
 
     setSubmitting(true);
     try {
+      // Upload any attached photos first
+      const uploadedUrls: string[] = [];
+      for (const file of selectedFiles) {
+        const fd = new FormData();
+        fd.append("file", file);
+        const upRes = await fetch("/api/fitment/upload-image", { method: "POST", body: fd });
+        if (upRes.ok) {
+          const upData = await upRes.json();
+          if (upData.url) uploadedUrls.push(upData.url);
+        }
+      }
+      if (uploadedUrls.length > 0) payload.imageUrls = uploadedUrls;
+
       const res = await fetch("/api/fitment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -609,6 +681,33 @@ function SubmitForm({ onSuccess }: { onSuccess: (entry: Partial<FitmentEntry> & 
           onChange={e => set("facebookUsername", e.target.value)}
         />
         <p className="text-xs text-zinc-500 mt-1">This will be publicly visible next to your entry so others can reach you with follow-up questions. Only add it if you're okay with that.</p>
+      </div>
+
+      {/* Photos */}
+      <div>
+        <label className={labelClass}>
+          <Camera className="w-3.5 h-3.5 inline mr-1" />
+          Photos <span className="text-zinc-600 font-normal">(optional — up to 3)</span>
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          className="w-full text-sm text-zinc-400 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-zinc-700 file:text-zinc-200 hover:file:bg-zinc-600 cursor-pointer"
+          onChange={e => {
+            const files = Array.from(e.target.files || []).slice(0, 3);
+            setSelectedFiles(files);
+            setUploadPreviews(files.map(f => URL.createObjectURL(f)));
+          }}
+        />
+        <p className="text-xs text-zinc-500 mt-1">Show what your setup actually looks like — before/after, riser install, or how the tent sits. Helps others confirm the fitment.</p>
+        {uploadPreviews.length > 0 && (
+          <div className="flex gap-2 mt-2">
+            {uploadPreviews.map((src, i) => (
+              <img key={i} src={src} alt="" className="w-16 h-16 rounded object-cover border border-zinc-700" />
+            ))}
+          </div>
+        )}
       </div>
 
       {error && (

@@ -598,6 +598,86 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/fitment/upload-image", async (req, res) => {
+    try {
+      const contentType = req.headers["content-type"] || "";
+      if (!contentType.startsWith("multipart/form-data")) {
+        return res.status(400).json({ error: "Must be multipart/form-data" });
+      }
+      const chunks: Buffer[] = [];
+      req.on("data", (chunk) => chunks.push(chunk));
+      req.on("end", async () => {
+        const body = Buffer.concat(chunks);
+        const boundary = contentType.split("boundary=")[1];
+        if (!boundary) return res.status(400).json({ error: "No boundary" });
+
+        const boundaryBuf = Buffer.from("--" + boundary);
+        const parts: Buffer[] = [];
+        let start = body.indexOf(boundaryBuf) + boundaryBuf.length + 2;
+        while (start < body.length) {
+          const end = body.indexOf(boundaryBuf, start);
+          if (end === -1) break;
+          parts.push(body.slice(start, end - 2));
+          start = end + boundaryBuf.length + 2;
+        }
+
+        let fileBuffer: Buffer | null = null;
+        let fileName = "upload.jpg";
+        let mimeType = "image/jpeg";
+
+        for (const part of parts) {
+          const headerEnd = part.indexOf("\r\n\r\n");
+          if (headerEnd === -1) continue;
+          const headers = part.slice(0, headerEnd).toString();
+          if (!headers.includes('filename=')) continue;
+          const nameMatch = headers.match(/filename="([^"]+)"/);
+          if (nameMatch) fileName = nameMatch[1].replace(/[^a-zA-Z0-9._-]/g, "_");
+          const ctMatch = headers.match(/Content-Type:\s*([^\r\n]+)/i);
+          if (ctMatch) mimeType = ctMatch[1].trim();
+          if (!mimeType.startsWith("image/")) {
+            return res.status(400).json({ error: "Only image files allowed" });
+          }
+          fileBuffer = part.slice(headerEnd + 4);
+        }
+
+        if (!fileBuffer) return res.status(400).json({ error: "No file found" });
+        if (fileBuffer.length > 5 * 1024 * 1024) return res.status(400).json({ error: "File too large (max 5MB)" });
+
+        const wpRes = await fetch("https://wp.prepperevolution.com/wp-json/wp/v2/media", {
+          method: "POST",
+          headers: {
+            "Authorization": "Basic " + Buffer.from("pe_admin:S4U4 3447 gTtb uGvE Ga8f h4hi").toString("base64"),
+            "Content-Disposition": `attachment; filename=${fileName}`,
+            "Content-Type": mimeType,
+          },
+          body: fileBuffer,
+        });
+        const wpData = await wpRes.json() as any;
+        if (!wpData.source_url) return res.status(500).json({ error: "WordPress upload failed" });
+        res.json({ url: wpData.source_url });
+      });
+    } catch (error) {
+      console.error("[fitment] image upload error:", error);
+      res.status(500).json({ error: "Upload failed" });
+    }
+  });
+
+  app.patch("/api/fitment/:id/images", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+      const { imageUrls, notes } = req.body;
+      const updates: any = {};
+      if (Array.isArray(imageUrls)) updates.imageUrls = imageUrls;
+      if (notes) updates.notes = sanitize(String(notes));
+      await db.update(rttFitmentSubmissions).set(updates).where(eq(rttFitmentSubmissions.id, id));
+      res.json({ success: true });
+    } catch (error) {
+      console.error("[fitment] image update error:", error);
+      res.status(500).json({ error: "Failed to update" });
+    }
+  });
+
   app.patch("/api/fitment/:id/reject", async (req, res) => {
     try {
       const id = parseInt(req.params.id);

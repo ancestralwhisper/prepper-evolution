@@ -96,6 +96,7 @@ export const rttFitmentSubmissions = pgTable("rtt_fitment_submissions", {
   // Community
   notes: text("notes"),
   facebookUsername: text("facebook_username"),
+  imageUrls: text("image_urls").array(),
   // Moderation
   status: text("status").notNull().default("pending"),
   verifiedCount: integer("verified_count").notNull().default(1),
