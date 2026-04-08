@@ -3,6 +3,7 @@ import {
   Tent, Search, Plus, CheckCircle, Users, ChevronDown, ChevronUp,
   ExternalLink, X, AlertTriangle, RotateCcw,
 } from "lucide-react";
+import { GuidedTour } from "./GuidedTour";
 import { useSEO } from "@/hooks/useSEO";
 import SupportFooter from "@/components/tools/SupportFooter";
 import DataPrivacyNotice from "@/components/tools/DataPrivacyNotice";
@@ -641,6 +642,39 @@ export default function RackRTTFitmentDatabase() {
     canonical: "https://prepperevolution.com/tools/rack-rtt-fitment-database",
   });
 
+  const FITMENT_TOUR = [
+    {
+      title: "Search the Database",
+      body: "Type your rack brand or RTT brand in the search fields to find existing entries. If someone has already measured your exact combo, you'll see the crossbar rise, riser size used, and what outcome they got.",
+      anchor: "fitment-search",
+    },
+    {
+      title: "Reading an Entry",
+      body: "Each entry shows the crossbar rise (how high the cross bar sticks above the side rail), center spine height if any, and the RTT mount foot thickness. The recommended riser size is calculated automatically with a 1/2\" flex buffer built in.",
+      anchor: "fitment-results",
+    },
+    {
+      title: "What the Outcome Means",
+      body: "Sealed flush = tent closes and seals properly with the riser used. Marginal = it mostly works but not perfectly. Didn't resolve = riser didn't solve it — read their notes for what they tried.",
+      anchor: "fitment-results",
+    },
+    {
+      title: "What to Measure",
+      body: "Use the cross-section diagram as your reference. Crossbar rise: measure from the top surface of the side rail to the top of the cross bar. Spine height: the raised center rib on top of the cross bar, if your rack has one. Mount foot thickness: the hardware that clamps your RTT to the rack.",
+      anchor: "fitment-contribute",
+    },
+    {
+      title: "Add Your Data",
+      body: "Switch to the Add Your Data tab to submit your measurements. Vehicle year, make, model, and package are optional but help others narrow down results — the same rack on a Tacoma vs a Sierra can have different clearance. Your entry goes live after a quick review.",
+      anchor: "fitment-contribute",
+    },
+    {
+      title: "Riser Links",
+      body: "Don't paste Amazon links in your submission — the PE team adds affiliate links during review so every link in the database is verified and current. Just name the riser brand and size you used in the notes field.",
+      anchor: "fitment-contribute",
+    },
+  ];
+
   const [entries, setEntries] = useState<FitmentEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"browse" | "contribute">("browse");
@@ -728,6 +762,11 @@ export default function RackRTTFitmentDatabase() {
           </div>
         )}
 
+        {/* Guided Tour */}
+        <div className="mb-6">
+          <GuidedTour steps={FITMENT_TOUR} toolName="the Rack + RTT Fitment Database" />
+        </div>
+
         {/* Tabs */}
         <div className="flex gap-2 mb-6">
           <button className={tabClass("browse")} onClick={() => setActiveTab("browse")}>
@@ -742,7 +781,7 @@ export default function RackRTTFitmentDatabase() {
         {/* Browse */}
         {activeTab === "browse" && (
           <div>
-            <div className="flex flex-col sm:flex-row gap-2 mb-4">
+            <div id="fitment-search" className="flex flex-col sm:flex-row gap-2 mb-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
                 <input
@@ -796,7 +835,7 @@ export default function RackRTTFitmentDatabase() {
             )}
 
             {!loading && filtered.length > 0 && (
-              <div className="space-y-3">
+              <div id="fitment-results" className="space-y-3">
                 {filtered.map(entry => (
                   <EntryCard key={entry.id} entry={entry} />
                 ))}
@@ -816,7 +855,7 @@ export default function RackRTTFitmentDatabase() {
 
         {/* Contribute */}
         {activeTab === "contribute" && (
-          <div>
+          <div id="fitment-contribute">
             <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 mb-6">
               <p className="text-sm font-medium text-zinc-300 mb-1">What you're contributing</p>
               <p className="text-sm text-zinc-500">Your rack, RTT, and vehicle info plus the actual clearance measurements. Once approved, your entry goes live in the database with your notes so others can find the exact riser they need — before buying anything.</p>
