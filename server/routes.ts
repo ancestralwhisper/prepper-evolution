@@ -542,7 +542,7 @@ export async function registerRoutes(
         mountFootThickness: parsed.mountFootThickness.toString(),
         riserUsed: parsed.riserUsed != null ? parsed.riserUsed.toString() : null,
         outcome: parsed.outcome,
-        notes: parsed.notes ? sanitize(parsed.notes) : null,
+        notes: parsed.notes ? parsed.notes.replace(/[<>]/g, "").replace(/javascript:/gi, "").trim().slice(0, 500) : null,
         facebookUsername: parsed.facebookUsername ? sanitize(parsed.facebookUsername) : null,
       });
 
@@ -669,7 +669,7 @@ export async function registerRoutes(
       const { imageUrls, notes } = req.body;
       const updates: any = {};
       if (Array.isArray(imageUrls)) updates.imageUrls = imageUrls;
-      if (notes) updates.notes = sanitize(String(notes));
+      if (notes) updates.notes = String(notes).replace(/[<>]/g, "").trim().slice(0, 1000);
       await db.update(rttFitmentSubmissions).set(updates).where(eq(rttFitmentSubmissions.id, id));
       res.json({ success: true });
     } catch (error) {
