@@ -41,12 +41,13 @@ import GearFinder from "@/pages/tools/GearFinder";
 import SkillsAnalyzer from "@/pages/tools/SkillsAnalyzer";
 import ThreatRiskDashboard from "@/pages/tools/ThreatRiskDashboard";
 import ReadinessDashboard from "@/pages/tools/ReadinessDashboard";
-import LoadBalancer from "@/pages/tools/LoadBalancer";
 import EvacuationRoutePlanner from "@/pages/tools/EvacuationRoutePlanner";
 import SolarCompatChecker from "@/pages/tools/SolarCompatChecker";
 import FailureModeDiagnostic from "@/pages/tools/FailureModeDiagnostic";
 import VirtualGoBag from "@/pages/tools/VirtualGoBag";
 import SITREP from "@/pages/tools/SITREP";
+import RackRTTFitmentDatabase from "@/pages/tools/RackRTTFitmentDatabase";
+import AdminFitment from "@/pages/tools/AdminFitment";
 import HouseholdSetup from "@/pages/tools/HouseholdSetup";
 import ShareResults from "@/pages/tools/ShareResults";
 import ProgrammaticAnswers from "@/pages/tools/ProgrammaticAnswers";
@@ -114,12 +115,13 @@ function Router() {
             <Route path="/tools/skills-tracker" component={SkillsAnalyzer} />
             <Route path="/tools/threat-risk-dashboard" component={ThreatRiskDashboard} />
             <Route path="/tools/readiness-dashboard" component={ReadinessDashboard} />
-            <Route path="/tools/load-balancer" component={LoadBalancer} />
             <Route path="/tools/evacuation-route-planner" component={EvacuationRoutePlanner} />
             <Route path="/tools/solar-compatibility" component={SolarCompatChecker} />
             <Route path="/tools/field-diagnostic" component={FailureModeDiagnostic} />
             <Route path="/tools/virtual-go-bag" component={VirtualGoBag} />
             <Route path="/tools/sitrep" component={SITREP} />
+            <Route path="/tools/rack-rtt-fitment-database" component={RackRTTFitmentDatabase} />
+            <Route path="/admin/fitment" component={AdminFitment} />
             <Route path="/tools/household" component={HouseholdSetup} />
             <Route path="/tools/share" component={ShareResults} />
             <Route path="/tools/answers" component={ProgrammaticAnswers} />

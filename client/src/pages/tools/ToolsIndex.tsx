@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import {
   Backpack, Droplets, UtensilsCrossed, Zap, ClipboardList, Map,
   ArrowRight, FolderOpen, Shield, Target, Crosshair,
-  Siren, Skull, Truck, Fuel, Weight, Brain, Wrench, Radar, BatteryCharging,
+  Siren, Skull, Truck, Fuel, Brain, Wrench, Radar, BatteryCharging,
   AlertTriangle, BarChart3, Repeat, Package, Tent, Search, Sun,
   Users, CheckCircle, Clock, ChevronRight,
 } from "lucide-react";
@@ -86,6 +86,17 @@ const calculators: Tool[] = [
     status: "live",
     version: "v1.2",
     cta: "Build My Kit",
+  },
+  {
+    slug: "barter-value-estimator",
+    name: "Barter & Trade Value Estimator",
+    description:
+      "Estimate post-collapse trade values for 100+ items and 30+ skills across 3 timeline phases. Based on real data from Venezuela, Yugoslavia, Argentina, and post-Katrina economies. Find the best ROI gear to stockpile now.",
+    icon: Repeat,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Estimate Values",
   },
 ];
 
@@ -204,17 +215,6 @@ const opsDeckTools: Tool[] = [
     cta: "Plan Route",
   },
   {
-    slug: "load-balancer",
-    name: "Overland Load Balancer Ops Deck",
-    description:
-      "Know your numbers before you load up. Pick your vehicle, add gear by placement zone, and see live payload math — total loaded weight vs GVWR, axle distribution, roof load check, and safety warnings.",
-    icon: Weight,
-    status: "live",
-    badge: "Beta",
-    version: "v1.0",
-    cta: "Balance Load",
-  },
-  {
     slug: "rigsafe-configurator",
     name: "RigSafe Overland Configurator",
     description:
@@ -281,17 +281,6 @@ const opsDeckTools: Tool[] = [
     cta: "Check Threats",
   },
   {
-    slug: "barter-value-estimator",
-    name: "Barter & Trade Value Estimator",
-    description:
-      "Estimate post-collapse trade values for 100+ items and 30+ skills across 3 timeline phases. Based on real data from Venezuela, Yugoslavia, Argentina, and post-Katrina economies. Find the best ROI gear to stockpile now.",
-    icon: Repeat,
-    status: "live",
-    badge: "New",
-    version: "v1.0",
-    cta: "Estimate Values",
-  },
-  {
     slug: "sitrep",
     name: "SITREP — Ops Deck Readiness Report",
     description:
@@ -301,6 +290,17 @@ const opsDeckTools: Tool[] = [
     badge: "New",
     version: "v1.0",
     cta: "Run SITREP",
+  },
+  {
+    slug: "rack-rtt-fitment-database",
+    name: "Rack + RTT Fitment Database",
+    description:
+      "Community-sourced clearance data for roof rack and rooftop tent combos. Look up your exact setup before you buy — or contribute your own measurements so others don't run into the same fitment problem you did.",
+    icon: Tent,
+    status: "coming-soon",
+    badge: "Community",
+    version: null,
+    cta: "Coming Soon",
   },
 ];
 

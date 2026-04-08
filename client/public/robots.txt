@@ -1,7 +1,11 @@
 User-agent: *
 Allow: /
 Disallow: /*?cat=*
+Disallow: /*?category=*
+Disallow: /*?page=*
 Disallow: /hello-world
+Disallow: /hello-world/
+Disallow: /category/
 
 # AI search crawlers — explicitly allowed for citation
 User-agent: GPTBot

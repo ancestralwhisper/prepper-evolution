@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertNewsletterSchema, linkHealthChecks, linkHealthRuns, gearRequests, gearTracking } from "@shared/schema";
+import { insertNewsletterSchema, linkHealthChecks, linkHealthRuns, gearRequests, gearTracking, rttFitmentSubmissions } from "@shared/schema";
 import { z } from "zod";
 import { db } from "./db";
 import { desc, eq } from "drizzle-orm";
@@ -85,6 +85,8 @@ export async function registerRoutes(
     "/ecoflow-delta-2-max-review": "/articles/best-portable-power-stations-2026",
     "/emergency-communication-grid-down": "/articles/emergency-communication-grid-down",
     "/articles/emergency-communication-grid-down": "/articles/best-emergency-communication-devices",
+    "/products/ecoflow-delta-2-max": "/products/ecoflow-delta-3-ultra",
+    "/articles/battle-of-the-off-grid-beacons-why-the-devos-lightranger-4000-beats-the-goal-zero-skylight-for-real-world-use": "/articles/best-portable-lighting-camping-2026",
   };
 
   for (const [oldPath, newPath] of Object.entries(legacyRedirects)) {
@@ -464,6 +466,149 @@ export async function registerRoutes(
       }
       console.error("Community build error:", error);
       res.status(500).json({ error: "Failed to submit build" });
+    }
+  });
+
+  // --- RTT Fitment Database ---
+  const fitmentRateMap = new Map<string, { count: number; resetAt: number }>();
+  function isFitmentRateLimited(ip: string): boolean {
+    const now = Date.now();
+    const entry = fitmentRateMap.get(ip);
+    if (!entry || now > entry.resetAt) {
+      fitmentRateMap.set(ip, { count: 1, resetAt: now + 86400000 });
+      return false;
+    }
+    entry.count++;
+    return entry.count > 3;
+  }
+
+  app.get("/api/fitment", async (_req, res) => {
+    try {
+      const entries = await db.select()
+        .from(rttFitmentSubmissions)
+        .where(eq(rttFitmentSubmissions.status, "approved"))
+        .orderBy(desc(rttFitmentSubmissions.approvedAt));
+      res.json(entries);
+    } catch (error) {
+      console.error("[fitment] fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch entries" });
+    }
+  });
+
+  app.post("/api/fitment", async (req, res) => {
+    try {
+      const ip = (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() || "unknown";
+      if (isFitmentRateLimited(ip)) {
+        return res.status(429).json({ error: "Too many submissions today. Try again tomorrow." });
+      }
+
+      const schema = z.object({
+        rackBrand: z.string().min(2).max(80),
+        rackModel: z.string().min(2).max(100),
+        rttBrand: z.string().min(2).max(80),
+        rttModel: z.string().min(2).max(100),
+        vehicleYear: z.number().int().min(1990).max(2030).optional(),
+        vehicleMake: z.string().max(60).optional(),
+        vehicleModel: z.string().max(80).optional(),
+        vehiclePackage: z.string().max(60).optional(),
+        crossbarRise: z.number().min(0).max(2.0),
+        hasSpine: z.boolean(),
+        spineHeight: z.number().min(0).max(0.5).optional(),
+        mountFootThickness: z.number().min(0.1).max(4.0),
+        riserUsed: z.number().min(0).max(6.0).optional(),
+        outcome: z.enum(["sealed", "marginal", "no-fix"]),
+        notes: z.string().max(500).optional(),
+        facebookUsername: z.string().max(100).optional(),
+      });
+
+      const parsed = schema.parse(req.body);
+      const allText = [parsed.rackBrand, parsed.rackModel, parsed.rttBrand, parsed.rttModel, parsed.vehicleMake, parsed.vehicleModel, parsed.vehiclePackage, parsed.notes, parsed.facebookUsername].filter(Boolean).join(" ");
+      if (containsBlockedContent(allText)) {
+        return res.status(400).json({ error: "Invalid content detected" });
+      }
+
+      await db.insert(rttFitmentSubmissions).values({
+        rackBrand: sanitize(parsed.rackBrand),
+        rackModel: sanitize(parsed.rackModel),
+        rttBrand: sanitize(parsed.rttBrand),
+        rttModel: sanitize(parsed.rttModel),
+        vehicleYear: parsed.vehicleYear ?? null,
+        vehicleMake: parsed.vehicleMake ? sanitize(parsed.vehicleMake) : null,
+        vehicleModel: parsed.vehicleModel ? sanitize(parsed.vehicleModel) : null,
+        vehiclePackage: parsed.vehiclePackage ? sanitize(parsed.vehiclePackage) : null,
+        crossbarRise: parsed.crossbarRise.toString(),
+        hasSpine: parsed.hasSpine,
+        spineHeight: parsed.hasSpine && parsed.spineHeight != null ? parsed.spineHeight.toString() : null,
+        mountFootThickness: parsed.mountFootThickness.toString(),
+        riserUsed: parsed.riserUsed != null ? parsed.riserUsed.toString() : null,
+        outcome: parsed.outcome,
+        notes: parsed.notes ? sanitize(parsed.notes) : null,
+        facebookUsername: parsed.facebookUsername ? sanitize(parsed.facebookUsername) : null,
+      });
+
+      const outcomeEmoji = parsed.outcome === "sealed" ? "✅" : parsed.outcome === "marginal" ? "⚠️" : "❌";
+      const vehicleStr = [parsed.vehicleYear, parsed.vehicleMake, parsed.vehicleModel, parsed.vehiclePackage].filter(Boolean).join(" ");
+      sendTelegramNotification(
+        `🏕️ <b>New RTT Fitment Submission</b>\n` +
+        `Rack: ${parsed.rackBrand} ${parsed.rackModel}\n` +
+        `RTT: ${parsed.rttBrand} ${parsed.rttModel}\n` +
+        (vehicleStr ? `Vehicle: ${vehicleStr}\n` : "") +
+        `Crossbar rise: ${parsed.crossbarRise}" | Spine: ${parsed.hasSpine ? (parsed.spineHeight || 0) + '"' : "none"}\n` +
+        `Mount foot: ${parsed.mountFootThickness}" | Riser: ${parsed.riserUsed != null ? parsed.riserUsed + '"' : "none"}\n` +
+        `${outcomeEmoji} Outcome: ${parsed.outcome}\n` +
+        (parsed.notes ? `Notes: ${parsed.notes.slice(0, 200)}\n` : "") +
+        (parsed.facebookUsername ? `FB: ${parsed.facebookUsername}\n` : "") +
+        `\nReview: prepperevolution.com/admin/fitment`
+      );
+
+      res.status(200).json({ message: "Submitted for review. Thanks for contributing!" });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid submission data" });
+      }
+      console.error("[fitment] submit error:", error);
+      res.status(500).json({ error: "Failed to submit" });
+    }
+  });
+
+  app.get("/api/fitment/pending", async (_req, res) => {
+    try {
+      const entries = await db.select()
+        .from(rttFitmentSubmissions)
+        .where(eq(rttFitmentSubmissions.status, "pending"))
+        .orderBy(desc(rttFitmentSubmissions.createdAt));
+      res.json(entries);
+    } catch (error) {
+      console.error("[fitment] pending error:", error);
+      res.status(500).json({ error: "Failed to fetch pending entries" });
+    }
+  });
+
+  app.patch("/api/fitment/:id/approve", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+      await db.update(rttFitmentSubmissions)
+        .set({ status: "approved", approvedAt: new Date() })
+        .where(eq(rttFitmentSubmissions.id, id));
+      res.json({ success: true });
+    } catch (error) {
+      console.error("[fitment] approve error:", error);
+      res.status(500).json({ error: "Failed to approve" });
+    }
+  });
+
+  app.patch("/api/fitment/:id/reject", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+      await db.update(rttFitmentSubmissions)
+        .set({ status: "rejected" })
+        .where(eq(rttFitmentSubmissions.id, id));
+      res.json({ success: true });
+    } catch (error) {
+      console.error("[fitment] reject error:", error);
+      res.status(500).json({ error: "Failed to reject" });
     }
   });
 

@@ -72,6 +72,43 @@ export const gearTracking = pgTable("gear_tracking", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const rttFitmentSubmissions = pgTable("rtt_fitment_submissions", {
+  id: serial("id").primaryKey(),
+  // Rack
+  rackBrand: text("rack_brand").notNull(),
+  rackModel: text("rack_model").notNull(),
+  // RTT
+  rttBrand: text("rtt_brand").notNull(),
+  rttModel: text("rtt_model").notNull(),
+  // Vehicle (optional but important context)
+  vehicleYear: integer("vehicle_year"),
+  vehicleMake: text("vehicle_make"),
+  vehicleModel: text("vehicle_model"),
+  vehiclePackage: text("vehicle_package"),
+  // Measurements (decimal inches stored as numeric)
+  crossbarRise: numeric("crossbar_rise", { precision: 6, scale: 4 }).notNull(),
+  hasSpine: boolean("has_spine").notNull().default(false),
+  spineHeight: numeric("spine_height", { precision: 6, scale: 4 }),
+  mountFootThickness: numeric("mount_foot_thickness", { precision: 6, scale: 4 }).notNull(),
+  // Result
+  riserUsed: numeric("riser_used", { precision: 6, scale: 4 }),
+  outcome: text("outcome").notNull(), // "sealed" | "marginal" | "no-fix"
+  // Community
+  notes: text("notes"),
+  facebookUsername: text("facebook_username"),
+  // Moderation
+  status: text("status").notNull().default("pending"),
+  verifiedCount: integer("verified_count").notNull().default(1),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  approvedAt: timestamp("approved_at"),
+});
+
+export const insertRttFitmentSchema = createInsertSchema(rttFitmentSubmissions).omit({
+  id: true, status: true, verifiedCount: true, createdAt: true, approvedAt: true,
+});
+export type RttFitmentSubmission = typeof rttFitmentSubmissions.$inferSelect;
+export type InsertRttFitment = z.infer<typeof insertRttFitmentSchema>;
+
 export const insertProductSchema = createInsertSchema(products).omit({ id: true });
 export const insertComparisonSchema = createInsertSchema(comparisons).omit({ id: true });
 export const insertNewsletterSchema = createInsertSchema(newsletterSubscribers).omit({ id: true, subscribedAt: true });
