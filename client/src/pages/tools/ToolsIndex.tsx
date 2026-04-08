@@ -599,8 +599,8 @@ function ToolCard({ tool, color = "primary" }: { tool: Tool; color?: string }) {
 
 export default function ToolsIndex() {
   useSEO({
-    title: "Free Prepper Tools & Calculators | Prepper Evolution",
-    description: "Free interactive tools for preppers and overlanders: bug out bag calculator, water storage, food storage, power station sizing, 72-hour kit builder, SHTF simulator, and the Ops Deck — vehicle-aware preparedness tools with real physics.",
+    title: "Free Prep & Overlanding Tools | Calculators, Ops Deck & More | Prepper Evolution",
+    description: "Free interactive tools for preppers and overlanders: bug out bag calculator, water storage, food storage, power station sizing, 72-hour kit builder, SHTF simulator, Ops Deck vehicle tools, and the Rack + RTT Fitment Database.",
   });
 
   return (
@@ -625,7 +625,7 @@ export default function ToolsIndex() {
               Free Tools
             </p>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 text-white">
-              Prepper <span className="text-primary">Calculators & Tools</span>
+              Prep & Overlanding <span className="text-primary">Tools</span>
             </h1>
             <p className="text-white/80 text-lg leading-relaxed">
               Interactive tools built on real data — FEMA guidelines, US Army field manuals,
