@@ -297,10 +297,10 @@ const opsDeckTools: Tool[] = [
     description:
       "Community-sourced clearance data for roof rack and rooftop tent combos. Look up your exact setup before you buy — or contribute your own measurements so others don't run into the same fitment problem you did.",
     icon: Tent,
-    status: "coming-soon",
-    badge: "Community",
-    version: null,
-    cta: "Coming Soon",
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Search Database",
   },
 ];
 
