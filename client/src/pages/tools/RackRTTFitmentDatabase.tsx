@@ -717,6 +717,15 @@ export default function RackRTTFitmentDatabase() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
 
+        {/* Hero Image */}
+        <div className="mb-8 rounded-xl overflow-hidden">
+          <img
+            src="https://wp.prepperevolution.com/wp-content/uploads/2026/04/rack-rtt-fitment-database-3.png"
+            alt="Rack + RTT Fitment Database — community-powered clearance data for roof racks and rooftop tents"
+            className="w-full object-cover"
+          />
+        </div>
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">

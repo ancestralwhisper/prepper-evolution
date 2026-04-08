@@ -814,6 +814,25 @@ export default function ToolsIndex() {
           variant="emerald"
         />
 
+        {/* ─── Showcase: Rack + RTT Fitment Database ────────────── */}
+        <FeatureShowcase
+          label="Ops Deck — Community Tools"
+          title="Rack + RTT Fitment Database:"
+          titleAccent="Know Before You Buy."
+          description="Rack manufacturers don't publish crossbar clearance specs. So the community built this. Look up your exact rack and RTT combo before anything ships — or contribute your own measurements so the next person doesn't run into the same fitment problem."
+          features={[
+            { highlight: "Community-sourced data", text: "— real measurements from overlanders who already went through the trial and error" },
+            { highlight: "Vehicle-specific", text: "— same rack on a Tacoma vs a Sierra can have different clearance. Year, make, model, and package all matter" },
+            { highlight: "Riser calculator built in", text: "— enter your measurements and get the exact riser size you need, with a flex buffer included" },
+            { highlight: "Contribute and earn a badge", text: "— founding contributors get a shareable badge card for their build" },
+          ]}
+          imageSrc="https://wp.prepperevolution.com/wp-content/uploads/2026/04/rack-rtt-fitment-database-3.png"
+          imageAlt="Rack + RTT Fitment Database showing community clearance data for roof rack and rooftop tent combos"
+          cta="Search Database"
+          href="/tools/rack-rtt-fitment-database"
+          variant="emerald"
+        />
+
         <div className="mb-16">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
