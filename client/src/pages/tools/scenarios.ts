@@ -67,7 +67,7 @@ const GEAR = {
   },
   jackery1000: {
     name: "Jackery Explorer 1000 Plus",
-    url: "https://www.amazon.com/dp/B0CFVBGWBT?tag=prepperevo-20",
+    url: "https://www.amazon.com/dp/B0C37CWBKZ?tag=prepperevo-20",
   },
   ecoflowDelta3: {
     name: "EcoFlow DELTA 3 Plus",

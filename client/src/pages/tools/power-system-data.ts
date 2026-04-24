@@ -122,7 +122,7 @@ export const deviceDatabase: DeviceEntry[] = [
   { id: "ham-rx",        name: "Ham Radio (Receive)",      watts: 8,   amps12v: 0.67, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "communication" },
   { id: "ham-tx",        name: "Ham Radio (Transmit)",     watts: 250, amps12v: 20.8, dutyCyclePct: 10,  defaultHoursPerDay: 2, category: "communication", note: "High peak draw during transmit" },
   { id: "starlink-mini", name: "Starlink Mini",            watts: 35,  amps12v: 2.92, dutyCyclePct: 100, defaultHoursPerDay: 6, category: "communication" },
-  { id: "starlink-std",  name: "Starlink Standard",        watts: 85,  amps12v: 7.08, dutyCyclePct: 100, defaultHoursPerDay: 6, category: "communication" },
+  { id: "starlink-std",  name: "Starlink Standard / Roam Standard", watts: 85, amps12v: 7.08, dutyCyclePct: 100, defaultHoursPerDay: 6, category: "communication", note: "Same hardware on Roam or Standard plan" },
   { id: "cb-radio",      name: "CB Radio",                 watts: 5,   amps12v: 0.42, dutyCyclePct: 100, defaultHoursPerDay: 4, category: "communication" },
   { id: "gmrs-mobile-15w-rx", name: "GMRS Mobile 15W (Receive)", watts: 10, amps12v: 0.83, dutyCyclePct: 100, defaultHoursPerDay: 8, category: "communication" },
   { id: "gmrs-mobile-15w-tx", name: "GMRS Mobile 15W (Transmit)", watts: 30, amps12v: 2.5, dutyCyclePct: 10, defaultHoursPerDay: 2, category: "communication", note: "Peak draw during transmit only" },

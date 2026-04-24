@@ -39,7 +39,7 @@ export default function Category() {
   });
 
   const wpCategory = categories?.find(
-    c => c.slug === (name ?? "") || c.name.toLowerCase() === categoryTitle.toLowerCase()
+    c => c.slug === (name ?? "") || decodeHtmlEntities(c.name).toLowerCase() === categoryTitle.toLowerCase()
   );
   
   const { data: postsData, isLoading: postsLoading } = useQuery({

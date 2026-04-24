@@ -337,6 +337,12 @@ const categories: GearCategory[] = [
         badge: "Amazon",
       },
       {
+        name: "RecPro 21-Gallon Fresh Water Tank (RV / Overland)",
+        note: "Hard tank — dedicated fresh water supply for the pump and shower system.",
+        href: AMZ("B079TCRW82"),
+        badge: "Amazon",
+      },
+      {
         name: "SEAFLO 33 Series 12V DC Diaphragm Pump (3.0 GPM, 45 PSI)",
         note: "Powers the shower head off 12V. Self-priming, built-in pressure switch.",
         href: AMZ("B07DQT1FVZ"),
@@ -388,8 +394,14 @@ const categories: GearCategory[] = [
     subtitle: "The under-the-hood electrical work for the COB lighting and 12V auxiliary system.",
     items: [
       {
+        name: "LiTime 100Ah LiFePO4 Battery (12V)",
+        note: "Dedicated 12V battery for the LED lighting circuit.",
+        href: AMZ("B0DJ957H39"),
+        badge: "Amazon",
+      },
+      {
         name: "TalentCell 12V 12Ah LiFePO4 Battery (LF4021)",
-        note: "Small auxiliary lithium battery for the COB lighting circuit",
+        note: "Small auxiliary lithium battery for the 12V water pump circuit.",
         href: AMZ("B08GSJJV6Y"),
         badge: "Amazon",
       },
@@ -397,6 +409,12 @@ const categories: GearCategory[] = [
         name: "ECO-WORTHY 12V 280Ah LiFePO4 Battery with Bluetooth & BMS (3584Wh)",
         note: "Main auxiliary house battery for the 12V system",
         href: AMZ("B0G79296WJ"),
+        badge: "Amazon",
+      },
+      {
+        name: "30A MPPT Solar Charge Controller",
+        note: "Manages solar input to the auxiliary battery bank.",
+        href: AMZ("B0BJ75NLRM"),
         badge: "Amazon",
       },
       {
@@ -477,6 +495,50 @@ const categories: GearCategory[] = [
         name: "MOON LENCE High Back Folding Camping Chair (330 lbs)",
         note: "Full back support. Good for longer sits.",
         href: AMZ("B0F9WQPSFF"),
+        badge: "Amazon",
+      },
+    ],
+  },
+  {
+    icon: "🚨",
+    title: "Recovery",
+    subtitle: "X-Bull traction boards for sand, mud, snow. Rhino bag keeps all the strap/hardware mess contained.",
+    items: [
+      {
+        name: "X-Bull Recovery Traction Boards (2-Pack)",
+        note: "Sand, mud, snow — these live under the bed. Don't leave without them.",
+        href: AMZ("B01MS1SKIW"),
+        badge: "Amazon",
+      },
+      {
+        name: "Rhino USA Recovery Gear Bag",
+        note: "Keeps straps, boards, and hardware from rattling loose in the bed.",
+        href: AMZ("B09RBZGY4K"),
+        badge: "Amazon",
+      },
+    ],
+  },
+  {
+    icon: "📷",
+    title: "Camera & Drone",
+    subtitle: "DJI Mini 4K for aerial shots, GoPros for trail and camp footage, Rode for clean audio.",
+    items: [
+      {
+        name: "DJI Mini 4K Drone",
+        note: "New. Lightweight enough to not need FAA registration. Shoots 4K/60fps.",
+        href: AMZ("B0CWFXJ5F6"),
+        badge: "Amazon",
+      },
+      {
+        name: "GoPro HERO9 Black",
+        note: "Running two of these — trail cam and camp cam.",
+        href: AMZ("B08DVX1H87"),
+        badge: "Amazon",
+      },
+      {
+        name: "Rode Wireless GO II (Single)",
+        note: "Clean wireless audio for camp and trail videos. No more wind noise on the mic.",
+        href: AMZ("B08XFQ14TY"),
         badge: "Amazon",
       },
     ],
@@ -621,7 +683,6 @@ export default function GearList() {
           <div className="mx-8 mb-8 bg-yellow-50 border border-yellow-200 rounded-xl p-5">
             <h3 className="font-black text-yellow-800 mb-2">🚧 Still Incoming / On the List</h3>
             <ul className="text-sm text-yellow-700 space-y-1">
-              <li>• Recovery boards (still deciding — MAXTRAX vs. Traction Boards)</li>
               <li>• RealTruck Elevate Rack Side Bars (considering)</li>
               <li>• Lift kit + new wheels/tires (planning for before October Overland Expo East)</li>
               <li>• OpenRoad Rugged Case mounts (on backorder from OpenRoad — slow shipping)</li>

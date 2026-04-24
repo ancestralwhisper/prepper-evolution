@@ -61,7 +61,8 @@ export type CategoryKey =
   | "camping"
   | "emergency-medical"
   | "vehicle-protection"
-  | "fire-starting";
+  | "fire-starting"
+  | "vehicle-accessories";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -212,6 +213,8 @@ export const MASTER_ASIN_MAP: Record<CategoryKey, ProductEntry[]> = {
   // =========================================================================
   "portable-power": [
     p("B0D7PPG25F", "Jackery Explorer 1000 V2", "Portable Power"),
+    p("B0C37CWBKZ", "Jackery Explorer 1000 Plus Power Station", "Portable Power"),
+    p("B09M8J9LY7", "Bluetti AC200MAX Power Station", "Portable Power"),
     p("B0CLGZB3L6", "Bluetti AC200L Power Station", "Portable Power"),
     p("B096ST3VMS", "Goal Zero Yeti 1000 Core", "Portable Power"),
     p("B0C4DW17PD", "EcoFlow DELTA 2 Max Power Station", "Portable Power"),
@@ -224,6 +227,9 @@ export const MASTER_ASIN_MAP: Record<CategoryKey, ProductEntry[]> = {
     p("B0FT32MCM9", "EcoFlow DELTA 3 Ultra Power Station", "Portable Power"),
     p("B0DB1S36YP", "EcoFlow RIVER 3 Power Station", "Portable Power"),
     p("B0DCCB657J", "EcoFlow RIVER 3 Plus Power Station", "Portable Power"),
+    p("B0DJ957H39", "LiTime 100Ah LiFePO4 Battery 12V", "Portable Power"),
+    p("B0BJ75NLRM", "30A MPPT Solar Charge Controller", "Portable Power"),
+    p("B079TCRW82", "RecPro 21-Gallon Fresh Water Tank", "Overlanding Gear"),
     p("B0F4D4Z18S", "EcoFlow WAVE 3 Portable AC/Heater", "Climate Control"),
     p("B0BZJ6S64B", "EcoFlow WAVE 2 Portable AC/Heater", "Climate Control"),
     p("B0F8Q5JD7V", "Zero Breeze Mark 3 Portable AC", "Climate Control"),
@@ -299,6 +305,7 @@ export const MASTER_ASIN_MAP: Record<CategoryKey, ProductEntry[]> = {
     p("B07YTYVQ4J", "MAXTRAX Recovery Boards", "Overlanding Gear", "Alternate listing"),
     p("B07942QM39", "ActionTrax Recovery Boards", "Overlanding Gear"),
     p("B01MS1SKIW", "X-BULL Recovery Boards", "Overlanding Gear"),
+    p("B09RBZGY4K", "Rhino USA Recovery Gear Bag", "Overlanding Gear"),
     p("B07SJHVQTJ", "Warn VR EVO 10-S Winch", "Overlanding Gear"),
     p("B0050DI9YQ", "ARB Twin Motor Air Compressor", "Overlanding Gear"),
     p("B07MVF491C", "Front Runner Slimline II Roof Rack", "Overlanding Gear"),
@@ -355,6 +362,25 @@ export const MASTER_ASIN_MAP: Record<CategoryKey, ProductEntry[]> = {
   // =========================================================================
   "vehicle-protection": [
     p("B0BLCYSB3G", "EMP Shield Micro DC-12V", "Vehicle Protection", "On Mike's 2025 Sierra 1500"),
+  ],
+
+  // =========================================================================
+  // VEHICLE ACCESSORIES
+  // =========================================================================
+  "vehicle-accessories": [
+    p("B09SJXKN1N", "Rough Country Underseat Storage Box", "Vehicle Accessories"),
+    p("B0FMT438HV", "Bulletpoint RubiGrid Dash Mount for 2022+ Sierra/Silverado (V2 Spring-Loaded)", "Vehicle Accessories", "20mm ball system; not compatible with Denali/AT4X/AT4 trim"),
+    p("B0FW426LNC", "Quad Lock MAG Phone Case iPhone 17 Pro Max", "Vehicle Accessories"),
+    p("B093QZR6M8", "Quad Lock 1-Inch Ball Adaptor", "Vehicle Accessories", "Pairs with RubiGrid 20mm ball arm for Quad Lock twist-lock mounting"),
+  ],
+
+  // =========================================================================
+  // CAMERA & DRONE
+  // =========================================================================
+  "camera-drone": [
+    p("B0CWFXJ5F6", "DJI Mini 4K Drone", "Camera & Drone"),
+    p("B08DVX1H87", "GoPro HERO9 Black", "Camera & Drone"),
+    p("B08XFQ14TY", "Rode Wireless GO II Single", "Camera & Drone"),
   ],
 
   // =========================================================================

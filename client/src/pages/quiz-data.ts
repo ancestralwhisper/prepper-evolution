@@ -235,7 +235,7 @@ export const scoreRanges: ScoreRange[] = [
     products: [
       {
         name: "Jackery Explorer 1000 Plus",
-        url: "https://www.amazon.com/dp/B0CFVBGWBT?tag=prepperevo-20",
+        url: "https://www.amazon.com/dp/B0C37CWBKZ?tag=prepperevo-20",
         reason: "1264Wh capacity. Powers devices, lights, and small appliances for days.",
       },
       {

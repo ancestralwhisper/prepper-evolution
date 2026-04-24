@@ -66,7 +66,7 @@ const categories = [
     icon: "💡",
     title: "Light & Power",
     items: [
-      { name: "Jackery Explorer 240v2 (portable power station)", asin: "B0CFVBGWBT", qty: "1" },
+      { name: "Jackery Explorer 1000 Plus (portable power station)", asin: "B0C37CWBKZ", qty: "1" },
       { name: "Goal Zero Torch 500 lantern/flashlight combo", asin: "B077NFHZ17", qty: "2" },
       { name: "Headlamps (Petzl or Black Diamond) — one per person", asin: "B08CL6YNYH", qty: "5" },
       { name: "AA/AAA batteries — 30 pack", asin: "B00000J1ER", qty: "2 packs" },
