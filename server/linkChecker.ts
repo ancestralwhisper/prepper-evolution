@@ -8,7 +8,26 @@ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 let isRunning = false;
 
+function checkAmazonLinkFormat(url: string): { statusCode: number | null; isHealthy: boolean; errorMessage: string | null } {
+  // Amazon blocks all automated HTTP checks — validate format only, never HTTP-fetch.
+  const asinMatch = url.match(/\/dp\/([A-Z0-9]{10})/);
+  const hasTag = url.includes("tag=prepperevo-20");
+
+  if (!asinMatch) {
+    return { statusCode: null, isHealthy: false, errorMessage: "Amazon URL missing /dp/ASIN — not a valid product link" };
+  }
+  if (!hasTag) {
+    return { statusCode: null, isHealthy: false, errorMessage: "Amazon URL missing affiliate tag (tag=prepperevo-20)" };
+  }
+  return { statusCode: 200, isHealthy: true, errorMessage: null };
+}
+
 async function checkSingleLink(url: string): Promise<{ statusCode: number | null; isHealthy: boolean; errorMessage: string | null }> {
+  // Never HTTP-check Amazon — they block bots and return false 404s.
+  if (url.includes("amazon.com")) {
+    return checkAmazonLinkFormat(url);
+  }
+
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
@@ -33,7 +52,7 @@ async function checkSingleLink(url: string): Promise<{ statusCode: number | null
     const isError404 = statusCode === 404;
     const isServerError = statusCode >= 500;
     const isRedirectToError = finalUrl.includes("/error") || finalUrl.includes("/gp/errors") || finalUrl.includes("/404");
-    const bodyIndicatesDog = body.includes("we couldn't find that page") || 
+    const bodyIndicatesDog = body.includes("we couldn't find that page") ||
                               body.includes("looking for something") ||
                               body.includes("Page not found");
 
@@ -49,8 +68,8 @@ async function checkSingleLink(url: string): Promise<{ statusCode: number | null
 
     return { statusCode, isHealthy, errorMessage };
   } catch (error: any) {
-    const errorMessage = error.name === "AbortError" 
-      ? "Request timed out after 15 seconds" 
+    const errorMessage = error.name === "AbortError"
+      ? "Request timed out after 15 seconds"
       : `Connection failed: ${error.message}`;
     return { statusCode: null, isHealthy: false, errorMessage };
   }
