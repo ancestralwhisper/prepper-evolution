@@ -302,6 +302,17 @@ const opsDeckTools: Tool[] = [
     version: "v1.0",
     cta: "Search Database",
   },
+  {
+    slug: "load-balancer",
+    name: "Overland Load Balancer",
+    description:
+      "Know your true payload before you load a single pound. Select your rig from 60+ vehicles (2000–present), deduct every installed mod from your stock payload, then place gear across 6 zones for front/rear and left/right axle balance. The number RigLocker won't show you.",
+    icon: BarChart3,
+    status: "live",
+    badge: "New",
+    version: "v1.0",
+    cta: "Balance My Load",
+  },
 ];
 
 const ACCENT_GRADIENT: Record<string, string> = {

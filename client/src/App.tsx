@@ -47,6 +47,7 @@ import FailureModeDiagnostic from "@/pages/tools/FailureModeDiagnostic";
 import VirtualGoBag from "@/pages/tools/VirtualGoBag";
 import SITREP from "@/pages/tools/SITREP";
 import RackRTTFitmentDatabase from "@/pages/tools/RackRTTFitmentDatabase";
+import LoadBalancer from "@/pages/tools/LoadBalancer";
 import AdminFitment from "@/pages/tools/AdminFitment";
 import HouseholdSetup from "@/pages/tools/HouseholdSetup";
 import ShareResults from "@/pages/tools/ShareResults";
@@ -121,6 +122,7 @@ function Router() {
             <Route path="/tools/virtual-go-bag" component={VirtualGoBag} />
             <Route path="/tools/sitrep" component={SITREP} />
             <Route path="/tools/rack-rtt-fitment-database" component={RackRTTFitmentDatabase} />
+            <Route path="/tools/load-balancer" component={LoadBalancer} />
             <Route path="/admin/fitment" component={AdminFitment} />
             <Route path="/tools/household" component={HouseholdSetup} />
             <Route path="/tools/share" component={ShareResults} />
