@@ -59,6 +59,7 @@ export default function FoodStorageCalculator() {
   const [livingSituation, setLivingSituation] = useState<LivingSituation>("house");
 
   const [rationPct, setRationPct] = useState(100);
+  const [allergens, setAllergens] = useState({ glutenFree: false, nutFree: false, dairyFree: false });
 
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestName, setRequestName] = useState("");
@@ -172,6 +173,22 @@ export default function FoodStorageCalculator() {
     });
   };
 
+  // Maps shopping list item names to allergen flags
+  const ALLERGEN_FLAGS: Record<string, { gluten?: true; nuts?: true; dairy?: true }> = {
+    "Dried Pasta": { gluten: true },
+    "Rolled Oats": { gluten: true },
+    "Peanut Butter": { nuts: true },
+    "Powdered Milk": { dairy: true },
+    "Energy / Protein Bars": { gluten: true, nuts: true, dairy: true },
+    "MREs": { gluten: true, dairy: true },
+  };
+
+  const ALLERGEN_SUBS: { flag: keyof typeof allergens; items: string[]; sub: string }[] = [
+    { flag: "glutenFree", items: ["Dried Pasta", "Rolled Oats"], sub: "Add extra white rice and dry beans to replace pasta/oat calories. Look for certified GF oats if tolerated." },
+    { flag: "nutFree", items: ["Peanut Butter"], sub: "Substitute with sunflower seed butter or tahini (sesame paste) for similar fat/protein density." },
+    { flag: "dairyFree", items: ["Powdered Milk"], sub: "Substitute with powdered coconut milk or oat milk powder for similar shelf-stable use cases." },
+  ];
+
   const calculations = useMemo(() => {
     const profile = activityLevels.find((a) => a.id === activity) || activityLevels[1];
     const totalPeople = group.males + group.females + group.children;
@@ -222,6 +239,21 @@ export default function FoodStorageCalculator() {
       waterGallonsForCooking,
     };
   }, [group, durationDays, activity]);
+
+  const allergenFlaggedItems = useMemo(() => {
+    const active = new Set<string>();
+    if (allergens.glutenFree) active.add("gluten");
+    if (allergens.nutFree) active.add("nuts");
+    if (allergens.dairyFree) active.add("dairy");
+    if (active.size === 0) return new Set<string>();
+    const flagged = new Set<string>();
+    for (const [name, flags] of Object.entries(ALLERGEN_FLAGS)) {
+      if ((allergens.glutenFree && flags.gluten) || (allergens.nutFree && flags.nuts) || (allergens.dairyFree && flags.dairy)) {
+        flagged.add(name);
+      }
+    }
+    return flagged;
+  }, [allergens]);
 
   const chartSegments = calculations.categoryBreakdown;
 
@@ -595,6 +627,47 @@ export default function FoodStorageCalculator() {
                 </div>
               </div>
 
+              {/* Allergen Filter */}
+              <div className="bg-card border border-border rounded-lg p-5 space-y-4">
+                <div>
+                  <p className="text-sm font-extrabold uppercase tracking-wide">Dietary Restrictions</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Flag items containing common allergens so you know what to swap out</p>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  {([
+                    { key: "glutenFree", label: "Gluten-Free", emoji: "🌾" },
+                    { key: "nutFree", label: "Nut-Free", emoji: "🥜" },
+                    { key: "dairyFree", label: "Dairy-Free", emoji: "🥛" },
+                  ] as const).map(({ key, label, emoji }) => (
+                    <button
+                      key={key}
+                      onClick={() => setAllergens((prev) => ({ ...prev, [key]: !prev[key] }))}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-bold transition-all ${
+                        allergens[key]
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border text-muted-foreground hover:border-primary/40"
+                      }`}
+                    >
+                      <span>{emoji}</span>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                {allergenFlaggedItems.size > 0 && (
+                  <div className="space-y-2 pt-1">
+                    <div className="flex items-start gap-2 p-3 bg-yellow-500/8 border border-yellow-500/20 rounded-lg">
+                      <AlertTriangle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <div className="text-xs text-muted-foreground space-y-1.5">
+                        <p className="font-bold text-foreground">{allergenFlaggedItems.size} items flagged in your shopping list below</p>
+                        {ALLERGEN_SUBS.filter((s) => allergens[s.flag]).map((s) => (
+                          <p key={s.flag}><span className="font-bold text-yellow-500">Swap:</span> {s.sub}</p>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {foodCategories.map((cat) => {
                 const isExpanded = expandedCats.has(cat.id);
                 const itemCount = cat.items.length;
@@ -896,15 +969,20 @@ export default function FoodStorageCalculator() {
                           ? (item.calories / calculations.totalShoppingCals) * 100
                           : 0;
                         return (
-                          <div key={item.name}>
-                            <div className="flex items-center justify-between text-sm mb-0.5">
-                              <span className="text-foreground font-medium truncate">{item.name}</span>
-                              <span className="font-bold tabular-nums ml-2 text-muted-foreground">{item.quantity}</span>
+                          <div key={item.name} className={allergenFlaggedItems.has(item.name) ? "opacity-60" : ""}>
+                            <div className="flex items-center justify-between text-sm mb-0.5 gap-1">
+                              <span className={`font-medium truncate ${allergenFlaggedItems.has(item.name) ? "line-through text-muted-foreground" : "text-foreground"}`}>{item.name}</span>
+                              <div className="flex items-center gap-1.5 flex-shrink-0">
+                                {allergenFlaggedItems.has(item.name) && (
+                                  <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-yellow-500/15 text-yellow-500 border border-yellow-500/20">⚠ swap</span>
+                                )}
+                                <span className="font-bold tabular-nums text-muted-foreground">{item.quantity}</span>
+                              </div>
                             </div>
                             <div className="flex items-center gap-2">
                               <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                                 <div
-                                  className="h-full rounded-full bg-primary transition-all duration-500"
+                                  className={`h-full rounded-full transition-all duration-500 ${allergenFlaggedItems.has(item.name) ? "bg-yellow-500/50" : "bg-primary"}`}
                                   style={{ width: `${pct}%` }}
                                 />
                               </div>

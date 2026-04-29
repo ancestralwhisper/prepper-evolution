@@ -55,6 +55,7 @@ export default function BugOutBagCalculator() {
 
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [showEssentialsOnly, setShowEssentialsOnly] = useState(false);
+  const [appliedPreset, setAppliedPreset] = useState<string | null>(null);
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestName, setRequestName] = useState("");
   const [requestBrand, setRequestBrand] = useState("");
@@ -247,6 +248,51 @@ export default function BugOutBagCalculator() {
   );
   const miscIdx = chartSegments.findIndex((s) => s.label === "Documents & Misc");
   if (miscIdx >= 0) chartSegments[miscIdx].value += customWeight2;
+
+  const BOB_PRESETS = [
+    {
+      id: "wildfire",
+      label: "Wildfire Evac",
+      emoji: "🔥",
+      desc: "Speed + smoke + exit fast",
+      gear: { "n95-masks": 1, "compass": 1, "topo-maps": 1, "garmin-inreach": 1, "document-kit": 1, "headlamp": 1, "energy-bars": 3, "nalgene-32": 1, "purification-tabs": 2, "rain-jacket": 1, "medications": 1, "ifak": 1, "whistle": 1, "mylar-blanket": 1, "bic-lighter": 1 } as SelectedGear,
+    },
+    {
+      id: "urban",
+      label: "Urban Bug-Out",
+      emoji: "🏙️",
+      desc: "City exit + security + comms",
+      gear: { "rush72": 1, "esee4": 1, "multitool": 1, "baofeng": 1, "document-kit": 1, "headlamp": 1, "energy-bars": 5, "nalgene-32": 2, "sawyer-squeeze": 1, "ifak": 1, "nitrile-gloves": 1, "paracord": 1, "pepper-spray": 1, "wool-socks": 1, "rain-jacket": 1, "compass": 1 } as SelectedGear,
+    },
+    {
+      id: "power-outage",
+      label: "Power Outage",
+      emoji: "⚡",
+      desc: "Stay local + 72-hour baseline",
+      gear: { "crank-radio": 1, "headlamp": 1, "energy-bars": 6, "nalgene-32": 2, "purification-tabs": 3, "mylar-blanket": 2, "document-kit": 1, "medications": 1, "whistle": 1, "power-bank": 1, "ifak": 1, "bic-lighter": 1 } as SelectedGear,
+    },
+    {
+      id: "winter",
+      label: "Winter Storm",
+      emoji: "❄️",
+      desc: "Cold weather + fire + warmth",
+      gear: { "mylar-blanket": 2, "sleeping-bag": 1, "rain-jacket": 1, "bic-lighter": 1, "ferro-rod": 1, "energy-bars": 4, "nalgene-32": 2, "medications": 1, "headlamp": 1, "wool-socks": 1, "base-layer": 1, "gloves": 1, "ifak": 1, "storm-matches": 1 } as SelectedGear,
+    },
+    {
+      id: "vehicle",
+      label: "Vehicle Bug-Out",
+      emoji: "🚗",
+      desc: "Truck/SUV — heavier + fuller",
+      gear: { "sleeping-bag": 1, "sleeping-pad": 1, "mh-supply": 5, "nalgene-32": 2, "sawyer-squeeze": 1, "esee4": 1, "multitool": 1, "garmin-inreach": 1, "headlamp": 1, "ifak": 1, "medications": 1, "paracord": 1, "jetboil": 1, "solar-panel": 1, "crank-radio": 1, "document-kit": 1 } as SelectedGear,
+    },
+  ] as const;
+
+  const loadPreset = useCallback((preset: typeof BOB_PRESETS[number]) => {
+    setSelected(preset.gear);
+    setAppliedPreset(preset.id);
+    setExpandedCats(new Set(["pack", "food", "water", "firstaid", "communication", "navigation"]));
+    trackEvent("pe_bob_preset_loaded", { preset: preset.id });
+  }, [BOB_PRESETS]);
 
   const getStatusColor = () => {
     if (calculations.pctBodyWeight >= CRITICAL_PERCENT) return "text-red-500";
@@ -553,6 +599,46 @@ export default function BugOutBagCalculator() {
                 <p className="text-sm text-muted-foreground mt-2">
                   US Army recommends keeping pack weight under 30% of body weight for extended movement.
                 </p>
+              </div>
+
+              {/* Quick Start Presets */}
+              <div className="bg-card border border-border rounded-xl p-5 space-y-3" id="bob-gear-list">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div>
+                    <p className="text-sm font-extrabold uppercase tracking-wide">Quick Start Presets</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Start with a scenario — then customize from there</p>
+                  </div>
+                  {appliedPreset && (
+                    <button
+                      onClick={() => { setSelected({}); setAppliedPreset(null); }}
+                      className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+                    >
+                      <X className="w-3 h-3" /> Clear preset
+                    </button>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {BOB_PRESETS.map((preset) => (
+                    <button
+                      key={preset.id}
+                      onClick={() => loadPreset(preset)}
+                      className={`text-left p-3 rounded-lg border transition-all ${
+                        appliedPreset === preset.id
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:border-primary/40"
+                      }`}
+                    >
+                      <span className="text-lg block mb-0.5">{preset.emoji}</span>
+                      <span className="text-xs font-extrabold block leading-tight">{preset.label}</span>
+                      <span className="text-xs text-muted-foreground block mt-0.5 leading-tight">{preset.desc}</span>
+                    </button>
+                  ))}
+                </div>
+                {appliedPreset && (
+                  <p className="text-xs text-primary font-bold">
+                    ✓ Preset loaded — gear is checked below. Add or remove items to customize.
+                  </p>
+                )}
               </div>
 
               {/* Essentials filter */}

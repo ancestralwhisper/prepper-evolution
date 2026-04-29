@@ -70,10 +70,11 @@ export default function SHTFSimulator() {
   const [currentNodeId, setCurrentNodeId] = useState<string>("");
   const [score, setScore] = useState(0);
   const [history, setHistory] = useState<
-    { nodeId: string; choiceIndex: number; consequence: string; impact: number }[]
+    { nodeId: string; choiceIndex: number; consequence: string; impact: number; bestChoiceIndex: number; bestChoiceImpact: number }[]
   >([]);
   const [fadeKey, setFadeKey] = useState(0);
   const [showShareToast, setShowShareToast] = useState(false);
+  const [hintsMode, setHintsMode] = useState(false);
 
   useSEO({
     title: "SHTF Scenario Simulator",
@@ -93,6 +94,16 @@ export default function SHTFSimulator() {
   const makeChoice = useCallback(
     (choice: Choice, choiceIndex: number) => {
       const newScore = score + choice.scoreImpact;
+
+      let bestChoiceIndex = 0;
+      let bestChoiceImpact = currentNode?.choices[0]?.scoreImpact ?? choice.scoreImpact;
+      currentNode?.choices.forEach((c, idx) => {
+        if (c.scoreImpact > bestChoiceImpact) {
+          bestChoiceImpact = c.scoreImpact;
+          bestChoiceIndex = idx;
+        }
+      });
+
       const newHistory = [
         ...history,
         {
@@ -100,6 +111,8 @@ export default function SHTFSimulator() {
           choiceIndex,
           consequence: choice.consequence,
           impact: choice.scoreImpact,
+          bestChoiceIndex,
+          bestChoiceImpact,
         },
       ];
 
@@ -117,7 +130,7 @@ export default function SHTFSimulator() {
         setCurrentNodeId(choice.nextNodeId);
       }
     },
-    [score, history, currentNodeId],
+    [score, history, currentNodeId, currentNode],
   );
 
   const resetToSelect = useCallback(() => {
@@ -131,6 +144,14 @@ export default function SHTFSimulator() {
 
   const retryScenario = useCallback(() => {
     if (selectedScenario) {
+      setHintsMode(false);
+      startScenario(selectedScenario);
+    }
+  }, [selectedScenario, startScenario]);
+
+  const retryWithHints = useCallback(() => {
+    if (selectedScenario) {
+      setHintsMode(true);
       startScenario(selectedScenario);
     }
   }, [selectedScenario, startScenario]);
@@ -374,9 +395,31 @@ export default function SHTFSimulator() {
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         {history[history.length - 1].consequence}
                       </p>
+                      {hintsMode && (() => {
+                        const last = history[history.length - 1];
+                        if (last.choiceIndex === last.bestChoiceIndex) return null;
+                        const prevNode = getNode(selectedScenario, last.nodeId);
+                        const bestText = prevNode?.choices[last.bestChoiceIndex]?.text;
+                        if (!bestText) return null;
+                        return (
+                          <div className="mt-3 pt-3 border-t border-[#EAB308]/20 flex items-start gap-2">
+                            <span className="text-base shrink-0">💡</span>
+                            <p className="text-sm text-[#EAB308] leading-relaxed">
+                              <strong>Best choice was:</strong> {bestText}{" "}
+                              <span className="opacity-75">(+{last.bestChoiceImpact} pts vs your {last.impact > 0 ? "+" : ""}{last.impact} pts)</span>
+                            </p>
+                          </div>
+                        );
+                      })()}
                     </div>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {hintsMode && (
+              <div className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#EAB308]">
+                <span>💡</span> Hints Mode Active — best choices shown after each decision
               </div>
             )}
 
@@ -438,6 +481,8 @@ export default function SHTFSimulator() {
               <div className="space-y-3">
                 {history.map((h, idx) => {
                   const node = getNode(selectedScenario, h.nodeId);
+                  const wasBest = h.choiceIndex === h.bestChoiceIndex;
+                  const bestText = !wasBest ? node?.choices[h.bestChoiceIndex]?.text : null;
                   return (
                     <div
                       key={idx}
@@ -462,6 +507,11 @@ export default function SHTFSimulator() {
                         <p className="text-sm text-foreground leading-relaxed">
                           {h.consequence}
                         </p>
+                        {hintsMode && !wasBest && bestText && (
+                          <p className="text-xs text-[#EAB308] mt-1 leading-relaxed">
+                            💡 Best choice: {bestText} (+{h.bestChoiceImpact} pts)
+                          </p>
+                        )}
                       </div>
                     </div>
                   );
@@ -552,6 +602,15 @@ export default function SHTFSimulator() {
               >
                 <RotateCcw className="w-4 h-4" /> Try Again
               </button>
+              {!hintsMode && (
+                <button
+                  onClick={retryWithHints}
+                  className="flex-1 flex items-center justify-center gap-2 bg-[#EAB308]/10 border border-[#EAB308]/30 text-[#EAB308] rounded-lg py-3 text-sm font-bold uppercase tracking-wide hover:bg-[#EAB308]/20 transition-colors"
+                  data-testid="button-replay-hints"
+                >
+                  💡 Replay with Hints
+                </button>
+              )}
               <button
                 onClick={resetToSelect}
                 className="flex-1 flex items-center justify-center gap-2 bg-muted border border-border rounded-lg py-3 text-sm font-bold uppercase tracking-wide hover:bg-card transition-colors"
