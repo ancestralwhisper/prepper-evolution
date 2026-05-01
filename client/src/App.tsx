@@ -1,5 +1,5 @@
 import { Switch, Route, useLocation, Redirect } from "wouter";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -9,56 +9,60 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
-import Article from "@/pages/Article";
-import Product from "@/pages/Product";
-import Comparison from "@/pages/Comparison";
-import Category from "@/pages/Category";
-import StartHere from "@/pages/StartHere";
-import About from "@/pages/About";
-import AdminLinkHealth from "@/pages/AdminLinkHealth";
-import Articles from "@/pages/Articles";
-import Products from "@/pages/Products";
-import ToolsIndex from "@/pages/tools/ToolsIndex";
-import BugOutBagCalculator from "@/pages/tools/BugOutBagCalculator";
-import SolarPowerCalculator from "@/pages/tools/SolarPowerCalculator";
-import WaterStorageCalculator from "@/pages/tools/WaterStorageCalculator";
-import FoodStorageCalculator from "@/pages/tools/FoodStorageCalculator";
-import KitBuilder from "@/pages/tools/KitBuilder";
-import SHTFSimulator from "@/pages/tools/SHTFSimulator";
-import CommunityGallery from "@/pages/tools/CommunityGallery";
-import MyKits from "@/pages/tools/MyKits";
-import VehicleProfile from "@/pages/tools/VehicleProfile";
-import RigSafeConfiguratorPage from "@/pages/tools/RigSafeConfiguratorPage";
-import RigRatedConfiguratorPage from "@/pages/tools/RigRatedConfiguratorPage";
-import TrailIntelPage from "@/pages/tools/TrailIntelPage";
-import PowerSystemBuilderPage from "@/pages/tools/PowerSystemBuilderPage";
-import PowerStationRuntimeCalculator from "@/pages/tools/PowerStationRuntimeCalculator";
-import FuelRangePlanner from "@/pages/tools/FuelRangePlanner";
-import Deadstock from "@/pages/tools/Deadstock";
-import BarterEstimator from "@/pages/tools/BarterEstimator";
-import TentFinder from "@/pages/tools/TentFinder";
-import GearFinder from "@/pages/tools/GearFinder";
-import SkillsAnalyzer from "@/pages/tools/SkillsAnalyzer";
-import ThreatRiskDashboard from "@/pages/tools/ThreatRiskDashboard";
-import ReadinessDashboard from "@/pages/tools/ReadinessDashboard";
-import EvacuationRoutePlanner from "@/pages/tools/EvacuationRoutePlanner";
-import SolarCompatChecker from "@/pages/tools/SolarCompatChecker";
-import FailureModeDiagnostic from "@/pages/tools/FailureModeDiagnostic";
-import VirtualGoBag from "@/pages/tools/VirtualGoBag";
-import SITREP from "@/pages/tools/SITREP";
-import RackRTTFitmentDatabase from "@/pages/tools/RackRTTFitmentDatabase";
-import LoadBalancer from "@/pages/tools/LoadBalancer";
-import AdminFitment from "@/pages/tools/AdminFitment";
-import HouseholdSetup from "@/pages/tools/HouseholdSetup";
-import ShareResults from "@/pages/tools/ShareResults";
-import ProgrammaticAnswers from "@/pages/tools/ProgrammaticAnswers";
-import Quiz from "@/pages/Quiz";
-import Contact from "@/pages/Contact";
-import PrivacyPolicy from "@/pages/PrivacyPolicy";
-import Terms from "@/pages/Terms";
-import GearList from "@/pages/freebies/GearList";
-import FamilyKit from "@/pages/freebies/FamilyKit";
-import BobWeightGuide from "@/pages/freebies/BobWeightGuide";
+
+// Lazy-loaded pages — only downloaded when navigated to
+const Article = lazy(() => import("@/pages/Article"));
+const Product = lazy(() => import("@/pages/Product"));
+const Comparison = lazy(() => import("@/pages/Comparison"));
+const Category = lazy(() => import("@/pages/Category"));
+const StartHere = lazy(() => import("@/pages/StartHere"));
+const About = lazy(() => import("@/pages/About"));
+const AdminLinkHealth = lazy(() => import("@/pages/AdminLinkHealth"));
+const Articles = lazy(() => import("@/pages/Articles"));
+const Products = lazy(() => import("@/pages/Products"));
+const Quiz = lazy(() => import("@/pages/Quiz"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const PrivacyPolicy = lazy(() => import("@/pages/PrivacyPolicy"));
+const Terms = lazy(() => import("@/pages/Terms"));
+const GearList = lazy(() => import("@/pages/freebies/GearList"));
+const FamilyKit = lazy(() => import("@/pages/freebies/FamilyKit"));
+const BobWeightGuide = lazy(() => import("@/pages/freebies/BobWeightGuide"));
+
+// Tools — all lazy loaded
+const ToolsIndex = lazy(() => import("@/pages/tools/ToolsIndex"));
+const BugOutBagCalculator = lazy(() => import("@/pages/tools/BugOutBagCalculator"));
+const SolarPowerCalculator = lazy(() => import("@/pages/tools/SolarPowerCalculator"));
+const WaterStorageCalculator = lazy(() => import("@/pages/tools/WaterStorageCalculator"));
+const FoodStorageCalculator = lazy(() => import("@/pages/tools/FoodStorageCalculator"));
+const KitBuilder = lazy(() => import("@/pages/tools/KitBuilder"));
+const SHTFSimulator = lazy(() => import("@/pages/tools/SHTFSimulator"));
+const CommunityGallery = lazy(() => import("@/pages/tools/CommunityGallery"));
+const MyKits = lazy(() => import("@/pages/tools/MyKits"));
+const VehicleProfile = lazy(() => import("@/pages/tools/VehicleProfile"));
+const RigSafeConfiguratorPage = lazy(() => import("@/pages/tools/RigSafeConfiguratorPage"));
+const RigRatedConfiguratorPage = lazy(() => import("@/pages/tools/RigRatedConfiguratorPage"));
+const TrailIntelPage = lazy(() => import("@/pages/tools/TrailIntelPage"));
+const PowerSystemBuilderPage = lazy(() => import("@/pages/tools/PowerSystemBuilderPage"));
+const PowerStationRuntimeCalculator = lazy(() => import("@/pages/tools/PowerStationRuntimeCalculator"));
+const FuelRangePlanner = lazy(() => import("@/pages/tools/FuelRangePlanner"));
+const Deadstock = lazy(() => import("@/pages/tools/Deadstock"));
+const BarterEstimator = lazy(() => import("@/pages/tools/BarterEstimator"));
+const TentFinder = lazy(() => import("@/pages/tools/TentFinder"));
+const GearFinder = lazy(() => import("@/pages/tools/GearFinder"));
+const SkillsAnalyzer = lazy(() => import("@/pages/tools/SkillsAnalyzer"));
+const ThreatRiskDashboard = lazy(() => import("@/pages/tools/ThreatRiskDashboard"));
+const ReadinessDashboard = lazy(() => import("@/pages/tools/ReadinessDashboard"));
+const EvacuationRoutePlanner = lazy(() => import("@/pages/tools/EvacuationRoutePlanner"));
+const SolarCompatChecker = lazy(() => import("@/pages/tools/SolarCompatChecker"));
+const FailureModeDiagnostic = lazy(() => import("@/pages/tools/FailureModeDiagnostic"));
+const VirtualGoBag = lazy(() => import("@/pages/tools/VirtualGoBag"));
+const SITREP = lazy(() => import("@/pages/tools/SITREP"));
+const RackRTTFitmentDatabase = lazy(() => import("@/pages/tools/RackRTTFitmentDatabase"));
+const LoadBalancer = lazy(() => import("@/pages/tools/LoadBalancer"));
+const AdminFitment = lazy(() => import("@/pages/tools/AdminFitment"));
+const HouseholdSetup = lazy(() => import("@/pages/tools/HouseholdSetup"));
+const ShareResults = lazy(() => import("@/pages/tools/ShareResults"));
+const ProgrammaticAnswers = lazy(() => import("@/pages/tools/ProgrammaticAnswers"));
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -83,6 +87,7 @@ function Router() {
           transition={{ duration: 0.3 }}
           className="min-h-screen flex flex-col"
         >
+          <Suspense fallback={<div className="min-h-screen bg-background" />}>
           <Switch location={location}>
             <Route path="/" component={Home} />
             <Route path="/start-here" component={StartHere} />
@@ -138,6 +143,7 @@ function Router() {
             <Route path="/freebies/bob-weight-guide" component={BobWeightGuide} />
             <Route component={NotFound} />
           </Switch>
+          </Suspense>
         </motion.div>
       </AnimatePresence>
     </>

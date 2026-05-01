@@ -23,12 +23,13 @@ import PrintQrCode from "@/components/tools/PrintQrCode";
 import InstallButton from "@/components/tools/InstallButton";
 import { trackEvent } from "@/lib/analytics";
 import { GuidedTour } from "./GuidedTour";
+import { useSEO } from "@/hooks/useSEO";
 
 const VEHICLE_TOUR = [
   { title: "Select Your Vehicle", body: "Search or pick your rig from the database. The profile loads real specs — GVWR, curb weight, payload capacity, roof rating. These are the hard limits you're working within." },
   { title: "Document Your Build", body: "Work through the modification sections to log what's on your rig. Each mod contributes to your payload used — the total updates in real time as you add gear." },
   { title: "Watch Your Payload", body: "The payload gauge shows how much capacity is used. Most overlanding builds max out faster than people expect once you add RTT, rack, fridge, recovery gear, and passengers." },
-  { title: "Export & Share", body: "Your profile saves automatically in your browser. The Load Balancer tool reads from this profile — keep it accurate and your load analysis will be too." },
+  { title: "Export & Share", body: "Your profile saves automatically in your browser. The RigSafe Configurator reads from this profile — keep it accurate and your load analysis will be too." },
 ];
 
 // ─── SVG Gauge Component ─────────────────────────────────────────────
@@ -500,6 +501,10 @@ function Tip({ text }: { text: string }) {
 // ═══════════════════════════════════════════════════════════════════════
 
 export default function VehicleProfileEditor() {
+  useSEO({
+    title: "Vehicle Profile | Ops Deck — Prepper Evolution",
+    description: "Build your rig's complete spec sheet. Select your vehicle, log every mod, and see your real payload, CG height, and recovery capability. Free overlanding tool — no sign-up required.",
+  });
   const [profile, setProfile] = useState<VehicleProfile>(createDefaultProfile);
   const [initialized, setInitialized] = useState(false);
 

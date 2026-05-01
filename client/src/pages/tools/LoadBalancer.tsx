@@ -122,12 +122,14 @@ function NumberInput({
   label: string; value: number; onChange: (v: number) => void;
   min?: number; max?: number; step?: number; unit?: string; hint?: string;
 }) {
+  const id = `ni-${label.toLowerCase().replace(/\s+/g, "-")}`;
   return (
     <div>
-      <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
+      <label htmlFor={id} className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
         {label} {unit && <span className="normal-case font-normal">({unit})</span>}
       </label>
       <input
+        id={id}
         type="number"
         value={value || ""}
         onChange={(e) => onChange(Number(e.target.value))}
@@ -145,10 +147,12 @@ function SelectInput<T extends string>({
   label: string; value: T; onChange: (v: T) => void;
   options: { value: T; label: string }[]; hint?: string;
 }) {
+  const id = `si-${label.toLowerCase().replace(/\s+/g, "-")}`;
   return (
     <div>
-      <label className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">{label}</label>
+      <label htmlFor={id} className="block text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">{label}</label>
       <select
+        id={id}
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
         className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none transition-colors"
