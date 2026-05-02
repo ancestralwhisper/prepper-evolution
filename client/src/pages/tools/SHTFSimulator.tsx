@@ -91,6 +91,11 @@ export default function SHTFSimulator() {
     trackEvent("pe_scenario_selected", { scenario: scenario.id });
   }, []);
 
+  const currentNode = useMemo(() => {
+    if (!selectedScenario || !currentNodeId) return null;
+    return getNode(selectedScenario, currentNodeId);
+  }, [selectedScenario, currentNodeId]);
+
   const makeChoice = useCallback(
     (choice: Choice, choiceIndex: number) => {
       const newScore = score + choice.scoreImpact;
@@ -155,11 +160,6 @@ export default function SHTFSimulator() {
       startScenario(selectedScenario);
     }
   }, [selectedScenario, startScenario]);
-
-  const currentNode = useMemo(() => {
-    if (!selectedScenario || !currentNodeId) return null;
-    return getNode(selectedScenario, currentNodeId);
-  }, [selectedScenario, currentNodeId]);
 
   const progress = useMemo(() => {
     if (!selectedScenario) return 0;

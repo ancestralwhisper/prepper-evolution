@@ -203,18 +203,6 @@ export default function SolarPowerCalculator() {
     setLastSaved(new Date());
   }, [people, days, region, useCase, selected, livingSituation, initialized]);
 
-  // Write computed results back to household readiness
-  useEffect(() => {
-    if (!initialized || calculations.totalDailyWh <= 0) return;
-    updateReadiness("solar", {
-      totalDailyWh: calculations.totalDailyWh,
-      batteryCapacityNeeded: calculations.batteryCapacityNeeded,
-      solarWattsNeeded: calculations.solarWattsNeeded,
-      daysOfAutonomy: days,
-      lastCalculated: new Date().toISOString(),
-    });
-  }, [initialized, calculations.totalDailyWh, calculations.batteryCapacityNeeded, days]);
-
   const applyUseCase = useCallback((uc: UseCase) => {
     setUseCase(uc);
     setLivingSituation(useCaseLabels[uc].living);
@@ -374,6 +362,18 @@ export default function SolarPowerCalculator() {
       selectedRegion,
     };
   }, [selected, region, days, people, livingSituation]);
+
+  // Write computed results back to household readiness
+  useEffect(() => {
+    if (!initialized || calculations.totalDailyWh <= 0) return;
+    updateReadiness("solar", {
+      totalDailyWh: calculations.totalDailyWh,
+      batteryCapacityNeeded: calculations.batteryCapacityNeeded,
+      solarWattsNeeded: calculations.solarWattsNeeded,
+      daysOfAutonomy: days,
+      lastCalculated: new Date().toISOString(),
+    });
+  }, [initialized, calculations.totalDailyWh, calculations.batteryCapacityNeeded, days]);
 
   const chartSegments = deviceCategories.map((cat) => ({
     label: cat.name,

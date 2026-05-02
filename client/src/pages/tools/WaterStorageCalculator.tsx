@@ -152,23 +152,6 @@ export default function WaterStorageCalculator() {
     setInitialized(true);
   }, []);
 
-  // Write computed results back to household readiness
-  useEffect(() => {
-    if (!initialized || calc.totalGallons <= 0) return;
-    updateReadiness("water", {
-      totalGallons: calc.totalGallons,
-      daysOfSupply: state.days,
-      dailyGallons: calc.totalDailyGallons,
-      lastCalculated: new Date().toISOString(),
-    });
-  }, [initialized, calc.totalGallons, calc.totalDailyGallons, state.days]);
-
-  useEffect(() => {
-    if (!initialized) return;
-    localStorage.setItem("pe-water-calculator", JSON.stringify(state));
-    setLastSaved(new Date());
-  }, [state, initialized]);
-
   const set = useCallback(<K extends keyof State>(key: K, value: State[K]) => {
     setState((prev) => ({ ...prev, [key]: value }));
   }, []);
@@ -257,6 +240,23 @@ export default function WaterStorageCalculator() {
       totalPeople,
     };
   }, [state]);
+
+  // Write computed results back to household readiness
+  useEffect(() => {
+    if (!initialized || calc.totalGallons <= 0) return;
+    updateReadiness("water", {
+      totalGallons: calc.totalGallons,
+      daysOfSupply: state.days,
+      dailyGallons: calc.totalDailyGallons,
+      lastCalculated: new Date().toISOString(),
+    });
+  }, [initialized, calc.totalGallons, calc.totalDailyGallons, state.days]);
+
+  useEffect(() => {
+    if (!initialized) return;
+    localStorage.setItem("pe-water-calculator", JSON.stringify(state));
+    setLastSaved(new Date());
+  }, [state, initialized]);
 
   const chartSegments = [
     { label: "Drinking", value: calc.totalDrinking, color: "#06B6D4" },
